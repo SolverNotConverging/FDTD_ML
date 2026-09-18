@@ -107,6 +107,12 @@ cells; it is not evidence that the untrained CNN improves mesh quality.
 
 ## Current limitations and deliberate scope choices
 
+The [anchor grading audit](docs/anchor_grading.md) confirms that explicit ratio
+constraints move neighboring lines, including across anchors. Grading is currently
+off by default, and the fixed interval allocation can prevent recovery of an otherwise
+feasible graded mesh. The audit adds a reproducible plotting example; it does not
+change mesher behavior.
+
 - PEC outer boundaries only. `add_PML()` raises `NotImplementedError`; no fixed
   PML collar or CPML auxiliary update exists yet.
 - Geometry is point-sampled at Yee locations. There is no subpixel averaging, and

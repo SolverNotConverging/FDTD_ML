@@ -6,6 +6,8 @@ independently of both the CNN raster and the simulation grid.
 
 Project documents: [implementation plan](IMPLEMENTATION_PLAN.md),
 [current progress](PROGRESS.md), and [validation results](docs/validation.md).
+The [anchor grading audit](docs/anchor_grading.md) includes reproducible plots of
+neighboring-line movement and the current grading limitations.
 
 ## Install and build (Windows)
 
