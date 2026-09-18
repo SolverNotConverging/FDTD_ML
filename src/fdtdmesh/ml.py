@@ -175,6 +175,7 @@ def save_model(
     alpha=4.0,
     training_commit="untrained",
     dataset_version="untrained",
+    training_metadata=None,
 ):
     metadata = dict(
         format_version=2,
@@ -189,6 +190,10 @@ def save_model(
         training_commit=training_commit,
         dataset_version=dataset_version,
     )
+    if training_metadata is not None:
+        if not isinstance(training_metadata, dict):
+            raise ValueError("training_metadata must be a dictionary")
+        metadata["training"] = training_metadata
     _validate_metadata(metadata)
     torch.save({**metadata, "state_dict": model.state_dict()}, Path(path))
 
@@ -223,6 +228,8 @@ def _validate_metadata(data):
         for key in ("training_commit", "dataset_version"):
             if not isinstance(data[key], str):
                 raise ValueError(f"Invalid checkpoint {key}")
+        if "training" in data and not isinstance(data["training"], dict):
+            raise ValueError("Invalid checkpoint training metadata")
     except (KeyError, TypeError) as exc:
         raise ValueError(f"Incomplete mesh checkpoint metadata: {exc}") from exc
 

@@ -186,11 +186,12 @@ format is **version 2 with nine input channels**; version 1 checkpoints are reje
 incompatible contracts. Existing checkpoints need conversion if their architecture
 or metadata differs; arbitrary old state dictionaries cannot be loaded blindly.
 
-**No trained meshing weights are included.** `examples/cnn_mesh.py` demonstrates
-the full pipeline using explicitly labelled random weights, or accepts
+`examples/cnn_mesh.py` demonstrates the full pipeline using explicitly labelled
+random weights, or accepts
 `--checkpoint path/to/mesher.pt`. Network gradients are supported, but integer
-meshing and FDTD are deliberately not differentiable. Teacher training and
-physics-generated target distillation belong to subsequent stages.
+meshing and FDTD are deliberately not differentiable. Stage 4 supplies reproducible
+teacher-target generation and imitation training; physics-generated target
+distillation belongs to Stage 5.
 
 `fdtdmesh.ml.repair_loss(rho_x, rho_y, meshes, x_collars=..., y_collars=...)`
 provides a differentiable auxiliary penalty against **detached** repaired-density
@@ -332,10 +333,35 @@ describes generator v1, preserved in `fdtdmesh.data.generate_v1`.
 .venv\Scripts\python.exe examples/plot_dataset_variation.py --manifest artifacts/diverse/manifest.json --output artifacts/diverse
 ```
 
+## Stage 4: teacher imitation
+
+The Stage-4 teacher first generates the existing material/edge heuristic density,
+passes it through the exact deterministic mesher, and rebins equal legal-cell mass
+into CNN pixels. This means the target already includes anchors, fixed PML collars,
+exact budgets, and mandatory 1.4 grading. Training minimizes scale-invariant axis-CDF
+error and periodically adds the detached repair loss. Validation records the line
+movement still required when CNN densities are projected to legal meshes.
+
+```powershell
+.venv\Scripts\python.exe -m fdtdmesh.training targets --manifest artifacts/stage3_v3/manifest.json --output artifacts/stage4/teacher_targets.npz
+.venv\Scripts\python.exe -m fdtdmesh.training train --manifest artifacts/stage3_v3/manifest.json --targets artifacts/stage4/teacher_targets.npz --output artifacts/stage4/training --epochs 20
+.venv\Scripts\python.exe -m fdtdmesh.training evaluate --manifest artifacts/stage3_v3/manifest.json --targets artifacts/stage4/teacher_targets.npz --checkpoint artifacts/stage4/training/best.pt --output artifacts/stage4/evaluation.json
+.venv\Scripts\python.exe examples/plot_stage4.py --training artifacts/stage4/training/training.json --evaluation artifacts/stage4/evaluation.json --output artifacts/stage4/training_and_repair.png
+```
+
+`resume.pt` includes the optimizer and completed history. Resume with the same
+settings and a larger `--epochs` value using `--resume`; incompatible settings or
+dataset identities fail explicitly. `best.pt` is an inference checkpoint containing
+the actual training commit, dataset identity, training configuration, and validation
+metrics. The evaluation command checks held-out imitation and legal projection, then
+runs selected teacher/CNN meshes through real CUDA FDTD. Its waveform/spectrum result
+measures agreement with the heuristic teacher, not converged-reference accuracy.
+See [Stage-4 training evidence](docs/stage4_training.md).
+
 ## Remaining stages
 
-Teacher training, physics-generated target distillation and demonstrated learned
-improvement remain future work. Reference coverage for difficult scenes also needs
+Physics-generated target distillation and demonstrated improvement over the heuristic
+teacher remain future work. Reference coverage for difficult scenes also needs
 expansion: the initial 32-scene run accepted 15 references and marked 17 nonconverged.
 TEz, dispersion, anisotropy, GPU batching, online DFT/energy monitors and bounded
 recording remain outside the implementation. The previous FDTD library is unchanged.
