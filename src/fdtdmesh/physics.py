@@ -459,7 +459,20 @@ def search_physics_targets(
                 except (ValueError, RuntimeError) as error:
                     row.update(status="failed", error=str(error), error_type=type(error).__name__)
                 rows.append(row)
-            selected, front = score_candidates(rows, search_config.beta)
+            try:
+                selected, front = score_candidates(rows, search_config.beta)
+            except ValueError as error:
+                _json(
+                    result_path,
+                    {
+                        "status": "failed",
+                        "error": str(error),
+                        "error_type": type(error).__name__,
+                        "candidates": rows,
+                    },
+                )
+                print(f"{spec.scene_id} {budget}: no eligible target: {error}", flush=True)
+                continue
             selected_mesh = meshes[selected["name"]]
             px = projected_density(
                 selected_mesh.x, spec.raster_shape[1], collar=effective.build(budget).pml.x
