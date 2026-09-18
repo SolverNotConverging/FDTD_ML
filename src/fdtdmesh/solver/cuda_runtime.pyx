@@ -13,7 +13,7 @@ cdef extern from "fdtd_api.h":
     int fdtd_device_count() nogil
     int fdtd_run(int, int, int, int, int, int,
         const void*, const void*, const void*, const void*, const void*,
-        const unsigned char*, const int*, const void*, const int*,
+        const unsigned char*, const void*, int, const int*, const void*, const int*,
         void*, void*, void*, void*, RunStats*, char*, int) nogil
 
 def device_count():
@@ -34,6 +34,7 @@ def run(c, initial, source_indices, waveforms, receiver_indices):
     cdef cnp.ndarray chx = np.ascontiguousarray(c.chx)
     cdef cnp.ndarray chy = np.ascontiguousarray(c.chy)
     cdef cnp.ndarray pec = np.ascontiguousarray(c.pec, dtype=np.uint8)
+    cdef cnp.ndarray profiles = np.ascontiguousarray(c.cpml)
     cdef cnp.ndarray sources = np.ascontiguousarray(source_indices, dtype=np.int32)
     cdef cnp.ndarray waves = np.ascontiguousarray(waveforms)
     cdef cnp.ndarray receivers = np.ascontiguousarray(receiver_indices, dtype=np.int32)
@@ -43,11 +44,16 @@ def run(c, initial, source_indices, waveforms, receiver_indices):
         raise ValueError("Runtime sizes exceed int32 capacity")
     cdef int nx = <int>ez.shape[0]-1, ny = <int>ez.shape[1]-1
     cdef int nt = <int>waves.shape[0], ns = <int>sources.size, nr = <int>receivers.size
+    cdef int has_pml = profiles.size > 0
     if nx<1 or ny<1 or nt<1 or waves.shape[1]!=ns or ez.size>2147483647:
         raise ValueError("Invalid runtime sizes")
     cdef int precision = 32 if ez.dtype == np.float32 else 64
     if ez.dtype not in (np.dtype("float32"), np.dtype("float64")):
         raise ValueError("Expected float32 or float64")
+    if (profiles.ndim!=2 or profiles.shape[1]!=3 or profiles.dtype!=ez.dtype
+            or (profiles.shape[0]!=0 and profiles.shape[0]!=2*nx+2*ny+2)
+            or not np.isfinite(profiles).all()):
+        raise ValueError("Invalid CPML coefficient buffer")
     for a, shape in [(hx,(nx+1,ny)),(hy,(nx,ny+1)),(ca,(nx+1,ny+1)),
                      (cbx,(nx+1,ny+1)),(cby,(nx+1,ny+1)),(chx,(nx+1,ny)),
                      (chy,(nx,ny+1)),(waves,(nt,ns))]:
@@ -67,7 +73,7 @@ def run(c, initial, source_indices, waveforms, receiver_indices):
     cdef int status
     with nogil:
         status = fdtd_run(precision,nx,ny,nt,ns,nr,
-            ca.data,cbx.data,cby.data,chx.data,chy.data,<unsigned char*>pec.data,
+            ca.data,cbx.data,cby.data,chx.data,chy.data,<unsigned char*>pec.data,profiles.data,has_pml,
             <int*>sources.data,waves.data,<int*>receivers.data,
             ez.data,hx.data,hy.data,history.data,&stats,error,1024)
     if status:

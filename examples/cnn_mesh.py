@@ -18,9 +18,12 @@ if args.checkpoint is None:
     save_model(args.checkpoint, ResUNet(), raster_shape=(64, 64))
     print("Smoke test only: random weights do not imply learned mesh quality.")
 sim = FDTD_2D_Ez(0.02, 0.015, 80, 60, 20e9, t_end=1e-9)
+sim.add_PML(6, thickness=0.0015)
 glass = sim.add_material("glass", epsilon_r=4)
 sim.add_circle(glass, center=(0.011, 0.0075), radius=0.002)
-sim.add_source("point", x=0.003, y=0.0075, width=2e-11, delay=8e-11)
+sim.add_source(
+    "point", x=0.003, y=0.0075, width=2e-11, delay=8e-11, normalization="current", amplitude=0.001
+)
 sim.add_receiver("point", x=0.017, y=0.0075)
 sim.mesh_with_model(args.checkpoint, device="cuda" if torch.cuda.is_available() else "cpu")
 print(sim.run().diagnostics)

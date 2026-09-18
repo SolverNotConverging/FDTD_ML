@@ -1,167 +1,108 @@
-# Current implementation progress
+# Current project progress
 
-Status date: 2026-09-18.
-Implementation baseline: Git commit `99374e7`
-(`Implement stage-one CUDA TMz solver and CNN-driven exact-budget mesher`).
+Updated 2026-09-18. **Stages 1 and 2 are implemented and validated**, including
+the agreed mandatory 1.4 grading policy and joint constrained mesh optimization.
+This record accompanies the stage-two implementation commit. Earlier commits:
+`99374e7` (stage one), `2437779` (plan/progress), `085cd1b` (historical grading audit).
 
-The two stage-one implementation tasks are complete and validated: the PEC-boundary
-nonuniform CUDA TMz solver and the CNN-to-FDTD mesher. A trained meshing model,
-CPML, and the subsequent dataset/training pipeline are not yet implemented.
-
-See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for the full roadmap,
-[README.md](README.md) for usage, and [docs/validation.md](docs/validation.md)
-for the numerical and performance evidence.
+See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.md),
+[stage 2 validation](docs/stage2_validation.md), and [grading plots](docs/anchor_grading.md).
 
 ## Stage status
 
-| Stage | Status | Evidence or remaining work |
+| Stage | Status | Evidence / remaining work |
 |---|---|---|
-| 1A: nonuniform CUDA TMz solver | Complete for PEC scope | Compiled native runtime; real-GPU and analytical tests |
-| 1B: CNN-to-FDTD mesher | Complete for inference scope | Exact-budget mesher; conditioned CNN; checkpoint-to-CUDA tests |
-| 2: CPML and dataset simulation conventions | Not started | Fixed collars, auxiliary state, reflection tests, source/probe comparison conventions |
-| 3: procedural datasets and converged references | Not started | Scene/data schemas, reference convergence, split design, physical metrics |
-| 4: teacher imitation | Not started | Teacher targets, training loop, trained checkpoint |
-| 5: physics targets and distillation | Not started | Candidate generation, FDTD scoring, Pareto selection, distillation |
-| 6: generalization and optional surrogate | Not started | OOD studies, ablations, optional surrogate validation |
+| 1A: nonuniform CUDA TMz solver | Complete | Native float32/64 solver; oracle and analytical cavity tests |
+| 1B: CNN-to-FDTD mesher | Complete for inference | Exact budgets/anchors; conditioned CNN; checkpoint-to-CUDA example |
+| Grading policy revision | Complete | Mandatory <=1.4; joint anchor assignment and line L1 optimization; exhaustive small-case optimum test |
+| 2: CPML and simulation conventions | Complete for vacuum collars | CUDA CPML; reflection controls; current normalization; physical receivers |
+| 3: procedural datasets and converged references | Not started | Schemas, generation, convergence, splits and physical metrics |
+| 4: teacher imitation | Not started | Teacher targets, training loop and trained checkpoint |
+| 5: physics targets and distillation | Not started | Candidate generation, FDTD scoring, Pareto selection and distillation |
+| 6: generalization / optional surrogate | Not started | OOD studies, ablations and any surrogate validation |
 
-## Completed: environment and repository
+## Completed in this update
 
-- Created a Python 3.12 project environment in `.venv` with `uv`.
-- Installed NumPy, SciPy, Cython, CUDA-enabled PyTorch, pytest, and Ruff.
-- Added `pyproject.toml`, `.python-version`, and the reproducible `uv.lock`.
-- Verified `uv sync --locked --python 3.12`.
-- Added a Windows build script that discovers MSVC and compiles/links the Cython
-  extension and CUDA runtime. Resolved compiler and Windows SDK path issues on this host.
-- Initialized Git and committed the implementation. Environment files, generated
-  native binaries, caches, artifacts, model checkpoints, and IDE settings are ignored.
-- Used the previous local FDTD library as an API/numerical reference without modifying it.
+- Made grading mandatory for density, model and supplied meshes; stricter limits
+  are supported, while disabling grading or exceeding 1.4 is rejected.
+- Replaced fixed interval allocation with joint mixed-integer anchor assignment
+  and line-coordinate optimization. Minimized normalized mean absolute displacement
+  from CNN density quantiles. Exact LP polishing retains anchors and ratio bounds.
+- Distinguished optimization timeout/numerical failure from proven infeasibility.
+  Added per-axis repair distance, solver status/gap and timing diagnostics.
+- Added scale-invariant detached repaired-CDF loss for future CNN training, with
+  gradients through predicted densities and explicit collar exclusion.
+- Reserved immutable physical PML collars inside total budgets, ignored CNN collar
+  density, anchored interfaces, and enforced interface grading. Continuous scene
+  checks keep geometry, sources, receivers and interpolation support out of PML.
+- Implemented CFS-CPML at electric and magnetic Yee positions, including corners,
+  with four device-resident auxiliary arrays and fresh state per run.
+- Extended the NumPy oracle and Cython/native interface; rebuilt the CUDA extension.
+- Added integrated point-current and per-node current-density normalization with
+  half-step sampling. Preserved explicit legacy field-increment behavior.
+- Added exact-coordinate bilinear receivers, fixed-count line probes, common-time
+  resampling without extrapolation, and documented spectral comparison conventions.
+- Added the ninth raw PML input channel and version-2 checkpoint meshing policy;
+  incompatible old checkpoints fail explicitly. Updated CNN-to-CPML example.
+- Replaced the old grading plots with current-policy plots, retained the historical
+  audit separately, and added CPML waveform/error/mesh plots and measured JSON.
 
-## Completed: solver
+## Validation performed
 
-- Continuous material/geometry scene, independent of the simulation grid.
-- Isotropic nondispersive epsilon/mu, electric loss, vacuum, and exact PEC masks.
-- Rectangles, circles, triangles, simple polygons, and anchored thin PEC lines.
-- Nonuniform Yee updates with primal/dual spacings and conservative CFL validation.
-- Float32 and float64 CUDA execution behind a validated Cython/C++ boundary.
-- Native timestep loop with device-resident fields, coefficients, source waveforms,
-  source/receiver indices, and receiver histories; no Python stepping loop.
-- PEC outer boundaries, point/line soft sources, Gaussian and sinusoidal waveforms.
-- Point/line Ez receivers, final fields, physical sampling times, and post-run DFT.
-- `Nt` or fixed physical `t_end`, cell-update cost, CUDA-event timing, wall timing,
-  and upload/download/residency diagnostics.
-- Deterministic handling of overlapping sources, repeatable fresh runs, input
-  validation, and resource cleanup.
-- Explicit NumPy oracle for numerical tests; no silent CPU production fallback.
+Full suite: **78 passed, no skips**, including real GPU tests (12.67 seconds in the
+recorded run). Ruff lint and formatting checks pass; `uv sync --locked --offline`
+verified the version-0.2.0 environment. Uniform, nonuniform and CNN-to-CPML
+examples all run successfully. Native CUDA build succeeded. Both precision modes agree with the
+NumPy CPML oracle for x, y and xy absorption on nonuniform material scenes.
 
-Main code: [simulation.py](src/fdtdmesh/simulation.py),
-[scene.py](src/fdtdmesh/scene.py), [sources.py](src/fdtdmesh/sources.py),
-and [solver/](src/fdtdmesh/solver/).
+Independent boundary benchmark: eight combinations of 0/30/45/90-degree packets
+and uniform/nonuniform meshes compared with an enlarged domain sharing the exact
+interior mesh and dt. Peak waveform error ranges from 5.25e-6 to 7.07e-6, below the
+predeclared 1% threshold. PEC controls give 25.19% and 27.12% peak error. At 1.5 ns,
+fields remain finite and interior Ez norms are below 3e-5 of their initial values.
+These measurements qualify the tested packets and parameters only.
 
-## Completed: mesher and CNN inference
+Other coverage: exhaustive small-problem global mesh optimum, recovered allocation
+counterexample, randomized legal meshes, fixed collar immutability, current
+conservation across grids/dt, bilinear and time interpolation, checkpoint contract,
+repair-loss gradients and scaling, repeated state reset, and zero stepping transfers.
+The full suite retains the stage-one cavity convergence, PEC shielding, geometry,
+source overlap and checkpoint-to-CUDA tests. Generated scientific figures were
+visually inspected. See the validation document for commands and full measurements.
 
-- Positive density integration, deterministic capped largest-remainder cell allocation,
-  and density-quantile line placement.
-- Exact Nx/Ny budgets, exact physical boundaries, and mandatory anchor retention.
-- Optional minimum/maximum spacing and adjacent-cell grading projection.
-- Explicit rejection of infeasible, duplicate, or unresolvable mesh lines.
-- Raw scene rasterization with epsilon, conductivity, PEC, sources, receivers,
-  x/y anchors, and mu; consistent pixel tie-breaking under physical scaling.
-- Fully convolutional residual U-Net with multi-scale FiLM conditioning.
-- Electrical-size, frequency-ratio, and budget conditioning; positive axis densities
-  through normalized log-sum-exp pooling and softplus.
-- Self-describing versioned checkpoints, compatible-model loading, and metadata checks.
-- Public `mesh_uniform`, `set_mesh`, `mesh_from_density`, `load_mesh_model`, and
-  `mesh_with_model` entry points.
-- End-to-end checkpoint -> CNN -> constrained mesh -> CUDA simulation example.
+Environment: Windows, RTX 4070 Laptop GPU (8 GB), CUDA toolkit 13.3, MSVC 14.51,
+Python 3.12 in `.venv`, CUDA PyTorch and SciPy from `uv.lock`. The previous library
+at `C:\Users\Traveler\PycharmProjects\FDTD` was used as a reference and not modified.
+Environment files, native binaries, plots, caches and random demo weights remain
+ignored; source, tests, scripts, documentation and dependency metadata are tracked.
 
-Main code: [mesh.py](src/fdtdmesh/mesh.py) and [ml.py](src/fdtdmesh/ml.py).
-No trained weights are supplied; the default CNN example explicitly uses random weights.
+## Current limitations
 
-## Validation already performed
+- No trained meshing weights, training loop, procedural dataset, convergence-based
+  reference generator, or demonstrated learned electromagnetic improvement yet.
+- Joint integer meshing can be expensive for large budgets/many anchors. A 30-second
+  per-axis MILP search limit raises a distinct optimization error when unfinished;
+  final LP refinement follows. Numerical tolerances and the normalized width floor
+  are documented. Multiple optimal solutions may differ in symmetry.
+- Grading bounds local ratios; it does not impose monotone spacing or curvature.
+  Repair loss is an auxiliary consistency proxy and is not an EM objective.
+- CPML collars must be vacuum. Broadband grazing incidence, extreme meshes and
+  material interfaces near collars need further targeted qualification for datasets.
+- Geometry remains point-sampled, with staircase errors and no subpixel averaging.
+- Line monitors record Ez only. Full histories consume memory proportional to Nt;
+  bilinear receivers record four node traces each. Batching, bounded histories,
+  online GPU DFT/energy, graph replay and independent Nsight transfer profiling
+  remain future work.
+- Legacy field-increment sources are not physically invariant across dt; choose
+  integrated current for point-source mesh comparisons. Align temporal coverage
+  and spectral windows explicitly.
+- Format-v1/eight-channel checkpoints require deliberate migration; loading them
+  silently would violate the new raster and grading contract.
+- Windows is validated. The provided Linux build path has not been validated.
 
-The last implementation validation recorded **46 passing tests, no skips**, including
-real-CUDA tests, in 2.69 seconds. Ruff lint and formatting checks passed. These are
-the recorded implementation results, not a new test run for this documentation update.
+## Next milestone
 
-Validated hardware/toolchain: Windows, RTX 4070 Laptop GPU (8 GB), NVIDIA driver
-596.49, CUDA toolkit 13.3, MSVC 14.51.36231, Python 3.12.14,
-PyTorch 2.14.0+cu130, NumPy 2.5.3, and SciPy 1.18.1.
-
-Coverage includes:
-
-- CUDA/NumPy agreement on uniform/nonuniform grids in both precisions, including
-  dielectric/magnetic loss, PEC objects, duplicate sources, and line receivers.
-- Analytical cavity convergence in vacuum and a lossy magnetic material; errors
-  decrease by approximately four when grid spacing is halved for these smooth cases.
-- Exact PEC shielding, zero-state preservation, repeated-run agreement, and malformed
-  native-input rejection.
-- Exact mesh budgets, anchors, density quantiles, constraint projection, randomized
-  mesh invariants, checkpoint compatibility, CNN gradients, and scale consistency.
-- Full CNN-to-CUDA integration and zero reported host/device transfers while stepping.
-- Successful uniform, nonuniform, and CUDA-CNN examples.
-
-A fixed-duration 128 x 96 benchmark measured median GPU times of 69.1 ms for
-2,857 uniform-grid steps and 100.6 ms for 4,406 nonuniform-grid steps over the
-same requested 1 ns duration. This demonstrates the CFL/work penalty of smaller
-cells; it is not evidence that the untrained CNN improves mesh quality.
-
-## Current limitations and deliberate scope choices
-
-The [anchor grading audit](docs/anchor_grading.md) confirms that explicit ratio
-constraints move neighboring lines, including across anchors. Grading is currently
-off by default, and the fixed interval allocation can prevent recovery of an otherwise
-feasible graded mesh. The audit adds a reproducible plotting example; it does not
-change mesher behavior.
-
-- PEC outer boundaries only. `add_PML()` raises `NotImplementedError`; no fixed
-  PML collar or CPML auxiliary update exists yet.
-- Geometry is point-sampled at Yee locations. There is no subpixel averaging, and
-  curved interfaces have staircase error. Unresolved unanchored features can disappear.
-- A uniform mesh rejects anchors it cannot represent; the density/model mesher is
-  required in those cases. New anchors invalidate an existing mesh until remeshing.
-- Grading projection fixes the integer cell allocation between anchors. It may reject
-  an allocation even when another integer allocation would be feasible.
-- Soft sources add Ez per step. Excitation normalization across changing dt needs
-  an explicit convention before physics-based candidate ranking.
-- Point receivers snap to nodes; comparisons across meshes need a consistent
-  physical receiver convention. Actual sampled coordinates are returned.
-- Line monitors record Ez only. Spectra are computed after the run on CPU; no
-  online GPU DFT or energy monitor is implemented.
-- Full waveforms and receiver histories require memory proportional to Nt.
-  Batching, bounded-history recording, and CUDA graph replay are not implemented.
-- Residency evidence is runtime accounting plus source inspection, not an independent
-  Nsight/CUPTI transfer trace.
-- Checkpoints must match the current architecture and metadata contract; older models
-  may need conversion. The eight-channel raster includes raw mu, and pooling uses
-  log-mean-exp to remove constant-field raster-size dependence.
-- Windows is validated; the provided Linux build path has not been validated.
-- No procedural training dataset, converged arbitrary-scene reference generator,
-  teacher training, physics distillation, or demonstrated learned improvement exists yet.
-
-## Next implementation milestone
-
-Proceed to Stage 2: reserve uniform-normal PML collars within the exact total budget,
-anchor their interfaces, implement device-resident CFS-CPML, and quantify reflection
-and stability. In parallel in the roadmap, define fair excitation and receiver
-comparison conventions before building reference datasets. Follow the detailed
-acceptance criteria in [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md).
-
-## Reproduce the existing validation
-
-From the project root in PowerShell:
-
-```powershell
-$env:UV_CACHE_DIR = Join-Path $PWD '.uv-cache'
-uv sync --locked --python 3.12
-.\scripts\build_cuda.ps1
-New-Item -ItemType Directory -Force artifacts | Out-Null
-.venv\Scripts\python.exe -m pytest -q --basetemp=artifacts/pytest
-.venv\Scripts\ruff.exe check .
-.venv\Scripts\ruff.exe format --check .
-.venv\Scripts\python.exe examples\simple_uniform.py
-.venv\Scripts\python.exe examples\simple_nonuniform.py
-.venv\Scripts\python.exe examples\cnn_mesh.py
-```
-
-Keep this file updated as stages are implemented. Record fresh test results and
-commit references, and move work to complete only when its acceptance evidence exists.
+Stage 3: versioned procedural scenes and reproducible train/evaluation splits,
+convergence-checked references, and uniform/heuristic/CNN comparisons at common
+physical excitation, observations and duration. Keep the CPML acceptance cases and
+analytical cavity tests as independent gates while expanding the physics coverage.

@@ -1,100 +1,75 @@
-# Anchor grading audit
+# Mandatory grading and density repair
 
-Date: 2026-09-18. This audits the existing mesher; it does not change its defaults
-or allocation algorithm.
+Updated 2026-09-18. This supersedes the [stage-one audit](anchor_grading_stage1.md).
 
-## Finding
+Every production mesh now limits adjacent widths in both directions to 1.4,
+including across anchors and PML interfaces. Stricter ratios down to 1 are allowed;
+grading cannot be disabled. Anchors remain exact and the total budget is unchanged.
 
-Neighbor movement and cross-anchor grading are implemented, but grading is opt-in.
-`AxisConstraints.max_ratio` defaults to `None`. Without an explicit limit,
-anchor-aware allocation and quantiles can create abrupt adjacent-cell size changes.
-
-When `max_ratio=r` is supplied, `_project` optimizes mesh-line positions subject to
-anchor-interval length equalities, spacing bounds, and both inequalities for every
-pair of adjacent widths:
+The density suggestion defines cumulative-density quantile coordinates q[i] over
+the learned interior. For a fixed budget, the deterministic mesher minimizes:
 
 ```text
-h[i+1] <= r * h[i]
-h[i]   <= r * h[i+1]
+sum_i abs(x[i] - q[i]) / (domain_length * number_of_free_interior_lines)
 ```
 
-These constraints apply across anchors as well as inside intervals. The projection
-moves neighboring non-anchor lines while preserving the exact cell count and anchor
-coordinates. Anchors are incorporated during mesh generation, not appended afterward.
+It jointly chooses the integer line index of every interior anchor and the line
+coordinates. All min/max spacing bounds, both ratio inequalities, fixed collar
+lines, boundaries, and anchors are enforced in the same mixed-integer linear
+program. This replaces fixed largest-remainder allocation followed by projection.
+Already legal quantiles are a zero-cost optimum and return without optimization.
 
-Enable it for both axes through either density or checkpoint-based meshing:
+The objective measures line displacement (a quantile approximation to transport
+distance), not pointwise density agreement. L1 can have multiple equally good
+solutions; symmetric input does not guarantee symmetric output, and spacing need
+not be monotone. A ratio cap controls local jumps, not curvature. Hard constraints
+can require sizeable departures from the CNN preference. The optimizer uses an
+axis-normalized 1e-9 numerical width floor; other tolerances are documented in code.
 
-```python
-from fdtdmesh import AxisConstraints
+## Measured cases
 
-grading = AxisConstraints(max_ratio=1.3)
-sim.mesh_from_density(rho_x, rho_y, x_constraints=grading, y_constraints=grading)
-# Or:
-sim.mesh_with_model("mesher.pt", x_constraints=grading, y_constraints=grading)
-```
+All examples use a 20 mm domain. The previous false-infeasibility example now
+succeeds by changing allocation; it does not fall back to a uniform mesh.
 
-The value 1.3 is an illustrative setting: the larger of two neighboring cells may
-be at most 30% wider than the smaller. This audit does not establish an optimal
-grading limit for electromagnetic accuracy.
+| Density | Cells | Anchors (mm) | Optimized interval counts | Maximum adjacent ratio |
+|---|---:|---|---|---:|
+| Uniform | 40 | 9.8, 10.2 | 20 + 1 + 19 | 1.4 |
+| [1, 1, 6, 6, 1, 1] | 40 | 9.8, 10.2 | 19 + 2 + 19 | 1.4 |
+| [1, 100] | 10 | 10 | 2 + 8 | 1.4 |
 
-## Measured examples
+A separate test enumerates every anchor assignment for a small two-anchor problem
+and independently solves each continuous LP, verifying the global L1 optimum.
+Other tests check line movement on both sides of close anchors, deterministic
+repeated output, legal randomized cases, actual infeasibility, and timeout handling.
 
-Domain length 20 mm, 40 cells, fixed anchors at 9.8 and 10.2 mm. Both runs retain
-41 coordinate lines and both exact anchors. Grading is checked numerically on
-every adjacent pair, and lines are confirmed to move on both sides of the anchors.
+The diagnostics report normalized mean/max displacement, solver gap/status, and
+meshing time per axis. Infeasible hard constraints raise `MeshInfeasibleError`;
+an unfinished search or failed numerical verification raises `MeshOptimizationError`.
+Large or heavily anchored problems may hit the per-axis 30-second MILP limit.
+The final LP refinement and verification occur after that search limit.
 
-| Density over equally sized bins | Default maximum adjacent ratio | With r=1.30 | Lines displaced by more than 1 μm | Maximum displacement |
-|---|---:|---:|---:|---:|
-| Uniform | 2.578947 | 1.300000 | 14 | 0.50997 mm |
-| [1, 1, 6, 6, 1, 1] | 5.869110 | 1.300000 | 24 | 0.63587 mm |
+## Future training penalty
 
-The projection minimizes squared displacement of mesh lines. It limits adjacent
-ratios, but it is not a monotonic-spacing or curvature-smoothing objective. The
-plots show compensating wider shoulder cells and, for the adaptive case, small
-spacing undershoots. The minimum spacing can therefore decrease even while the
-maximum adjacent ratio improves; use `min_spacing` too if a CFL-related floor is
-required, accepting that the combined constraints may be infeasible.
+`repair_loss` in `fdtdmesh.ml` compares normalized predicted density CDFs against
+detached CDF targets formed by assigning equal mass to each repaired interior
+cell, then integrating back into raster bins. Pass x/y collars for CPML samples.
+Fixed collar mass is excluded. Multiplying an entire predicted density by a
+positive scalar leaves the loss unchanged, and gradients reach the CNN density.
+There is no derivative through the MILP or FDTD.
 
-## Why “graded whenever possible” is not yet guaranteed
+This provides the requested penalty mechanism; a training loop and trained model
+are later stages. It is an auxiliary consistency loss, not an exact Boolean
+feasibility penalty or electromagnetic objective. Raster rebinning can leave
+nonzero loss even when the quantile mesh was already legal. Monitor the actual
+projection correction as well, and tune the auxiliary weight during training.
 
-The mesher allocates integer cell counts to anchor intervals first and keeps those
-counts fixed during projection. It does not search alternative allocations after
-a projection feasibility failure.
-
-A concrete counterexample uses a 20 mm domain, 10 cells, an anchor at 10 mm,
-density `[1, 100]`, and `max_ratio=1.3`:
-
-- Current allocation: one cell in the left half and nine in the right half.
-- The left cell is 10 mm wide, so its right neighbor would need to be at least
-  `10/1.3 = 7.6923` mm wide and the next at least `7.6923/1.3 = 5.9172` mm.
-  Those two alone cannot fit inside the 10 mm right interval. Projection rejects it.
-- Five cells on each side give uniform 2 mm widths, preserve all hard constraints,
-  and have adjacent ratio 1.0. This is a feasible alternative allocation, not the
-  current mesher's output for the original density.
-
-To fully implement the requested policy, enable a documented default grading
-limit and make interval allocation grading-aware, or retry allocation when projection
-fails. A feasible hard-constrained mesh may need to deviate substantially from the
-CNN density target. Truly infeasible anchor/budget/spacing combinations must still
-be reported, rather than silently dropping anchors or relaxing the grading limit.
-
-## Reproduce the figures
-
-Matplotlib is included in the development dependencies. From the repository root:
+## Reproduce
 
 ```powershell
-uv sync --locked
 .venv\Scripts\python.exe examples\plot_anchor_grading.py
 ```
 
-Generated files under `artifacts/anchor_grading/`:
-
-- `anchor_grading_comparison.png` and `.svg`: mesh-line movement, cell widths,
-  and adjacent ratios for uniform and adaptive densities.
-- `anchor_allocation_limit.png` and `.svg`: the failed fixed allocation and an
-  independent feasible alternative satisfying the same hard constraints.
-- `measurements.json`: exact coordinates, measured ratios, displacements, and
-  the expected allocation error.
-
-The generated artifacts are ignored by Git; the script and dependency lockfile
-are tracked so the figures can be reproduced.
+Outputs PNG/SVG figures and exact coordinates/metrics in
+`artifacts/anchor_grading/`. Blue shows unconstrained density quantiles and may
+miss anchors; orange is the legal optimum. Purple lines are exact anchors.
+Generated artifacts are ignored by Git; scripts are tracked.

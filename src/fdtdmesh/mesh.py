@@ -1,17 +1,33 @@
 """Exact-budget tensor-product grids; densities are constant within raster bins."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import numpy as np
-from scipy.optimize import Bounds, LinearConstraint, linprog, minimize
+
+DEFAULT_MAX_RATIO = 1.4
+MESH_POLICY = {
+    "version": 2,
+    "max_ratio": DEFAULT_MAX_RATIO,
+    "objective": "normalized_line_L1",
+    "allocation": "joint_anchor_MILP",
+}
 
 
 class MeshInfeasibleError(ValueError):
     """The requested budget, anchors, or spacing constraints cannot be satisfied."""
 
 
+class MeshOptimizationError(RuntimeError):
+    """Optimization did not finish; distinct from proven mesh infeasibility."""
+
+
 def cell_count(value):
-    if isinstance(value, (bool, np.bool_)) or int(value) != value or value < 1:
+    if (
+        isinstance(value, (bool, np.bool_))
+        or not np.isfinite(value)
+        or int(value) != value
+        or value < 1
+    ):
         raise ValueError("Cell counts must be positive integers")
     return int(value)
 
@@ -20,6 +36,7 @@ def cell_count(value):
 class Mesh:
     x: np.ndarray
     y: np.ndarray
+    metadata: dict = field(default_factory=dict, compare=False)
 
     def __post_init__(self):
         for name in ("x", "y"):
@@ -28,6 +45,7 @@ class Mesh:
                 raise ValueError("Mesh axes must be finite, strictly increasing 1-D coordinates")
             if a[0] != 0:
                 raise ValueError("Mesh axes must begin at zero")
+            validate_spacing(a, AxisConstraints())
             a.flags.writeable = False
             object.__setattr__(self, name, a)
 
@@ -40,7 +58,7 @@ class Mesh:
         return len(self.y) - 1
 
     def diagnostics(self):
-        result = {"Nx": self.Nx, "Ny": self.Ny}
+        result = {"Nx": self.Nx, "Ny": self.Ny, **self.metadata}
         for name in ("x", "y"):
             h = np.diff(getattr(self, name))
             ratios = h[1:] / h[:-1]
@@ -56,7 +74,7 @@ class Mesh:
 class AxisConstraints:
     min_spacing: float = 0.0
     max_spacing: float | None = None
-    max_ratio: float | None = None
+    max_ratio: float = DEFAULT_MAX_RATIO
 
     def __post_init__(self):
         if not np.isfinite(self.min_spacing) or self.min_spacing < 0:
@@ -67,141 +85,78 @@ class AxisConstraints:
             or self.max_spacing < self.min_spacing
         ):
             raise ValueError("max_spacing must be positive and >= min_spacing")
-        if self.max_ratio is not None and (not np.isfinite(self.max_ratio) or self.max_ratio < 1):
-            raise ValueError("max_ratio must be finite and >= 1")
+        if (
+            self.max_ratio is None
+            or not np.isfinite(self.max_ratio)
+            or not 1 <= self.max_ratio <= DEFAULT_MAX_RATIO
+        ):
+            raise ValueError("Grading is mandatory: max_ratio must lie in [1, 1.4]")
 
 
-def _allocate(masses, total, lower, upper):
-    """Capped largest-remainder allocation, stable ties in coordinate order."""
-    counts = lower.copy()
-    if counts.sum() > total or upper.sum() < total:
-        raise MeshInfeasibleError("Budget conflicts with anchor intervals and spacing bounds")
-    while counts.sum() < total:
-        active = np.flatnonzero(counts < upper)
-        left = total - counts.sum()
-        quotas = left * masses[active] / masses[active].sum()
-        whole = np.minimum(np.floor(quotas).astype(int), upper[active] - counts[active])
-        counts[active] += whole
-        left = total - counts.sum()
-        if left:
-            order = active[np.argsort(-(quotas - np.floor(quotas)), kind="stable")]
-            for i in order:
-                if counts[i] < upper[i] and left:
-                    counts[i] += 1
-                    left -= 1
-    return counts
+@dataclass(frozen=True)
+class AxisCollar:
+    """Symmetric fixed PML collars counted inside the total cell budget."""
+
+    cells: int = 0
+    thickness: float = 0.0
+
+    def __post_init__(self):
+        if self.cells == 0 and self.thickness == 0:
+            return
+        object.__setattr__(self, "cells", cell_count(self.cells))
+        if not np.isfinite(self.thickness) or self.thickness <= 0:
+            raise ValueError("PML collar thickness must be finite and positive")
+
+    def fixed_lines(self, length, count):
+        if 2 * self.cells >= count or 2 * self.thickness >= length:
+            raise MeshInfeasibleError("PML collars leave no interior cells or physical width")
+        if not self.cells:
+            return {0: 0.0, count: length}
+        left = np.linspace(0, self.thickness, self.cells + 1)
+        right = np.linspace(length - self.thickness, length, self.cells + 1)
+        return {**dict(enumerate(left)), **{count - self.cells + i: x for i, x in enumerate(right)}}
 
 
-def _project(lines, anchor_indices, anchors, constraints, length):
-    n = len(lines) - 1
-    lo = max(constraints.min_spacing / length, 1e-14)
-    hi = constraints.max_spacing / length if constraints.max_spacing else 1.0
-    target = np.diff(lines) / length
-    eq = np.zeros((len(anchors) - 1, n))
-    for row, (i, j) in enumerate(zip(anchor_indices[:-1], anchor_indices[1:])):
-        eq[row, i:j] = 1
-    rhs = np.diff(anchors) / length
-    grading = np.zeros((2 * (n - 1), n))
-    if constraints.max_ratio is not None:
-        for i in range(n - 1):
-            grading[2 * i, i : i + 2] = [-constraints.max_ratio, 1]
-            grading[2 * i + 1, i : i + 2] = [1, -constraints.max_ratio]
-    feasible = linprog(
-        np.zeros(n),
-        A_ub=grading,
-        b_ub=np.zeros(len(grading)),
-        A_eq=eq,
-        b_eq=rhs,
-        bounds=[(lo, hi)] * n,
-        method="highs",
-    )
-    if not feasible.success:
+def adjacent_ratio(h):
+    return max(1.0, np.max(h[1:] / h[:-1], initial=1), np.max(h[:-1] / h[1:], initial=1))
+
+
+def validate_spacing(lines, constraints):
+    h = np.diff(lines)
+    tol = 1e-8
+    if np.any(h <= 0) or adjacent_ratio(h) > constraints.max_ratio * (1 + tol):
         raise MeshInfeasibleError(
-            "Spacing/grading infeasible for the allocated anchor intervals; "
-            "relax constraints or change the budget/density"
+            f"Mesh violates maximum adjacent spacing ratio {constraints.max_ratio}"
         )
-    cumulative = np.tril(np.ones((n, n)))
+    if h.min() < constraints.min_spacing * (1 - tol):
+        raise MeshInfeasibleError("Mesh violates minimum spacing")
+    if constraints.max_spacing is not None and h.max() > constraints.max_spacing * (1 + tol):
+        raise MeshInfeasibleError("Mesh violates maximum spacing")
 
-    def objective(h):
-        delta = cumulative @ (h - target)
-        return 0.5 * delta @ delta, cumulative.T @ delta
 
-    result = minimize(
-        objective,
-        feasible.x,
-        jac=True,
-        method="SLSQP",
-        bounds=Bounds(lo, hi),
-        constraints=[LinearConstraint(eq, rhs, rhs), LinearConstraint(grading, -np.inf, 0)],
-        options={"ftol": 1e-13, "maxiter": 1000},
+def axis_mesh(
+    length,
+    count,
+    density,
+    anchors=(),
+    constraints=None,
+    *,
+    collar=None,
+    return_diagnostics=False,
+    time_limit=30.0,
+):
+    from .mesh_projection import project_axis
+
+    return project_axis(
+        length,
+        count,
+        density,
+        anchors,
+        constraints,
+        collar=collar,
+        return_diagnostics=return_diagnostics,
+        time_limit=time_limit,
     )
-    if not result.success:
-        raise MeshInfeasibleError(f"Mesh constraint projection failed: {result.message}")
-    out = np.r_[0, np.cumsum(result.x)] * length
-    out[anchor_indices] = anchors
-    h = np.diff(out) / length
-    tol = 1e-9
-    if (
-        np.any(h <= 0)
-        or h.min() < lo - tol
-        or h.max() > hi + tol
-        or np.max(grading @ h, initial=0) > tol
-        or (
-            constraints.max_ratio is not None
-            and n > 1
-            and max(np.max(h[1:] / h[:-1]), np.max(h[:-1] / h[1:]))
-            > constraints.max_ratio * (1 + 1e-8)
-        )
-    ):
-        raise MeshInfeasibleError("Projected mesh failed final constraint verification")
-    return out
-
-
-def axis_mesh(length, count, density, anchors=(), constraints=None):
-    count = cell_count(count)
-    if not np.isfinite(length) or length <= 0:
-        raise ValueError("Axis length must be finite and positive")
-    rho = np.asarray(density, dtype=float)
-    if rho.ndim != 1 or not rho.size or not np.isfinite(rho).all() or np.any(rho <= 0):
-        raise ValueError("Density must be a finite, positive 1-D array")
-    rho = rho / rho.max()  # Avoid overflow; scale has no effect on quantiles.
-    if np.any(rho == 0):
-        raise ValueError("Density dynamic range exceeds floating-point precision")
-    a = np.unique(np.r_[0.0, anchors, length])
-    if not np.isfinite(a).all() or a[0] < 0 or a[-1] > length:
-        raise ValueError("Anchors must be finite and inside the domain")
-    if len(a) - 1 > count:
-        raise MeshInfeasibleError("There must be at least one cell between each pair of anchors")
-    c = constraints or AxisConstraints()
-    edges = np.unique(np.r_[np.linspace(0, length, len(rho) + 1), a])
-    mid = (edges[:-1] + edges[1:]) / 2
-    values = rho[np.minimum((mid / length * len(rho)).astype(int), len(rho) - 1)]
-    cdf = np.r_[0, np.cumsum(np.diff(edges) * values)]
-    if np.any(np.diff(cdf) <= 0):
-        raise MeshInfeasibleError("Density/anchor dynamic range cannot be resolved in float64")
-    am = np.interp(a, edges, cdf)
-    spans = np.diff(a)
-    lower = np.ones(len(spans), dtype=int)
-    upper = np.full(len(spans), count, dtype=int)
-    if c.max_spacing:
-        lower = np.maximum(lower, np.ceil(spans / c.max_spacing - 1e-12).astype(int))
-    if c.min_spacing:
-        upper = np.minimum(upper, np.floor(spans / c.min_spacing + 1e-12).astype(int))
-    if np.any(upper < lower):
-        raise MeshInfeasibleError("Anchor separation violates spacing bounds")
-    counts = _allocate(np.diff(am), count, lower, upper)
-    chunks = [
-        np.interp(np.linspace(am[i], am[i + 1], k + 1)[:-1], cdf, edges)
-        for i, k in enumerate(counts)
-    ]
-    lines = np.r_[np.concatenate(chunks), length]
-    indices = np.r_[0, np.cumsum(counts)]
-    lines[indices] = a
-    if c.min_spacing or c.max_spacing or c.max_ratio:
-        lines = _project(lines, indices, a, c, length)
-    if len(lines) != count + 1 or np.any(np.diff(lines) <= 0):
-        raise MeshInfeasibleError("Mesh has unresolvable or duplicate lines")
-    return lines
 
 
 def density_mesh(
@@ -216,8 +171,43 @@ def density_mesh(
     y_anchors=(),
     x_constraints=None,
     y_constraints=None,
+    x_collar=None,
+    y_collar=None,
+    time_limit=30.0,
 ):
-    return Mesh(
-        axis_mesh(Lx, Nx, rho_x, x_anchors, x_constraints),
-        axis_mesh(Ly, Ny, rho_y, y_anchors, y_constraints),
+    x, xd = axis_mesh(
+        Lx,
+        Nx,
+        rho_x,
+        x_anchors,
+        x_constraints,
+        collar=x_collar,
+        return_diagnostics=True,
+        time_limit=time_limit,
     )
+    y, yd = axis_mesh(
+        Ly,
+        Ny,
+        rho_y,
+        y_anchors,
+        y_constraints,
+        collar=y_collar,
+        return_diagnostics=True,
+        time_limit=time_limit,
+    )
+    return Mesh(
+        x, y, {**{f"x_{k}": v for k, v in xd.items()}, **{f"y_{k}": v for k, v in yd.items()}}
+    )
+
+
+def projected_density(lines, bins, *, collar=None):
+    """Equal mass per learned cell integrated into CNN bins; detached teacher target."""
+    bins = cell_count(bins)
+    collar = collar or AxisCollar()
+    length = lines[-1]
+    interior = np.asarray(lines)[collar.cells : len(lines) - collar.cells]
+    if len(interior) < 2:
+        raise ValueError("No learned cells")
+    edges = np.linspace(0, length, bins + 1)
+    cdf = np.interp(edges, interior, np.linspace(0, 1, len(interior)), left=0, right=1)
+    return np.diff(cdf)

@@ -1,3 +1,6 @@
+> Historical stage-one validation. Current grading, CPML, source, and receiver
+> contracts and fresh results are in [stage 2 validation](stage2_validation.md).
+
 # Stage-one validation
 
 Validated on 2026-09-18 on Windows with an NVIDIA GeForce RTX 4070 Laptop GPU

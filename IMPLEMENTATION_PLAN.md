@@ -64,6 +64,9 @@ src/fdtdmesh/
     scene.py                  Continuous materials, geometry, anchors, probes
     sources.py                Vectorized source waveform preparation
     mesh.py                   Exact-budget density meshing and constraints
+    mesh_projection.py        Joint integer anchor assignment and L1 projection
+    pml.py                    Fixed collars and staggered CFS-CPML profiles
+    sampling.py               Physical probe interpolation and dual-cell areas
     ml.py                     Rasterization, ResU-Net, conditioning, model I/O
     solver/
         coefficients.py       Staggered material coefficients and CFL limit
@@ -130,12 +133,12 @@ Acceptance criteria:
    Predict two logits fields, pool over orthogonal axes, then apply softplus plus
    a positive floor. Use normalized log-sum-exp (log-mean-exp) to avoid an artificial
    dependence on raster size for constant predictions.
-4. Treat axis densities as piecewise constant over raster bins. Integrate their
-   mass between sorted mandatory anchors. Reserve at least one cell per interval,
-   then allocate the remainder deterministically by importance mass.
-5. Place lines at equal-density quantiles within each interval. Optionally project
-   line positions onto minimum/maximum spacing and adjacent-cell grading constraints,
-   preserving the interval cell counts and anchor coordinates.
+4. Treat densities as piecewise constant in raster bins and integrate quantiles
+   over the learned interior; fixed collars ignore CNN density.
+5. Jointly optimize integer anchor assignments and line positions to minimize
+   normalized mean absolute quantile-line displacement. Enforce mandatory adjacent
+   ratio <= 1.4, optional stricter ratio and min/max widths, exact anchors, counts,
+   and collar lines. Distinguish solver timeout from proven infeasibility.
 6. Verify exact counts, exact boundaries and anchors, strict monotonicity, finite
    coordinates, and deterministic output. Reject infeasible requests explicitly.
 7. Save self-describing checkpoints: format version, architecture, weights, ordered
@@ -155,13 +158,13 @@ Acceptance criteria:
 - Checkpoint round-trip preserves predictions; incompatible metadata is rejected.
 - A loaded CNN checkpoint produces a legal mesh that runs on the CUDA solver.
 
-Stage-one exclusions: CPML, TEz, dispersion, anisotropy, PMC, periodic boundaries,
+Historical stage-one exclusions (CPML is now added in stage 2): CPML, TEz, dispersion, anisotropy, PMC, periodic boundaries,
 TF/SF, waveguide eigensolvers, NF2FF, 3D, plotting inside the solver, trained model
 quality claims, and a CPU production backend. Training is a later stage.
 
 ## 5. Stage 2 — open boundaries and solver readiness for datasets
 
-Add CFS-CPML after the PEC/nonuniform solver is validated.
+Implemented after PEC/nonuniform validation. See [stage 2 evidence](docs/stage2_validation.md).
 
 1. Reserve a fixed number of PML cells per side **inside the total Nx/Ny budget**.
    Define physical collar thickness and reject budgets with no feasible interior.
@@ -176,12 +179,24 @@ Add CFS-CPML after the PEC/nonuniform solver is validated.
    oblique propagation, corners, uniform/nonuniform interiors, and long-run stability.
    Establish quantitative tolerances before accepting this stage.
 
-Before large datasets, also define source normalization across different dt,
-physical receiver alignment/interpolation, and spectral sampling conventions.
-The present soft source adds Ez per step, and point receivers snap to nodes;
-those effects must not be mistaken for mesh discretization error in comparisons.
-Consider device-side DFT, energy diagnostics, bounded recording, graph replay,
-and batching based on profiling and dataset requirements.
+6. Use physical point current deposition normalized by dual-cell area and dt;
+   retain explicit legacy field-increment and per-node current-density modes.
+7. Interpolate receivers at fixed physical coordinates; provide fixed sample counts
+   for lines and common-time resampling without extrapolation. Define DFT/window
+   conventions for fair comparisons.
+8. Add the raw PML channel and version-2 checkpoint meshing policy. Record projection
+   correction metrics and provide a detached repaired-CDF auxiliary training loss.
+
+Acceptance: <1% normalized waveform peak/L2 and final interior error against the
+same mesh extended outward, for 0/30/45/90-degree vacuum packets on uniform and
+nonuniform grids; finite late fields with <1% initial norm after 1.5 ns at 45 degrees.
+PEC controls must produce >10% peak error, confirming sensitivity to reflection.
+Also require CUDA/NumPy CPML agreement in both precisions, zero stepping transfers,
+exact fixed collars, current conservation, and physical probe interpolation tests.
+These tests qualify the implemented cases, not arbitrary broadband grazing incidence.
+
+Device-side DFT, energy diagnostics, bounded recording, graph replay, and batching
+remain optional later work driven by profiling and dataset requirements.
 
 ## 6. Stage 3 — procedural scenes, trusted references, and evaluation
 
@@ -215,7 +230,8 @@ split integrity checks, and an accuracy-versus-work/runtime report for the basel
 2. Train the conditioned ResU-Net over multiple scenes, electrical sizes, and budgets.
    Normalize density targets consistently because a global density scale does not
    change the unconstrained quantile mesh.
-3. Add reproducible training/resume commands, validation, seed/config logging, and
+3. Add the detached repair loss with a modest weight and monitor projection
+   correction metrics alongside physical quality. Add reproducible training/resume commands, validation, seed/config logging, and
    checkpoints with actual dataset and Git provenance.
 4. Evaluate generated meshes through the deterministic mesher and real CUDA solver,
    rather than relying only on a density imitation loss.

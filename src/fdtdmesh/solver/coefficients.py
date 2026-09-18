@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from ..constants import C0, EPS0, MU0
+from ..pml import build_cpml
 
 
 @dataclass
@@ -15,6 +16,8 @@ class Coefficients:
     pec: np.ndarray
     dt: float
     dt_cfl: float
+    cpml: np.ndarray
+    current_scale: np.ndarray
 
 
 def build_coefficients(scene, mesh, *, dt=None, safety=0.95, dtype="float32"):
@@ -49,4 +52,11 @@ def build_coefficients(scene, mesh, *, dt=None, safety=0.95, dtype="float32"):
     arrays = [np.ascontiguousarray(a, dtype=dtype) for a in arrays]
     if not all(np.isfinite(a).all() for a in arrays):
         raise ValueError("Coefficients overflow the requested field precision")
-    return Coefficients(*arrays, np.ascontiguousarray(pec, dtype=np.uint8), timestep, cfl)
+    return Coefficients(
+        *arrays,
+        np.ascontiguousarray(pec, dtype=np.uint8),
+        timestep,
+        cfl,
+        build_cpml(scene, mesh, timestep, dtype),
+        np.ascontiguousarray(cb, dtype=dtype),
+    )

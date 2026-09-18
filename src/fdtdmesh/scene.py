@@ -35,6 +35,7 @@ class Probe:
     kind: str
     x: float | tuple
     y: float | tuple
+    samples: int | None = None
 
 
 class Scene2D:
@@ -46,6 +47,7 @@ class Scene2D:
         self.primitives = []
         self.x_anchors, self.y_anchors = {0.0, self.Lx}, {0.0, self.Ly}
         self.sources, self.receivers = [], []
+        self.pml = None
 
     def add_material(self, name, **kwargs):
         if name in self.materials:

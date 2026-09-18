@@ -13,8 +13,11 @@ class Waveform:
     delay: float | None = None
     width: float | None = None
     phase: float = 0.0
+    normalization: str = "field_increment"
 
     def sample(self, times, f_max):
+        if self.normalization not in ("field_increment", "current", "current_density"):
+            raise ValueError("normalization must be field_increment, current, or current_density")
         f = f_max / 2 if self.frequency is None else self.frequency
         width = 1 / f_max if self.width is None else self.width
         delay = 4 * width if self.delay is None else self.delay

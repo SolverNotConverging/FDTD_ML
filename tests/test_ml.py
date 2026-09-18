@@ -3,13 +3,22 @@ import pytest
 import torch
 
 from fdtdmesh import FDTD_2D_Ez
-from fdtdmesh.ml import ResUNet, conditioning, load_model, pool_axes, rasterize, save_model
+from fdtdmesh.ml import (
+    CHANNELS,
+    ResUNet,
+    conditioning,
+    load_model,
+    pool_axes,
+    rasterize,
+    repair_loss,
+    save_model,
+)
 
 
 def test_network_shape_positivity_and_gradients():
     torch.manual_seed(2)
     model = ResUNet(width=4)
-    logits = model(torch.randn(2, 8, 17, 23), torch.randn(2, 5))
+    logits = model(torch.randn(2, len(CHANNELS), 17, 23), torch.randn(2, 5))
     x, y = pool_axes(logits)
     assert x.shape == (2, 23) and y.shape == (2, 17) and (x > 0).all() and (y > 0).all()
     (x.square().mean() + y.square().mean()).backward()
@@ -34,7 +43,7 @@ def test_checkpoint_roundtrip_and_mesh(tmp_path):
     path = tmp_path / "mesher.pt"
     save_model(path, model, raster_shape=(17, 23))
     loaded, metadata = load_model(path)
-    inputs, cond = torch.randn(1, 8, 17, 23), torch.randn(1, 5)
+    inputs, cond = torch.randn(1, len(CHANNELS), 17, 23), torch.randn(1, 5)
     torch.testing.assert_close(model(inputs, cond), loaded(inputs, cond))
     sim = FDTD_2D_Ez(0.02, 0.015, 30, 20, 20e9, Nt=5)
     sim.add_pec_line(x=0.011, y=(0.004, 0.009))
@@ -60,3 +69,32 @@ def test_scaling_and_raw_raster():
     ra, rb = rasterize(a, (20, 30), a.f_max), rasterize(b, (20, 30), b.f_max)
     np.testing.assert_array_equal(ra, rb)
     assert ra[2].sum() > 0 and ra[5].sum() > 0
+
+
+def test_checkpoint_records_grading_and_pml_mask(tmp_path):
+    path = tmp_path / "stage2.pt"
+    save_model(path, ResUNet(4), raster_shape=(24, 32))
+    _, metadata = load_model(path)
+    assert metadata["format_version"] == 2 and metadata["mesh_policy"]["max_ratio"] == 1.4
+    s = FDTD_2D_Ez(0.02, 0.015, 40, 32, 20e9, Nt=2)
+    s.add_PML(4, thickness=0.002)
+    assert rasterize(s, (24, 32), s.f_max)[8].sum() > 0
+    mesh = s.mesh_with_model(path)
+    s.pml.validate_mesh(mesh)
+    data = torch.load(path, weights_only=True)
+    data["mesh_policy"]["max_ratio"] = 1.5
+    torch.save(data, path)
+    with pytest.raises(ValueError, match="mesh_policy"):
+        load_model(path)
+
+
+def test_repair_loss_is_scale_invariant_and_has_gradients():
+    s = FDTD_2D_Ez(1, 1, 10, 10, 1e9, Nt=2)
+    s.add_anchor("x", 0.5)
+    mesh = s.mesh_from_density([1, 100], [1, 3])
+    x = torch.tensor([[1.0, 100.0]], requires_grad=True)
+    y = torch.tensor([[1.0, 3.0]], requires_grad=True)
+    loss = repair_loss(x, y, [mesh])
+    torch.testing.assert_close(loss, repair_loss(7 * x, 2 * y, [mesh]))
+    loss.backward()
+    assert loss > 0 and torch.isfinite(x.grad).all() and x.grad.abs().sum() > 0

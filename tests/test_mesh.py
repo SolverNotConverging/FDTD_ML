@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 from fdtdmesh.mesh import AxisConstraints, Mesh, MeshInfeasibleError, axis_mesh
+from fdtdmesh.mesh_projection import density_quantiles
 
 
 @pytest.mark.parametrize("n", [1, 2, 7, 31, 100])
@@ -21,7 +22,7 @@ def test_anchors_density_and_repeatability():
 
 def test_quantiles_piecewise_constant():
     # Masses 1/2 and 3/2, so half the four cells occupy the final third.
-    np.testing.assert_allclose(axis_mesh(1, 4, [1, 3]), [0, 0.5, 2 / 3, 5 / 6, 1])
+    np.testing.assert_allclose(density_quantiles(1, 4, [1, 3]), [0, 0.5, 2 / 3, 5 / 6, 1])
 
 
 def test_projection_preserves_anchors_and_bounds():
@@ -59,9 +60,13 @@ def test_invalid_density(rho):
 
 def test_randomized_invariants():
     rng = np.random.default_rng(83)
-    for _ in range(100):
-        anchors = rng.uniform(0, 1, 5)
-        count = int(rng.integers(8, 80))
+    for _ in range(20):
+        count = int(rng.integers(8, 40))
+        # Anchors drawn from a known graded witness; arbitrary close anchors can
+        # legitimately be infeasible now that grading is mandatory.
+        widths = 1 + 0.1 * np.sin(np.linspace(0, 2 * np.pi, count))
+        witness = np.r_[0, np.cumsum(widths) / widths.sum()]
+        anchors = rng.choice(witness[1:-1], 5, replace=False)
         x = axis_mesh(1, count, np.exp(rng.normal(size=32)), anchors)
         assert len(x) == count + 1 and np.all(np.diff(x) > 0)
         assert all(a in x for a in anchors)

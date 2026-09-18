@@ -11,6 +11,7 @@ int fdtd_device_count();
 int fdtd_run(int precision, int nx, int ny, int nt, int ns, int nr,
     const void* ca, const void* cbx, const void* cby,
     const void* chx, const void* chy, const unsigned char* pec,
+    const void* profiles, int has_pml,
     const int* sources, const void* waveforms, const int* receivers,
     void* ez, void* hx, void* hy, void* history,
     RunStats* stats, char* error, int error_size);

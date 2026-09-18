@@ -9,7 +9,7 @@ from torch import nn
 from torch.nn import functional as F
 
 from .constants import C0, EPS0
-from .mesh import cell_count, density_mesh
+from .mesh import MESH_POLICY, AxisCollar, cell_count, density_mesh, projected_density
 from .scene import raster_index
 
 CHANNELS = [
@@ -21,6 +21,7 @@ CHANNELS = [
     "x_anchor",
     "y_anchor",
     "mu_r",
+    "PML",
 ]
 CONDITIONING = [
     "log_Lx_over_lambda0",
@@ -38,6 +39,7 @@ NORMALIZATION = {
     "x_anchor": "binary",
     "y_anchor": "binary",
     "mu_r": "identity",
+    "PML": "binary",
 }
 
 
@@ -80,7 +82,7 @@ class ResUNet(nn.Module):
             or min(raster.shape[2:]) < 4
             or condition.shape != (raster.shape[0], 5)
         ):
-            raise ValueError("Expected raster (B,8,H,W), H/W>=4, and conditioning (B,5)")
+            raise ValueError("Expected raster (B,9,H,W), H/W>=4, and conditioning (B,5)")
         a = self.enc1(raster, condition)
         b = self.enc2(F.avg_pool2d(a, 2), condition)
         h = self.bottom(F.avg_pool2d(b, 2), condition)
@@ -127,6 +129,9 @@ def rasterize(scene, shape, f_max):
         pec.T,
         mu.T,
     )
+    if scene.pml is not None:
+        x0, x1, y0, y1 = scene.pml.interfaces(scene)
+        raster[8] = (x[None, :] < x0) | (x[None, :] > x1) | (y[:, None] < y0) | (y[:, None] > y1)
     for channel, probes in ((3, [s[0] for s in scene.sources]), (4, scene.receivers)):
         for p in probes:
             if p.kind == "point":
@@ -172,7 +177,8 @@ def save_model(
     dataset_version="untrained",
 ):
     metadata = dict(
-        format_version=1,
+        format_version=2,
+        mesh_policy=MESH_POLICY,
         architecture={"name": "ResUNet", "width": model.width},
         input_channels=CHANNELS,
         normalization=NORMALIZATION,
@@ -191,7 +197,8 @@ def _validate_metadata(data):
     if not isinstance(data, dict):
         raise ValueError("Mesh checkpoint must contain a metadata dictionary")
     expected = {
-        "format_version": 1,
+        "format_version": 2,
+        "mesh_policy": MESH_POLICY,
         "input_channels": CHANNELS,
         "normalization": NORMALIZATION,
         "conditioning": CONDITIONING,
@@ -233,6 +240,11 @@ def infer_mesh(scene, model, metadata, Nx, Ny, f_max, f_min=0, **constraints):
     _validate_metadata(metadata)
     device = next(model.parameters()).device
     condition = conditioning(scene, Nx, Ny, f_max, f_min)
+    if scene.pml is not None:
+        scene.pml.validate_scene(scene)
+        if "x_collar" in constraints or "y_collar" in constraints:
+            raise ValueError("PML collars are controlled by the scene")
+        constraints.update(x_collar=scene.pml.x, y_collar=scene.pml.y)
     inputs = rasterize(scene, metadata["raster_shape"], f_max)
     with torch.inference_mode():
         logits = model(
@@ -250,3 +262,38 @@ def infer_mesh(scene, model, metadata, Nx, Ny, f_max, f_min=0, **constraints):
         y_anchors=sorted(scene.y_anchors),
         **constraints,
     )
+
+
+def repair_loss(rho_x, rho_y, meshes, *, x_collars=None, y_collars=None):
+    """Detached repaired-density CDF targets; an auxiliary loss, not FDTD backprop.
+
+    Ignore fixed collar pixels by normalizing predicted mass over the learned
+    physical interval. Multiplying a predicted density by a constant changes no loss.
+    """
+    if rho_x.ndim != 2 or rho_y.ndim != 2 or len(meshes) != len(rho_x) or len(meshes) != len(rho_y):
+        raise ValueError("Expected batched axis densities and one repaired mesh per sample")
+    losses = []
+    for rho, axis, collars in ((rho_x, "x", x_collars), (rho_y, "y", y_collars)):
+        collars = [AxisCollar()] * len(meshes) if collars is None else collars
+        if len(collars) != len(meshes):
+            raise ValueError("One collar definition is required per sample")
+        if not torch.isfinite(rho).all() or not (rho > 0).all():
+            raise ValueError("Predicted densities must be positive and finite")
+        targets, masks = [], []
+        for mesh, collar in zip(meshes, collars):
+            lines = getattr(mesh, axis)
+            targets.append(projected_density(lines, rho.shape[1], collar=collar))
+            edges = np.linspace(0, lines[-1], rho.shape[1] + 1)
+            masks.append(
+                np.maximum(
+                    0,
+                    np.minimum(edges[1:], lines[-1] - collar.thickness)
+                    - np.maximum(edges[:-1], collar.thickness),
+                )
+            )
+        target = torch.as_tensor(np.array(targets), device=rho.device, dtype=rho.dtype).detach()
+        mask = torch.as_tensor(np.array(masks), device=rho.device, dtype=rho.dtype)
+        probability = rho * mask
+        probability = probability / probability.sum(dim=1, keepdim=True)
+        losses.append((probability.cumsum(1) - target.cumsum(1)).square().mean())
+    return sum(losses) / 2

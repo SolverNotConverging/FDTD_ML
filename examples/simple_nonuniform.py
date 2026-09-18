@@ -10,6 +10,6 @@ u = (np.arange(128) + 0.5) / 128
 sim.mesh_from_density(
     1 + 4 * np.exp(-(((u - 0.55) / 0.12) ** 2)),
     np.ones(128),
-    x_constraints=AxisConstraints(min_spacing=5e-5, max_ratio=1.5),
+    x_constraints=AxisConstraints(min_spacing=5e-5),
 )
 print(sim.run().diagnostics)
