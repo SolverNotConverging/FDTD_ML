@@ -71,6 +71,68 @@ ratio of 1.122. Against the heuristic it has lower error in 17/32 and lower work
 sensitive to outliers; the Stage 5 mean is slightly worse than Stage 4 even though
 its median improves.
 
+## Available-data continuation
+
+The larger local reference run was stopped for migration to external servers after
+172/704 training-scene decisions. It retained 79 converged references and 93
+nonconverged scenes with no runtime failures. Before that run, five promising
+single-pass cases were refined through 2048 and all five achieved the required
+second consecutive pass. Four resource-limited cases were retried with a
+256-billion-update cap: one converged at 1024 and three completed as explicit
+nonconverged rejects. The acceptance criteria were unchanged.
+
+Training and validation continued locally on the complete pilot corpus. A second
+candidate search used the current Stage 5 checkpoint, the Stage 4 checkpoint,
+uniform and heuristic baselines, three mixtures, and two seeded perturbations. It
+again produced 72 targets (60 train and 12 validation). Winner counts were:
+
+| Candidate | Targets |
+|---|---:|
+| uniform | 20 |
+| uniform + Stage 5 CNN | 16 |
+| uniform + heuristic | 11 |
+| Stage 5 CNN | 8 |
+| Stage 4 CNN | 4 |
+| heuristic | 4 |
+| Stage 5 perturbation 0 | 3 |
+| Stage 5 perturbation 1 | 3 |
+| heuristic + Stage 5 CNN | 3 |
+
+Two continuations started from the first Stage 5 checkpoint. The 50% physics blend
+selected epoch 11 and stopped at epoch 21; its best validation CDF loss was
+5.711e-5. The stronger 80% blend selected epoch 7 and stopped at epoch 17; its best
+CDF loss was worse at 6.512e-5. Both used a 60-epoch cap and ten-epoch patience.
+
+Checkpoint selection used actual validation FDTD measurements rather than CDF
+loss. Across 12 validation scene-budget pairs, the 80% model reduced median maximum
+EM error from 5.880% to 4.934% and median cell updates from 33,211,392 to 30,456,320
+relative to the 50% model. Its error-plus-cost objective was 0.07164 versus 0.08179,
+so the 80% checkpoint was selected.
+
+The selected checkpoint completed all 32 untouched IID scene-budget evaluations:
+
+| Strategy | Successful | Median max EM error | Mean max EM error | Median cell updates |
+|---|---:|---:|---:|---:|
+| uniform | 32 | 4.680% | 5.502% | 24,367,104 |
+| heuristic | 32 | 4.223% | 4.801% | 30,864,384 |
+| prior Stage 5 | 32 | 4.328% | 5.173% | 27,440,640 |
+| selected 80% model | 32 | **4.068%** | 4.902% | 26,686,976 |
+
+The selected model has lower error than uniform in 20/32 pairs and than the
+heuristic in 17/32. It uses less work than the heuristic in 29/32 pairs. Against
+the prior Stage 5 model, aggregate median and mean errors and median work all
+improve, although paired error is lower in 15/32; the median paired error ratio is
+1.002 because the aggregate median and paired-ratio statistics summarize different
+distributions. The summary figure is
+`artifacts/stage5_available/stage5_available_summary.png`.
+
+Continuation SHA-256 values:
+
+- 50% physics targets: `88f2ae4cf834880a508d6a5ef432057477beece775b45ca9a5ab70fa0c93962c`
+- 80% physics targets: `d35707547051586e3d5149190a14a5813ef7cbfad3970073e747a6e0d25432e3`
+- 50% checkpoint: `111b566c9f22e1f565bf0433aec8d7bc63ed6137dde52a2331b4698840fbcc03`
+- selected 80% checkpoint: `b91bd56e06162dc61c1350bc67c9c823c7515cc1948476004fb23685c0209f0c`
+
 ## Reproduction
 
 ```powershell

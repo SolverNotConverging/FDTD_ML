@@ -7,6 +7,8 @@ the broad scene generator, with verified randomized source/receiver coverage.
 The evaluator supports longer resonance windows and now has a reference-only,
 restart-safe 64/16/32 train/validation/IID workflow. Stage 4 supplies projected
 teacher targets, reproducible/resumable training, and held-out CUDA evaluation.
+Stage 5 now includes a second candidate search, two early-stopped continuation
+branches, measured validation selection, and a selected 80%-physics checkpoint.
 This record accompanies the version-0.5.0 imitation-training update. Earlier commits:
 `99374e7` (stage one), `2437779` (plan/progress), `085cd1b` (historical grading audit),
 `e35a079` (stage two), `079b62c` (initial stage three), `00db055` (generator v2),
@@ -25,7 +27,7 @@ See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.
 | 2: CPML and simulation conventions | Complete for vacuum collars | CUDA CPML; reflection controls; current normalization; physical receivers |
 | 3: procedural datasets and converged references | Implemented; partial reference coverage | Versioned scenes, split validation, reference gates, three baselines, measured reports |
 | 4: teacher imitation | Complete | Projected targets; resumable GPU training; trained checkpoint; IID/CUDA evidence |
-| 5: physics targets and distillation | First substantial cycle complete | 52 references; 72 physics targets; trained checkpoint; 32-pair untouched IID evaluation |
+| 5: physics targets and distillation | Available-data continuation complete | Second search; 50%/80% early-stopped branches; FDTD-selected checkpoint; 32-pair IID evaluation |
 | 6: generalization / optional surrogate | Not started | OOD studies, ablations and any surrogate validation |
 
 ## Previous update: Stage-4 teacher imitation
@@ -101,6 +103,29 @@ under ignored `artifacts/reference_pilot/` and `artifacts/stage5/`.
 Validation: **131 tests passed, no skips**, including CUDA (16.80 seconds). Ruff
 lint/format, locked offline uv synchronization, checkpoint/target hashes, and the
 rendered Stage-5 summary figure were verified.
+
+## Current update: Stage-5 available-data continuation
+
+- Stopped the expanded local reference run after 172/704 train decisions so the
+  expensive corpus can move to servers. It preserves 79 converged and 93 rejected
+  scenes, with no failures. Five promising rejects were separately recovered at
+  2048; one of four former resource failures converged at 1024, while the other
+  three completed as retained nonconverged cases under the larger limit.
+- Repeated candidate search on all 36 converged pilot train/validation references.
+  The 72 selected targets include current Stage 5, Stage 4, uniform, heuristic,
+  mixtures, and perturbations. All rejected reference scenes remain reported.
+- Continued from the Stage-5 checkpoint with 50% and 80% physics weights and a
+  60-epoch cap. Early stopping selected epoch 11/21 for 50% and epoch 7/17 for 80%.
+- Actual validation FDTD results selected the 80% checkpoint despite its worse CDF
+  loss: median EM error is 4.934% versus 5.880% for 50%, with lower median work.
+- On 32 untouched IID scene-budget pairs, the selected model achieves 4.068% median
+  and 4.902% mean maximum EM error at 26,686,976 median cell updates. This improves
+  the prior Stage-5 aggregate median, mean, and median work. Every one of the 128
+  strategy runs succeeded.
+
+See the continuation section in [Stage-5 evidence](docs/stage5_training.md). Local
+artifacts are under ignored `artifacts/stage5_available/`; the rendered summary was
+visually inspected.
 
 ## Previous update: dk mixture and spatial probe coverage
 
@@ -271,8 +296,9 @@ ignored; source, tests, scripts, documentation and dependency metadata are track
 
 ## Next milestone
 
-Stage 5: generate physics-scored candidates and distill targets selected by converged
-receiver error and cost, retaining sensitive outliers. Before larger experiments, improve reference
-coverage (especially compositional scenes), expand seeds, and examine staircase
-convergence, PML sensitivity and sampling bandwidth. Do not weaken the reference
-gate merely to increase dataset size; retain failures in coverage reports.
+Move large reference generation to server hardware and include feasible 32x32,
+48x48, 64x64, and 96x96 candidate budgets. Expand train/validation coverage,
+especially compositional scenes, and examine staircase convergence, PML sensitivity,
+and sampling bandwidth. Compare strategies within equal budget strata and do not
+weaken the reference gate merely to increase dataset size; retain failures and
+infeasible scene-budget pairs in coverage reports.
