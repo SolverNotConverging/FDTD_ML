@@ -7,12 +7,15 @@ import torch
 
 from fdtdmesh.data.generate import GenerationConfig, make_scene
 from fdtdmesh.data.schema import write_manifest
+from fdtdmesh.evaluation import EvaluationConfig
 from fdtdmesh.mesh import MESH_POLICY
 from fdtdmesh.ml import ResUNet, load_model, save_model
 from fdtdmesh.physics import (
     PHYSICS_TARGET_VERSION,
     PhysicsDataset,
     SearchConfig,
+    _physics_evaluation_report,
+    _reference,
     candidate_densities,
     load_physics_targets,
     pareto_front,
@@ -134,3 +137,61 @@ def test_physics_target_integrity_and_dataset(tmp_path):
     np.savez_compressed(targets, target_x=2 * x, target_y=y)
     with pytest.raises(ValueError, match="do not match"):
         load_physics_targets(manifest, targets)
+
+
+def test_external_reference_corpus_is_loaded_without_recomputation(tmp_path, monkeypatch):
+    scene = small_scenes()[0]
+    root = tmp_path / "references"
+    directory = root / scene.scene_id
+    directory.mkdir(parents=True)
+    status = {
+        "status": "converged",
+        "accepted_budget": [64, 64],
+        "scene_id": scene.scene_id,
+        "scene_hash": scene.content_hash,
+        "duration": scene.t_end,
+    }
+    (directory / "reference.json").write_text(json.dumps(status), encoding="utf-8")
+    (directory / "evaluated_scene.json").write_text(json.dumps(scene.to_dict()), encoding="utf-8")
+    times = np.linspace(0, scene.t_end, 17)
+    frequencies = np.linspace(scene.f_min, scene.f_max, 5)
+    waveforms = np.zeros((17, len(scene.receivers)))
+    np.savez_compressed(
+        directory / "reference_latest.npz",
+        times=times,
+        frequencies=frequencies,
+        waveforms=waveforms,
+    )
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("External references must not be recomputed")
+
+    monkeypatch.setattr("fdtdmesh.physics.converge_reference", forbidden)
+    loaded, effective, loaded_times, loaded_frequencies, loaded_waveforms = _reference(
+        scene, tmp_path / "search", EvaluationConfig(), reference_root=root
+    )
+    assert loaded["status"] == "converged" and effective.to_dict() == scene.to_dict()
+    np.testing.assert_array_equal(loaded_times, times)
+    np.testing.assert_array_equal(loaded_frequencies, frequencies)
+    np.testing.assert_array_equal(loaded_waveforms, waveforms)
+
+
+def test_physics_evaluation_summary_uses_paired_heldout_errors():
+    def row(strategy, error, updates):
+        return {
+            "scene_id": "test_iid-00000",
+            "budget": [64, 64],
+            "strategy": strategy,
+            "status": "ok",
+            "metrics": {"waveform_l2_max": error, "spectrum_l2_max": error / 2},
+            "diagnostics": {"cell_updates": updates},
+        }
+
+    report = _physics_evaluation_report(
+        {"dataset_id": "example"},
+        [{"scene_id": "test_iid-00000", "status": "converged"}],
+        [row("imitation", 0.2, 100), row("distilled", 0.1, 110)],
+    )
+    assert report["accepted_references"] == 1
+    assert report["summary"]["distilled"]["median_em_error"] == pytest.approx(0.1)
+    assert report["paired_vs_imitation"] == {"count": 1, "distilled_lower_error": 1}

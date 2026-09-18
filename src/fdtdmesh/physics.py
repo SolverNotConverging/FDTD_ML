@@ -219,22 +219,55 @@ def _teacher_map(manifest_path, target_path):
     }
 
 
-def _reference(spec, directory, evaluation):
+def _read_reference(spec, directory, *, arrays_name):
+    status_path, arrays_path = directory / "reference.json", directory / arrays_name
+    scene_path = directory / "evaluated_scene.json"
+    if not status_path.exists():
+        return (
+            {"status": "missing", "levels": [], "accepted_budget": None},
+            spec,
+            None,
+            None,
+            None,
+        )
+    status = json.loads(status_path.read_text(encoding="utf-8"))
+    if (
+        status.get("scene_id", spec.scene_id) != spec.scene_id
+        or status.get("scene_hash", spec.content_hash) != spec.content_hash
+    ):
+        raise ValueError(f"Reference identity differs for {spec.scene_id}")
+    effective = SceneSpec.from_dict(json.loads(scene_path.read_text(encoding="utf-8")))
+    if status["status"] != "converged":
+        return status, effective, None, None, None
+    if not arrays_path.exists():
+        raise ValueError(f"Converged reference arrays are missing for {spec.scene_id}")
+    with np.load(arrays_path) as arrays:
+        times = arrays["times"].copy()
+        frequencies = arrays["frequencies"].copy()
+        waveforms = arrays["waveforms"].copy()
+    if (
+        times.ndim != 1
+        or len(times) < 2
+        or frequencies.ndim != 1
+        or waveforms.shape[0] != len(times)
+        or not np.isfinite(times).all()
+        or not np.isfinite(frequencies).all()
+        or not np.isfinite(waveforms).all()
+        or not np.isclose(times[-1], effective.t_end)
+    ):
+        raise ValueError(f"Invalid reference arrays for {spec.scene_id}")
+    return status, effective, times, frequencies, waveforms
+
+
+def _reference(spec, directory, evaluation, reference_root=None):
+    if reference_root is not None:
+        return _read_reference(
+            spec, Path(reference_root) / spec.scene_id, arrays_name="reference_latest.npz"
+        )
     status_path, arrays_path = directory / "reference.json", directory / "reference.npz"
     scene_path = directory / "evaluated_scene.json"
     if status_path.exists():
-        status = json.loads(status_path.read_text(encoding="utf-8"))
-        effective = SceneSpec.from_dict(json.loads(scene_path.read_text(encoding="utf-8")))
-        if status["status"] != "converged":
-            return status, effective, None, None, None
-        with np.load(arrays_path) as arrays:
-            return (
-                status,
-                effective,
-                arrays["times"].copy(),
-                arrays["frequencies"].copy(),
-                arrays["waveforms"].copy(),
-            )
+        return _read_reference(spec, directory, arrays_name="reference.npz")
     status, latest = converge_reference(spec, evaluation)
     effective = replace(spec, t_end=status.get("duration", spec.t_end))
     _json(status_path, status)
@@ -270,6 +303,7 @@ def search_physics_targets(
     search_config=None,
     evaluation_config=None,
     baseline_checkpoint=None,
+    references=None,
     device=None,
     scene_ids=None,
 ):
@@ -277,6 +311,15 @@ def search_physics_targets(
     evaluation = evaluation_config or EvaluationConfig()
     device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
     manifest, scenes = read_manifest(manifest_path)
+    reference_identity = None
+    if references is not None:
+        references = Path(references)
+        reference_run = references / "run.json"
+        if not reference_run.exists():
+            raise ValueError("Reference corpus is missing run.json")
+        reference_identity = json.loads(reference_run.read_text(encoding="utf-8"))
+        if reference_identity.get("dataset_id") != manifest["dataset_id"]:
+            raise ValueError("Reference corpus belongs to a different dataset")
     if scene_ids is not None:
         scene_map = {scene.scene_id: scene for scene in scenes}
         if not all(scene_id in scene_map for scene_id in scene_ids):
@@ -304,6 +347,7 @@ def search_physics_targets(
         "baseline_checkpoint_sha256": (
             None if baseline_checkpoint is None else _sha256(baseline_checkpoint)
         ),
+        "reference_run_sha256": None if references is None else _sha256(reference_run),
         "splits": list(splits),
         "limit": limit,
         "scene_ids": scene_ids,
@@ -311,6 +355,7 @@ def search_physics_targets(
         "evaluation_config": asdict(evaluation),
         "mesh_policy": MESH_POLICY,
     }
+    identity = json.loads(json.dumps(identity, allow_nan=False))
     identity_path = output / "run.json"
     if identity_path.exists():
         if json.loads(identity_path.read_text(encoding="utf-8")) != identity:
@@ -322,7 +367,9 @@ def search_physics_targets(
     for spec in selected_scenes:
         scene_dir = output / spec.scene_id
         scene_dir.mkdir(exist_ok=True)
-        status, effective, times, frequencies, reference = _reference(spec, scene_dir, evaluation)
+        status, effective, times, frequencies, reference = _reference(
+            spec, scene_dir, evaluation, reference_root=references
+        )
         references.append({"scene_id": spec.scene_id, **status})
         if status["status"] != "converged":
             print(f"{spec.scene_id}: {status['status']}; no physics targets", flush=True)
@@ -476,6 +523,165 @@ def search_physics_targets(
     return report
 
 
+def evaluate_physics_checkpoint(
+    manifest_path,
+    checkpoint,
+    references,
+    output,
+    *,
+    split="test_iid",
+    baseline_checkpoint=None,
+    limit=None,
+    max_cell_updates=256_000_000_000,
+    device=None,
+):
+    """Compare a distilled checkpoint with fixed baselines on an external corpus."""
+    manifest, scenes = read_manifest(manifest_path)
+    selected = [scene for scene in scenes if scene.split == split]
+    if limit is not None:
+        if isinstance(limit, bool) or int(limit) != limit or limit < 1:
+            raise ValueError("limit must be a positive integer")
+        selected = selected[: int(limit)]
+    if not selected:
+        raise ValueError("No scenes selected for physics evaluation")
+    references = Path(references)
+    reference_run_path = references / "run.json"
+    if not reference_run_path.exists():
+        raise ValueError("Reference corpus is missing run.json")
+    reference_run = json.loads(reference_run_path.read_text(encoding="utf-8"))
+    if reference_run.get("dataset_id") != manifest["dataset_id"]:
+        raise ValueError("Reference corpus belongs to a different dataset")
+    evaluation = EvaluationConfig(**reference_run["config"])
+    evaluation = replace(evaluation, max_cell_updates=max_cell_updates)
+    device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
+    model, metadata = load_model(checkpoint, device=device)
+    baseline_model = baseline_metadata = None
+    if baseline_checkpoint is not None:
+        baseline_model, baseline_metadata = load_model(baseline_checkpoint, device=device)
+
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=True)
+    identity = {
+        "physics_target_version": PHYSICS_TARGET_VERSION,
+        "dataset_id": manifest["dataset_id"],
+        "checkpoint_sha256": _sha256(checkpoint),
+        "baseline_checkpoint_sha256": (
+            None if baseline_checkpoint is None else _sha256(baseline_checkpoint)
+        ),
+        "reference_run_sha256": _sha256(reference_run_path),
+        "split": split,
+        "limit": limit,
+        "max_cell_updates": max_cell_updates,
+        "mesh_policy": MESH_POLICY,
+    }
+    identity_path = output / "run.json"
+    if identity_path.exists():
+        if json.loads(identity_path.read_text(encoding="utf-8")) != identity:
+            raise ValueError("Physics evaluation output belongs to a different run")
+    else:
+        _json(identity_path, identity)
+
+    rows, reference_status = [], []
+    for spec in selected:
+        status, effective, times, frequencies, reference = _reference(
+            spec, output / spec.scene_id, evaluation, reference_root=references
+        )
+        reference_status.append({"scene_id": spec.scene_id, **status})
+        if status["status"] != "converged":
+            continue
+        for budget in spec.budgets:
+            simulation = effective.build(budget)
+            densities = {
+                "uniform": (np.ones(spec.raster_shape[1]), np.ones(spec.raster_shape[0])),
+                "heuristic": tuple(
+                    _normalize(value) for value in heuristic_density(simulation, spec.raster_shape)
+                ),
+                "distilled": _predict_density(effective, budget, model, metadata, device),
+            }
+            if baseline_model is not None:
+                densities["imitation"] = _predict_density(
+                    effective, budget, baseline_model, baseline_metadata, device
+                )
+            for name, density in densities.items():
+                row = {
+                    "scene_id": spec.scene_id,
+                    "scene_hash": spec.content_hash,
+                    "split": spec.split,
+                    "budget": list(budget),
+                    "strategy": name,
+                    "status": "ok",
+                }
+                try:
+                    result = run_scene(
+                        effective,
+                        budget,
+                        evaluation,
+                        strategy="density",
+                        density=density,
+                    )
+                    observations = sample_observables(result, times)
+                    row.update(
+                        metrics=metrics(observations, reference, times, frequencies, evaluation),
+                        diagnostics=result.diagnostics,
+                        tail=tail_diagnostic(effective, observations, evaluation),
+                    )
+                except (ValueError, RuntimeError) as error:
+                    row.update(status="failed", error=str(error), error_type=type(error).__name__)
+                rows.append(row)
+        report = _physics_evaluation_report(identity, reference_status, rows)
+        _json(output / "report.json", report)
+    return _physics_evaluation_report(identity, reference_status, rows)
+
+
+def _physics_evaluation_report(identity, reference_status, rows):
+    summaries = {}
+    for strategy in sorted({row["strategy"] for row in rows}):
+        valid = [row for row in rows if row["strategy"] == strategy and row["status"] == "ok"]
+        errors = [
+            max(row["metrics"]["waveform_l2_max"], row["metrics"]["spectrum_l2_max"])
+            for row in valid
+        ]
+        costs = [row["diagnostics"]["cell_updates"] for row in valid]
+        summaries[strategy] = {
+            "successful": len(valid),
+            "median_em_error": None if not errors else float(np.median(errors)),
+            "mean_em_error": None if not errors else float(np.mean(errors)),
+            "median_cell_updates": None if not costs else float(np.median(costs)),
+        }
+    paired = None
+    if "distilled" in summaries and "imitation" in summaries:
+        keyed = {
+            (row["scene_id"], tuple(row["budget"]), row["strategy"]): row
+            for row in rows
+            if row["status"] == "ok"
+        }
+        pairs = []
+        for scene_id, budget, strategy in list(keyed):
+            if strategy != "distilled" or (scene_id, budget, "imitation") not in keyed:
+                continue
+            distilled = keyed[(scene_id, budget, "distilled")]
+            imitation = keyed[(scene_id, budget, "imitation")]
+            distilled_error = max(
+                distilled["metrics"]["waveform_l2_max"],
+                distilled["metrics"]["spectrum_l2_max"],
+            )
+            imitation_error = max(
+                imitation["metrics"]["waveform_l2_max"],
+                imitation["metrics"]["spectrum_l2_max"],
+            )
+            pairs.append(distilled_error < imitation_error)
+        paired = {"count": len(pairs), "distilled_lower_error": sum(pairs)}
+    return {
+        **identity,
+        "references": reference_status,
+        "accepted_references": sum(row["status"] == "converged" for row in reference_status),
+        "rows": rows,
+        "summary": summaries,
+        "paired_vs_imitation": paired,
+        "provenance": provenance(),
+    }
+
+
 def load_physics_targets(manifest_path, target_path):
     manifest, scenes = read_manifest(manifest_path)
     target_path = Path(target_path)
@@ -554,6 +760,7 @@ def main():
     search.add_argument("--teacher-targets", required=True)
     search.add_argument("--checkpoint", required=True)
     search.add_argument("--baseline-checkpoint")
+    search.add_argument("--references", required=True)
     search.add_argument("--output", required=True)
     search.add_argument("--splits", nargs="+", default=["train", "validation"])
     search.add_argument("--limit", type=int)
@@ -579,6 +786,16 @@ def main():
     distill.add_argument("--device")
     distill.add_argument("--resume")
     distill.add_argument("--allow-dirty", action="store_true")
+    evaluate = sub.add_parser("evaluate")
+    evaluate.add_argument("--manifest", required=True)
+    evaluate.add_argument("--checkpoint", required=True)
+    evaluate.add_argument("--baseline-checkpoint")
+    evaluate.add_argument("--references", required=True)
+    evaluate.add_argument("--output", required=True)
+    evaluate.add_argument("--split", default="test_iid")
+    evaluate.add_argument("--limit", type=int)
+    evaluate.add_argument("--max-cell-updates", type=int, default=256_000_000_000)
+    evaluate.add_argument("--device")
     args = parser.parse_args()
     if args.command == "search":
         search_physics_targets(
@@ -597,10 +814,11 @@ def main():
                 reference_levels=tuple(args.levels), max_cell_updates=args.max_cell_updates
             ),
             baseline_checkpoint=args.baseline_checkpoint,
+            references=args.references,
             device=args.device,
             scene_ids=args.scenes,
         )
-    else:
+    elif args.command == "distill":
         _, initial = load_model(args.initial_checkpoint)
         config = TrainingConfig(
             epochs=args.epochs,
@@ -625,6 +843,18 @@ def main():
             initial_checkpoint=args.initial_checkpoint,
             training_kind="physics_distillation",
             target_version=PHYSICS_TARGET_VERSION,
+        )
+    else:
+        evaluate_physics_checkpoint(
+            args.manifest,
+            args.checkpoint,
+            args.references,
+            args.output,
+            split=args.split,
+            baseline_checkpoint=args.baseline_checkpoint,
+            limit=args.limit,
+            max_cell_updates=args.max_cell_updates,
+            device=args.device,
         )
 
 
