@@ -16,7 +16,7 @@ from torch.utils.data import DataLoader, Dataset
 from fdtdmesh.data.schema import provenance, read_manifest
 from fdtdmesh.evaluation.metrics import compare_observables, sample_observables
 from fdtdmesh.evaluation.pipeline import EvaluationConfig, grids, heuristic_density, run_scene
-from fdtdmesh.mesh import MESH_POLICY, projected_density
+from fdtdmesh.mesh import MESH_POLICY, cell_count, projected_density
 from fdtdmesh.ml import (
     ResUNet,
     conditioning,
@@ -55,8 +55,28 @@ def _git_state():
         return "unavailable", None
 
 
+def square_budgets(budgets):
+    """Normalize an optional list of square-mesh cell counts."""
+    if budgets is None:
+        return None
+    normalized = []
+    for value in budgets:
+        budget = (cell_count(value), cell_count(value))
+        if budget in normalized:
+            raise ValueError("budgets must be distinct")
+        normalized.append(budget)
+    if not normalized:
+        raise ValueError("budgets must contain at least one cell count")
+    return tuple(normalized)
+
+
 def build_teacher_targets(
-    manifest_path, output_path, *, splits=("train", "validation"), time_limit=30.0
+    manifest_path,
+    output_path,
+    *,
+    splits=("train", "validation"),
+    time_limit=30.0,
+    budgets=None,
 ):
     """Project heuristic densities to legal meshes and save their raster-bin mass targets."""
     manifest, scenes = read_manifest(manifest_path)
@@ -72,13 +92,27 @@ def build_teacher_targets(
     if output_path.exists() or metadata_path.exists():
         raise ValueError("Teacher output already exists; choose a new path")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    samples, target_x, target_y = [], [], []
+    budget_override = square_budgets(budgets)
+    samples, target_x, target_y, failures = [], [], [], []
     started = perf_counter()
     for scene in selected:
-        for budget in scene.budgets:
-            simulation = scene.build(budget)
-            density = heuristic_density(simulation, shape)
-            mesh = simulation.mesh_from_density(*density, time_limit=time_limit)
+        for budget in budget_override or scene.budgets:
+            try:
+                simulation = scene.build(budget)
+                density = heuristic_density(simulation, shape)
+                mesh = simulation.mesh_from_density(*density, time_limit=time_limit)
+            except (ValueError, RuntimeError) as error:
+                failures.append(
+                    {
+                        "scene_id": scene.scene_id,
+                        "scene_hash": scene.content_hash,
+                        "split": scene.split,
+                        "budget": list(budget),
+                        "error": str(error),
+                        "error_type": type(error).__name__,
+                    }
+                )
+                continue
             target_x.append(projected_density(mesh.x, shape[1], collar=simulation.pml.x))
             target_y.append(projected_density(mesh.y, shape[0], collar=simulation.pml.y))
             samples.append(
@@ -94,6 +128,8 @@ def build_teacher_targets(
                     },
                 }
             )
+    if not samples:
+        raise ValueError("No feasible teacher targets were generated")
     np.savez_compressed(
         output_path,
         target_x=np.asarray(target_x, dtype=np.float32),
@@ -108,8 +144,10 @@ def build_teacher_targets(
         "mesh_policy": MESH_POLICY,
         "raster_shape": list(shape),
         "splits": list(splits),
+        "budget_override": None if budget_override is None else [list(x) for x in budget_override],
         "teacher": "material_edge_heuristic_projected_to_legal_mesh_then_rebinned",
         "samples": samples,
+        "failures": failures,
         "seconds": perf_counter() - started,
         "provenance": provenance(),
     }
@@ -555,6 +593,7 @@ def main():
     targets.add_argument("--manifest", required=True)
     targets.add_argument("--output", required=True)
     targets.add_argument("--splits", nargs="+", default=["train", "validation", "test_iid"])
+    targets.add_argument("--budgets", nargs="+", type=int)
     train = sub.add_parser("train")
     train.add_argument("--manifest", required=True)
     train.add_argument("--targets", required=True)
@@ -583,7 +622,7 @@ def main():
     evaluate.add_argument("--device")
     args = parser.parse_args()
     if args.command == "targets":
-        build_teacher_targets(args.manifest, args.output, splits=args.splits)
+        build_teacher_targets(args.manifest, args.output, splits=args.splits, budgets=args.budgets)
     elif args.command == "train":
         config = TrainingConfig(
             epochs=args.epochs,

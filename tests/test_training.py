@@ -72,6 +72,15 @@ def test_teacher_targets_are_legal_seeded_and_bound_to_manifest(tmp_path):
         load_teacher_targets(manifest, targets)
 
 
+def test_teacher_targets_accept_budget_override(tmp_path):
+    manifest, _ = teacher_fixture(tmp_path)
+    targets = tmp_path / "override.npz"
+    metadata = build_teacher_targets(manifest, targets, budgets=(24, 32))
+    assert metadata["budget_override"] == [[24, 24], [32, 32]]
+    assert {tuple(sample["budget"]) for sample in metadata["samples"]} == {(32, 32)}
+    assert {tuple(failure["budget"]) for failure in metadata["failures"]} == {(24, 24)}
+
+
 def test_short_training_checkpoint_and_resume_contract(tmp_path):
     manifest, targets = teacher_fixture(tmp_path)
     output = tmp_path / "training"

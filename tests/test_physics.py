@@ -229,8 +229,10 @@ def test_search_passes_external_reference_root_without_shadowing(tmp_path, monke
         splits=("train",),
         references=references,
         device="cpu",
+        budgets=(24, 32),
     )
     assert seen == [references]
+    assert report["budget_override"] == [[24, 24], [32, 32]]
     assert report["accepted_references"] == 0 and report["targets"] == 0
 
 

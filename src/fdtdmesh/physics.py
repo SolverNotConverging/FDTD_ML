@@ -25,7 +25,12 @@ from fdtdmesh.evaluation.pipeline import (
 )
 from fdtdmesh.mesh import MESH_POLICY, projected_density
 from fdtdmesh.ml import conditioning, load_model, pool_axes, rasterize
-from fdtdmesh.training import TrainingConfig, load_teacher_targets, train_model
+from fdtdmesh.training import (
+    TrainingConfig,
+    load_teacher_targets,
+    square_budgets,
+    train_model,
+)
 
 PHYSICS_TARGET_VERSION = 1
 
@@ -306,6 +311,7 @@ def search_physics_targets(
     references=None,
     device=None,
     scene_ids=None,
+    budgets=None,
 ):
     search_config = search_config or SearchConfig()
     evaluation = evaluation_config or EvaluationConfig()
@@ -332,6 +338,7 @@ def search_physics_targets(
             selected_scenes.extend(subset if limit is None else subset[:limit])
     if not selected_scenes:
         raise ValueError("No scenes selected for physics search")
+    budget_override = square_budgets(budgets)
     teacher = _teacher_map(manifest_path, teacher_targets)
     model, metadata = load_model(checkpoint, device=device)
     baseline_model = baseline_metadata = None
@@ -351,6 +358,9 @@ def search_physics_targets(
         "splits": list(splits),
         "limit": limit,
         "scene_ids": scene_ids,
+        "budget_override": (
+            None if budget_override is None else [list(value) for value in budget_override]
+        ),
         "search_config": asdict(search_config),
         "evaluation_config": asdict(evaluation),
         "mesh_policy": MESH_POLICY,
@@ -374,10 +384,11 @@ def search_physics_targets(
         if status["status"] != "converged":
             print(f"{spec.scene_id}: {status['status']}; no physics targets", flush=True)
             continue
-        for budget in spec.budgets:
+        for budget in budget_override or spec.budgets:
             key = (spec.scene_id, tuple(budget))
             if key not in teacher:
-                raise ValueError(f"Teacher target is missing {key}")
+                print(f"{spec.scene_id} {budget}: no feasible teacher target", flush=True)
+                continue
             sample_dir = scene_dir / f"{budget[0]}_{budget[1]}"
             sample_dir.mkdir(exist_ok=True)
             result_path = sample_dir / "result.json"
@@ -698,6 +709,7 @@ def evaluate_physics_checkpoint(
     limit=None,
     max_cell_updates=256_000_000_000,
     device=None,
+    budgets=None,
 ):
     """Compare a distilled checkpoint with fixed baselines on an external corpus."""
     manifest, scenes = read_manifest(manifest_path)
@@ -708,6 +720,7 @@ def evaluate_physics_checkpoint(
         selected = selected[: int(limit)]
     if not selected:
         raise ValueError("No scenes selected for physics evaluation")
+    budget_override = square_budgets(budgets)
     references = Path(references)
     reference_run_path = references / "run.json"
     if not reference_run_path.exists():
@@ -735,6 +748,9 @@ def evaluate_physics_checkpoint(
         "reference_run_sha256": _sha256(reference_run_path),
         "split": split,
         "limit": limit,
+        "budget_override": (
+            None if budget_override is None else [list(value) for value in budget_override]
+        ),
         "max_cell_updates": max_cell_updates,
         "mesh_policy": MESH_POLICY,
     }
@@ -753,7 +769,7 @@ def evaluate_physics_checkpoint(
         reference_status.append({"scene_id": spec.scene_id, **status})
         if status["status"] != "converged":
             continue
-        for budget in spec.budgets:
+        for budget in budget_override or spec.budgets:
             simulation = effective.build(budget)
             densities = {
                 "uniform": (np.ones(spec.raster_shape[1]), np.ones(spec.raster_shape[0])),
@@ -929,6 +945,7 @@ def main():
     search.add_argument("--splits", nargs="+", default=["train", "validation"])
     search.add_argument("--limit", type=int)
     search.add_argument("--scenes", nargs="+")
+    search.add_argument("--budgets", nargs="+", type=int)
     search.add_argument("--beta", type=float, default=0.02)
     search.add_argument("--physics-weight", type=float, default=0.5)
     search.add_argument("--perturbations", type=int, default=2)
@@ -960,6 +977,7 @@ def main():
     evaluate.add_argument("--output", required=True)
     evaluate.add_argument("--split", default="test_iid")
     evaluate.add_argument("--limit", type=int)
+    evaluate.add_argument("--budgets", nargs="+", type=int)
     evaluate.add_argument("--max-cell-updates", type=int, default=256_000_000_000)
     evaluate.add_argument("--device")
     reblend = sub.add_parser("reblend")
@@ -994,6 +1012,7 @@ def main():
             references=args.references,
             device=args.device,
             scene_ids=args.scenes,
+            budgets=args.budgets,
         )
     elif args.command == "distill":
         _, initial = load_model(args.initial_checkpoint)
@@ -1034,6 +1053,7 @@ def main():
             limit=args.limit,
             max_cell_updates=args.max_cell_updates,
             device=args.device,
+            budgets=args.budgets,
         )
     elif args.command == "reblend":
         reblend_physics_targets(
