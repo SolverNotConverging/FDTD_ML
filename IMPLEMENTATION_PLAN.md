@@ -244,6 +244,11 @@ split integrity checks, and an accuracy-versus-work/runtime report for the basel
 
 ## 7. Stage 4 — teacher imitation
 
+Implemented in version 0.5.0. See [measured Stage-4 evidence](docs/stage4_training.md).
+The trained model strongly reduces teacher-density loss and improves median physical
+teacher agreement, while a sensitive held-out outlier demonstrates why Stage 5 needs
+physics-selected targets.
+
 1. Implement or adapt the heuristic teacher to produce axis density targets compatible
    with the new exact-budget mesher. Do not assume an old checkpoint matches the
    current architecture or raster contract.
@@ -258,6 +263,11 @@ split integrity checks, and an accuracy-versus-work/runtime report for the basel
 
 Acceptance: a genuinely trained, loadable checkpoint; held-out imitation and physical
 evaluation results; and stable constraint satisfaction across the supported budgets.
+
+Measured acceptance: the epoch-40 checkpoint records dataset/Git provenance; all 64
+IID scene-budget projections are legal; held-out CDF loss is 14.9x below the seeded
+untrained control; and 16 real-CUDA comparisons are recorded. This accepts the
+imitation pipeline, not electromagnetic improvement over the heuristic.
 
 ## 8. Stage 5 — physics-generated targets and distillation
 

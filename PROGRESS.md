@@ -1,13 +1,15 @@
 # Current project progress
 
-Updated 2026-09-18. **Stages 1–3 are implemented**, including mandatory 1.4 grading,
+Updated 2026-09-18. **Stages 1–4 are implemented**, including mandatory 1.4 grading,
 CUDA CPML, procedural datasets and convergence-gated evaluation. Stage 3 reference
 coverage remains partial. Generator v3 adds a low-dk-dominant material mixture to
 the broad scene generator, with verified randomized source/receiver coverage.
-The evaluator supports longer resonance windows.
-This record accompanies the version-0.4.1 dk/probe update. Earlier commits:
+The evaluator supports longer resonance windows. Stage 4 now supplies projected
+teacher targets, reproducible/resumable training, and held-out CUDA evaluation.
+This record accompanies the version-0.5.0 imitation-training update. Earlier commits:
 `99374e7` (stage one), `2437779` (plan/progress), `085cd1b` (historical grading audit),
-`e35a079` (stage two), `079b62c` (initial stage three), and `00db055` (generator v2).
+`e35a079` (stage two), `079b62c` (initial stage three), `00db055` (generator v2),
+`1d3eca1` (generator v3), and `70c1a02` (Stage-4 implementation).
 
 See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.md),
 [stage 2 validation](docs/stage2_validation.md), and [grading plots](docs/anchor_grading.md).
@@ -21,11 +23,35 @@ See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.
 | Grading policy revision | Complete | Mandatory <=1.4; joint anchor assignment and line L1 optimization; exhaustive small-case optimum test |
 | 2: CPML and simulation conventions | Complete for vacuum collars | CUDA CPML; reflection controls; current normalization; physical receivers |
 | 3: procedural datasets and converged references | Implemented; partial reference coverage | Versioned scenes, split validation, reference gates, three baselines, measured reports |
-| 4: teacher imitation | Not started | Teacher targets, training loop and trained checkpoint |
+| 4: teacher imitation | Complete | Projected targets; resumable GPU training; trained checkpoint; IID/CUDA evidence |
 | 5: physics targets and distillation | Not started | Candidate generation, FDTD scoring, Pareto selection and distillation |
 | 6: generalization / optional surrogate | Not started | OOD studies, ablations and any surrogate validation |
 
-## Current update: dk mixture and spatial probe coverage
+## Current update: Stage-4 teacher imitation
+
+- Added versioned heuristic-teacher targets. Raw heuristic density is projected through
+  the exact legal mesher before rebinning, so targets include budgets, anchors, PML
+  collars, and mandatory grading.
+- Added seeded AdamW training, validation, detached repair loss, bounded projection
+  diagnostics, safe resume, best-checkpoint selection, dataset/hash/Git provenance,
+  held-out evaluation, and real CUDA teacher-agreement checks.
+- Trained width-16 ResU-Net for 40 epochs on 64 train samples and selected epoch 40.
+  Best validation CDF loss is 2.621e-5. Held-out IID loss is 3.783e-5 versus 5.634e-4
+  untrained (14.9x lower); all 64 tested projections are legal.
+- Across 16 held-out CUDA scenes, the trained model improves waveform and spectrum
+  teacher agreement in 11. Median errors improve (waveform 5.50% to 3.45%, spectrum
+  6.05% to 4.78%), while one sensitive case makes means worse. Small density/line
+  differences therefore do not guarantee small EM error.
+- Updated root `AGENTS.md`: bounded repetitive work with objectively checkable output
+  may use `gpt-5.6-luna`; numerical reasoning, architecture and integration stay with
+  the primary/stronger model.
+
+Validation: **113 tests passed, no skips**, including CUDA (16.41 seconds). Ruff
+lint/format and locked offline uv synchronization passed. See
+[Stage-4 evidence](docs/stage4_training.md) and the local ignored artifacts under
+`artifacts/stage4/`.
+
+## Previous update: dk mixture and spatial probe coverage
 
 - Generator v3 samples dielectric constants with 85% probability in 1–10 and
   15% in 10–30, logarithmically within each component. Configurable mixture settings
@@ -167,8 +193,9 @@ ignored; source, tests, scripts, documentation and dependency metadata are track
 
 ## Current limitations
 
-- No trained meshing weights, training loop or demonstrated learned electromagnetic
-  improvement yet. Reference convergence is empirical for selected observables;
+- A trained teacher-imitation checkpoint now exists locally, but it does not demonstrate
+  electromagnetic improvement over the heuristic or uniform meshing. Reference
+  convergence is empirical for selected observables;
   difficult scenes require more refinement/qualification. Dataset generation and
   comparison are implemented, with partial accepted reference coverage.
 - Joint integer meshing can be expensive for large budgets/many anchors. A 30-second
@@ -193,8 +220,8 @@ ignored; source, tests, scripts, documentation and dependency metadata are track
 
 ## Next milestone
 
-Stage 4: teacher-density targets and reproducible training over accepted scenes,
-with held-out physical evaluation. Before larger experiments, improve reference
+Stage 5: generate physics-scored candidates and distill targets selected by converged
+receiver error and cost, retaining sensitive outliers. Before larger experiments, improve reference
 coverage (especially compositional scenes), expand seeds, and examine staircase
 convergence, PML sensitivity and sampling bandwidth. Do not weaken the reference
 gate merely to increase dataset size; retain failures in coverage reports.

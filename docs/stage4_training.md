@@ -50,7 +50,44 @@ dataset does not yet have broad accepted-reference coverage.
 
 ## Measured run
 
-The reproducible experiment and its measured results will be recorded here after the
-implementation commit is trained from a clean Git state. Generated targets,
-checkpoints, resume state, reports and figures live below `artifacts/stage4/` and are
-ignored by Git; the implementation, command contract and measured summary are tracked.
+Implementation commit `70c1a02` was trained from a clean Git state on the v3 dataset
+`10c7b9dcaf1c9b47bf723d33c39bf354d659c9b7b63500b84446a8d4ebc1266f` using an
+RTX 4070 Laptop GPU. The target set contains 192 scene-budget samples: 32 scenes and
+two budgets from each of train, validation, and IID. Exact teacher projection took
+55.70 seconds.
+
+Training used width 16, batch size 4, AdamW learning rate 1e-3, repair weight 0.05
+every fourth batch, and seed 2026. It ran 40 epochs in two resumable invocations,
+about 312 seconds combined. The selected epoch-40 checkpoint has SHA-256:
+
+```text
+2a634488e298e1f6d22b0be5724901ce6fc574f565ab2429a4778c1e74648058
+```
+
+Best validation CDF MSE is 2.621e-5. On all 64 held-out IID scene-budget samples,
+CDF MSE is 3.783e-5 versus 5.634e-4 for the seeded untrained network, a 14.9x
+reduction. All 64 CNN densities produce legal exact-budget meshes. Across those
+projections, normalized mean line correction averages 0.0155% in x and 0.0203% in y;
+the largest per-sample mean correction is 0.0612% in x and 0.0964% in y. These small
+repair values do not directly predict electromagnetic agreement.
+
+Real CUDA FDTD compared learned and teacher meshes for the first budget of 16 held-out
+IID scenes. Training improves both waveform and spectrum agreement in 11/16 scenes.
+Median waveform disagreement falls from 5.50% for seeded random weights to 3.45%;
+median complex-spectrum disagreement falls from 6.05% to 4.78%. The mean moves in
+the opposite direction: waveform 6.37% to 7.62%, spectrum 11.81% to 13.61%. One
+mesh-sensitive scene (`test_iid-00001`) dominates: normalized mean line displacements
+are only 0.167% in x and 0.253% in y, yet waveform and spectrum disagreement are
+67.96% and 140.78%. Its three dielectric constants are 2.10, 3.37, and 8.06 and its
+window is 3.94 ns; no extreme material value explains the sensitivity.
+
+This is the useful Stage-4 result: imitation learns the teacher density distribution
+and often improves physical agreement, but lower density loss is not a reliable EM
+objective. Stage 5 should use converged receiver physics to select/distill targets,
+with sensitive outliers retained rather than averaged away. The comparison is against
+the heuristic teacher, not a converged reference, so it establishes neither absolute
+accuracy nor superiority to uniform meshing.
+
+Generated targets, checkpoints, resume state, raw reports, the seeded-untrained
+control and `training_and_repair.png` live below `artifacts/stage4/` and are ignored
+by Git. The implementation, command contract, hashes, and measured summary are tracked.

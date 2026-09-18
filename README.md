@@ -358,6 +358,12 @@ runs selected teacher/CNN meshes through real CUDA FDTD. Its waveform/spectrum r
 measures agreement with the heuristic teacher, not converged-reference accuracy.
 See [Stage-4 training evidence](docs/stage4_training.md).
 
+The measured 40-epoch run reduces held-out teacher CDF loss 14.9x versus seeded
+random weights and improves median CUDA teacher agreement over 16 IID scenes. It also
+finds a mesh-sensitive outlier that makes mean waveform/spectrum agreement worse.
+This confirms the training machinery and the need for Stage-5 physics-selected targets;
+teacher imitation alone is not evidence of improved FDTD accuracy.
+
 ## Remaining stages
 
 Physics-generated target distillation and demonstrated improvement over the heuristic
