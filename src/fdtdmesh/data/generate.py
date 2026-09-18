@@ -8,7 +8,7 @@ from fdtdmesh.constants import C0
 
 from .schema import SCHEMA_VERSION, SPLITS, SceneSpec, geometry_signature
 
-GENERATOR_VERSION = 2
+GENERATOR_VERSION = 3
 
 
 def log_uniform(rng, low, high):
@@ -23,8 +23,10 @@ class GenerationConfig:
     aspect_max: float = 3.3
     size_min: float = 0.035
     size_max: float = 0.50
-    epsilon_min: float = 1.05
+    epsilon_min: float = 1.0
     epsilon_max: float = 30.0
+    epsilon_core_max: float = 10.0
+    epsilon_core_probability: float = 0.85
     sigma_min: float = 1e-5
     sigma_max: float = 10.0
     lossless_probability: float = 0.2
@@ -51,6 +53,12 @@ class GenerationConfig:
         if self.size_min < 4 / self.raster_size or self.size_max > 0.6:
             raise ValueError("Sizes must resolve four raster pixels and fit inside collars")
         if (
+            not np.isfinite([self.epsilon_core_max, self.epsilon_core_probability]).all()
+            or not self.epsilon_min <= self.epsilon_core_max <= self.epsilon_max
+            or not 0 <= self.epsilon_core_probability <= 1
+        ):
+            raise ValueError("Invalid permittivity mixture cutoff or probability")
+        if (
             not np.isfinite(
                 [
                     self.lossless_probability,
@@ -68,6 +76,15 @@ class GenerationConfig:
 
     def to_dict(self):
         return asdict(self)
+
+
+def sample_permittivity(rng, config, split):
+    """Draw ordinary dk from a dominant low-dk component and a smaller high-dk tail."""
+    if split == "test_material_ood":
+        return log_uniform(rng, config.epsilon_max * 1.2, config.epsilon_max * 4)
+    if rng.random() < config.epsilon_core_probability:
+        return log_uniform(rng, config.epsilon_min, config.epsilon_core_max)
+    return log_uniform(rng, config.epsilon_core_max, config.epsilon_max)
 
 
 def _bounds(g, domain):
@@ -95,11 +112,6 @@ def _layout(rng, domain, count, split, cfg):
         if split != "test_material_ood" and rng.random() < cfg.pec_probability:
             return "PEC"
         name = f"object_{len(materials)}"
-        eps_range = (
-            (cfg.epsilon_max * 1.2, cfg.epsilon_max * 4)
-            if split == "test_material_ood"
-            else (cfg.epsilon_min, cfg.epsilon_max)
-        )
         sig_range = (
             (cfg.sigma_max * 2, cfg.sigma_max * 20)
             if split == "test_material_ood"
@@ -111,7 +123,7 @@ def _layout(rng, domain, count, split, cfg):
             else log_uniform(rng, *sig_range)
         )
         materials.append(
-            dict(name=name, epsilon_r=log_uniform(rng, *eps_range), mu_r=1.0, sigma_e=sigma)
+            dict(name=name, epsilon_r=sample_permittivity(rng, cfg, split), mu_r=1.0, sigma_e=sigma)
         )
         return name
 

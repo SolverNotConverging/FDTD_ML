@@ -4,7 +4,12 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from fdtdmesh.data.generate import GenerationConfig, _bounds, generate_dataset
+from fdtdmesh.data.generate import (
+    GenerationConfig,
+    _bounds,
+    generate_dataset,
+    sample_permittivity,
+)
 from fdtdmesh.data.generate_v1 import make_scene as legacy_scene
 from fdtdmesh.data.schema import validate_splits
 from fdtdmesh.evaluation.metrics import spectrum
@@ -28,6 +33,7 @@ def test_broad_generator_is_seeded_multiscale_and_per_object():
     eps = [m["epsilon_r"] for s in regular for m in s.materials]
     sigma = [m["sigma_e"] for s in regular for m in s.materials]
     assert min(eps) < 2 and max(eps) > 20
+    assert 0.75 < np.mean(np.array(eps) <= 10) < 0.95
     assert 0 in sigma and max(sigma) > 1 and min(v for v in sigma if v) > 0
     spans = []
     kinds = set()
@@ -53,6 +59,54 @@ def test_broad_generator_is_seeded_multiscale_and_per_object():
             assert eps.item() == 1 and not pec.item()
     assert max(spans) / min(spans) > 8
     assert kinds == {"rectangle", "circle", "triangle", "polygon", "pec_line"}
+    # Each receiver index, as well as the source, must vary across the whole interior.
+    probes = np.array(
+        [
+            [[p["x"] / s.domain[0], p["y"] / s.domain[1]] for p in s.sources + s.receivers]
+            for s in regular
+        ]
+    )
+    assert np.all((probes >= 0.19) & (probes <= 0.81))
+    assert np.all(np.ptp(probes, axis=0) > 0.5)
+    for index in range(4):
+        assert len(np.unique(probes[:, index, :] > 0.5, axis=0)) == 4
+    for scene_probes in probes:
+        distance = np.linalg.norm(scene_probes[:, None] - scene_probes[None, :], axis=-1)
+        assert np.all(distance[np.triu_indices(4, k=1)] >= 0.08)
+
+
+def test_permittivity_mixture_and_held_out_tail():
+    cfg = GenerationConfig()
+    rng = np.random.default_rng(71)
+    draws = np.array([sample_permittivity(rng, cfg, "train") for _ in range(10000)])
+    assert 0.83 < np.mean(draws <= 10) < 0.87
+    assert draws.min() >= 1 and draws.max() <= 30
+    assert draws.min() < 1.01 and draws.max() > 29
+    # Log-uniform within each component, rather than just correct mixture counts.
+    assert abs(np.mean(np.log(draws[draws <= 10])) - np.log(10) / 2) < 0.03
+    assert abs(np.mean(np.log(draws[draws > 10])) - np.log(300) / 2) < 0.03
+    for probability, bounds in ((0, (10, 30)), (1, (1, 10))):
+        custom = replace(cfg, epsilon_core_probability=probability)
+        values = [sample_permittivity(rng, custom, "train") for _ in range(100)]
+        assert min(values) >= bounds[0] and max(values) <= bounds[1]
+    ood = [sample_permittivity(rng, cfg, "test_material_ood") for _ in range(100)]
+    assert min(ood) >= 36 and max(ood) <= 120
+
+
+@pytest.mark.parametrize(
+    "options",
+    [
+        {"epsilon_core_max": 0.5},
+        {"epsilon_core_max": 31},
+        {"epsilon_core_max": float("nan")},
+        {"epsilon_core_probability": -0.1},
+        {"epsilon_core_probability": 1.1},
+        {"epsilon_core_probability": float("nan")},
+    ],
+)
+def test_invalid_permittivity_mixture(options):
+    with pytest.raises(ValueError, match="permittivity mixture"):
+        GenerationConfig(**options)
 
 
 def test_generator_configuration_limits_and_custom_counts():

@@ -202,9 +202,10 @@ remain optional later work driven by profiling and dataset requirements.
 
 ## 6. Stage 3 — procedural scenes, trusted references, and evaluation
 
-Implemented in version 0.3.0 and expanded in 0.4.0. See the
+Implemented in version 0.3.0 and expanded in 0.4.0/0.4.1. See the
 [original stage 3 evidence](docs/stage3_validation.md) and
-[broader generator / ring-down contract](docs/dataset_v2.md).
+[broader generator / ring-down contract](docs/dataset_v2.md), and
+[dk mixture and randomized probe validation](docs/dataset_v3.md).
 The pipeline is complete; individual scenes remain unusable as references until they
 pass the recorded convergence checks. The initial validation accepts 15/32 scenes.
 
@@ -217,6 +218,10 @@ pass the recorded convergence checks. The initial validation accepts 15/32 scene
    logarithmically distributed sizes/contrast/loss, domain aspect ratio/electrical
    size, object orientation and vacuum probe locations. Use 128x128 rasters to
    resolve smaller features. Keep generation configuration and versions in manifests.
+   Generator v3 draws dk from a configurable 85% log-uniform 1–10 core and 15%
+   log-uniform 10–30 tail; material-OOD remains 36–120. Check spatial coverage for
+   the source and every receiver index independently to guard against fixed-location
+   shortcuts. The mixture is an initial design choice, pending application statistics.
 3. Require important unanchored features to span several CNN pixels initially.
    If necessary later, add raw subpixel samples/material fractions rather than
    semantic geometry features.

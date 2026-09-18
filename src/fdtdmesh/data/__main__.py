@@ -18,6 +18,8 @@ def main():
         "--aspect", type=float, nargs=2, default=[0.3, 3.3], metavar=("MIN", "MAX")
     )
     generate.add_argument("--duration-cycles", type=float, default=24.0)
+    generate.add_argument("--dk-core-max", type=float, default=10.0)
+    generate.add_argument("--dk-core-probability", type=float, default=0.85)
     evaluate = sub.add_parser("evaluate")
     evaluate.add_argument("--manifest", required=True)
     evaluate.add_argument("--output", required=True)
@@ -43,6 +45,8 @@ def main():
             aspect_min=args.aspect[0],
             aspect_max=args.aspect[1],
             duration_cycles=args.duration_cycles,
+            epsilon_core_max=args.dk_core_max,
+            epsilon_core_probability=args.dk_core_probability,
         )
         scenes = generate_dataset(args.per_split, args.seed, config=config)
         manifest = write_manifest(

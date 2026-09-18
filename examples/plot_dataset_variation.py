@@ -18,9 +18,9 @@ from fdtdmesh.data.schema import read_manifest
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, required=True)
-    parser.add_argument("--output", type=Path, default=Path("artifacts/stage3_v2"))
+    parser.add_argument("--output", type=Path, default=Path("artifacts/stage3_v3"))
     args = parser.parse_args()
-    _, scenes = read_manifest(args.manifest)
+    manifest, scenes = read_manifest(args.manifest)
     args.output.mkdir(parents=True, exist_ok=True)
     ordinary = [s for s in scenes if s.split in ("train", "validation", "test_iid")]
     selected = [min(ordinary, key=lambda s: abs(len(s.geometry) - n)) for n in range(1, 9)]
@@ -86,6 +86,37 @@ def main():
     fig.tight_layout()
     fig.savefig(args.output / "diversity_distributions.png", dpi=160)
     plt.close(fig)
+    probes = np.array(
+        [
+            [[p["x"] / s.domain[0], p["y"] / s.domain[1]] for p in s.sources + s.receivers]
+            for s in ordinary
+        ]
+    )
+    cutoff = manifest.get("generation", {}).get("config", {}).get("epsilon_core_max", 10.0)
+    fig, axes = plt.subplots(1, 5, figsize=(17, 3.7))
+    names = ["Source", "Receiver 1", "Receiver 2", "Receiver 3"]
+    for index, (ax, name) in enumerate(zip(axes, names)):
+        ax.axvspan(0, 0.125, color="gray", alpha=0.15)
+        ax.axvspan(0.875, 1, color="gray", alpha=0.15)
+        ax.axhspan(0, 0.125, color="gray", alpha=0.15)
+        ax.axhspan(0.875, 1, color="gray", alpha=0.15)
+        ax.scatter(*probes[:, index, :].T, s=15, alpha=0.7, color="#3274ad")
+        ax.set(title=name, xlabel="x / Lx", ylabel="y / Ly", xlim=(0, 1), ylim=(0, 1))
+        ax.set_aspect("equal")
+    axes[4].hist(eps, bins=np.linspace(1, 30, 16), color="#d65f32")
+    axes[4].axvline(cutoff, color="#343c4b", linestyle="--")
+    core_fraction = float(np.mean(np.array(eps) <= cutoff))
+    axes[4].set(
+        title=f"{core_fraction:.1%} of objects: dk <= {cutoff:g}",
+        xlabel="Dielectric constant (dk)",
+        ylabel="Object count",
+    )
+    fig.suptitle(
+        f"Measured probe positions and dk across {len(ordinary)} train/validation/IID scenes"
+    )
+    fig.tight_layout()
+    fig.savefig(args.output / "probes_and_permittivity.png", dpi=160)
+    plt.close(fig)
     summary = {
         "scenes": len(scenes),
         "ordinary_scenes": len(ordinary),
@@ -96,6 +127,13 @@ def main():
         ],
         "normalized_span_range": [min(spans), max(spans)],
         "epsilon_range": [min(eps), max(eps)],
+        "epsilon_core_max": cutoff,
+        "epsilon_core_fraction": core_fraction,
+        "dielectric_objects": len(eps),
+        "probe_normalized_ranges": {
+            name: {"min": probes[:, i].min(0).tolist(), "max": probes[:, i].max(0).tolist()}
+            for i, name in enumerate(names)
+        },
         "sigma_range": [min(sig), max(sig)],
         "duration_ns_range": [
             min(s.t_end for s in scenes) * 1e9,

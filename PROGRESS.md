@@ -2,11 +2,12 @@
 
 Updated 2026-09-18. **Stages 1–3 are implemented**, including mandatory 1.4 grading,
 CUDA CPML, procedural datasets and convergence-gated evaluation. Stage 3 reference
-coverage remains partial. Generator v2 now broadens object counts, geometry,
-materials and aspect ratios; the evaluator supports longer resonance windows.
-This record accompanies the version-0.4.0 diversity and ring-down update. Earlier commits:
+coverage remains partial. Generator v3 adds a low-dk-dominant material mixture to
+the broad scene generator, with verified randomized source/receiver coverage.
+The evaluator supports longer resonance windows.
+This record accompanies the version-0.4.1 dk/probe update. Earlier commits:
 `99374e7` (stage one), `2437779` (plan/progress), `085cd1b` (historical grading audit),
-`e35a079` (stage two), and `079b62c` (initial stage three).
+`e35a079` (stage two), `079b62c` (initial stage three), and `00db055` (generator v2).
 
 See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.md),
 [stage 2 validation](docs/stage2_validation.md), and [grading plots](docs/anchor_grading.md).
@@ -24,7 +25,29 @@ See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.
 | 5: physics targets and distillation | Not started | Candidate generation, FDTD scoring, Pareto selection and distillation |
 | 6: generalization / optional surrogate | Not started | OOD studies, ablations and any surrogate validation |
 
-## Current update: broader scenes and resonance windows
+## Current update: dk mixture and spatial probe coverage
+
+- Generator v3 samples dielectric constants with 85% probability in 1–10 and
+  15% in 10–30, logarithmically within each component. Configurable mixture settings
+  are persisted in manifests and exposed through the generation CLI. High material-OOD
+  values remain deliberately separate. This probability is a design default.
+- Verified the existing randomized source and all three receiver positions. Added
+  per-probe spatial coverage, quadrant and separation regression checks.
+- A fresh 256-scene sample (32 per split, seed 2026) contains 267 dielectric objects
+  across 96 train/validation/IID scenes; 88.76% have dk <=10, with dk spanning
+  1.020–29.128. All four probe roles cover both coordinates approximately 0.19–0.81.
+- Saved and visually checked `artifacts/stage3_v3/probes_and_permittivity.png`.
+  Generator versions and historical manifests distinguish the changed seed realizations.
+- Clarified that spatial convergence requires BOTH receiver waveform and complex
+  DFT errors <=2% for two consecutive refinements. Time-window acceptance separately
+  checks late waveform RMS/peak <=1% after excitation ends, extending if necessary.
+
+Validation: **109 tests passed, no skips**, including CUDA (16.35 seconds). Ruff
+lint/format and locked offline uv sync passed. Pytest used a workspace-local temporary
+directory because the default shared temporary directory was inaccessible. No new
+full reference sweep or training was performed. See [v3 evidence](docs/dataset_v3.md).
+
+## Previous update: broader scenes and resonance windows (v2)
 
 - Generator v2 randomizes counts, shape types, orientations and placement; ordinary
   scenes contain 1–8 objects, dense held-out scenes 9–12. Aspect ratios span 0.3–3.3.

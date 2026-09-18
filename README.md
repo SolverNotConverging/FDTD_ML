@@ -282,19 +282,27 @@ not evidence of solver validation. The reference solver is only for tests.
 
 Generation creates versioned SI scene records with eight distinct splits, reproducible
 seeds, physical current sources, PML configuration, raster policy, budgets and provenance.
-Generator v2 draws 1–8 objects per ordinary scene (9–12 in the dense held-out split).
+Generator v3 draws 1–8 objects per ordinary scene (9–12 in the dense held-out split).
 Aspect ratios range from 0.3 to 3.3; per-axis shape spans are sampled over 3.5–50%
 of the domain using logarithmic distributions. Each dielectric object gets its own
-permittivity (1.05–30) and conductivity (lossless or 1e-5–10 S/m). Rectangles,
+permittivity (85% log-uniform 1–10, 15% log-uniform 10–30) and conductivity
+(lossless or 1e-5–10 S/m). The dk cutoff/probability are configurable with
+`--dk-core-max` and `--dk-core-probability`; these are design defaults, not a fit to
+measured application statistics. Rectangles,
 circles, oriented triangles/quadrilaterals, horizontal/vertical PEC lines and
 gap/touching pairs are mixed randomly. Held-out polygons have 5–9 vertices.
+The source and each of three receivers independently propose both normalized
+coordinates in [0.19, 0.81], rejecting geometry clearance and separation violations.
+No source/receiver coordinate is fixed across scenes.
 The raster is now 128x128 to retain a four-pixel minimum feature policy. Content hashes, lineage checks and normalized
 raster geometry comparisons guard against cross-split duplicates.
 
 Evaluation refines **uniform reference grids** through 64, 128, 256, 512 and 1024 cells
 per axis, retaining physical PML thickness while refining collar cells. Two
 consecutive refinements must satisfy the default 2% per-receiver waveform and
-spectral L2 thresholds. Longer initial durations account for domain transit time
+complex DFT L2 thresholds (Hann-windowed, aggregated over frequencies, including
+amplitude and phase differences). The separately reported phase RMS is diagnostic.
+Longer initial durations account for domain transit time
 and permittivity. A receiver ring-down gate doubles duration up to twice when the
 last 20% of the waveform has RMS above 1% of peak. Each extension restarts the
 spatial sequence; all candidates then use that same accepted physical window.
@@ -314,8 +322,9 @@ Use a new empty evaluation output directory to preserve prior results.
 Outputs include a copied manifest, per-scene reference histories/status, NPZ
 waveforms/spectra/meshes, JSON metrics and cost diagnostics, a Markdown table, and
 optional plots. All methods use common physical times, receiver coordinates,
-frequencies and windowing. See [generator v2 and resonance validation](docs/dataset_v2.md)
-for current ranges, limits and evidence. The [original stage 3 record](docs/stage3_validation.md)
+frequencies and windowing. See [current dk and probe validation](docs/dataset_v3.md)
+and [generator v2 and resonance validation](docs/dataset_v2.md)
+for ranges, limits and evidence. The [original stage 3 record](docs/stage3_validation.md)
 describes generator v1, preserved in `fdtdmesh.data.generate_v1`.
 
 ```powershell
