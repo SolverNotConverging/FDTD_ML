@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=75", "wheel", "Cython>=3", "numpy>=2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fdtdmesh"
+version = "0.1.0"
+description = "Nonuniform CUDA TMz FDTD and budget-conditioned CNN meshing"
+requires-python = ">=3.11"
+dependencies = ["numpy>=2", "scipy>=1.14", "torch>=2.6"]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.9", "Cython>=3", "setuptools>=75", "wheel"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+fdtdmesh = ["solver/*.pyx", "solver/cuda/*.h", "solver/cuda/*.cu"]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu130" }
+
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = ["cuda: requires the compiled extension and a CUDA GPU"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]

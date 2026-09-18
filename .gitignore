@@ -1,0 +1,15 @@
+.venv/
+.uv-cache/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+*.egg-info/
+*.pyd
+*.so
+*.obj
+src/fdtdmesh/solver/cuda_runtime.cpp
+artifacts/
+*.pt
+.idea/
