@@ -278,6 +278,10 @@ imitation pipeline, not electromagnetic improvement over the heuristic.
 
 ## 8. Stage 5 — physics-generated targets and distillation
 
+The first substantial cycle is implemented and measured. See
+[Stage-5 evidence](docs/stage5_training.md). Further iterations can expand candidate
+families and reduce the retained Stage 4 prior.
+
 1. For each scene/budget, propose uniform, heuristic, current CNN, perturbed-density,
    and uniform/adaptive-mixture candidates.
 2. Generate legal meshes and run every candidate for the same physical duration.

@@ -379,10 +379,19 @@ finds a mesh-sensitive outlier that makes mean waveform/spectrum agreement worse
 This confirms the training machinery and the need for Stage-5 physics-selected targets;
 teacher imitation alone is not evidence of improved FDTD accuracy.
 
+## Stage 5: physics-selected distillation
+
+Stage 5 reuses the standalone converged-reference corpus, evaluates eight legal
+candidate families with real CUDA FDTD, retains their Pareto tradeoffs, and distills
+the selected projected densities from the Stage 4 checkpoint. The first measured
+cycle contains 72 train/validation targets and evaluates the resulting checkpoint on
+32 untouched IID scene-budget pairs. See [Stage-5 evidence](docs/stage5_training.md)
+for commands, hashes, coverage, target diversity, and held-out error/cost results.
+
 ## Remaining stages
 
-Physics-generated target distillation and demonstrated improvement over the heuristic
-teacher remain future work. Reference coverage for difficult scenes also needs
-expansion: the initial 32-scene run accepted 15 references and marked 17 nonconverged.
+Further physics-search/distillation cycles and broader OOD evaluation remain future
+work. Reference coverage for difficult scenes also needs expansion: the first Stage-5
+corpus accepts 52/112 scenes under the strict two-pass gate.
 TEz, dispersion, anisotropy, GPU batching, online DFT/energy monitors and bounded
 recording remain outside the implementation. The previous FDTD library is unchanged.

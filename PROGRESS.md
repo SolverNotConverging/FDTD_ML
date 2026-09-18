@@ -25,7 +25,7 @@ See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.
 | 2: CPML and simulation conventions | Complete for vacuum collars | CUDA CPML; reflection controls; current normalization; physical receivers |
 | 3: procedural datasets and converged references | Implemented; partial reference coverage | Versioned scenes, split validation, reference gates, three baselines, measured reports |
 | 4: teacher imitation | Complete | Projected targets; resumable GPU training; trained checkpoint; IID/CUDA evidence |
-| 5: physics targets and distillation | In progress | Reference corpus workflow and candidate-search scaffolding; converged corpus and measured distillation remain |
+| 5: physics targets and distillation | First substantial cycle complete | 52 references; 72 physics targets; trained checkpoint; 32-pair untouched IID evaluation |
 | 6: generalization / optional surrogate | Not started | OOD studies, ablations and any surrogate validation |
 
 ## Previous update: Stage-4 teacher imitation
@@ -77,6 +77,30 @@ Validation: **128 tests passed, no skips**, including CUDA (17.19 seconds). Ruff
 lint/format and locked offline uv synchronization passed. A separate three-scene
 reduced-grid CUDA smoke run verified converged, nonconverged, failed, and resume
 paths; it is orchestration evidence rather than production reference data.
+
+## Current update: first substantial Stage-5 cycle
+
+- Completed all 112 reference attempts: 30/64 train, 6/16 validation, and 16/32
+  untouched IID scenes converge. There are 52 accepted references, 56 explicit
+  spatial nonconvergences, and four resource failures.
+- Evaluated eight candidate families on both budgets of every accepted train and
+  validation scene. Generated 72 finite, hash-verified physics targets: 60 train and
+  12 validation. Uniform wins 23 targets; 49 select a nonuniform family.
+- Trained a 20-epoch physics-distilled checkpoint from the Stage-4 model. Epoch 16
+  reduces validation target loss from 1.586e-4 initially to 1.161e-4.
+- Evaluated uniform, heuristic, Stage-4 imitation, and Stage-5 distilled meshes on
+  16 converged untouched IID scenes and two budgets, with 128/128 successful runs.
+  Stage 5 improves median max EM error from 4.690% to 4.328% versus Stage 4 and wins
+  17/32 pairs. Its mean is slightly worse, so sensitive outliers remain.
+- Against the heuristic, Stage 5 has lower paired error in 17/32 and lower work in
+  28/32; median paired ratios are 0.969 error and 0.864 work.
+
+See [Stage-5 evidence](docs/stage5_training.md). Generated data and checkpoints are
+under ignored `artifacts/reference_pilot/` and `artifacts/stage5/`.
+
+Validation: **131 tests passed, no skips**, including CUDA (16.80 seconds). Ruff
+lint/format, locked offline uv synchronization, checkpoint/target hashes, and the
+rendered Stage-5 summary figure were verified.
 
 ## Previous update: dk mixture and spatial probe coverage
 
