@@ -4,7 +4,8 @@ Updated 2026-09-18. **Stages 1–4 are implemented**, including mandatory 1.4 gr
 CUDA CPML, procedural datasets and convergence-gated evaluation. Stage 3 reference
 coverage remains partial. Generator v3 adds a low-dk-dominant material mixture to
 the broad scene generator, with verified randomized source/receiver coverage.
-The evaluator supports longer resonance windows. Stage 4 now supplies projected
+The evaluator supports longer resonance windows and now has a reference-only,
+restart-safe 64/16/32 train/validation/IID workflow. Stage 4 supplies projected
 teacher targets, reproducible/resumable training, and held-out CUDA evaluation.
 This record accompanies the version-0.5.0 imitation-training update. Earlier commits:
 `99374e7` (stage one), `2437779` (plan/progress), `085cd1b` (historical grading audit),
@@ -24,10 +25,10 @@ See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.
 | 2: CPML and simulation conventions | Complete for vacuum collars | CUDA CPML; reflection controls; current normalization; physical receivers |
 | 3: procedural datasets and converged references | Implemented; partial reference coverage | Versioned scenes, split validation, reference gates, three baselines, measured reports |
 | 4: teacher imitation | Complete | Projected targets; resumable GPU training; trained checkpoint; IID/CUDA evidence |
-| 5: physics targets and distillation | Not started | Candidate generation, FDTD scoring, Pareto selection and distillation |
+| 5: physics targets and distillation | In progress | Reference corpus workflow and candidate-search scaffolding; converged corpus and measured distillation remain |
 | 6: generalization / optional surrogate | Not started | OOD studies, ablations and any surrogate validation |
 
-## Current update: Stage-4 teacher imitation
+## Previous update: Stage-4 teacher imitation
 
 - Added versioned heuristic-teacher targets. Raw heuristic density is projected through
   the exact legal mesher before rebinning, so targets include budgets, anchors, PML
@@ -50,6 +51,32 @@ Validation: **113 tests passed, no skips**, including CUDA (16.41 seconds). Ruff
 lint/format and locked offline uv synchronization passed. See
 [Stage-4 evidence](docs/stage4_training.md) and the local ignored artifacts under
 `artifacts/stage4/`.
+
+## Current update: converged-reference corpus infrastructure
+
+- Added exact-count generation for selected splits and the canonical 64 train,
+  16 validation, and 32 untouched IID test manifest command.
+- Generated the local 112-scene seed-2026 manifest with dataset ID
+  `f17978780a329ec23e184b889440c52e5904e737d122d3a6d86bc5ae58abf7d7`.
+  It has exact split counts, 1–8 primitives, epsilon_r 1.020–29.128, sigma
+  0–9.429 S/m, and source coverage of approximately 0.19–0.81 on both axes.
+- Added a reference-only runner that commits each scene independently, resumes only
+  under an identical dataset/configuration contract, and updates JSON/Markdown
+  coverage after every scene. Completed failures and nonconvergence remain recorded.
+- Each scene retains its own adaptive duration, duration history, accepted spatial
+  budget, latest waveform/spectrum/mesh, cost diagnostics, and wall time. Only
+  `converged` is accepted as ground truth.
+- Kept direct Yee-location material point sampling. No averaging or subpixel model
+  was introduced.
+
+The 112-scene manifest is generated and validated. The full CUDA convergence sweep
+has not yet been run, so accepted-reference counts are not claimed here. See
+[the reference workflow](docs/reference_dataset.md).
+
+Validation: **128 tests passed, no skips**, including CUDA (17.19 seconds). Ruff
+lint/format and locked offline uv synchronization passed. A separate three-scene
+reduced-grid CUDA smoke run verified converged, nonconverged, failed, and resume
+paths; it is orchestration evidence rather than production reference data.
 
 ## Previous update: dk mixture and spatial probe coverage
 

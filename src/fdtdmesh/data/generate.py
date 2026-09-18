@@ -341,15 +341,21 @@ def make_scene(seed, split, index=0, *, config=None):
     return scene
 
 
-def generate_dataset(per_split=4, seed=2026, *, config=None):
+def generate_splits(counts, seed=2026, *, config=None):
+    """Generate exact per-split counts with one deterministic, leakage-checked stream."""
     from fdtdmesh.mesh import cell_count
 
-    per_split = cell_count(per_split)
+    if not isinstance(counts, dict) or not counts:
+        raise ValueError("counts must be a nonempty split-to-count mapping")
+    unknown = set(counts) - set(SPLITS)
+    if unknown:
+        raise ValueError(f"Unknown splits: {sorted(unknown)}")
+    normalized = {split: cell_count(count) for split, count in counts.items()}
     cfg = config or GenerationConfig()
     rng = np.random.default_rng(seed)
     scenes, signatures = [], []
     for split in SPLITS:
-        for index in range(per_split):
+        for index in range(normalized.get(split, 0)):
             for _ in range(1000):
                 try:
                     scene = make_scene(int(rng.integers(0, 2**32)), split, index, config=cfg)
@@ -369,3 +375,11 @@ def generate_dataset(per_split=4, seed=2026, *, config=None):
                     "Cannot generate resolved, separated scenes with this configuration"
                 )
     return scenes
+
+
+def generate_dataset(per_split=4, seed=2026, *, config=None):
+    """Generate the same positive count for every supported split."""
+    from fdtdmesh.mesh import cell_count
+
+    per_split = cell_count(per_split)
+    return generate_splits({split: per_split for split in SPLITS}, seed, config=config)

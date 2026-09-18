@@ -238,9 +238,16 @@ pass the recorded convergence checks. The initial validation accepts 15/32 scene
    evaluations. Prevent near-duplicate scenes from crossing dataset splits.
 7. Establish uniform, heuristic, and CNN baselines with identical scene, excitation,
    physical duration, observable definitions, and error metrics.
+8. Use a deterministic 64/16/32 train/validation/IID reference manifest for the first
+   physics-target cycle. Generate references per scene with atomic status commits,
+   exact-configuration resume checks, incremental coverage reports, and no silent
+   removal of failed or unconverged cases. Keep the IID test split untouched during
+   search and distillation.
 
 Acceptance: reproducible scene generation, documented reference convergence,
 split integrity checks, and an accuracy-versus-work/runtime report for the baselines.
+The production reference corpus is accepted scene by scene; creating its manifest or
+finishing only part of a resumable sweep does not imply that all 112 labels converged.
 
 ## 7. Stage 4 — teacher imitation
 

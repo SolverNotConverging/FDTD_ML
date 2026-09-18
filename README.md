@@ -1,4 +1,4 @@
-# FDTDMesh — stages 1–3
+# FDTDMesh — learned nonuniform FDTD meshing
 
 A scene-first, nonuniform 2D TMz solver and a CNN-to-Yee-mesh pipeline.
 The production solver runs compiled CUDA kernels through Cython. Geometry exists
@@ -281,6 +281,20 @@ not evidence of solver validation. The reference solver is only for tests.
 .venv\Scripts\python.exe examples/plot_stage3.py --evaluation artifacts/stage3/evaluation
 ```
 
+The Stage-5 reference pilot uses exact asymmetric split sizes and a reference-only,
+resumable runner:
+
+```powershell
+.venv\Scripts\python.exe -m fdtdmesh.data reference-manifest --output artifacts/reference_pilot/manifest.json --seed 2026 --train 64 --validation 16 --test 32
+.venv\Scripts\python.exe -m fdtdmesh.data references --manifest artifacts/reference_pilot/manifest.json --output artifacts/reference_pilot/references --splits train validation test_iid --duration-extensions 3
+```
+
+The reference directory is bound to its dataset and full convergence configuration.
+Rerunning the same command skips committed scenes and continues the remaining work;
+configuration changes are rejected. Reports update after each scene. See the
+[reference dataset workflow](docs/reference_dataset.md) for the acceptance policy,
+artifact layout, and recorded 112-scene dataset identity.
+
 Generation creates versioned SI scene records with eight distinct splits, reproducible
 seeds, physical current sources, PML configuration, raster policy, budgets and provenance.
 Generator v3 draws 1–8 objects per ordinary scene (9–12 in the dense held-out split).
@@ -318,7 +332,8 @@ The candidates are a uniform density preference projected onto all hard constrai
 an explicit material/edge heuristic, and an optional supplied CNN checkpoint.
 `--demo-cnn` uses labelled random weights; omit it to run only the first two, or
 supply `--checkpoint path.pt`. This provides no evidence of learned improvement.
-Use a new empty evaluation output directory to preserve prior results.
+Use a new empty candidate-evaluation output directory to preserve prior results.
+The reference-only command above has its own validated resume contract.
 
 Outputs include a copied manifest, per-scene reference histories/status, NPZ
 waveforms/spectra/meshes, JSON metrics and cost diagnostics, a Markdown table, and
