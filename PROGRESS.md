@@ -1,6 +1,6 @@
 # Current project progress
 
-Updated 2026-09-18. **Stages 1–4 are implemented**, including mandatory 1.4 grading,
+Updated 2026-09-19. **Stages 1–4 are implemented**, including mandatory 1.4 grading,
 CUDA CPML, procedural datasets and convergence-gated evaluation. Stage 3 reference
 coverage remains partial. Generator v4 retains the low-dk-dominant material mixture
 and randomized source/receiver coverage while adding 32x32 and 48x48 budget strata.
@@ -8,7 +8,8 @@ The evaluator supports longer resonance windows and now has a reference-only,
 restart-safe 64/16/32 train/validation/IID workflow. Stage 4 supplies projected
 teacher targets, reproducible/resumable training, and held-out CUDA evaluation.
 Stage 5 now includes a second candidate search, two early-stopped continuation
-branches, measured validation selection, and a selected 80%-physics checkpoint.
+branches, measured validation selection, a selected 80%-physics checkpoint, and a
+measured four-budget continuation experiment.
 This record accompanies the version-0.5.0 imitation-training update. Earlier commits:
 `99374e7` (stage one), `2437779` (plan/progress), `085cd1b` (historical grading audit),
 `e35a079` (stage two), `079b62c` (initial stage three), `00db055` (generator v2),
@@ -27,7 +28,7 @@ See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.
 | 2: CPML and simulation conventions | Complete for vacuum collars | CUDA CPML; reflection controls; current normalization; physical receivers |
 | 3: procedural datasets and converged references | Implemented; partial reference coverage | Versioned scenes, split validation, reference gates, three baselines, measured reports |
 | 4: teacher imitation | Complete | Projected targets; resumable GPU training; trained checkpoint; IID/CUDA evidence |
-| 5: physics targets and distillation | Available-data continuation complete | Second search; 50%/80% early-stopped branches; FDTD-selected checkpoint; 32-pair IID evaluation |
+| 5: physics targets and distillation | Four-budget pilot complete | 32/48/64/96 targets; FDTD-selected default retained; 63-pair IID evaluation |
 | 6: generalization / optional surrogate | Not started | OOD studies, ablations and any surrogate validation |
 
 ## Previous update: Stage-4 teacher imitation
@@ -130,6 +131,25 @@ rendered Stage-5 summary figure were verified.
 See the continuation section in [Stage-5 evidence](docs/stage5_training.md). Local
 artifacts are under ignored `artifacts/stage5_available/`; the rendered summary was
 visually inspected.
+
+## Current update: four-budget Stage-5 continuation
+
+- Added explicit square-budget overrides to teacher generation, physics search, and
+  evaluation while preserving the original manifest and reference-corpus hashes.
+- Generated 308 feasible heuristic pairs and retained 12 infeasible pairs. The 36
+  converged train/validation references yielded 142 physics targets: 34 at 32x32
+  and 36 each at 48x48, 64x64, and 96x96.
+- Continued the selected model with an 80% physics blend. Early stopping selected
+  epoch 24 and stopped at epoch 34. Validation median/mean errors improved from
+  9.723%/23.764% to 7.300%/21.845%.
+- On 63 feasible held-out pairs, the continuation wins 35 paired comparisons and
+  improves median error at 32x32, 48x48, and 64x64. Aggregate median/mean errors are
+  7.507%/12.855% versus 7.044%/12.034% for the prior model, so the current default
+  checkpoint remains selected.
+- Rendered and visually checked the per-budget FDTD comparison, graded meshes, and
+  cell-width profiles under ignored `artifacts/stage5_low_budget/`.
+
+Validation: **138 tests passed, no skips**. Ruff also passes.
 
 ## Previous update: dk mixture and spatial probe coverage
 
@@ -300,9 +320,9 @@ ignored; source, tests, scripts, documentation and dependency metadata are track
 
 ## Next milestone
 
-Move large reference generation to server hardware and include feasible 32x32,
-48x48, 64x64, and 96x96 candidate budgets. Expand train/validation coverage,
-especially compositional scenes, and examine staircase convergence, PML sensitivity,
+Move large reference generation to server hardware and expand train/validation
+coverage across 32x32, 48x48, 64x64, and 96x96, especially for 32x32 outliers and
+compositional scenes. Examine staircase convergence, PML sensitivity,
 and sampling bandwidth. Compare strategies within equal budget strata and do not
 weaken the reference gate merely to increase dataset size; retain failures and
 infeasible scene-budget pairs in coverage reports.

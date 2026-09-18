@@ -296,6 +296,12 @@ families and reduce the retained Stage 4 prior.
    Record infeasible scene-budget pairs, balance sampling across budgets, normalize
    losses within each budget, and report equal-budget accuracy/cost comparisons.
 
+The first four-budget pilot is complete. It reuses fixed converged references, records
+infeasible low-budget pairs, and reports validation and held-out FDTD metrics by
+budget. It improves several strata but does not yet meet aggregate held-out acceptance,
+so the earlier selected checkpoint remains the default while server reference coverage
+is expanded.
+
 Acceptance: measured improvement in held-out electromagnetic error at matched cost,
 or lower cost at matched error. Teacher agreement alone is not sufficient.
 Let the model learn when uniform allocation is adequate; do not hard-code a

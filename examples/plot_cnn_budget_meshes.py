@@ -77,6 +77,7 @@ def main():
     )
     parser.add_argument("--budgets", nargs="+", type=int, default=[32, 48, 64, 96])
     parser.add_argument("--device", default="cuda")
+    parser.add_argument("--title", default="Selected 80%-physics CNN: exact-budget graded meshes")
     args = parser.parse_args()
     if any(budget < 1 for budget in args.budgets) or len(set(args.budgets)) != len(args.budgets):
         raise ValueError("Budgets must be distinct positive integers")
@@ -108,7 +109,7 @@ def main():
             meshes[scene_id, budget] = simulation
             draw_scene(axes[row, column], spec, simulation, epsilon, pec, budget)
             axes[row, column].set_title(f"{scene_id} / {budget}x{budget}")
-    figure.suptitle("Selected 80%-physics CNN: exact-budget graded meshes", fontsize=15)
+    figure.suptitle(args.title, fontsize=15)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(args.output, dpi=180)
     plt.close(figure)

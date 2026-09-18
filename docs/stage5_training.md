@@ -133,6 +133,45 @@ Continuation SHA-256 values:
 - 50% checkpoint: `111b566c9f22e1f565bf0433aec8d7bc63ed6137dde52a2331b4698840fbcc03`
 - selected 80% checkpoint: `b91bd56e06162dc61c1350bc67c9c823c7515cc1948476004fb23685c0209f0c`
 
+## Low-budget continuation
+
+The pilot references were reused without changing their manifest identity or
+recomputing converged waveforms. Teacher generation, candidate search, and evaluation
+now accept an explicit list of square budgets. The run used 32x32, 48x48, 64x64,
+and 96x96. Teacher projection produced 308 feasible pairs across all selected scenes
+and recorded 12 infeasible pairs. Physics search used the 36 converged train and
+validation references and produced 142 targets: 34 at 32x32 and 36 at each other
+budget. The two missing 32x32 pairs remain explicit geometric infeasibilities.
+
+The 80% physics continuation started from the previously selected checkpoint. Its
+best validation CDF loss was 1.803e-4 at epoch 24; training stopped at epoch 34 after
+ten stale epochs. Validation FDTD improved aggregate median maximum EM error from
+9.723% to 7.300% and mean error from 23.764% to 21.845%, winning 14/24 pairs.
+
+Held-out IID results span 63 feasible scene-budget pairs:
+
+| Budget | Feasible | Low-budget median | Prior Stage 5 median | Low-budget mean | Prior Stage 5 mean |
+|---:|---:|---:|---:|---:|---:|
+| 32x32 | 15 | **27.736%** | 30.141% | 31.428% | **28.549%** |
+| 48x48 | 16 | **10.018%** | 10.455% | 11.163% | **10.814%** |
+| 64x64 | 16 | **5.234%** | 5.597% | 6.404% | **5.713%** |
+| 96x96 | 16 | 3.455% | **3.394%** | **3.587%** | 4.091% |
+| all | 63 | 7.507% | **7.044%** | 12.855% | **12.034%** |
+
+The continuation wins 35/63 paired comparisons and improves the median in every new
+low-budget stratum, but its aggregate held-out median and mean are worse. It is
+therefore retained as an experimental low-budget checkpoint and does not replace the
+current default. The comparison and mesh figures are
+`artifacts/stage5_low_budget/low_budget_test_comparison.png` and
+`artifacts/stage5_low_budget/low_budget_cnn_meshes.png`.
+
+Low-budget SHA-256 values:
+
+- heuristic targets: `593c4ada4b0c0ffaf8eb54433608b0d105b51048775d4401c6fdbfc8ce39904a`
+- 50% search targets: `3caee15225502948ebe171452ed88fb82b4f44be067e43273c20aba5aa6ba677`
+- 80% blended targets: `d7fac498586861db3c8e33e37110252a41bf1bfdcced2219fbfde296043697bf`
+- experimental checkpoint: `dff6a46f631e807824466dec45c5a96383afbef389050908bb5a959df7154c4e`
+
 ## Reproduction
 
 ```powershell

@@ -391,6 +391,9 @@ the selected projected densities from the Stage 4 checkpoint. The first measured
 cycle contains 72 train/validation targets and evaluates the resulting checkpoint on
 32 untouched IID scene-budget pairs. See [Stage-5 evidence](docs/stage5_training.md)
 for commands, hashes, coverage, target diversity, and held-out error/cost results.
+The same workflow now supports explicit 32x32, 48x48, 64x64, and 96x96 overrides
+against the unchanged reference corpus. The first four-budget continuation improves
+several low-budget medians but does not replace the selected default checkpoint.
 
 ## Remaining stages
 
