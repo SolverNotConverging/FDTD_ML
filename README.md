@@ -4,6 +4,9 @@ A scene-first, nonuniform 2D TMz solver and a CNN-to-Yee-mesh pipeline.
 The production solver runs compiled CUDA kernels through Cython. Geometry exists
 independently of both the CNN raster and the simulation grid.
 
+Project documents: [implementation plan](IMPLEMENTATION_PLAN.md),
+[current progress](PROGRESS.md), and [validation results](docs/validation.md).
+
 ## Install and build (Windows)
 
 Requirements: Python 3.11+, `uv`, Visual Studio C++ x64 tools and Windows SDK,
