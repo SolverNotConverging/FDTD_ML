@@ -68,6 +68,8 @@ src/fdtdmesh/
     pml.py                    Fixed collars and staggered CFS-CPML profiles
     sampling.py               Physical probe interpolation and dual-cell areas
     ml.py                     Rasterization, ResU-Net, conditioning, model I/O
+    data/                     Versioned scene schema, seeded generation, split checks, CLI
+    evaluation/               Common observables, refinement, candidate scoring and reports
     solver/
         coefficients.py       Staggered material coefficients and CFL limit
         reference_tmz.py      NumPy testing oracle
@@ -81,7 +83,7 @@ scripts/                      Build and, later, dataset/training/evaluation comm
 docs/                         Numerical conventions and validation records
 ```
 
-As training develops, add `data/` and `evaluation/` modules and separate `ml.py`
+Stage 3 adds `data/` and `evaluation/`. As training develops, separate `ml.py`
 into a package when model, losses, datasets, and training warrant it. Keep a `uv`
 environment and dependency lockfile, and commit coherent changes to Git.
 
@@ -199,6 +201,10 @@ Device-side DFT, energy diagnostics, bounded recording, graph replay, and batchi
 remain optional later work driven by profiling and dataset requirements.
 
 ## 6. Stage 3 — procedural scenes, trusted references, and evaluation
+
+Implemented in version 0.3.0. See [stage 3 contracts and evidence](docs/stage3_validation.md).
+The pipeline is complete; individual scenes remain unusable as references until they
+pass the recorded convergence checks. The initial validation accepts 15/32 scenes.
 
 1. Create versioned scene/data schemas containing physical scene definitions,
    random seeds, budgets, frequencies, source/receiver conventions, mesh parameters,

@@ -1,4 +1,4 @@
-# FDTDMesh — stages 1 and 2
+# FDTDMesh — stages 1–3
 
 A scene-first, nonuniform 2D TMz solver and a CNN-to-Yee-mesh pipeline.
 The production solver runs compiled CUDA kernels through Cython. Geometry exists
@@ -272,10 +272,43 @@ conservation, and physical probe/time interpolation.
 CUDA tests skip when no native backend/device is available; a skipped GPU suite is
 not evidence of solver validation. The reference solver is only for tests.
 
+## Stage 3: datasets and evaluation
+
+```powershell
+.venv\Scripts\python.exe -m fdtdmesh.data generate --output artifacts/stage3/manifest.json --per-split 4 --seed 2026
+.venv\Scripts\python.exe -m fdtdmesh.data evaluate --manifest artifacts/stage3/manifest.json --output artifacts/stage3/evaluation --split all --demo-cnn
+.venv\Scripts\python.exe examples/plot_stage3.py --evaluation artifacts/stage3/evaluation
+```
+
+Generation creates versioned SI scene records with eight distinct splits, reproducible
+seeds, physical current sources, PML configuration, raster policy, budgets and provenance.
+Families include rectangles, circles, triangles, polygons, thin PEC lines, gaps,
+mixed objects and touching objects. Content hashes, lineage checks and normalized
+raster geometry comparisons guard against cross-split duplicates.
+
+Evaluation refines **uniform reference grids** through 64, 128, 256 and 512 cells
+per axis, retaining physical PML thickness while refining collar cells. Two
+consecutive refinements must satisfy the default 2% per-receiver waveform and
+spectral L2 thresholds. Failed/nonconverged references are recorded and excluded
+from candidate accuracy scoring. References that cannot represent anchors uniformly
+are rejected explicitly. Candidate collars retain fixed counts within their budgets.
+
+The candidates are a uniform density preference projected onto all hard constraints,
+an explicit material/edge heuristic, and an optional supplied CNN checkpoint.
+`--demo-cnn` uses labelled random weights; omit it to run only the first two, or
+supply `--checkpoint path.pt`. This provides no evidence of learned improvement.
+Use a new empty evaluation output directory to preserve prior results.
+
+Outputs include a copied manifest, per-scene reference histories/status, NPZ
+waveforms/spectra/meshes, JSON metrics and cost diagnostics, a Markdown table, and
+optional plots. All methods use common physical times, receiver coordinates,
+frequencies and windowing. See [stage 3 contracts and validation](docs/stage3_validation.md)
+for normalization floors, split definitions, limits and measured coverage.
+
 ## Remaining stages
 
-Procedural datasets, converged arbitrary-scene references, teacher training,
-physics-generated target distillation, and demonstrated learned improvement remain
-future work. TEz, dispersion, anisotropy, GPU batching, online DFT/energy monitors,
-and bounded-history recording are also outside the current implementation.
-The previous FDTD library was used as a reference and remains unchanged.
+Teacher training, physics-generated target distillation and demonstrated learned
+improvement remain future work. Reference coverage for difficult scenes also needs
+expansion: the initial 32-scene run accepted 15 references and marked 17 nonconverged.
+TEz, dispersion, anisotropy, GPU batching, online DFT/energy monitors and bounded
+recording remain outside the implementation. The previous FDTD library is unchanged.
