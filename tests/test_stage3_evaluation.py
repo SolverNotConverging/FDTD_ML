@@ -3,7 +3,7 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from fdtdmesh.data.generate import make_scene
+from fdtdmesh.data.generate_v1 import make_scene
 from fdtdmesh.data.schema import write_manifest
 from fdtdmesh.evaluation import (
     EvaluationConfig,
@@ -45,7 +45,9 @@ def test_observations_align_dt_and_use_known_zero_initial_state():
 
 def test_convergence_requires_consecutive_passes_and_rejects_exhaustion():
     scene = make_scene(1, "train", 1)
-    config = EvaluationConfig(reference_levels=(8, 16, 32, 64), relative_tolerance=0.02)
+    config = EvaluationConfig(
+        reference_levels=(8, 16, 32, 64), relative_tolerance=0.02, tail_relative_tolerance=None
+    )
 
     def runner(values):
         def run(spec, budget, config, **kw):
@@ -85,7 +87,9 @@ def test_real_cuda_dataset_reference_and_three_baselines(tmp_path):
     manifest = tmp_path / "dataset.json"
     write_manifest(manifest, [scene], generation={"seed": 42})
     output = tmp_path / "evaluated"
-    report = evaluate_dataset(manifest, output, demo_cnn=True)
+    report = evaluate_dataset(
+        manifest, output, demo_cnn=True, config=EvaluationConfig(tail_relative_tolerance=None)
+    )
     assert report["scenes"][0]["status"] == "converged"
     assert report["checkpoint"]["untrained"]
     assert len(report["candidates"]) == 3

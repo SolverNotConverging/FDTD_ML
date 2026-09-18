@@ -202,7 +202,9 @@ remain optional later work driven by profiling and dataset requirements.
 
 ## 6. Stage 3 — procedural scenes, trusted references, and evaluation
 
-Implemented in version 0.3.0. See [stage 3 contracts and evidence](docs/stage3_validation.md).
+Implemented in version 0.3.0 and expanded in 0.4.0. See the
+[original stage 3 evidence](docs/stage3_validation.md) and
+[broader generator / ring-down contract](docs/dataset_v2.md).
 The pipeline is complete; individual scenes remain unusable as references until they
 pass the recorded convergence checks. The initial validation accepts 15/32 scenes.
 
@@ -211,13 +213,20 @@ pass the recorded convergence checks. The initial validation accepts 15/32 scene
    solver precision, boundary conditions, and code provenance.
 2. Generate mixed scenes with dielectric and PEC rectangles, circles, triangles,
    polygons, thin lines, gaps, touching objects, and several geometric scales.
-   Vary material contrast, loss, domain aspect ratio/electrical size, and probe locations.
+   Vary object count (1–8 ordinarily, 9–12 held out), independent object materials,
+   logarithmically distributed sizes/contrast/loss, domain aspect ratio/electrical
+   size, object orientation and vacuum probe locations. Use 128x128 rasters to
+   resolve smaller features. Keep generation configuration and versions in manifests.
 3. Require important unanchored features to span several CNN pixels initially.
    If necessary later, add raw subpixel samples/material fractions rather than
    semantic geometry features.
 4. Generate fine uniform references and refine until successive observables agree
    within a recorded convergence tolerance. Retain analytical cases as independent
    checks, and mark nonconverged scenes rather than treating them as ground truth.
+   Separately test late-time receiver ring-down after excitation ends; extend the
+   physical duration and restart spatial checks when needed. Preserve temporal and
+   frequency sampling resolution and compare every candidate over the accepted
+   shared window. Longer simulation time does not substitute for spatial refinement.
 5. Compare receiver waveforms on a common physical time basis, requested spectra,
    and phase where meaningful. Use normalization floors and document weighting.
 6. Separate IID, compositional, geometry-OOD, material-OOD, scale-OOD, and unseen-budget

@@ -2,7 +2,7 @@
 
 import hashlib
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from time import perf_counter
 
@@ -18,17 +18,24 @@ from .metrics import compare_observables, sample_observables, spectrum
 
 @dataclass(frozen=True)
 class EvaluationConfig:
-    reference_levels: tuple = (64, 128, 256, 512)
+    reference_levels: tuple = (64, 128, 256, 512, 1024)
     relative_tolerance: float = 0.02
     consecutive_passes: int = 2
     samples: int = 1025
     frequency_count: int = 12
     amplitude_floor: float = 1e-8
     phase_gate: float = 0.01
-    max_cell_updates: int = 8_000_000_000
+    max_cell_updates: int = 128_000_000_000
     max_history_bytes: int = 256_000_000
     max_field_bytes: int = 1_000_000_000
     meshing_time_limit: float = 30.0
+    duration_multiplier: float = 1.0
+    max_duration_extensions: int = 2
+    tail_relative_tolerance: float | None = 0.01
+    tail_fraction: float = 0.2
+    samples_per_period: int = 16
+    max_observation_samples: int = 65537
+    max_frequency_samples: int = 8193
 
     def __post_init__(self):
         from fdtdmesh.mesh import cell_count
@@ -44,6 +51,9 @@ class EvaluationConfig:
             "max_cell_updates",
             "max_history_bytes",
             "max_field_bytes",
+            "samples_per_period",
+            "max_observation_samples",
+            "max_frequency_samples",
         ):
             object.__setattr__(self, name, cell_count(getattr(self, name)))
         if self.samples < 3 or self.frequency_count < 2 or self.consecutive_passes >= len(levels):
@@ -54,6 +64,8 @@ class EvaluationConfig:
                 self.amplitude_floor,
                 self.phase_gate,
                 self.meshing_time_limit,
+                self.duration_multiplier,
+                self.tail_fraction,
             ]
         ).all():
             raise ValueError("Configuration must be finite")
@@ -62,8 +74,23 @@ class EvaluationConfig:
             or self.amplitude_floor <= 0
             or not 0 < self.phase_gate < 1
             or self.meshing_time_limit <= 0
+            or self.duration_multiplier < 1
+            or not 0 < self.tail_fraction < 0.5
+            or self.samples_per_period < 4
         ):
             raise ValueError("Invalid evaluation tolerance or limits")
+        if (
+            isinstance(self.max_duration_extensions, bool)
+            or int(self.max_duration_extensions) != self.max_duration_extensions
+            or self.max_duration_extensions < 0
+        ):
+            raise ValueError("Duration extensions must be a nonnegative integer")
+        object.__setattr__(self, "max_duration_extensions", int(self.max_duration_extensions))
+        if self.tail_relative_tolerance is not None and (
+            not np.isfinite(self.tail_relative_tolerance)
+            or not 0 < self.tail_relative_tolerance < 1
+        ):
+            raise ValueError("Tail tolerance must be in (0,1), or None for fixed-window evaluation")
 
 
 def heuristic_density(scene, raster_shape):
@@ -104,7 +131,11 @@ def run_scene(spec, budget, config, *, strategy="uniform", checkpoint=None, refe
     nr = sum(receiver.get("samples", 1) for receiver in spec.receivers)
     history_bytes = nt * nr * 4 * np.dtype(s.dtype).itemsize
     if s.Nx * s.Ny * nt > config.max_cell_updates or history_bytes > config.max_history_bytes:
-        raise RuntimeError("Reference/candidate resource limit exceeded before CUDA allocation")
+        raise RuntimeError(
+            f"Reference/candidate resource limit exceeded before CUDA allocation: "
+            f"{s.Nx * s.Ny * nt} cell updates (limit {config.max_cell_updates}), "
+            f"{history_bytes} history bytes (limit {config.max_history_bytes})"
+        )
     if spec.f_max > 0.5 / c.dt:
         raise ValueError("Solver timestep cannot sample requested frequency band")
     result = s.run()
@@ -117,8 +148,16 @@ def run_scene(spec, budget, config, *, strategy="uniform", checkpoint=None, refe
 
 
 def grids(spec, config):
-    times = np.linspace(0, spec.t_end, config.samples)
-    frequencies = np.linspace(spec.f_min, spec.f_max, config.frequency_count)
+    samples = max(
+        config.samples, int(np.ceil(spec.t_end * spec.f_max * config.samples_per_period)) + 1
+    )
+    frequency_count = max(
+        config.frequency_count, int(np.ceil(2 * spec.t_end * (spec.f_max - spec.f_min))) + 1
+    )
+    if samples > config.max_observation_samples or frequency_count > config.max_frequency_samples:
+        raise ValueError("Observation resource limit exceeded; increase explicit sampling limits")
+    times = np.linspace(0, spec.t_end, samples)
+    frequencies = np.linspace(spec.f_min, spec.f_max, frequency_count)
     if spec.f_max > 0.5 / (times[1] - times[0]):
         raise ValueError("Observation grid undersamples requested spectrum")
     return times, frequencies
@@ -135,7 +174,38 @@ def metrics(a, b, times, frequencies, config):
     )
 
 
-def converge_reference(spec, config, *, runner=run_scene):
+def tail_diagnostic(spec, observations, config):
+    n = max(1, int(np.ceil(len(observations) * config.tail_fraction)))
+    ratios = np.sqrt(np.mean(observations[-n:] ** 2, axis=0)) / np.maximum(
+        np.max(abs(observations), axis=0), config.amplitude_floor
+    )
+
+    # Tail tests are meaningful only after pulsed excitation has ended.
+    def ended(source):
+        width = source.get("width")
+        width = 1 / spec.f_max if width is None else width
+        delay = source.get("delay")
+        delay = 4 * width if delay is None else delay
+        return (
+            source.get("waveform", "gaussian") in ("gaussian", "gaussian_sine")
+            and delay + 4 * width <= (1 - config.tail_fraction) * spec.t_end
+        )
+
+    pulse_ended = all(ended(source) for source in spec.sources)
+    return {
+        "tail_rms_over_peak": float(ratios.max()),
+        "pulse_ended_before_tail": pulse_ended,
+        "settled": bool(
+            pulse_ended
+            and (
+                config.tail_relative_tolerance is None
+                or ratios.max() <= config.tail_relative_tolerance
+            )
+        ),
+    }
+
+
+def _converge_at_duration(spec, config, runner):
     times, frequencies = grids(spec, config)
     history = []
     previous = None
@@ -145,7 +215,16 @@ def converge_reference(spec, config, *, runner=run_scene):
         try:
             result = runner(spec, [level, level], config, reference=True)
             observations = sample_observables(result, times)
-            entry = {"budget": [level, level], "diagnostics": result.diagnostics}
+            tail = tail_diagnostic(spec, observations, config)
+            entry = {"budget": [level, level], "diagnostics": result.diagnostics, "tail": tail}
+            latest = (result, observations)
+            if config.tail_relative_tolerance is not None and not tail["settled"]:
+                history.append(entry)
+                return {
+                    "status": "time_unsettled",
+                    "levels": history,
+                    "accepted_budget": None,
+                }, latest
             if previous is not None:
                 comparison = metrics(previous, observations, times, frequencies, config)
                 passed = (
@@ -169,6 +248,24 @@ def converge_reference(spec, config, *, runner=run_scene):
             )
             return {"status": "failed", "levels": history, "accepted_budget": None}, latest
     return {"status": "nonconverged", "levels": history, "accepted_budget": None}, latest
+
+
+def converge_reference(spec, config, *, runner=run_scene):
+    attempts = []
+    effective = replace(spec, t_end=spec.t_end * config.duration_multiplier)
+    for extension in range(config.max_duration_extensions + 1):
+        try:
+            status, latest = _converge_at_duration(effective, config, runner)
+        except ValueError as error:
+            status, latest = (
+                {"status": "failed", "levels": [], "accepted_budget": None, "error": str(error)},
+                None,
+            )
+        attempts.append({"duration": effective.t_end, **status})
+        if status["status"] != "time_unsettled" or extension == config.max_duration_extensions:
+            return {**status, "duration": effective.t_end, "duration_history": attempts}, latest
+        # Restart the spatial sequence so every refinement uses the same time window.
+        effective = replace(effective, t_end=effective.t_end * 2)
 
 
 def _json(path, value):
@@ -206,10 +303,20 @@ def evaluate_dataset(
     if demo_cnn:
         torch.manual_seed(2026)
         checkpoint = output / "untrained_demo.pt"
-        save_model(checkpoint, ResUNet(4), raster_shape=(64, 64))
+        save_model(
+            checkpoint,
+            ResUNet(4),
+            raster_shape=tuple(max(s.raster_shape[i] for s in scenes) for i in range(2)),
+        )
     model_record = None
     if checkpoint is not None:
         _, metadata = load_model(checkpoint)
+        if any(
+            any(a < b for a, b in zip(metadata["raster_shape"], s.raster_shape)) for s in scenes
+        ):
+            raise ValueError(
+                "Checkpoint raster is smaller than the dataset feature-resolution contract"
+            )
         model_record = {
             "sha256": hashlib.sha256(Path(checkpoint).read_bytes()).hexdigest(),
             "metadata": metadata,
@@ -229,8 +336,8 @@ def evaluate_dataset(
     _json(output / "manifest.json", manifest)
     for spec in scenes:
         print(f"Reference {spec.scene_id}", flush=True)
-        times, frequencies = grids(spec, config)
         status, latest = converge_reference(spec, config)
+        evaluated_spec = replace(spec, t_end=status.get("duration", spec.t_end))
         status.update(
             scene_id=spec.scene_id,
             scene_hash=spec.content_hash,
@@ -241,8 +348,10 @@ def evaluate_dataset(
         directory = output / spec.scene_id
         directory.mkdir()
         _json(directory / "scene.json", spec.to_dict())
+        _json(directory / "evaluated_scene.json", evaluated_spec.to_dict())
         _json(directory / "reference.json", status)
         if latest is not None:
+            times, frequencies = grids(evaluated_spec, config)
             result, observations = latest
             # The filename says latest; only reference.json status grants acceptance.
             np.savez_compressed(
@@ -273,12 +382,13 @@ def evaluate_dataset(
                 }
                 try:
                     result = run_scene(
-                        spec, budget, config, strategy=strategy, checkpoint=checkpoint
+                        evaluated_spec, budget, config, strategy=strategy, checkpoint=checkpoint
                     )
                     observations = sample_observables(result, times)
                     row.update(
                         metrics=metrics(observations, reference, times, frequencies, config),
                         diagnostics=result.diagnostics,
+                        tail=tail_diagnostic(evaluated_spec, observations, config),
                     )
                     np.savez_compressed(
                         directory / f"{strategy}_{budget[0]}_{budget[1]}.npz",

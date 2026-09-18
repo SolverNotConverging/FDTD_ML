@@ -37,7 +37,13 @@ def spectrum(values, times, frequencies):
     # Common Hann window and trapezoidal time integral; no per-run normalization.
     weights = np.hanning(len(times)) * dt[0]
     weights[[0, -1]] *= 0.5
-    return (np.exp(-2j * np.pi * frequencies[:, None] * times) * weights) @ values
+    # Bound temporary memory as longer ring-down windows add times/frequencies.
+    return np.concatenate(
+        [
+            (np.exp(-2j * np.pi * frequencies[i : i + 64, None] * times) * weights) @ values
+            for i in range(0, len(frequencies), 64)
+        ]
+    )
 
 
 def compare_observables(

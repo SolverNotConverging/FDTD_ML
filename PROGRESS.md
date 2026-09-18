@@ -2,10 +2,11 @@
 
 Updated 2026-09-18. **Stages 1–3 are implemented**, including mandatory 1.4 grading,
 CUDA CPML, procedural datasets and convergence-gated evaluation. Stage 3 reference
-coverage is partial: 15 of the initial 32 scenes pass; the other 17 remain excluded.
-This record accompanies the stage-three implementation commit. Earlier commits:
+coverage remains partial. Generator v2 now broadens object counts, geometry,
+materials and aspect ratios; the evaluator supports longer resonance windows.
+This record accompanies the version-0.4.0 diversity and ring-down update. Earlier commits:
 `99374e7` (stage one), `2437779` (plan/progress), `085cd1b` (historical grading audit),
-and `e35a079` (stage two).
+`e35a079` (stage two), and `079b62c` (initial stage three).
 
 See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.md),
 [stage 2 validation](docs/stage2_validation.md), and [grading plots](docs/anchor_grading.md).
@@ -22,6 +23,36 @@ See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.
 | 4: teacher imitation | Not started | Teacher targets, training loop and trained checkpoint |
 | 5: physics targets and distillation | Not started | Candidate generation, FDTD scoring, Pareto selection and distillation |
 | 6: generalization / optional surrogate | Not started | OOD studies, ablations and any surrogate validation |
+
+## Current update: broader scenes and resonance windows
+
+- Generator v2 randomizes counts, shape types, orientations and placement; ordinary
+  scenes contain 1–8 objects, dense held-out scenes 9–12. Aspect ratios span 0.3–3.3.
+- Logarithmic shape sizes span 3.5–50% of an axis before packing/resolution checks.
+  Each dielectric object has independent epsilon_r (1.05–30) and conductivity
+  (zero or 1e-5–10 S/m). Held-out material ranges extend further.
+- Raster resolution increases to 128x128. Object/probe placement rejects unresolved
+  gaps and unintended overlaps, and maintains probe clearance from geometry. Source/receiver
+  positions and source pulse width/carrier are also randomized.
+- Initial durations include a dielectric transit-time allowance. Reference defaults
+  reach 1024x1024, with a 128-billion-update cap that can be raised explicitly.
+- A separate 1% late-receiver RMS/peak gate doubles duration at most twice, restarting
+  mesh refinement each time. Accepted references and every candidate use the same
+  duration, temporal samples, frequencies and window. Sampling grows with duration;
+  chunked spectral evaluation bounds temporary memory.
+- New rejection status `time_unsettled` distinguishes persistent ring-down from
+  spatial nonconvergence. Full duration attempts and an evaluated scene are saved.
+- Frozen generator v1 remains available for reproducing earlier experiments.
+
+Validation: **102 tests passed, no skips**, including real CUDA (15.59 seconds in the
+recorded run). A reproducible 128-scene v2 sample covers all ordinary counts 1–8,
+aspect ratios 0.331–3.207, geometry spans 0.0352–0.4661 of an axis, epsilon_r
+1.10–27.87 and sigma 0–9.43 S/m. Gallery and distribution plots were inspected.
+The harder four-scene CUDA sample still fails spatial/reference acceptance; one
+scene extends from 2.93 to 5.85 ns and passes the ring-down check. This is broader
+coverage, not a claim of learned generalization or universally converged labels.
+Ruff lint/format checks and locked uv synchronization pass.
+See [full v2 evidence](docs/dataset_v2.md).
 
 ## Completed in stage 3
 
@@ -41,7 +72,7 @@ See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.
   Markdown accuracy/work/runtime reports, scene galleries and comparison plots.
 - Updated the project to 0.3.0. No training loop or trained weights were added.
 
-## Stage 3 validation
+## Historical generator-v1 stage 3 validation
 
 **93 tests passed, no skips**, including real CUDA tests (13.74 seconds in the
 recorded full run). The 15 new tests cover reproducibility, schema validation,

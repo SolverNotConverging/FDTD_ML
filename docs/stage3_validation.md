@@ -1,3 +1,8 @@
+> Historical generator-v1 / version-0.3.0 record. Current CLI defaults use generator
+> v2, broader distributions, longer durations and a separate ring-down gate. See
+> [the v2 contract and validation](dataset_v2.md). The old generator is retained in
+> `fdtdmesh.data.generate_v1`; old manifests can still be read and evaluated.
+
 # Stage 3: procedural datasets, reference convergence and evaluation
 
 Implemented 2026-09-18 for project version 0.3.0. The stage-three workflow is

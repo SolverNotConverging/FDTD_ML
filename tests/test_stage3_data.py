@@ -4,7 +4,7 @@ from copy import deepcopy
 import numpy as np
 import pytest
 
-from fdtdmesh.data.generate import generate_dataset, make_scene
+from fdtdmesh.data.generate_v1 import generate_dataset, make_scene
 from fdtdmesh.data.schema import SPLITS, SceneSpec, read_manifest, validate_splits, write_manifest
 
 

@@ -282,14 +282,26 @@ not evidence of solver validation. The reference solver is only for tests.
 
 Generation creates versioned SI scene records with eight distinct splits, reproducible
 seeds, physical current sources, PML configuration, raster policy, budgets and provenance.
-Families include rectangles, circles, triangles, polygons, thin PEC lines, gaps,
-mixed objects and touching objects. Content hashes, lineage checks and normalized
+Generator v2 draws 1–8 objects per ordinary scene (9–12 in the dense held-out split).
+Aspect ratios range from 0.3 to 3.3; per-axis shape spans are sampled over 3.5–50%
+of the domain using logarithmic distributions. Each dielectric object gets its own
+permittivity (1.05–30) and conductivity (lossless or 1e-5–10 S/m). Rectangles,
+circles, oriented triangles/quadrilaterals, horizontal/vertical PEC lines and
+gap/touching pairs are mixed randomly. Held-out polygons have 5–9 vertices.
+The raster is now 128x128 to retain a four-pixel minimum feature policy. Content hashes, lineage checks and normalized
 raster geometry comparisons guard against cross-split duplicates.
 
-Evaluation refines **uniform reference grids** through 64, 128, 256 and 512 cells
+Evaluation refines **uniform reference grids** through 64, 128, 256, 512 and 1024 cells
 per axis, retaining physical PML thickness while refining collar cells. Two
 consecutive refinements must satisfy the default 2% per-receiver waveform and
-spectral L2 thresholds. Failed/nonconverged references are recorded and excluded
+spectral L2 thresholds. Longer initial durations account for domain transit time
+and permittivity. A receiver ring-down gate doubles duration up to twice when the
+last 20% of the waveform has RMS above 1% of peak. Each extension restarts the
+spatial sequence; all candidates then use that same accepted physical window.
+Time samples and spectral frequencies grow with duration to retain resolution.
+Use `--duration-multiplier`, `--duration-extensions`, `--tail-tolerance` and
+`--max-cell-updates` to control longer runs; `--fixed-window` explicitly disables
+the ring-down gate without disabling mesh-convergence checks. Failed/nonconverged references are recorded and excluded
 from candidate accuracy scoring. References that cannot represent anchors uniformly
 are rejected explicitly. Candidate collars retain fixed counts within their budgets.
 
@@ -302,8 +314,14 @@ Use a new empty evaluation output directory to preserve prior results.
 Outputs include a copied manifest, per-scene reference histories/status, NPZ
 waveforms/spectra/meshes, JSON metrics and cost diagnostics, a Markdown table, and
 optional plots. All methods use common physical times, receiver coordinates,
-frequencies and windowing. See [stage 3 contracts and validation](docs/stage3_validation.md)
-for normalization floors, split definitions, limits and measured coverage.
+frequencies and windowing. See [generator v2 and resonance validation](docs/dataset_v2.md)
+for current ranges, limits and evidence. The [original stage 3 record](docs/stage3_validation.md)
+describes generator v1, preserved in `fdtdmesh.data.generate_v1`.
+
+```powershell
+.venv\Scripts\python.exe -m fdtdmesh.data generate --output artifacts/diverse/manifest.json --per-split 16 --objects 1 8 --aspect 0.3 3.3
+.venv\Scripts\python.exe examples/plot_dataset_variation.py --manifest artifacts/diverse/manifest.json --output artifacts/diverse
+```
 
 ## Remaining stages
 
