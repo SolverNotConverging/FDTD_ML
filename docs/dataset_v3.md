@@ -1,5 +1,8 @@
 # Generator v3: dielectric distribution and spatial probe coverage
 
+> Historical generator-v3 record. Current generation adds
+> [v4 low-budget strata](dataset_v4.md) without changing these distributions.
+
 Implemented 2026-09-18, package 0.4.1. Scene schema v1 and checkpoint format v2 remain
 compatible. New manifests store generator version 3 and every generation setting.
 The additional mixture draw changes seed realizations; historical v2 generation is

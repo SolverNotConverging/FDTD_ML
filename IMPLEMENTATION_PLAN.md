@@ -292,7 +292,7 @@ families and reduce the retained Stage 4 prior.
    as a strong prior, then reduce its weight as physics-generated targets improve.
 5. Repeat candidate search, real-FDTD evaluation, and distillation. Keep an untouched
    test set and compare to both the original teacher and the imitation checkpoint.
-6. Add feasible low-budget strata at 32x32 and 48x48 alongside 64x64 and 96x96.
+6. Use feasible low-budget strata at 32x32 and 48x48 alongside 64x64 and 96x96.
    Record infeasible scene-budget pairs, balance sampling across budgets, normalize
    losses within each budget, and report equal-budget accuracy/cost comparisons.
 

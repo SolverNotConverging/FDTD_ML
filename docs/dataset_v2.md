@@ -1,6 +1,7 @@
 # Generator v2: broader geometry and longer resonance windows
 
-Historical generator-v2 record. Current generation uses the [v3 dk mixture](dataset_v3.md).
+Historical generator-v2 record. Current generation uses the
+[v4 low-budget strata](dataset_v4.md), retaining the [v3 dk mixture](dataset_v3.md).
 To reproduce v2 from seeds, use Git commit `00db055`; existing saved manifests remain
 readable. The commands below describe the v2 checkout, not current defaults.
 

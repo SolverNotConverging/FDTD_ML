@@ -2,8 +2,8 @@
 
 Updated 2026-09-18. **Stages 1–4 are implemented**, including mandatory 1.4 grading,
 CUDA CPML, procedural datasets and convergence-gated evaluation. Stage 3 reference
-coverage remains partial. Generator v3 adds a low-dk-dominant material mixture to
-the broad scene generator, with verified randomized source/receiver coverage.
+coverage remains partial. Generator v4 retains the low-dk-dominant material mixture
+and randomized source/receiver coverage while adding 32x32 and 48x48 budget strata.
 The evaluator supports longer resonance windows and now has a reference-only,
 restart-safe 64/16/32 train/validation/IID workflow. Stage 4 supplies projected
 teacher targets, reproducible/resumable training, and held-out CUDA evaluation.
@@ -122,6 +122,10 @@ rendered Stage-5 summary figure were verified.
   and 4.902% mean maximum EM error at 26,686,976 median cell updates. This improves
   the prior Stage-5 aggregate median, mean, and median work. Every one of the 128
   strategy runs succeeded.
+- Generator v4 adds 32x32 and 48x48 to the existing 64x64 and 96x96 ordinary
+  budgets. Budget-OOD remains 80x80 and 112x112. Low-budget infeasibility stays an
+  explicit outcome under unchanged anchors, collars, and 1.4 grading. Current-CNN
+  mesh and cell-width plots were rendered across all four budgets.
 
 See the continuation section in [Stage-5 evidence](docs/stage5_training.md). Local
 artifacts are under ignored `artifacts/stage5_available/`; the rendered summary was

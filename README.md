@@ -297,7 +297,10 @@ artifact layout, and recorded 112-scene dataset identity.
 
 Generation creates versioned SI scene records with eight distinct splits, reproducible
 seeds, physical current sources, PML configuration, raster policy, budgets and provenance.
-Generator v3 draws 1–8 objects per ordinary scene (9–12 in the dense held-out split).
+Generator v4 draws 1–8 objects per ordinary scene (9–12 in the dense held-out split)
+and assigns ordinary scenes 32x32, 48x48, 64x64, and 96x96 budgets. The 80x80 and
+112x112 budget-OOD cases remain disjoint. Low-budget infeasibility is recorded; it
+does not relax anchors, PML collars, or mandatory grading.
 Aspect ratios range from 0.3 to 3.3; per-axis shape spans are sampled over 3.5–50%
 of the domain using logarithmic distributions. Each dielectric object gets its own
 permittivity (85% log-uniform 1–10, 15% log-uniform 10–30) and conductivity
@@ -338,7 +341,8 @@ The reference-only command above has its own validated resume contract.
 Outputs include a copied manifest, per-scene reference histories/status, NPZ
 waveforms/spectra/meshes, JSON metrics and cost diagnostics, a Markdown table, and
 optional plots. All methods use common physical times, receiver coordinates,
-frequencies and windowing. See [current dk and probe validation](docs/dataset_v3.md)
+frequencies and windowing. See [current low-budget policy](docs/dataset_v4.md),
+[dk and probe validation](docs/dataset_v3.md),
 and [generator v2 and resonance validation](docs/dataset_v2.md)
 for ranges, limits and evidence. The [original stage 3 record](docs/stage3_validation.md)
 describes generator v1, preserved in `fdtdmesh.data.generate_v1`.

@@ -5,6 +5,8 @@ import numpy as np
 import pytest
 
 from fdtdmesh.data.generate import (
+    BUDGET_OOD_BUDGETS,
+    STANDARD_BUDGETS,
     GenerationConfig,
     _bounds,
     generate_dataset,
@@ -39,6 +41,8 @@ def test_broad_generator_is_seeded_multiscale_and_per_object():
     kinds = set()
     for s in a:
         assert s.raster_shape == [128, 128]
+        expected_budgets = BUDGET_OOD_BUDGETS if s.split == "test_budget_ood" else STANDARD_BUDGETS
+        assert s.budgets == [list(budget) for budget in expected_budgets]
         dielectric_names = [g["material"] for g in s.geometry if g.get("material", "PEC") != "PEC"]
         assert len(dielectric_names) == len(set(dielectric_names)) == len(s.materials)
         if s.split == "test_compositional":

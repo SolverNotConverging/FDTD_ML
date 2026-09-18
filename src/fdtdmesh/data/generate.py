@@ -8,7 +8,9 @@ from fdtdmesh.constants import C0
 
 from .schema import SCHEMA_VERSION, SPLITS, SceneSpec, geometry_signature
 
-GENERATOR_VERSION = 3
+GENERATOR_VERSION = 4
+STANDARD_BUDGETS = ((32, 32), (48, 48), (64, 64), (96, 96))
+BUDGET_OOD_BUDGETS = ((80, 80), (112, 112))
 
 
 def log_uniform(rng, low, high):
@@ -305,7 +307,7 @@ def make_scene(seed, split, index=0, *, config=None):
         if split == "test_geometry_ood"
         else "random_mix"
     )
-    budgets = [[64, 64], [96, 96]] if split != "test_budget_ood" else [[80, 80], [112, 112]]
+    budgets = BUDGET_OOD_BUDGETS if split == "test_budget_ood" else STANDARD_BUDGETS
     scene = SceneSpec(
         SCHEMA_VERSION,
         f"{split}-{index:05d}",
@@ -319,7 +321,7 @@ def make_scene(seed, split, index=0, *, config=None):
         duration,
         "float64",
         [cfg.raster_size] * 2,
-        budgets,
+        [list(budget) for budget in budgets],
         dict(
             pml_width=8,
             thickness=(domain / 8).tolist(),
