@@ -363,14 +363,14 @@ def search_physics_targets(
     else:
         _json(identity_path, identity)
     started = perf_counter()
-    samples, target_x, target_y, references = [], [], [], []
+    samples, target_x, target_y, reference_rows = [], [], [], []
     for spec in selected_scenes:
         scene_dir = output / spec.scene_id
         scene_dir.mkdir(exist_ok=True)
         status, effective, times, frequencies, reference = _reference(
             spec, scene_dir, evaluation, reference_root=references
         )
-        references.append({"scene_id": spec.scene_id, **status})
+        reference_rows.append({"scene_id": spec.scene_id, **status})
         if status["status"] != "converged":
             print(f"{spec.scene_id}: {status['status']}; no physics targets", flush=True)
             continue
@@ -526,8 +526,8 @@ def search_physics_targets(
         _json(output / "physics_targets.json", target_metadata)
     report = {
         **identity,
-        "references": references,
-        "accepted_references": sum(row["status"] == "converged" for row in references),
+        "references": reference_rows,
+        "accepted_references": sum(row["status"] == "converged" for row in reference_rows),
         "targets": len(samples),
         "elapsed_seconds": perf_counter() - started,
         "provenance": provenance(),

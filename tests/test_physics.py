@@ -20,6 +20,7 @@ from fdtdmesh.physics import (
     load_physics_targets,
     pareto_front,
     score_candidates,
+    search_physics_targets,
 )
 
 
@@ -195,3 +196,37 @@ def test_physics_evaluation_summary_uses_paired_heldout_errors():
     assert report["accepted_references"] == 1
     assert report["summary"]["distilled"]["median_em_error"] == pytest.approx(0.1)
     assert report["paired_vs_imitation"] == {"count": 1, "distilled_lower_error": 1}
+
+
+def test_search_passes_external_reference_root_without_shadowing(tmp_path, monkeypatch):
+    scene = small_scenes()[0]
+    manifest_path = tmp_path / "manifest.json"
+    manifest = write_manifest(manifest_path, [scene], generation={"test": True})
+    references = tmp_path / "references"
+    references.mkdir()
+    (references / "run.json").write_text(
+        json.dumps({"dataset_id": manifest["dataset_id"]}), encoding="utf-8"
+    )
+    teacher, checkpoint = tmp_path / "teacher.npz", tmp_path / "checkpoint.pt"
+    teacher.write_bytes(b"teacher")
+    checkpoint.write_bytes(b"checkpoint")
+    monkeypatch.setattr("fdtdmesh.physics._teacher_map", lambda *args: {})
+    monkeypatch.setattr("fdtdmesh.physics.load_model", lambda *args, **kwargs: (object(), {}))
+    seen = []
+
+    def fake_reference(spec, directory, evaluation, reference_root=None):
+        seen.append(reference_root)
+        return {"status": "missing"}, spec, None, None, None
+
+    monkeypatch.setattr("fdtdmesh.physics._reference", fake_reference)
+    report = search_physics_targets(
+        manifest_path,
+        teacher,
+        checkpoint,
+        tmp_path / "search",
+        splits=("train",),
+        references=references,
+        device="cpu",
+    )
+    assert seen == [references]
+    assert report["accepted_references"] == 0 and report["targets"] == 0
