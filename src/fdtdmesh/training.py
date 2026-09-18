@@ -149,6 +149,7 @@ class TeacherDataset(Dataset):
             manifest_path, target_path
         )
         self.dataset_id = manifest["dataset_id"]
+        self.target_id = metadata["targets_sha256"]
         self.raster_shape = tuple(metadata["raster_shape"])
         self.records = []
         for index, sample in enumerate(metadata["samples"]):
@@ -313,6 +314,10 @@ def train_model(
     device=None,
     resume=None,
     allow_dirty=False,
+    dataset_factory=TeacherDataset,
+    initial_checkpoint=None,
+    training_kind="teacher_imitation",
+    target_version=TEACHER_VERSION,
 ):
     config = config or TrainingConfig()
     commit, dirty = _git_state()
@@ -323,15 +328,24 @@ def train_model(
     device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
-    train = TeacherDataset(manifest_path, target_path, "train")
-    validation = TeacherDataset(manifest_path, target_path, "validation")
+    train = dataset_factory(manifest_path, target_path, "train")
+    validation = dataset_factory(manifest_path, target_path, "validation")
     if train.dataset_id != validation.dataset_id:
         raise ValueError("Training and validation dataset IDs differ")
     torch.manual_seed(config.seed)
     np.random.seed(config.seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(config.seed)
-    model = ResUNet(config.width).to(device)
+    if initial_checkpoint is None:
+        model = ResUNet(config.width).to(device)
+    else:
+        model, initial_metadata = load_model(initial_checkpoint, device=device)
+        if (
+            model.width != config.width
+            or tuple(initial_metadata["raster_shape"]) != train.raster_shape
+            or initial_metadata["pooling"]["alpha"] != config.alpha
+        ):
+            raise ValueError("Initial checkpoint architecture, raster or pooling differs")
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay
     )
@@ -344,6 +358,8 @@ def train_model(
         if (
             previous_config != current_config
             or state["dataset_id"] != train.dataset_id
+            or state.get("target_id") != train.target_id
+            or state.get("training_kind") != training_kind
             or current_epochs < state["epoch"]
             or previous_epochs < state["epoch"]
         ):
@@ -392,7 +408,12 @@ def train_model(
             "epoch": epoch + 1,
             "config": asdict(config),
             "validation": validation_metrics,
-            "teacher_version": TEACHER_VERSION,
+            "training_kind": training_kind,
+            "target_version": target_version,
+            "target_id": train.target_id,
+            "initial_checkpoint_sha256": (
+                None if initial_checkpoint is None else _sha256(initial_checkpoint)
+            ),
         }
         if validation_metrics["loss"] < best:
             best = validation_metrics["loss"]
@@ -412,6 +433,8 @@ def train_model(
                 "best": best,
                 "config": asdict(config),
                 "dataset_id": train.dataset_id,
+                "target_id": train.target_id,
+                "training_kind": training_kind,
                 "model": model.state_dict(),
                 "optimizer": optimizer.state_dict(),
                 "history": history,
@@ -420,6 +443,7 @@ def train_model(
         )
         report = {
             "training_version": TRAINING_VERSION,
+            "training_kind": training_kind,
             "dataset_id": train.dataset_id,
             "teacher_targets_sha256": _sha256(target_path),
             "training_commit": commit,

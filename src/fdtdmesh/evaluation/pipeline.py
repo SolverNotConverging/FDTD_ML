@@ -104,7 +104,17 @@ def heuristic_density(scene, raster_shape):
     return weight.mean(axis=0), weight.mean(axis=1)
 
 
-def run_scene(spec, budget, config, *, strategy="uniform", checkpoint=None, reference=False):
+def run_scene(
+    spec,
+    budget,
+    config,
+    *,
+    strategy="uniform",
+    checkpoint=None,
+    reference=False,
+    density=None,
+    mesh_lines=None,
+):
     s = spec.build(budget, reference=reference)
     field_bytes = (s.Nx + 1) * (s.Ny + 1) * np.dtype(s.dtype).itemsize * 30
     if field_bytes > config.max_field_bytes or s.Nx * s.Ny > config.max_cell_updates:
@@ -121,6 +131,14 @@ def run_scene(spec, budget, config, *, strategy="uniform", checkpoint=None, refe
         )
     elif strategy == "cnn":
         s.mesh_with_model(checkpoint, time_limit=config.meshing_time_limit)
+    elif strategy == "density":
+        if density is None or len(density) != 2:
+            raise ValueError("Density strategy requires x/y densities")
+        s.mesh_from_density(*density, time_limit=config.meshing_time_limit)
+    elif strategy == "mesh":
+        if mesh_lines is None or len(mesh_lines) != 2:
+            raise ValueError("Mesh strategy requires x/y line arrays")
+        s.set_mesh(*mesh_lines)
     else:
         raise ValueError("Unknown mesh strategy")
     meshing_seconds = perf_counter() - started
