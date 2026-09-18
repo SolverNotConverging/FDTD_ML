@@ -52,10 +52,15 @@ def main():
     references.add_argument("--output", required=True)
     references.add_argument("--splits", nargs="+", default=["train", "validation", "test_iid"])
     references.add_argument("--limit", type=int, help="Maximum scenes per selected split")
+    references.add_argument("--scenes", nargs="+", help="Exact scene IDs to process")
+    references.add_argument(
+        "--reuse", nargs="*", default=[], help="Reference roots to reuse by exact scene hash"
+    )
     references.add_argument("--levels", type=int, nargs="+", default=[64, 128, 256, 512, 1024])
     references.add_argument("--tolerance", type=float, default=0.02)
     references.add_argument("--consecutive-passes", type=int, default=2)
     references.add_argument("--max-cell-updates", type=int, default=128_000_000_000)
+    references.add_argument("--max-field-bytes", type=int, default=1_000_000_000)
     references.add_argument("--duration-multiplier", type=float, default=1.0)
     references.add_argument("--duration-extensions", type=int, default=3)
     references.add_argument("--tail-tolerance", type=float, default=0.01)
@@ -106,6 +111,7 @@ def main():
             relative_tolerance=args.tolerance,
             consecutive_passes=args.consecutive_passes,
             max_cell_updates=args.max_cell_updates,
+            max_field_bytes=getattr(args, "max_field_bytes", 1_000_000_000),
             duration_multiplier=args.duration_multiplier,
             max_duration_extensions=args.duration_extensions,
             tail_relative_tolerance=None if args.fixed_window else args.tail_tolerance,
@@ -117,6 +123,8 @@ def main():
                 config=config,
                 splits=args.splits,
                 limit=args.limit,
+                scene_ids=args.scenes,
+                reuse_roots=args.reuse,
             )
         else:
             evaluate_dataset(

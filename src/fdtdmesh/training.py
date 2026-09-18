@@ -224,6 +224,8 @@ class TrainingConfig:
     repair_every: int = 4
     projection_samples: int = 8
     seed: int = 2026
+    early_stopping_patience: int | None = None
+    early_stopping_min_delta: float = 0.0
 
     def __post_init__(self):
         integer = ("epochs", "batch_size", "width", "repair_every", "projection_samples", "seed")
@@ -244,6 +246,14 @@ class TrainingConfig:
             or self.repair_weight < 0
         ):
             raise ValueError("Invalid training scalar")
+        if self.early_stopping_patience is not None and (
+            isinstance(self.early_stopping_patience, bool)
+            or int(self.early_stopping_patience) != self.early_stopping_patience
+            or self.early_stopping_patience < 1
+        ):
+            raise ValueError("Early-stopping patience must be a positive integer or None")
+        if not np.isfinite(self.early_stopping_min_delta) or self.early_stopping_min_delta < 0:
+            raise ValueError("Early-stopping minimum delta must be finite and nonnegative")
 
 
 def _project_batch(dataset, indices, rho_x, rho_y, time_limit=30.0):
@@ -349,7 +359,7 @@ def train_model(
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay
     )
-    history, start_epoch, best = [], 0, math.inf
+    history, start_epoch, best, stale_epochs = [], 0, math.inf, 0
     if resume is not None:
         state = torch.load(resume, map_location=device, weights_only=True)
         previous_config, current_config = dict(state["config"]), asdict(config)
@@ -367,6 +377,7 @@ def train_model(
         model.load_state_dict(state["model"])
         optimizer.load_state_dict(state["optimizer"])
         history, start_epoch, best = state["history"], state["epoch"], state["best"]
+        stale_epochs = state.get("stale_epochs", 0)
     started = perf_counter()
     for epoch in range(start_epoch, config.epochs):
         generator = torch.Generator().manual_seed(config.seed + epoch)
@@ -395,12 +406,15 @@ def train_model(
             repair_total += repair.item() * n
             seen += n
         validation_metrics = evaluate_imitation(model, validation, config, device)
+        improved = validation_metrics["loss"] < best - config.early_stopping_min_delta
+        stale_epochs = 0 if improved else stale_epochs + 1
         row = {
             "epoch": epoch + 1,
             "train_loss": total / seen,
             "train_imitation": imitation_total / seen,
             "train_repair": repair_total / seen,
             "validation": validation_metrics,
+            "improved": improved,
         }
         history.append(row)
         training_metadata = {
@@ -415,7 +429,7 @@ def train_model(
                 None if initial_checkpoint is None else _sha256(initial_checkpoint)
             ),
         }
-        if validation_metrics["loss"] < best:
+        if improved:
             best = validation_metrics["loss"]
             save_model(
                 output / "best.pt",
@@ -438,8 +452,13 @@ def train_model(
                 "model": model.state_dict(),
                 "optimizer": optimizer.state_dict(),
                 "history": history,
+                "stale_epochs": stale_epochs,
             },
             output / "resume.pt",
+        )
+        stopped_early = (
+            config.early_stopping_patience is not None
+            and stale_epochs >= config.early_stopping_patience
         )
         report = {
             "training_version": TRAINING_VERSION,
@@ -452,6 +471,8 @@ def train_model(
             "config": asdict(config),
             "best_validation_loss": best,
             "history": history,
+            "stopped_early": stopped_early,
+            "stale_epochs": stale_epochs,
             "elapsed_seconds": perf_counter() - started,
             "provenance": provenance(),
         }
@@ -461,6 +482,12 @@ def train_model(
             f"validation={validation_metrics['loss']:.6g}",
             flush=True,
         )
+        if stopped_early:
+            print(
+                f"early stopping after {stale_epochs} epochs without required improvement",
+                flush=True,
+            )
+            break
     return report
 
 
@@ -540,6 +567,8 @@ def main():
     train.add_argument("--repair-every", type=int, default=4)
     train.add_argument("--projection-samples", type=int, default=8)
     train.add_argument("--seed", type=int, default=2026)
+    train.add_argument("--patience", type=int)
+    train.add_argument("--min-delta", type=float, default=0.0)
     train.add_argument("--device")
     train.add_argument("--resume")
     train.add_argument("--allow-dirty", action="store_true")
@@ -565,6 +594,8 @@ def main():
             repair_every=args.repair_every,
             projection_samples=args.projection_samples,
             seed=args.seed,
+            early_stopping_patience=args.patience,
+            early_stopping_min_delta=args.min_delta,
         )
         train_model(
             args.manifest,

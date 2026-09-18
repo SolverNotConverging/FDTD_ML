@@ -536,6 +536,157 @@ def search_physics_targets(
     return report
 
 
+def reblend_physics_targets(
+    manifest_path,
+    teacher_targets,
+    source_targets,
+    output_path,
+    *,
+    physics_weight,
+):
+    """Create a new target blend from cached physics targets without rerunning FDTD."""
+    if not np.isfinite(physics_weight) or not 0 <= physics_weight <= 1:
+        raise ValueError("physics_weight must be in [0,1]")
+    manifest, _, metadata, source_x, source_y = load_physics_targets(manifest_path, source_targets)
+    teacher = _teacher_map(manifest_path, teacher_targets)
+    output_path = Path(output_path)
+    metadata_path = output_path.with_suffix(".json")
+    if output_path.exists() or metadata_path.exists():
+        raise ValueError("Reblended target output already exists")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    target_x, target_y, samples = [], [], []
+    for index, sample in enumerate(metadata["samples"]):
+        key = (sample["scene_id"], tuple(sample["budget"]))
+        if key not in teacher:
+            raise ValueError(f"Teacher target is missing {key}")
+        old_weight = sample.get("physics_weight")
+        if old_weight is None or not 0 < old_weight <= 1:
+            raise ValueError("Source physics targets require a positive recorded blend weight")
+        prior_x, prior_y = teacher[key]
+
+        def recover(source, prior):
+            physics = (source - (1 - old_weight) * prior) / old_weight
+            if not np.isfinite(physics).all() or np.min(physics) < -1e-6:
+                raise ValueError("Cannot recover a valid physics target from the source blend")
+            physics = np.maximum(physics, 0)
+            physics /= physics.sum()
+            return (1 - physics_weight) * prior + physics_weight * physics
+
+        target_x.append(recover(source_x[index], prior_x))
+        target_y.append(recover(source_y[index], prior_y))
+        samples.append({**sample, "physics_weight": physics_weight})
+    np.savez_compressed(
+        output_path,
+        target_x=np.asarray(target_x, dtype=np.float32),
+        target_y=np.asarray(target_y, dtype=np.float32),
+    )
+    output_metadata = {
+        "schema_version": 1,
+        "physics_target_version": PHYSICS_TARGET_VERSION,
+        "dataset_id": manifest["dataset_id"],
+        "targets_sha256": _sha256(output_path),
+        "mesh_policy": MESH_POLICY,
+        "raster_shape": metadata["raster_shape"],
+        "samples": samples,
+        "physics_weight": physics_weight,
+        "source_targets_sha256": _sha256(source_targets),
+        "teacher_targets_sha256": _sha256(teacher_targets),
+        "search_identity": metadata.get("search_identity"),
+        "provenance": provenance(),
+    }
+    _json(metadata_path, output_metadata)
+    return output_metadata
+
+
+def select_validation_checkpoint(evaluations, checkpoints, output, *, beta=0.02):
+    """Select a checkpoint from measured validation EM error and cell-update cost."""
+    if len(evaluations) != len(checkpoints) or not evaluations:
+        raise ValueError("Provide one checkpoint for every nonempty evaluation list")
+    if not np.isfinite(beta) or beta < 0:
+        raise ValueError("beta must be finite and nonnegative")
+    records = []
+    contract = None
+    for evaluation_path, checkpoint_path in zip(evaluations, checkpoints):
+        report = json.loads(Path(evaluation_path).read_text(encoding="utf-8"))
+        current = (
+            report.get("dataset_id"),
+            report.get("reference_run_sha256"),
+            report.get("split"),
+        )
+        if current[2] != "validation" or None in current:
+            raise ValueError("Checkpoint selection requires validation evaluation reports")
+        if contract is None:
+            contract = current
+        elif current != contract:
+            raise ValueError("Validation evaluation reports use different contracts")
+        checkpoint_sha = _sha256(checkpoint_path)
+        if report.get("checkpoint_sha256") != checkpoint_sha:
+            raise ValueError("Evaluation report does not match its checkpoint")
+        rows = [row for row in report["rows"] if row["status"] == "ok"]
+        keyed = {(row["scene_id"], tuple(row["budget"]), row["strategy"]): row for row in rows}
+        pairs = []
+        for scene_id, budget, strategy in keyed:
+            if strategy != "distilled":
+                continue
+            uniform = keyed.get((scene_id, budget, "uniform"))
+            if uniform is None or uniform["diagnostics"]["cell_updates"] <= 0:
+                continue
+            candidate = keyed[(scene_id, budget, "distilled")]
+            error = max(
+                candidate["metrics"]["waveform_l2_max"],
+                candidate["metrics"]["spectrum_l2_max"],
+            )
+            cost_ratio = (
+                candidate["diagnostics"]["cell_updates"] / uniform["diagnostics"]["cell_updates"]
+            )
+            pairs.append((error, cost_ratio))
+        if not pairs:
+            raise ValueError("Evaluation report has no measured distilled/uniform pairs")
+        median_error = float(np.median([pair[0] for pair in pairs]))
+        median_cost_ratio = float(np.median([pair[1] for pair in pairs]))
+        records.append(
+            {
+                "checkpoint": str(checkpoint_path),
+                "checkpoint_sha256": checkpoint_sha,
+                "evaluation": str(evaluation_path),
+                "pairs": len(pairs),
+                "median_em_error": median_error,
+                "median_cost_ratio": median_cost_ratio,
+                "objective": median_error + beta * median_cost_ratio,
+            }
+        )
+    for row in records:
+        row["pareto"] = not any(
+            other is not row
+            and other["median_em_error"] <= row["median_em_error"]
+            and other["median_cost_ratio"] <= row["median_cost_ratio"]
+            and (
+                other["median_em_error"] < row["median_em_error"]
+                or other["median_cost_ratio"] < row["median_cost_ratio"]
+            )
+            for other in records
+        )
+    selected = min(
+        (row for row in records if row["pareto"]),
+        key=lambda row: (row["objective"], row["median_em_error"], row["checkpoint_sha256"]),
+    )
+    result = {
+        "schema_version": 1,
+        "dataset_id": contract[0],
+        "reference_run_sha256": contract[1],
+        "split": contract[2],
+        "beta": beta,
+        "candidates": records,
+        "selected_checkpoint": selected["checkpoint"],
+        "selected_checkpoint_sha256": selected["checkpoint_sha256"],
+        "provenance": provenance(),
+    }
+    output = Path(output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    _json(output, result)
+    return result
+
+
 def evaluate_physics_checkpoint(
     manifest_path,
     checkpoint,
@@ -796,6 +947,8 @@ def main():
     distill.add_argument("--repair-every", type=int, default=4)
     distill.add_argument("--projection-samples", type=int, default=8)
     distill.add_argument("--seed", type=int, default=2026)
+    distill.add_argument("--patience", type=int)
+    distill.add_argument("--min-delta", type=float, default=0.0)
     distill.add_argument("--device")
     distill.add_argument("--resume")
     distill.add_argument("--allow-dirty", action="store_true")
@@ -809,6 +962,17 @@ def main():
     evaluate.add_argument("--limit", type=int)
     evaluate.add_argument("--max-cell-updates", type=int, default=256_000_000_000)
     evaluate.add_argument("--device")
+    reblend = sub.add_parser("reblend")
+    reblend.add_argument("--manifest", required=True)
+    reblend.add_argument("--teacher-targets", required=True)
+    reblend.add_argument("--source-targets", required=True)
+    reblend.add_argument("--output", required=True)
+    reblend.add_argument("--physics-weight", type=float, required=True)
+    select = sub.add_parser("select")
+    select.add_argument("--evaluations", nargs="+", required=True)
+    select.add_argument("--checkpoints", nargs="+", required=True)
+    select.add_argument("--output", required=True)
+    select.add_argument("--beta", type=float, default=0.02)
     args = parser.parse_args()
     if args.command == "search":
         search_physics_targets(
@@ -843,6 +1007,8 @@ def main():
             repair_every=args.repair_every,
             projection_samples=args.projection_samples,
             seed=args.seed,
+            early_stopping_patience=args.patience,
+            early_stopping_min_delta=args.min_delta,
         )
         train_model(
             args.manifest,
@@ -857,7 +1023,7 @@ def main():
             training_kind="physics_distillation",
             target_version=PHYSICS_TARGET_VERSION,
         )
-    else:
+    elif args.command == "evaluate":
         evaluate_physics_checkpoint(
             args.manifest,
             args.checkpoint,
@@ -868,6 +1034,21 @@ def main():
             limit=args.limit,
             max_cell_updates=args.max_cell_updates,
             device=args.device,
+        )
+    elif args.command == "reblend":
+        reblend_physics_targets(
+            args.manifest,
+            args.teacher_targets,
+            args.source_targets,
+            args.output,
+            physics_weight=args.physics_weight,
+        )
+    else:
+        select_validation_checkpoint(
+            args.evaluations,
+            args.checkpoints,
+            args.output,
+            beta=args.beta,
         )
 
 

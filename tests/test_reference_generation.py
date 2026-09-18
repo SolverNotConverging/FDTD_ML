@@ -110,3 +110,46 @@ def test_reference_resume_rejects_changed_configuration(tmp_path, monkeypatch):
     changed = EvaluationConfig(relative_tolerance=0.01)
     with pytest.raises(ValueError, match="different dataset or configuration"):
         generate_references(manifest, output, config=changed, splits=("train",))
+
+
+def test_reference_generation_reuses_only_exact_converged_scene(tmp_path):
+    scenes = generate_splits({"train": 2}, seed=39)
+    manifest = tmp_path / "expanded.json"
+    value = write_manifest(manifest, scenes, generation={"seed": 39})
+    reuse = tmp_path / "reuse"
+    source = reuse / scenes[0].scene_id
+    source.mkdir(parents=True)
+    (reuse / "run.json").write_text(json.dumps({"dataset_id": "older-dataset"}), encoding="utf-8")
+    status = {
+        "status": "converged",
+        "accepted_budget": [128, 128],
+        "duration": scenes[0].t_end,
+        "duration_history": [],
+        "levels": [],
+        "scene_id": scenes[0].scene_id,
+        "scene_hash": scenes[0].content_hash,
+        "split": "train",
+        "family": scenes[0].family,
+        "wall_seconds": 1.0,
+    }
+    (source / "scene.json").write_text(json.dumps(scenes[0].to_dict()), encoding="utf-8")
+    (source / "evaluated_scene.json").write_text(json.dumps(scenes[0].to_dict()), encoding="utf-8")
+    (source / "reference.json").write_text(json.dumps(status), encoding="utf-8")
+    np.savez_compressed(source / "reference_latest.npz", waveforms=np.zeros((2, 1)))
+
+    def failed_runner(*args, **kwargs):
+        raise RuntimeError("deliberate test failure")
+
+    output = tmp_path / "output"
+    report = generate_references(
+        manifest,
+        output,
+        splits=("train",),
+        reuse_roots=(reuse,),
+        runner=failed_runner,
+    )
+    assert report["dataset_id"] == value["dataset_id"]
+    assert report["scenes"][0]["status"] == "converged"
+    assert report["scenes"][0]["reused"] is True
+    assert report["scenes"][0]["reused_from_dataset_id"] == "older-dataset"
+    assert report["scenes"][1]["status"] == "failed"

@@ -1,6 +1,8 @@
 """Resumable generation of converged FDTD reference observations."""
 
+import hashlib
 import json
+import shutil
 from dataclasses import asdict, replace
 from pathlib import Path
 from time import perf_counter
@@ -35,14 +37,23 @@ def _selection(splits, limit):
     return splits, None if limit is None else int(limit)
 
 
-def _run_identity(manifest, config, splits, limit):
+def _sha256(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def _run_identity(manifest, config, splits, limit, scene_ids, reuse_roots):
     return {
         "schema_version": REFERENCE_RUN_SCHEMA,
         "dataset_id": manifest["dataset_id"],
         # Normalize tuples so the in-memory value exactly matches its JSON round trip.
         "config": json.loads(json.dumps(asdict(config), allow_nan=False)),
         "mesh_policy": MESH_POLICY,
-        "selection": {"splits": list(splits), "limit_per_split": limit},
+        "selection": {
+            "splits": list(splits),
+            "limit_per_split": limit,
+            "scene_ids": None if scene_ids is None else list(scene_ids),
+        },
+        "reuse_run_sha256": [_sha256(Path(root) / "run.json") for root in reuse_roots],
     }
 
 
@@ -84,6 +95,33 @@ def _coverage(scenes):
     }
 
 
+def _reuse_completed(directory, spec, reuse_roots):
+    for root in reuse_roots:
+        source = Path(root) / spec.scene_id
+        try:
+            status = _load_completed(source, spec)
+        except (FileNotFoundError, ValueError, KeyError, json.JSONDecodeError):
+            continue
+        if status is None or status.get("status") != "converged":
+            continue
+        for name in (
+            "scene.json",
+            "evaluated_scene.json",
+            "reference_latest.npz",
+        ):
+            shutil.copy2(source / name, directory / name)
+        reused = {
+            **status,
+            "reused": True,
+            "reused_from_dataset_id": json.loads(
+                (Path(root) / "run.json").read_text(encoding="utf-8")
+            )["dataset_id"],
+        }
+        _write_json(directory / "reference.json", reused)
+        return reused
+    return None
+
+
 def _write_summary(output, report):
     coverage = report["coverage"]
     lines = [
@@ -116,22 +154,36 @@ def generate_references(
     config=None,
     splits=("train", "validation", "test_iid"),
     limit=None,
+    scene_ids=None,
+    reuse_roots=(),
     runner=None,
 ):
     """Generate or resume per-scene references, committing each result atomically."""
     config = config or EvaluationConfig()
     splits, limit = _selection(splits, limit)
     manifest, all_scenes = read_manifest(manifest_path)
-    selected = []
-    for split in splits:
-        candidates = [scene for scene in all_scenes if scene.split == split]
-        selected.extend(candidates if limit is None else candidates[:limit])
+    if scene_ids is not None:
+        scene_ids = tuple(scene_ids)
+        scene_map = {scene.scene_id: scene for scene in all_scenes}
+        if len(set(scene_ids)) != len(scene_ids) or not all(
+            scene_id in scene_map for scene_id in scene_ids
+        ):
+            raise ValueError("Every selected scene ID must exist exactly once")
+        selected = [scene_map[scene_id] for scene_id in scene_ids]
+    else:
+        selected = []
+        for split in splits:
+            candidates = [scene for scene in all_scenes if scene.split == split]
+            selected.extend(candidates if limit is None else candidates[:limit])
     if not selected:
         raise ValueError("No scenes selected")
 
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
-    identity = _run_identity(manifest, config, splits, limit)
+    reuse_roots = tuple(Path(root) for root in reuse_roots)
+    if any(not (root / "run.json").is_file() for root in reuse_roots):
+        raise ValueError("Every reuse root must contain run.json")
+    identity = _run_identity(manifest, config, splits, limit, scene_ids, reuse_roots)
     run_path = output / "run.json"
     if run_path.exists():
         previous = json.loads(run_path.read_text(encoding="utf-8"))
@@ -153,6 +205,8 @@ def generate_references(
         directory = output / spec.scene_id
         directory.mkdir(exist_ok=True)
         status = _load_completed(directory, spec)
+        if status is None:
+            status = _reuse_completed(directory, spec, reuse_roots)
         if status is None:
             print(f"Reference {spec.scene_id}", flush=True)
             started = perf_counter()

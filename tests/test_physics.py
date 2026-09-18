@@ -19,8 +19,10 @@ from fdtdmesh.physics import (
     candidate_densities,
     load_physics_targets,
     pareto_front,
+    reblend_physics_targets,
     score_candidates,
     search_physics_targets,
+    select_validation_checkpoint,
 )
 
 
@@ -230,3 +232,117 @@ def test_search_passes_external_reference_root_without_shadowing(tmp_path, monke
     )
     assert seen == [references]
     assert report["accepted_references"] == 0 and report["targets"] == 0
+
+
+def test_reblend_recovers_cached_physics_target_without_fdtd(tmp_path):
+    scenes = small_scenes()
+    manifest_path = tmp_path / "manifest.json"
+    manifest = write_manifest(manifest_path, scenes, generation={"test": True})
+    teacher = tmp_path / "teacher.npz"
+    prior_x = np.full((2, 32), 1 / 32, dtype=np.float32)
+    prior_y = prior_x.copy()
+    np.savez_compressed(teacher, target_x=prior_x, target_y=prior_y)
+    teacher.with_suffix(".json").write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "teacher_version": 1,
+                "dataset_id": manifest["dataset_id"],
+                "mesh_policy": MESH_POLICY,
+                "targets_sha256": hashlib.sha256(teacher.read_bytes()).hexdigest(),
+                "raster_shape": [32, 32],
+                "samples": [
+                    {
+                        "scene_id": scene.scene_id,
+                        "scene_hash": scene.content_hash,
+                        "split": scene.split,
+                        "budget": [32, 32],
+                    }
+                    for scene in scenes
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    physics_x = np.tile(np.linspace(1, 2, 32), (2, 1)).astype(np.float32)
+    physics_x /= physics_x.sum(1, keepdims=True)
+    physics_y = physics_x[:, ::-1].copy()
+    source = tmp_path / "source.npz"
+    old_weight = 0.5
+    np.savez_compressed(
+        source,
+        target_x=(1 - old_weight) * prior_x + old_weight * physics_x,
+        target_y=(1 - old_weight) * prior_y + old_weight * physics_y,
+    )
+    source.with_suffix(".json").write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "physics_target_version": PHYSICS_TARGET_VERSION,
+                "dataset_id": manifest["dataset_id"],
+                "targets_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+                "mesh_policy": MESH_POLICY,
+                "raster_shape": [32, 32],
+                "samples": [
+                    {
+                        "scene_id": scene.scene_id,
+                        "scene_hash": scene.content_hash,
+                        "split": scene.split,
+                        "budget": [32, 32],
+                        "physics_weight": old_weight,
+                    }
+                    for scene in scenes
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    output = tmp_path / "reblended.npz"
+    metadata = reblend_physics_targets(manifest_path, teacher, source, output, physics_weight=0.8)
+    arrays = np.load(output)
+    np.testing.assert_allclose(arrays["target_x"], 0.2 * prior_x + 0.8 * physics_x, atol=1e-8)
+    np.testing.assert_allclose(arrays["target_y"], 0.2 * prior_y + 0.8 * physics_y, atol=1e-8)
+    assert metadata["physics_weight"] == 0.8
+
+
+def test_checkpoint_selection_uses_measured_validation_error_and_cost(tmp_path):
+    checkpoints = [tmp_path / "a.pt", tmp_path / "b.pt"]
+    for index, checkpoint in enumerate(checkpoints):
+        checkpoint.write_bytes(f"checkpoint-{index}".encode())
+
+    def report(checkpoint, error, updates):
+        rows = []
+        for scene_id in ("validation-00000", "validation-00001"):
+            for strategy, value, cost in (
+                ("uniform", error + 0.1, 100),
+                ("distilled", error, updates),
+            ):
+                rows.append(
+                    {
+                        "scene_id": scene_id,
+                        "budget": [32, 32],
+                        "strategy": strategy,
+                        "status": "ok",
+                        "metrics": {
+                            "waveform_l2_max": value,
+                            "spectrum_l2_max": value / 2,
+                        },
+                        "diagnostics": {"cell_updates": cost},
+                    }
+                )
+        return {
+            "dataset_id": "dataset",
+            "reference_run_sha256": "reference",
+            "split": "validation",
+            "checkpoint_sha256": hashlib.sha256(checkpoint.read_bytes()).hexdigest(),
+            "rows": rows,
+        }
+
+    evaluations = [tmp_path / "a.json", tmp_path / "b.json"]
+    evaluations[0].write_text(json.dumps(report(checkpoints[0], 0.02, 130)))
+    evaluations[1].write_text(json.dumps(report(checkpoints[1], 0.025, 70)))
+    result = select_validation_checkpoint(
+        evaluations, checkpoints, tmp_path / "nested" / "selection.json", beta=0.02
+    )
+    assert result["selected_checkpoint"] == str(checkpoints[1])
+    assert all(row["pareto"] for row in result["candidates"])

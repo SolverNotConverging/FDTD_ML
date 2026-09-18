@@ -120,3 +120,43 @@ def test_checkpoint_training_metadata_validation(tmp_path):
     assert metadata["training"] == {"epoch": 1}
     with pytest.raises(ValueError, match="dictionary"):
         save_model(path, ResUNet(2), training_metadata="bad")
+
+
+@pytest.mark.parametrize(
+    "options", [{"early_stopping_patience": 0}, {"early_stopping_min_delta": -1}]
+)
+def test_invalid_early_stopping_config(options):
+    with pytest.raises(ValueError):
+        TrainingConfig(**options)
+
+
+def test_training_early_stops_and_persists_stale_epochs(tmp_path, monkeypatch):
+    manifest, targets = teacher_fixture(tmp_path)
+    losses = iter([1.0, 1.1, 1.2])
+    monkeypatch.setattr(
+        "fdtdmesh.training.evaluate_imitation",
+        lambda *args, **kwargs: {"loss": next(losses), "loss_x": 0.0, "loss_y": 0.0},
+    )
+    output = tmp_path / "training"
+    report = train_model(
+        manifest,
+        targets,
+        output,
+        config=TrainingConfig(
+            epochs=8,
+            batch_size=1,
+            width=2,
+            repair_weight=0,
+            projection_samples=1,
+            early_stopping_patience=2,
+            seed=7,
+        ),
+        device="cpu",
+        allow_dirty=True,
+    )
+    assert report["stopped_early"] is True
+    assert len(report["history"]) == 3 and report["stale_epochs"] == 2
+    state = torch.load(output / "resume.pt", map_location="cpu", weights_only=False)
+    assert state["stale_epochs"] == 2
+    _, best = load_model(output / "best.pt")
+    assert best["training"]["epoch"] == 1
