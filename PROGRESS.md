@@ -18,6 +18,35 @@ This record accompanies the version-0.5.0 imitation-training update. Earlier com
 See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.md),
 [stage 2 validation](docs/stage2_validation.md), and [grading plots](docs/anchor_grading.md).
 
+## Current direction: small-CNN proof of concept on richer scenes
+
+The next implementation is specified in [section 11 of the implementation
+plan](IMPLEMENTATION_PLAN.md#11-revised-next-milestone--small-cnn-rich-scenes).
+The user reprioritized the original width-16 CNN before any capacity expansion.
+`codex/small-cnn-rich-scenes` branches from `366508e`; the larger-model proposal
+is preserved on `codex/server-scale-cnn`. CNN/solver/generator source is unchanged
+by this planning update. Historical trained weights are not present in the remote
+checkout; restoring the source does not restore checkpoint artifacts.
+
+Planned generator v5 introduces deliberate contacts, intersections, nesting and
+mixed assemblies; epsilon variation within 1–10 without a mandatory >10 tail;
+variable permeability and conductivity; visible-feature and distribution audits;
+and deterministic splits that survive corpus expansion. Fine references are
+planned through 4096 with longer mu-aware windows, six duration extensions,
+qualified larger resource limits, and unchanged 2% spatial / 1% tail tolerances.
+Targeted 8192 refinement is conditional on numerical and memory qualification.
+These changes are **not implemented or launched** by this documentation revision.
+
+The superseded 2,560-scene v4 worker was stopped, preserving **118 completed
+records: 53 converged, 60 nonconverged, 5 failed**. Records and stop metadata remain
+under ignored `artifacts/stage5_server_v4/`, separate from any future v5 corpus.
+The earlier 2048-cap preflight and the main-checkout small run are also preserved.
+
+Remote setup was verified on `neeps`: four 24-GiB TITAN RTX cards, Python 3.12.14,
+locked CUDA PyTorch, and a source-unchanged native build with CUDA toolkit 12.6.
+The preceding environment validation passed all 138 tests with no skips. That
+result validates the existing code; it is not evidence for the planned v5 physics.
+
 ## Stage status
 
 | Stage | Status | Evidence / remaining work |
@@ -316,13 +345,16 @@ ignored; source, tests, scripts, documentation and dependency metadata are track
   and spectral windows explicitly.
 - Format-v1/eight-channel checkpoints require deliberate migration; loading them
   silently would violate the new raster and grading contract.
-- Windows is validated. The provided Linux build path has not been validated.
+- Windows is historically validated. The existing Linux build and 138-test suite
+  now pass on the TITAN RTX server with CUDA toolkit 12.6; proposed generator-v5
+  contacts, material distributions and fine/long references remain unqualified.
 
 ## Next milestone
 
-Move large reference generation to server hardware and expand train/validation
-coverage across 32x32, 48x48, 64x64, and 96x96, especially for 32x32 outliers and
-compositional scenes. Examine staircase convergence, PML sensitivity,
-and sampling bandwidth. Compare strategies within equal budget strata and do not
-weaken the reference gate merely to increase dataset size; retain failures and
-infeasible scene-budget pairs in coverage reports.
+Implement and qualify the richer generator-v5 distribution and fine/long reference
+policy in implementation-plan section 11, then train the original width-16 CNN
+as a proof of concept across 32x32, 48x48, 64x64, and 96x96 budgets. Examine
+staircase convergence, magnetic/lossy interfaces, contact topology, PML sensitivity
+and sampling bandwidth. Raise explicitly qualified compute limits rather than
+weakening acceptance. Preserve all rejected references and infeasible pairs.
+Return to larger CNNs only after physical evaluation of this controlled baseline.
