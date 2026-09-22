@@ -2,6 +2,7 @@
 """Print compact progress for sparse references, candidates, and CNN evaluation."""
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
@@ -35,6 +36,38 @@ def print_campaign_progress(label, config_path, output):
     if report_path.is_file():
         report = json.loads(report_path.read_text())
         print(f"  decision={report['decision']}")
+
+
+def print_cluster_preflight(config_path, output):
+    print("Sparse cluster mesh preflight")
+    path = output / "cutcell_preflight.json"
+    if not path.is_file():
+        print("  waiting for cut-cell cost preflight")
+        return
+    report = json.loads(path.read_text())
+    config_hash = hashlib.sha256(config_path.read_bytes()).hexdigest()
+    if report.get("config_sha256") != config_hash:
+        print("  stale: cluster configuration changed after preflight")
+        return
+    rows = report["cases"]
+    infeasible = sum(not row["mesh_feasible"] for row in rows)
+    cap = [
+        sum(row["mesh_feasible"] and not row["within_step_limit"][index] for row in rows)
+        for index in range(len(report["duration_schedule_s"]))
+    ]
+    circle_refs = [
+        row for row in rows
+        if row["phase"] == "references" and row["pec_circle_count"] > 0
+    ]
+    circle_last_capped = sum(
+        row["mesh_feasible"] and not row["within_step_limit"][-1]
+        for row in circle_refs
+    )
+    print(
+        f"  meshes={len(rows)} infeasible={infeasible} "
+        f"step_cap_by_retry={cap} circular_PEC_references_last_retry_capped="
+        f"{circle_last_capped}/{len(circle_refs)}"
+    )
 
 
 def print_training_progress(label, grid):
@@ -133,6 +166,7 @@ def main():
 
     print_campaign_progress("Sparse pair campaign", args.campaign_config, args.references)
     print_campaign_progress("Sparse cluster pilot", args.cluster_config, args.clusters)
+    print_cluster_preflight(args.cluster_config, args.clusters)
     if args.pec_circle_config.is_file():
         print_campaign_progress("Circular PEC gap pilot", args.pec_circle_config, args.pec_circles)
 
