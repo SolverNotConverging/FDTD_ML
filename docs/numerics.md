@@ -56,6 +56,9 @@ For counterclockwise contour tangent t=(-ny,nx), define Ht=H dot t. Then
                         * exp(-i*k*(rhat dot r')) dl
 
 Source normalization is the DFT of the incident pulse at its phase origin.
+`SurfaceDFT.normalized_far_field` returns complex A/Einc in sqrt(m); this is the
+primary training/reference target. It uses the global far-field coordinate origin
+(0,0). Both origins and the Fourier convention are recorded in solver diagnostics.
 The angular **2D scattering width** is
 
     width(phi) = 2*pi*abs(A(phi)/Ei_origin)^2    [metres]
@@ -64,6 +67,19 @@ The differential cross section per radian is width/(2*pi); total scattering cros
 section per unit length is its integral over angle. For uniformly sampled angles
 covering 2*pi, this integral is the mean width. Complex amplitudes depend on phase
 origin/target position even when translated-target widths agree.
+
+For a target translated by dr at fixed illumination phase origin, its complex
+normalized amplitude gains exp(i*k*(d_incident-d_observation) dot dr). The analytic
+cylinder benchmark includes this factor. Source normalization does not remove
+physical scattering phase, and predictions are never rotated to match references.
+
+Store real and imaginary components together (the pilots use native complex128
+NPZ arrays). The complex L2 metric measures amplitude and phase simultaneously.
+Weighted phase RMS is an additional diagnostic over sufficiently strong angular
+samples; no phase is reported for a zero field. Per-frequency normalization uses
+an explicit amplitude floor, which must be calibrated before training.
+Candidate ranking combines this complex error with a floored logarithmic
+scattering-width error; see the [joint loss and curriculum](curriculum.md).
 
 Bins below a floor relative to the incident time-domain L1 norm or strongest
 requested bin are rejected. Thus even a request containing only out-of-band

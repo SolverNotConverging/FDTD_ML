@@ -16,6 +16,7 @@ CNN training are subsequent milestones.
 - [Numerical conventions](docs/numerics.md)
 - [openEMS implementation review](docs/openems_review.md)
 - [Conformal PEC and cell enlargement](docs/conformal_pec.md)
+- [Simple-first training curriculum and joint loss](docs/curriculum.md)
 - [Archived receiver-CNN project](archive/receiver_cnn_2026-09-22/README.md)
 
 ## Run the initial validation
@@ -58,7 +59,8 @@ result = simulate(
     frequencies=[0.8e9, 1e9, 1.2e9], duration=30e-9, pml_thickness=0.15,
 )
 angles = np.linspace(0, 2*np.pi, 180, endpoint=False)
-width = result.monitor.scattering_width(angles)  # [frequency, angle], metres
+field = result.monitor.normalized_far_field(angles)  # complex128, sqrt(m); primary target
+width = result.monitor.scattering_width(angles)  # derived [frequency, angle], metres
 print(result.diagnostics)
 ```
 
@@ -69,6 +71,11 @@ For PEC-only scenes, use `Circle(..., PEC())` or `Rectangle(..., PEC())` and sel
 `pec_mode="enlarged"` to test cell enlargement. The default `"conformal"` retains
 small cut regions and reduces dt as required; `"staircase"` is a comparison mode.
 The enlarged method remains experimental and computes its own stability bound.
+
+Both pilot scripts preserve complex far fields and incident spectra in `spectra.npz`.
+Phase origins and the Fourier convention are recorded in the reports. Future
+training includes complex real/imaginary error and a floored log-RCS loss. The
+initial data curriculum starts with one PEC cylinder, then one dielectric cylinder.
 
 ## Archive and restoration
 

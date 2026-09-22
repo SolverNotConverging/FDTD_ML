@@ -15,8 +15,43 @@ import numpy as np
 from matplotlib.patches import Circle as CirclePatch
 
 from scattermesh import PEC, Circle, Grid, PlaneWave, Rectangle, focused_axis, simulate
-from scattermesh.analytic import cylinder_width
+from scattermesh.analytic import cylinder_far_field, cylinder_width
 from scattermesh.conformal import CutCellPEC
+from scattermesh.metrics import compare_far_fields, scattering_loss
+
+
+def plot_complex_spectra(output):
+    """Plot cached complex spectra without rerunning a simulation."""
+    with np.load(Path(output) / "spectra.npz") as data:
+        degrees = np.rad2deg(data["angles"])
+        reference = data["circle_n64_enlarged_analytic_complex_far_field"][1]
+        predictions = [
+            ("Uniform 64²", data["circle_n64_enlarged_complex_far_field"][1]),
+            ("Nonuniform 64²", data["circle_graded_n64_enlarged_complex_far_field"][1]),
+        ]
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4), constrained_layout=True)
+    for ax, part, label in zip(axes[:2], [np.real, np.imag], ["Re(F)", "Im(F)"]):
+        ax.plot(degrees, part(reference), "k--", label="Analytic")
+        for name, prediction in predictions:
+            ax.plot(degrees, part(prediction), label=name)
+        ax.set(xlabel="Observation angle (degrees)", ylabel=label + " (sqrt(m))")
+        ax.grid(alpha=0.2)
+        ax.legend()
+    valid = abs(reference) >= 0.05 * abs(reference).max()
+    for name, prediction in predictions:
+        error = np.rad2deg(np.angle(prediction * np.conj(reference)))
+        axes[2].plot(degrees, np.where(valid, error, np.nan), label=name)
+    axes[2].set(
+        xlabel="Observation angle (degrees)",
+        ylabel="Phase error (degrees)",
+        title="No fitted phase rotation\nReference nulls excluded",
+    )
+    axes[2].axhline(0, color="k", lw=0.5)
+    axes[2].grid(alpha=0.2)
+    axes[2].legend()
+    fig.suptitle("Complex far field: enlarged PEC, 1 GHz, incidence 40.1°")
+    fig.savefig(Path(output) / "complex_far_field.png", dpi=160)
+    plt.close(fig)
 
 
 def main():
@@ -40,6 +75,7 @@ def main():
             pec_mode=mode,
         )
         width = result.monitor.scattering_width(angles)
+        field = result.monitor.normalized_far_field(angles)
         record = dict(
             name=name,
             **result.diagnostics,
@@ -51,10 +87,29 @@ def main():
             )
             error = np.linalg.norm(width - reference, axis=1) / np.linalg.norm(reference, axis=1)
             record["width_relative_l2_by_frequency"] = error.tolist()
+            reference_field = np.array(
+                [
+                    cylinder_far_field(
+                        obj.radius,
+                        PEC(),
+                        f,
+                        angles,
+                        angle,
+                        center=obj.center,
+                        incident_origin=source.origin,
+                    )
+                    for f in frequencies
+                ]
+            )
+            record.update(compare_far_fields(field, reference_field))
+            record.update(scattering_loss(field, reference_field))
+            spectra[name + "_analytic_complex_far_field"] = reference_field
             record["geometry"] = dict(kind="circle", center=list(obj.center), radius=obj.radius)
         else:
             record["geometry"] = dict(kind="rectangle", bounds=list(obj.bounds))
         spectra[name] = width
+        spectra[name + "_complex_far_field"] = field
+        spectra[name + "_incident_spectrum"] = result.monitor.incident.copy()
         records.append(record)
         (args.output / "partial_records.json").write_text(json.dumps(records, indent=2) + "\n")
         print(
@@ -103,7 +158,10 @@ def main():
         )
 
     report = dict(
-        schema=1,
+        schema=2,
+        primary_target="source-normalized complex far field A/Einc, sqrt(m)",
+        complex_storage="native complex128 in spectra.npz; real/imaginary parts must be retained",
+        phase_convention="exp(-i omega t), outgoing exp(+i k r), global far-field origin (0,0)",
         created_utc=datetime.now(timezone.utc).isoformat(),
         formulation="TMz cut-edge PEC with unchanged Yee electric dual metrics",
         time_step="min(background CFL, conservative cut-edge Gershgorin bound), safety=0.9",
@@ -174,6 +232,7 @@ def main():
     ax.grid(alpha=0.2)
     fig.savefig(args.output / "conformal_pec.png", dpi=160)
     plt.close(fig)
+    plot_complex_spectra(args.output)
     print("Report:", args.output / "report.json")
 
 

@@ -1,6 +1,9 @@
 {
-  "schema": 1,
-  "created_utc": "2026-09-22T03:39:01.788389+00:00",
+  "schema": 2,
+  "primary_target": "source-normalized complex far field A/Einc, sqrt(m)",
+  "complex_storage": "native complex128 in spectra.npz; real/imaginary parts must be retained",
+  "phase_convention": "exp(-i omega t), outgoing exp(+i k r), global far-field origin (0,0)",
+  "created_utc": "2026-09-22T03:51:22.716078+00:00",
   "formulation": "TMz cut-edge PEC with unchanged Yee electric dual metrics",
   "time_step": "min(background CFL, conservative cut-edge Gershgorin bound), safety=0.9",
   "frequencies_hz": [
@@ -31,7 +34,7 @@
       "simulated_time": 3.502601690073193e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 1520640,
-      "wall_seconds": 0.2292364127933979,
+      "wall_seconds": 0.24690891429781914,
       "peak_scattered_e": 0.9999989786920583,
       "tail_peak_over_global_peak": 4.6202515042427434e-06,
       "incident_tail_at_origin": 6.6567123680370545e-295,
@@ -43,6 +46,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -57,10 +69,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.17101839161820043,
-        0.16983329018307192,
-        0.2265798585139167
+        0.17101839161820057,
+        0.16983329018307175,
+        0.22657985851391657
       ],
+      "complex_relative_l2_by_frequency": [
+        0.19076039067585054,
+        0.22873189586466822,
+        0.28428066572495425
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.05087611401032519,
+        0.05983448497409065,
+        0.07330141139187253
+      ],
+      "phase_weighted_rms_degrees": [
+        10.298743936813475,
+        12.713614639639196,
+        15.76224773485527
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -68,6 +103,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.058782302295317036,
+      "complex_mse_loss": 0.05650776791389058,
+      "rcs_log_loss": 0.009098137525705813,
+      "rcs_db_mse": 0.6864060633473676,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -88,7 +135,7 @@
       "simulated_time": 3.502542991245605e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 2163456,
-      "wall_seconds": 0.3149299006909132,
+      "wall_seconds": 0.32130152732133865,
       "peak_scattered_e": 1.0133914458594102,
       "tail_peak_over_global_peak": 3.834545636416319e-06,
       "incident_tail_at_origin": 6.867366210804705e-295,
@@ -100,6 +147,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -114,10 +170,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.018843715968853977,
-        0.028657710572377492,
-        0.036838723933720605
+        0.01884371596885404,
+        0.028657710572377548,
+        0.03683872393372047
       ],
+      "complex_relative_l2_by_frequency": [
+        0.03271594664944634,
+        0.04393358804498823,
+        0.07471765280186778
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.008725397477934932,
+        0.011492684934903274,
+        0.019265852611882503
+      ],
+      "phase_weighted_rms_degrees": [
+        1.7879751189467548,
+        2.3072148862442003,
+        4.179703729395508
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -125,6 +204,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.0029273313887899686,
+      "complex_mse_loss": 0.0028610736546322035,
+      "rcs_log_loss": 0.00026503093663106034,
+      "rcs_db_mse": 0.019995173887424715,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -145,7 +236,7 @@
       "simulated_time": 3.502601690073193e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 1520640,
-      "wall_seconds": 0.27071385830640793,
+      "wall_seconds": 0.27264268323779106,
       "peak_scattered_e": 1.0028371005598529,
       "tail_peak_over_global_peak": 4.733215822671999e-06,
       "incident_tail_at_origin": 6.6567123680370545e-295,
@@ -157,6 +248,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -171,10 +271,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.01959603793040619,
-        0.03502952192038402,
-        0.04561320600167595
+        0.019596037930406242,
+        0.03502952192038412,
+        0.0456132060016758
       ],
+      "complex_relative_l2_by_frequency": [
+        0.027188972934515023,
+        0.031720259713864836,
+        0.0478289421726465
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.007251344379927129,
+        0.008297773233805796,
+        0.012332632462691924
+      ],
+      "phase_weighted_rms_degrees": [
+        1.408982531039249,
+        1.3848352414795693,
+        2.4548710955188335
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -182,6 +305,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.0014360615987140488,
+      "complex_mse_loss": 0.00134434094496773,
+      "rcs_log_loss": 0.0003668826149852754,
+      "rcs_db_mse": 0.02767934104657254,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -202,7 +337,7 @@
       "simulated_time": 3.5026016900731717e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 3604480,
-      "wall_seconds": 0.3563765026628971,
+      "wall_seconds": 0.3556839283555746,
       "peak_scattered_e": 0.9999263997031765,
       "tail_peak_over_global_peak": 2.8963668553496083e-06,
       "incident_tail_at_origin": 6.656712368111173e-295,
@@ -214,6 +349,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -228,10 +372,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.12483307792313958,
-        0.1442791868193344,
-        0.16275774380884567
+        0.12483307792313969,
+        0.14427918681933422,
+        0.16275774380884556
       ],
+      "complex_relative_l2_by_frequency": [
+        0.18055355862388867,
+        0.21985737420207255,
+        0.26888988524666213
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.04815393489693552,
+        0.05751297912959314,
+        0.06933291804180837
+      ],
+      "phase_weighted_rms_degrees": [
+        10.044596285847476,
+        12.347498218870403,
+        15.2652072189681
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -239,6 +406,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.05203170369722617,
+      "complex_mse_loss": 0.05107954097024777,
+      "rcs_log_loss": 0.0038086509079136074,
+      "rcs_db_mse": 0.28734244442656376,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -259,7 +438,7 @@
       "simulated_time": 3.5009199744080645e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 7622656,
-      "wall_seconds": 0.7499178238213062,
+      "wall_seconds": 0.7870852053165436,
       "peak_scattered_e": 1.0022138825603815,
       "tail_peak_over_global_peak": 2.2195472723887187e-06,
       "incident_tail_at_origin": 1.615871513414223e-294,
@@ -271,6 +450,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -285,10 +473,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.011636803101215225,
-        0.015984948848750805,
-        0.020122979000780455
+        0.011636803101215298,
+        0.01598494884875062,
+        0.020122979000780337
       ],
+      "complex_relative_l2_by_frequency": [
+        0.01716979055567563,
+        0.02826522489122605,
+        0.05037250159080475
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.004579211746993678,
+        0.00739396299606591,
+        0.012988486053137923
+      ],
+      "phase_weighted_rms_degrees": [
+        0.9418800357896546,
+        1.554438330966646,
+        2.8368292831151405
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -296,6 +507,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.0012258632133845654,
+      "complex_mse_loss": 0.0012103711874643268,
+      "rcs_log_loss": 6.196810368095414e-05,
+      "rcs_db_mse": 0.004675163678342558,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -316,7 +539,7 @@
       "simulated_time": 3.5026016900731717e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 3604480,
-      "wall_seconds": 0.42110754176974297,
+      "wall_seconds": 0.4464469328522682,
       "peak_scattered_e": 1.0012668589385054,
       "tail_peak_over_global_peak": 2.9779498252315844e-06,
       "incident_tail_at_origin": 6.656712368111173e-295,
@@ -328,6 +551,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -342,10 +574,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.010960595894992124,
-        0.01772957482449576,
-        0.020908193839062846
+        0.010960595894992176,
+        0.017729574824495574,
+        0.020908193839062717
       ],
+      "complex_relative_l2_by_frequency": [
+        0.011158626317663104,
+        0.016922052058485695,
+        0.031069616505784683
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.002976024229792651,
+        0.004426677205628165,
+        0.008011261460467028
+      ],
+      "phase_weighted_rms_degrees": [
+        0.5752731529142677,
+        0.8319097970091427,
+        1.6786416828560577
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -353,6 +608,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.00047657523352765145,
+      "complex_mse_loss": 0.00045873061899462386,
+      "rcs_log_loss": 7.137845813211043e-05,
+      "rcs_db_mse": 0.005385124847347911,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -373,7 +640,7 @@
       "simulated_time": 3.502601690073193e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 12165120,
-      "wall_seconds": 0.9266203325241804,
+      "wall_seconds": 0.9494947474449873,
       "peak_scattered_e": 0.9999999905447421,
       "tail_peak_over_global_peak": 1.0694900215063692e-06,
       "incident_tail_at_origin": 6.6567123680370545e-295,
@@ -385,6 +652,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -399,10 +675,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.06366154731156874,
-        0.07074868530349088,
-        0.07957920604307075
+        0.06366154731156885,
+        0.07074868530349065,
+        0.0795792060430706
       ],
+      "complex_relative_l2_by_frequency": [
+        0.08917862432258498,
+        0.11023024277878568,
+        0.1368873981814036
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.02378408768322032,
+        0.028835374184717807,
+        0.03529624310844344
+      ],
+      "phase_weighted_rms_degrees": [
+        4.877109368773931,
+        6.0610905574988045,
+        7.549159627955931
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -410,6 +709,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.01323034320464555,
+      "complex_mse_loss": 0.012947231080004307,
+      "rcs_log_loss": 0.001132448498564974,
+      "rcs_db_mse": 0.08543721323703755,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -430,7 +741,7 @@
       "simulated_time": 3.500274921569287e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 36025344,
-      "wall_seconds": 2.7124705594033003,
+      "wall_seconds": 2.7350538838654757,
       "peak_scattered_e": 1.0031190318248044,
       "tail_peak_over_global_peak": 8.309245096075609e-07,
       "incident_tail_at_origin": 2.263475278390513e-294,
@@ -442,6 +753,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -456,10 +776,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.004950627442556871,
-        0.006193231161737767,
-        0.0079390245904358
+        0.004950627442556948,
+        0.006193231161737592,
+        0.007939024590435682
       ],
+      "complex_relative_l2_by_frequency": [
+        0.007360430141716769,
+        0.012643957307836046,
+        0.022553280443026336
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.0019630389816685497,
+        0.003307560892147624,
+        0.0058153349394152246
+      ],
+      "phase_weighted_rms_degrees": [
+        0.402761556017808,
+        0.6994271349498945,
+        1.270880191123094
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -467,6 +810,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.00024398888237851275,
+      "complex_mse_loss": 0.00024089868233842252,
+      "rcs_log_loss": 1.2360800160360978e-05,
+      "rcs_db_mse": 0.0009325565978668452,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -487,7 +842,7 @@
       "simulated_time": 3.502601690073161e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 12165120,
-      "wall_seconds": 1.2196397092193365,
+      "wall_seconds": 1.2582711707800627,
       "peak_scattered_e": 1.001287208158274,
       "tail_peak_over_global_peak": 1.0901021150592367e-06,
       "incident_tail_at_origin": 6.6567123681490035e-295,
@@ -499,6 +854,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -513,10 +877,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.0051459681876921725,
-        0.006924062458059395,
-        0.007733427046373465
+        0.005145968187692239,
+        0.006924062458059237,
+        0.0077334270463733385
       ],
+      "complex_relative_l2_by_frequency": [
+        0.005002634504074831,
+        0.007738868706090109,
+        0.01359196073231416
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.0013342109568950376,
+        0.0020244278637246917,
+        0.0035046699455301045
+      ],
+      "phase_weighted_rms_degrees": [
+        0.25394640957746456,
+        0.3905959334776004,
+        0.7405032527801025
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -524,6 +911,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 9.339579097226515e-05,
+      "complex_mse_loss": 8.988594579341032e-05,
+      "rcs_log_loss": 1.4039380715419354e-05,
+      "rcs_db_mse": 0.001059196568690948,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -544,7 +943,7 @@
       "simulated_time": 3.500611575476539e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 28819456,
-      "wall_seconds": 1.7476301696151495,
+      "wall_seconds": 1.7924387026578188,
       "peak_scattered_e": 0.9999999991685316,
       "tail_peak_over_global_peak": 5.246868535070666e-07,
       "incident_tail_at_origin": 1.8988002005844745e-294,
@@ -556,6 +955,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -570,10 +978,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.05095654672028693,
-        0.05578469754570989,
-        0.06077684440974037
+        0.05095654672028705,
+        0.05578469754570965,
+        0.06077684440974022
       ],
+      "complex_relative_l2_by_frequency": [
+        0.06305340458758851,
+        0.07669122631262129,
+        0.09293497133377832
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.01681644805387486,
+        0.020061828330064323,
+        0.02396316523692164
+      ],
+      "phase_weighted_rms_degrees": [
+        3.405078734650732,
+        4.19672754604173,
+        5.1452099450399515
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -581,6 +1012,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.0062793062939059344,
+      "complex_mse_loss": 0.00616472830674334,
+      "rcs_log_loss": 0.00045831194865037487,
+      "rcs_db_mse": 0.03457719775825874,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -601,7 +1044,7 @@
       "simulated_time": 3.500153405916072e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 78659584,
-      "wall_seconds": 4.66864294372499,
+      "wall_seconds": 4.7455945406109095,
       "peak_scattered_e": 1.0023088827782005,
       "tail_peak_over_global_peak": 4.4250347979892774e-07,
       "incident_tail_at_origin": 2.4113758019965192e-294,
@@ -613,6 +1056,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -627,10 +1079,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.00275196025751298,
-        0.003521593929799997,
-        0.004278170994377337
+        0.002751960257513056,
+        0.0035215939297998282,
+        0.0042781709943772155
       ],
+      "complex_relative_l2_by_frequency": [
+        0.0041506071993235175,
+        0.0070975902047746,
+        0.01258049634427789
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.0011069738551945242,
+        0.0018566743953851797,
+        0.0032438651277750742
+      ],
+      "phase_weighted_rms_degrees": [
+        0.22785359435471972,
+        0.39195255026001924,
+        0.7100221610582342
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -638,6 +1113,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 7.617649706699352e-05,
+      "complex_mse_loss": 7.529073836879263e-05,
+      "rcs_log_loss": 3.5430347928035846e-06,
+      "rcs_db_mse": 0.00026730312193675034,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -658,7 +1145,7 @@
       "simulated_time": 3.500611575476539e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 28819456,
-      "wall_seconds": 2.2376803420484066,
+      "wall_seconds": 2.2814151998609304,
       "peak_scattered_e": 1.0021849154660873,
       "tail_peak_over_global_peak": 5.325821078843487e-07,
       "incident_tail_at_origin": 1.8988002005844745e-294,
@@ -670,6 +1157,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -684,10 +1180,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.002865576570139407,
-        0.0039638587965729576,
-        0.004252813299852781
+        0.002865576570139474,
+        0.003963858796572806,
+        0.004252813299852652
       ],
+      "complex_relative_l2_by_frequency": [
+        0.002843660508474822,
+        0.004422860982405984,
+        0.00765080162097422
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.0007584089953016622,
+        0.0011569860337748417,
+        0.0019727495560293673
+      ],
+      "phase_weighted_rms_degrees": [
+        0.1457708440905128,
+        0.22244362307822066,
+        0.4192043886131909
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -695,6 +1214,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 2.9759489543086733e-05,
+      "complex_mse_loss": 2.8727623266883418e-05,
+      "rcs_log_loss": 4.127465104813266e-06,
+      "rcs_db_mse": 0.00031139527911001956,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -715,7 +1246,7 @@
       "simulated_time": 3.5003784366558826e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 3359232,
-      "wall_seconds": 0.710292836651206,
+      "wall_seconds": 0.7336211986839771,
       "peak_scattered_e": 0.9999999034047807,
       "tail_peak_over_global_peak": 2.4271551943620144e-06,
       "incident_tail_at_origin": 2.1445575000505826e-294,
@@ -727,6 +1258,15 @@
         0.8953459523361477
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -741,10 +1281,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.11123936843869625,
-        0.10880733755052163,
-        0.05797123139377627
+        0.11123936843869633,
+        0.10880733755052144,
+        0.057971231393776176
       ],
+      "complex_relative_l2_by_frequency": [
+        0.10967401446276798,
+        0.15572916068091103,
+        0.20030930324627386
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.029250242380029972,
+        0.04073753723574609,
+        0.05164950140183097
+      ],
+      "phase_weighted_rms_degrees": [
+        5.702003211465666,
+        8.616200701693394,
+        11.37543999540934
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -752,6 +1315,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.025843655440383778,
+      "complex_mse_loss": 0.025467925967256045,
+      "rcs_log_loss": 0.0015029178925109394,
+      "rcs_db_mse": 0.11338715767024263,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -772,7 +1347,7 @@
       "simulated_time": 3.500293833979227e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 16694784,
-      "wall_seconds": 3.506952801719308,
+      "wall_seconds": 3.5587423145771027,
       "peak_scattered_e": 1.0033618586447608,
       "tail_peak_over_global_peak": 1.8603483792958748e-06,
       "incident_tail_at_origin": 2.2412743320523644e-294,
@@ -784,6 +1359,15 @@
         0.8953459523361477
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -798,10 +1382,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.05284272867319097,
-        0.03841536061266945,
-        0.04897069481007273
+        0.05284272867319105,
+        0.03841536061266928,
+        0.04897069481007282
       ],
+      "complex_relative_l2_by_frequency": [
+        0.040730950642216976,
+        0.0785229067586033,
+        0.110519495827763
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.010863012396234807,
+        0.020540981688664084,
+        0.028497312716761612
+      ],
+      "phase_weighted_rms_degrees": [
+        1.9011599046669303,
+        4.338239282413649,
+        6.042525295776751
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -809,6 +1416,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.006871875450031914,
+      "complex_mse_loss": 0.006679805394687315,
+      "rcs_log_loss": 0.0007682802213783948,
+      "rcs_db_mse": 0.05796265453385497,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -829,7 +1448,7 @@
       "simulated_time": 3.5003784366558826e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 3359232,
-      "wall_seconds": 0.8423276226967573,
+      "wall_seconds": 0.8540030363947153,
       "peak_scattered_e": 1.0006046012308456,
       "tail_peak_over_global_peak": 2.365122944286388e-06,
       "incident_tail_at_origin": 2.1445575000505826e-294,
@@ -841,6 +1460,15 @@
         0.8953459523361477
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -855,10 +1483,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.06656916656229175,
-        0.040794476004432326,
-        0.06476563992899849
+        0.06656916656229184,
+        0.04079447600443215,
+        0.06476563992899861
       ],
+      "complex_relative_l2_by_frequency": [
+        0.047519601748220175,
+        0.08242753455914642,
+        0.10305708615663443
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.012673556956463905,
+        0.021562401952671534,
+        0.02657313978757859
+      ],
+      "phase_weighted_rms_degrees": [
+        2.120982700540641,
+        4.535484259803638,
+        5.4313429778726645
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -866,6 +1517,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.006828331404251676,
+      "complex_mse_loss": 0.006557724670301568,
+      "rcs_log_loss": 0.0010824269358004355,
+      "rcs_db_mse": 0.08166335250096055,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -886,7 +1549,7 @@
       "simulated_time": 3.500956168061563e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 7970816,
-      "wall_seconds": 1.1138273049145937,
+      "wall_seconds": 1.1406823210418224,
       "peak_scattered_e": 0.9999999980344767,
       "tail_peak_over_global_peak": 3.0995277813686135e-06,
       "incident_tail_at_origin": 1.5855205310073886e-294,
@@ -898,6 +1561,15 @@
         0.8953459523361479
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -912,10 +1584,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.05906538798237906,
-        0.06543175788398152,
-        0.09125311455613487
+        0.05906538798237916,
+        0.06543175788398133,
+        0.09125311455613473
       ],
+      "complex_relative_l2_by_frequency": [
+        0.0722061780212399,
+        0.08736453503562248,
+        0.12426674537313681
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.01925750797764274,
+        0.022853882879326222,
+        0.03204202368703609
+      ],
+      "phase_weighted_rms_degrees": [
+        3.8728525766338007,
+        4.6916641965813515,
+        6.812371215275277
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -923,6 +1618,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.009704415897117302,
+      "complex_mse_loss": 0.009429506044019173,
+      "rcs_log_loss": 0.0010996394123925176,
+      "rcs_db_mse": 0.08296194226888266,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -943,7 +1650,7 @@
       "simulated_time": 3.500010438567116e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 35385344,
-      "wall_seconds": 4.883642602711916,
+      "wall_seconds": 4.997301833704114,
       "peak_scattered_e": 1.0016654241573661,
       "tail_peak_over_global_peak": 2.6186793901483023e-06,
       "incident_tail_at_origin": 2.5976029029766806e-294,
@@ -955,6 +1662,15 @@
         0.8953459523361479
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -969,10 +1685,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.011861902354998965,
-        0.02232078386794418,
-        0.026606229726906554
+        0.011861902354998977,
+        0.02232078386794419,
+        0.026606229726906436
       ],
+      "complex_relative_l2_by_frequency": [
+        0.02081177431226993,
+        0.031413255533368864,
+        0.05958066096371503
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.0055505348826182955,
+        0.008217463327942305,
+        0.015362798342840621
+      ],
+      "phase_weighted_rms_degrees": [
+        1.1380699375420975,
+        1.616844480900747,
+        3.323083480080865
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -980,6 +1719,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.001700533671739694,
+      "complex_mse_loss": 0.001656592578034248,
+      "rcs_log_loss": 0.00017576437482178417,
+      "rcs_db_mse": 0.013260486803728835,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -1000,7 +1751,7 @@
       "simulated_time": 3.500956168061563e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 7970816,
-      "wall_seconds": 1.1846181247383356,
+      "wall_seconds": 1.2091213669627905,
       "peak_scattered_e": 0.9999999980344767,
       "tail_peak_over_global_peak": 3.1320027387214305e-06,
       "incident_tail_at_origin": 1.5855205310073886e-294,
@@ -1012,6 +1763,15 @@
         0.8953459523361479
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1026,10 +1786,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.01224862041579294,
-        0.024456093801781004,
-        0.02993925610212071
+        0.012248620415792942,
+        0.024456093801781046,
+        0.02993925610212058
       ],
+      "complex_relative_l2_by_frequency": [
+        0.020821791807443837,
+        0.028871456607528,
+        0.054746228180385687
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.005553206565270862,
+        0.007552548498025584,
+        0.014116245942263234
+      ],
+      "phase_weighted_rms_degrees": [
+        1.1273985389117125,
+        1.4132560219936092,
+        3.01514095973222
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -1037,6 +1820,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.0014722704127207128,
+      "complex_mse_loss": 0.001421419173563921,
+      "rcs_log_loss": 0.0002034049566271671,
+      "rcs_db_mse": 0.01534582162000948,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -1057,7 +1852,7 @@
       "simulated_time": 3.5000003460163546e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 26910720,
-      "wall_seconds": 2.1182972211390734,
+      "wall_seconds": 2.139569779857993,
       "peak_scattered_e": 0.9999999930980474,
       "tail_peak_over_global_peak": 1.6793195003992077e-06,
       "incident_tail_at_origin": 2.611271876121158e-294,
@@ -1069,6 +1864,15 @@
         0.8953459523361477
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1083,10 +1887,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.03571070904062193,
-        0.04015836555917322,
-        0.044661505154769264
+        0.03571070904062204,
+        0.04015836555917299,
+        0.044661505154769125
       ],
+      "complex_relative_l2_by_frequency": [
+        0.0442915353909516,
+        0.054850309428198823,
+        0.07365470090009821
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.01181262628084812,
+        0.0143484143429108,
+        0.01899177180359859
+      ],
+      "phase_weighted_rms_degrees": [
+        2.393099675790827,
+        2.9881450546580757,
+        4.1002244910486905
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -1094,6 +1921,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.0035254464234949295,
+      "complex_mse_loss": 0.003465103838780001,
+      "rcs_log_loss": 0.00024137033885971373,
+      "rcs_db_mse": 0.01821010768823956,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -1114,7 +1953,7 @@
       "simulated_time": 3.5001823995644293e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 161270784,
-      "wall_seconds": 12.676260974258184,
+      "wall_seconds": 12.783664910122752,
       "peak_scattered_e": 1.0012838690331682,
       "tail_peak_over_global_peak": 1.4549958503213821e-06,
       "incident_tail_at_origin": 2.3752449447218284e-294,
@@ -1126,6 +1965,15 @@
         0.8953459523361477
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1140,10 +1988,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.005426030711720874,
-        0.008948010320731638,
-        0.009356267085964091
+        0.005426030711720901,
+        0.008948010320731562,
+        0.009356267085963998
       ],
+      "complex_relative_l2_by_frequency": [
+        0.008337194713800651,
+        0.014094108724077146,
+        0.02651020914640046
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.002223543720385659,
+        0.003686909223945531,
+        0.006835624018852521
+      ],
+      "phase_weighted_rms_degrees": [
+        0.4540836416713026,
+        0.7477942794538978,
+        1.4847298147407195
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -1151,6 +2022,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.00033079007428130357,
+      "complex_mse_loss": 0.0003236479684692759,
+      "rcs_log_loss": 2.8568423248110782e-05,
+      "rcs_db_mse": 0.0021553355159088868,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -1171,7 +2054,7 @@
       "simulated_time": 3.5000003460163546e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 26910720,
-      "wall_seconds": 2.675651589408517,
+      "wall_seconds": 2.7601308804005384,
       "peak_scattered_e": 1.0008326780504506,
       "tail_peak_over_global_peak": 1.6897513092194198e-06,
       "incident_tail_at_origin": 2.611271876121158e-294,
@@ -1183,6 +2066,15 @@
         0.8953459523361477
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1197,10 +2089,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.005479683221084224,
-        0.009172383832320122,
-        0.009337981508415551
+        0.005479683221084248,
+        0.009172383832320049,
+        0.009337981508415453
       ],
+      "complex_relative_l2_by_frequency": [
+        0.007839169469782772,
+        0.013010851304683964,
+        0.024451791341159986
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.0020907195580692345,
+        0.003403537508170033,
+        0.006304863581896633
+      ],
+      "phase_weighted_rms_degrees": [
+        0.4231263167002476,
+        0.677617398691909,
+        1.363344202355466
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -1208,6 +2123,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.00028350473328210313,
+      "complex_mse_loss": 0.00027620830981339907,
+      "rcs_log_loss": 2.918569387481617e-05,
+      "rcs_db_mse": 0.002201905300076217,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -1228,7 +2155,7 @@
       "simulated_time": 3.5026016900731717e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 3604480,
-      "wall_seconds": 0.4345738925039768,
+      "wall_seconds": 0.44598458893597126,
       "peak_scattered_e": 1.0006020607573245,
       "tail_peak_over_global_peak": 2.9616383055722297e-06,
       "incident_tail_at_origin": 6.656712368111173e-295,
@@ -1240,6 +2167,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.0,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1254,10 +2190,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.009874081756302739,
-        0.012023028305083084,
-        0.019521365980628157
+        0.009874081756302772,
+        0.012023028305082957,
+        0.019521365980627946
       ],
+      "complex_relative_l2_by_frequency": [
+        0.011226866945253731,
+        0.01726677902008607,
+        0.03111495346761849
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.0029942241188636288,
+        0.004516855097636045,
+        0.008022951538939874
+      ],
+      "phase_weighted_rms_degrees": [
+        0.5683355595321596,
+        0.8974113231361015,
+        1.6822427890975762
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -1265,6 +2224,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.000483468353591089,
+      "complex_mse_loss": 0.0004641081761423264,
+      "rcs_log_loss": 7.744070979505036e-05,
+      "rcs_db_mse": 0.005842489476891343,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -1285,7 +2256,7 @@
       "simulated_time": 3.5026016900731717e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 3604480,
-      "wall_seconds": 0.4233101159334183,
+      "wall_seconds": 0.4459361080080271,
       "peak_scattered_e": 1.0023011880940496,
       "tail_peak_over_global_peak": 2.9822979815181402e-06,
       "incident_tail_at_origin": 6.656712368111173e-295,
@@ -1297,6 +2268,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 1.9722220547535925,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1311,10 +2291,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.010270195722813713,
-        0.016596564731817542,
-        0.015142534241353022
+        0.01027019572281379,
+        0.01659656473181747,
+        0.015142534241352841
       ],
+      "complex_relative_l2_by_frequency": [
+        0.010265797347607844,
+        0.01680149442539108,
+        0.03203909278179244
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.002737905255977805,
+        0.004395140266459089,
+        0.008261239696451112
+      ],
+      "phase_weighted_rms_degrees": [
+        0.49898690344914165,
+        0.8037814925417222,
+        1.7442277181958392
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -1322,6 +2325,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.0004956599747913896,
+      "complex_mse_loss": 0.0004713934254629681,
+      "rcs_log_loss": 9.706619731368593e-05,
+      "rcs_db_mse": 0.007323128079119384,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -1342,7 +2357,7 @@
       "simulated_time": 3.5026016900731717e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 3604480,
-      "wall_seconds": 0.42432480305433273,
+      "wall_seconds": 0.4498615339398384,
       "peak_scattered_e": 0.9999871393009141,
       "tail_peak_over_global_peak": 2.9890413647837344e-06,
       "incident_tail_at_origin": 6.656712368111173e-295,
@@ -1354,6 +2369,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 3.961897402027128,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1368,10 +2392,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.010645273565695395,
-        0.017272701544666827,
-        0.017810482113654186
+        0.010645273565695447,
+        0.017272701544666813,
+        0.01781048211365393
       ],
+      "complex_relative_l2_by_frequency": [
+        0.010793060051393173,
+        0.01671301948367691,
+        0.031363330075116325
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.0028785270975253893,
+        0.004371995909828949,
+        0.008086995134166048
+      ],
+      "phase_weighted_rms_degrees": [
+        0.5412322426149544,
+        0.8059522555226094,
+        1.7057987151682465
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -1379,6 +2426,18 @@
           0.591
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.00048074545418252306,
+      "complex_mse_loss": 0.00045982454631181307,
+      "rcs_log_loss": 8.368363148284005e-05,
+      "rcs_db_mse": 0.0063134846984291915,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -1399,7 +2458,7 @@
       "simulated_time": 3.5026016900731717e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 3604480,
-      "wall_seconds": 0.48456578701734543,
+      "wall_seconds": 0.4727973211556673,
       "peak_scattered_e": 1.00157031944524,
       "tail_peak_over_global_peak": 2.9790385099430196e-06,
       "incident_tail_at_origin": 6.656712368111173e-295,
@@ -1411,6 +2470,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1425,10 +2493,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.010273268450481344,
-        0.01628418115851173,
-        0.018633381036278752
+        0.010273268450481382,
+        0.01628418115851156,
+        0.01863338103627863
       ],
+      "complex_relative_l2_by_frequency": [
+        0.011575345716170141,
+        0.016991435587310685,
+        0.03124149066131274
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.00308716398765142,
+        0.004444827397131779,
+        0.008055578994865172
+      ],
+      "phase_weighted_rms_degrees": [
+        0.6057315761551827,
+        0.8488312397425243,
+        1.7026797358993138
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -1436,6 +2527,18 @@
           0.5897
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.00048314633392810094,
+      "complex_mse_loss": 0.0004662427501691592,
+      "rcs_log_loss": 6.761433503576677e-05,
+      "rcs_db_mse": 0.005101141789363116,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -1456,7 +2559,7 @@
       "simulated_time": 3.5026016900731717e-08,
       "requested_time": 3.5e-08,
       "cell_updates": 3604480,
-      "wall_seconds": 0.42983655259013176,
+      "wall_seconds": 0.44307093508541584,
       "peak_scattered_e": 1.001643420634554,
       "tail_peak_over_global_peak": 2.9712364106976915e-06,
       "incident_tail_at_origin": 6.656712368111173e-295,
@@ -1468,6 +2571,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1482,10 +2594,33 @@
       "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
       "finite_fields": true,
       "width_relative_l2_by_frequency": [
-        0.010645669253586605,
-        0.017130421604933298,
-        0.019034503621398514
+        0.01064566925358665,
+        0.017130421604933114,
+        0.019034503621398385
       ],
+      "complex_relative_l2_by_frequency": [
+        0.011183381383678264,
+        0.01656856889464275,
+        0.03118461103317741
+      ],
+      "complex_absolute_rms_by_frequency": [
+        0.002982626447142166,
+        0.0043342087592158265,
+        0.008040912654433147
+      ],
+      "phase_weighted_rms_degrees": [
+        0.5808650191320678,
+        0.8167107875026058,
+        1.7001850661390305
+      ],
+      "phase_valid_angle_counts": [
+        180,
+        180,
+        180
+      ],
+      "amplitude_floor_sqrt_m": 1e-12,
+      "phase_reference_fraction": 0.05,
+      "phase_alignment_applied": false,
       "geometry": {
         "kind": "circle",
         "center": [
@@ -1493,6 +2628,18 @@
           0.5947
         ],
         "radius": 0.08
+      },
+      "joint_scattering_loss": 0.0004737779801172791,
+      "complex_mse_loss": 0.0004573551532266317,
+      "rcs_log_loss": 6.569130756258959e-05,
+      "rcs_db_mse": 0.004956059599316755,
+      "scattering_loss_config": {
+        "complex_weight": 1.0,
+        "rcs_weight": 0.25,
+        "amplitude_floor_sqrt_m": 1e-12,
+        "rcs_floor_fraction": 0.0001,
+        "rcs_db_scale": 8.685889638065035,
+        "weights_status": "provisional_pilot"
       }
     },
     {
@@ -1513,7 +2660,7 @@
       "simulated_time": 6.000401117495627e-08,
       "requested_time": 6e-08,
       "cell_updates": 3684096,
-      "wall_seconds": 0.633106542751193,
+      "wall_seconds": 0.6170230749994516,
       "peak_scattered_e": 1.0227613894878815,
       "tail_peak_over_global_peak": 1.423130401553074e-06,
       "incident_tail_at_origin": 0.0,
@@ -1525,6 +2672,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1566,7 +2722,7 @@
       "simulated_time": 6.002185623443608e-08,
       "requested_time": 6e-08,
       "cell_updates": 2605824,
-      "wall_seconds": 0.5262455027550459,
+      "wall_seconds": 0.5066884085536003,
       "peak_scattered_e": 1.010267817680734,
       "tail_peak_over_global_peak": 1.9603317111002214e-06,
       "incident_tail_at_origin": 0.0,
@@ -1578,6 +2734,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1619,7 +2784,7 @@
       "simulated_time": 6.000870356311922e-08,
       "requested_time": 6e-08,
       "cell_updates": 9483264,
-      "wall_seconds": 1.7284506186842918,
+      "wall_seconds": 1.5792015101760626,
       "peak_scattered_e": 1.0236304371352103,
       "tail_peak_over_global_peak": 8.307153432134343e-07,
       "incident_tail_at_origin": 0.0,
@@ -1631,6 +2796,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1672,7 +2846,7 @@
       "simulated_time": 6.002185623443608e-08,
       "requested_time": 6e-08,
       "cell_updates": 2605824,
-      "wall_seconds": 0.5324883610010147,
+      "wall_seconds": 0.5205306243151426,
       "peak_scattered_e": 1.0103670943490453,
       "tail_peak_over_global_peak": 1.9641777040696682e-06,
       "incident_tail_at_origin": 0.0,
@@ -1684,6 +2858,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1725,7 +2908,7 @@
       "simulated_time": 6.000367116222948e-08,
       "requested_time": 6e-08,
       "cell_updates": 29212416,
-      "wall_seconds": 5.067869387567043,
+      "wall_seconds": 4.860067036002874,
       "peak_scattered_e": 1.0238643248812893,
       "tail_peak_over_global_peak": 6.354801122971492e-07,
       "incident_tail_at_origin": 0.0,
@@ -1737,6 +2920,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1778,7 +2970,7 @@
       "simulated_time": 6.002185623443608e-08,
       "requested_time": 6e-08,
       "cell_updates": 2605824,
-      "wall_seconds": 0.5359128173440695,
+      "wall_seconds": 0.5233070068061352,
       "peak_scattered_e": 1.0103786648747854,
       "tail_peak_over_global_peak": 1.964566981310427e-06,
       "incident_tail_at_origin": 0.0,
@@ -1790,6 +2982,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1831,7 +3032,7 @@
       "simulated_time": 6.002185623443608e-08,
       "requested_time": 6e-08,
       "cell_updates": 2605824,
-      "wall_seconds": 0.5436806697398424,
+      "wall_seconds": 0.4980446733534336,
       "peak_scattered_e": 1.0103799677533212,
       "tail_peak_over_global_peak": 1.9646102457120362e-06,
       "incident_tail_at_origin": 0.0,
@@ -1843,6 +3044,15 @@
         0.8999999999999999
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1884,7 +3094,7 @@
       "simulated_time": 6.000045426049864e-08,
       "requested_time": 6e-08,
       "cell_updates": 21630976,
-      "wall_seconds": 2.7053573671728373,
+      "wall_seconds": 2.751122387126088,
       "peak_scattered_e": 1.0086676607102405,
       "tail_peak_over_global_peak": 8.073962853929899e-07,
       "incident_tail_at_origin": 0.0,
@@ -1896,6 +3106,15 @@
         0.8953459523361479
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1937,7 +3156,7 @@
       "simulated_time": 6.001639145248394e-08,
       "requested_time": 6e-08,
       "cell_updates": 13664256,
-      "wall_seconds": 1.9559665247797966,
+      "wall_seconds": 1.9711581710726023,
       "peak_scattered_e": 1.008453158029253,
       "tail_peak_over_global_peak": 9.577761027311185e-07,
       "incident_tail_at_origin": 0.0,
@@ -1949,6 +3168,15 @@
         0.8953459523361479
       ],
       "incident_angle_radians": 0.7,
+      "incident_phase_origin": [
+        0.6,
+        0.6
+      ],
+      "far_field_origin": [
+        0.0,
+        0.0
+      ],
+      "fourier_convention": "integral f(t) exp(+i omega t) dt",
       "pml_thickness": [
         0.15,
         0.15
@@ -1975,13 +3203,14 @@
   ],
   "source_sha256": {
     "src/scattermesh/__init__.py": "2acdc7ec66f9ae4ce252beeeffbf055e3c5f21e219c3d25f5c17a8dde88e478a",
-    "src/scattermesh/analytic.py": "507b43782a1b700396e16544bbb3a73b1e91f3ee734950611f4ebafa531c0947",
+    "src/scattermesh/analytic.py": "6ccaaaee317c7a4fd199d09c7fd5439ce68ba827a56f13a3a1cdac9fbcbf5173",
     "src/scattermesh/conformal.py": "da902813571881c7908bbe831d7a1fbb2b8f718e1dbe8c1063e52d54df00194b",
     "src/scattermesh/constants.py": "b99b765671464c860e9f78625f12bea6b52daeea52a4000f6404bd69b04efef1",
     "src/scattermesh/geometry.py": "66abbcde65223e0a3f009fa767e599a79bf4b8bda992068859de5b1d13b6c4f9",
     "src/scattermesh/grid.py": "2a7cd3e1489eaff9e0e3038123ea162f79d1eb7bad082cada197dbe08f633df2",
-    "src/scattermesh/observables.py": "662cfeb442a66337dbe298bda057bef78ceee2b0770679afe978c134f9a8fe67",
-    "src/scattermesh/solver.py": "0a1c1abfd9111ef035d0e86e302ebd334295eed4fcef9d7603e2c062402c3e02",
+    "src/scattermesh/metrics.py": "cebfcd6eafd72cd4e637ba6bae1f685ca1aebf9bac04308c05dd792609b46aa8",
+    "src/scattermesh/observables.py": "71376aa30d1a8392591b2f539e1da3556aac041d421ed662dfd0695bf95aeaf2",
+    "src/scattermesh/solver.py": "64592a83ca39d07e81d5185da4ab5a44c255766513be2f134d10ae9635032224",
     "src/scattermesh/source.py": "8376321b4de6b4c2ebd04b09d650dd4f2bf00cbfb121b0c5a1e2359abfa79f1f"
   },
   "limitations": [
@@ -1991,5 +3220,15 @@
     "Finite tests do not prove all offsets/grading stable with CPML",
     "Enlargement is a local TMz Galerkin aggregation, not a general 3D algorithm",
     "An independent CFL bound is still enforced after enlargement"
-  ]
+  ],
+  "loss_postprocessing": {
+    "created_utc": "2026-09-22T04:02:11.262797+00:00",
+    "reused_saved_complex_spectra": true,
+    "source_sha256": {
+      "src/scattermesh/metrics.py": "0da1226d346f869af297e487e601cfd63d214c457d2b7dd960c78d00e1abffa6"
+    },
+    "spectra_sha256": "1d704af81eb8e1f6638aedebd984b8a275fc0b13bbfca0b35545eb3ac7dce610",
+    "scored_records": 26,
+    "note": "Joint loss added from saved complex targets; source_sha256 above records the original field run."
+  }
 }

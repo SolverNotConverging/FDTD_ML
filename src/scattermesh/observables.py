@@ -107,7 +107,13 @@ class SurfaceDFT:
             )
         return np.asarray(amplitude)
 
-    def scattering_width(self, angles, *, incident_floor=1e-3):
+    def normalized_far_field(self, angles, *, incident_floor=1e-3):
+        """Complex A/Einc [sqrt(m)], retaining amplitude and absolute phase.
+
+        A uses the global coordinate origin in exp(i*k*r)/sqrt(r). Einc is
+        sampled at the incident wave's declared phase origin. Never align the
+        prediction's phase to a reference before comparing physics targets.
+        """
         if not np.isfinite(incident_floor) or not 0 < incident_floor < 1:
             raise ValueError("incident_floor must be between 0 and 1")
         amplitude = abs(self.incident)
@@ -116,4 +122,9 @@ class SurfaceDFT:
         scale = max(float(amplitude.max()), self.incident_l1)
         if scale == 0 or np.any(amplitude < incident_floor * scale):
             raise ValueError("Incident spectrum too small for reliable normalization")
-        return 2 * np.pi * abs(self.far_amplitude(angles) / self.incident[:, None]) ** 2
+        return self.far_amplitude(angles) / self.incident[:, None]
+
+    def scattering_width(self, angles, *, incident_floor=1e-3):
+        return (
+            2 * np.pi * abs(self.normalized_far_field(angles, incident_floor=incident_floor)) ** 2
+        )

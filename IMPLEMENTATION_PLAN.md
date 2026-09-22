@@ -10,6 +10,10 @@ See [progress](PROGRESS.md) for measured validation.
 Learn where a limited number of nonuniform Yee cells most improve scattering
 accuracy. The primary experiment is at low budgets, with the same continuous scene,
 incident wave, physical domain, and simulation stopping criteria for every mesh.
+**The physics loss includes both source-normalized complex far-field error and
+RCS/scattering-width error. Complex targets retain absolute phase; both terms are
+stored and reported separately.** See the [simple-first curriculum](docs/curriculum.md),
+updated from the user's referenced discussion.
 Count PML cells and the time-step penalty from small cells in the computational cost.
 Do not infer success from teacher imitation loss, early stopping, or visual mesh density.
 
@@ -53,8 +57,8 @@ parameterization before allocating more training compute.
    An optional `enlarged` mode couples tiny cut regions to neighboring field regions
    through an energy-consistent Galerkin projection and checks the reduced operator's
    CFL bound. Do not obtain speed by silently clipping cut fractions or shifting PEC.
-   Circles are analytic validation fixtures; this does not change the proposed
-   rectangle/thin-segment dataset policy. Zero-thickness screens, split edges,
+   Single PEC circles are the first training family, with analytic complex-field
+   references. Rectangles/corners follow after cylinder stages. Zero-thickness screens, split edges,
    unresolved gaps, and mixed dielectric/PEC coupling remain explicit next work.
    A 2D thin segment represents an extruded screen, not a finite 3D wire antenna.
 
@@ -97,6 +101,9 @@ correction into the broadband contrast-source formulation.
   quadrature weights; no full time-history storage.
 - Closed-contour 2D NF2FF; complex amplitude, angular scattering width, source-spectrum
   normalization floor, field-tail and cost diagnostics.
+- Persist complex128 normalized far fields and incident spectra with frequency,
+  observation angle, Fourier sign, incident phase origin, and far-field origin.
+  Test absolute complex cylinder phase and subcell-translation phase factors.
 - Tests against outgoing Hankel waves and analytic lossless/lossy cylinder scattering.
 - Reproducible `scripts/qualify_scattering.py`, report and scientific plot.
 - Experimental off-grid PEC rectangles/circles with staircase, conformal, and
@@ -121,9 +128,10 @@ This is an executable starting point, not a qualified reference-data service.
 - Add an openEMS-style TFSF comparison with empty-domain leakage, transmitted-wave
   amplitude/phase, and interface tests. Add an external openEMS benchmark with
   matched polarization/dimensional interpretation; do not compare 2D width to 3D RCS.
-- Initial engineering targets: analytic angular L2 width error <1% on resolved
+- Initial engineering targets: analytic angular L2 complex-field error <1% on resolved
   benchmarks; duration/PML/contour/quadrature variations each <0.5%. These are
   proposed gates, to be calibrated across resonant and weak-scattering cases.
+  Also report magnitude, width, and phase errors. A width-only pass is insufficient.
 - Report angular nulls with absolute and floor-normalized errors, not unstable
   pointwise relative percentages. Empty/no-contrast cases require absolute metrics.
 
@@ -158,11 +166,27 @@ This is an executable starting point, not a qualified reference-data service.
 
 ### M4 — new scene schema and converged references
 
-Use three separately tagged families and keep their results separate:
+Start in controlled stages rather than immediately mixing every geometry family:
+
+1. Single PEC circular cylinders: vary electrical size, subcell location, incidence,
+   frequency band, and compute budget; analytic complex references.
+2. Single dielectric cylinders: start with moderate lossless contrast, then extend
+   epsilon_r to 30 and add conductivity; analytic complex references.
+3. Two/multiple cylinders: introduce controlled gaps and size/material contrasts.
+4. Rectangles/corners and thin screens once their solver treatment is qualified.
+5. Broader shapes and complex assemblies as generalization/stress tests.
+
+Propose a first pool of only 32–64 base PEC-cylinder geometries for candidate-mesh
+experiments, before any large data campaign. Final counts depend on acceptance,
+timing, and evidence of mesh headroom. Follow [the staged curriculum](docs/curriculum.md).
+Analytic references still need series-order checks and consistent phase conventions;
+an over-refined FDTD result is not the default truth for single cylinders.
+
+As stages expand, keep three separately tagged families and report their results separately:
 
 | Family | Initial contents | Controlled difficulty |
 |---|---|---|
-| Simple | One dielectric shape, one PEC rectangle/segment | Scale, location, contrast, loss, incidence |
+| Simple | First PEC circle, then dielectric circle; later other single objects | Scale, location, contrast, loss, incidence |
 | Sparse | Two dielectrics, two PEC objects, PEC + dielectric | Log-spaced gap, size ratio, orientation, incidence |
 | Complex | Several mixed objects with explicit overlap priority | Occlusion, multiple scattering, intersections, resonances |
 
@@ -175,12 +199,17 @@ Use three separately tagged families and keep their results separate:
   and their illuminations into the same train/validation/test split.
 - Explicit held-out angle sectors and size/gap ranges test extrapolation. Also
   evaluate unseen angles on held-out geometry to measure ordinary generalization.
+- Keep shape/topology holdouts once multiple families exist. For the initial
+  cylinder-only experiment use explicit held-out electrical-size intervals and
+  position/angle regimes; nearby-radius interpolation is not shape generalization.
 - Start with tens of qualified scenes, then hundreds; choose full campaign size
   after timing and diversity review. Do not relabel the old 3,000 references.
 - Reference records contain immutable scene/config/code IDs, actual x/y, dt/Nt,
-  CPML and quadrature settings, complex far fields, angular widths, DFT contour,
-  source spectrum, settling histories, refinement comparisons, and wall times.
-- Acceptance requires independent spatial refinement and time extension, plus
+  CPML and quadrature settings, native complex far fields (or explicit real/imag
+  arrays), derived angular widths, DFT contour, source spectrum, incident/far-field
+  phase origins, Fourier convention, settling histories, comparisons, and wall times.
+- Acceptance requires complex-field agreement under independent spatial refinement
+  and time extension, plus
   monitored-tail and source-spectrum checks. Compare at least two successive fine
   refinements; agreement of two underresolved meshes is not enough. Escalate mesh,
   runtime, and quadrature within explicit limits; retain failed attempts and skip
@@ -188,11 +217,14 @@ Use three separately tagged families and keep their results separate:
 
 ### M5 — new model and training targets
 
-- Start a fresh small CNN. Condition on continuous-geometry raster/SDF, material
+- Start a fresh small CNN/residual U-Net. Condition on continuous-geometry raster/SDF, material
   channels, gap/feature information, frequency band, sin/cos incidence, Nx/Ny, and
   grading policy. Use an input resolution high enough to see the smallest admitted
   features; test subpixel translations and resolution sensitivity explicitly.
-- Predict positive axis densities/cumulative coordinates with exact budgets.
+- Predict a spatial importance map projected to positive x/y axis densities, or
+  predict the two axis densities directly. A free 2D mask is not a realizable
+  tensor-product grid. The deterministic mesher enforces exact cell counts and
+  checks actual Nx*Ny*Nt against the compute-budget cap.
   Conformal PEC is the preferred candidate to avoid boundary anchors, conditional
   on M1 qualification. Cell enlargement changes effective degrees of freedom;
   record aggregation counts and error sensitivity. Any fallback alignment is a
@@ -203,16 +235,41 @@ Use three separately tagged families and keep their results separate:
 - Optional short heuristic pretraining is initialization. Main supervision is
   measured scattering accuracy and computational cost; the teacher must not
   permanently cap the achievable mesh quality.
-- Physics loss combines normalized complex far-field error and floor-stabilized
-  log-width error over frequencies/angles, with a tail/worst-bin term. Include cell
-  updates/runtime tradeoffs and feasibility/settling gates. Select numerical weights
-  from pilot scales and a Pareto sweep; do not inherit old waveform-loss weights.
+- The complex component compares real and imaginary parts directly:
+
+      L_complex(f) = sum_angle w * |F_pred - F_ref|^2
+                     / (sum_angle w * |F_ref|^2 + F_floor^2)
+
+  Here F=A/Eincident is the complex far field in sqrt(m), angular weights sum to
+  one, and F_floor is calibrated to physical scale/numerical noise. No arbitrary
+  global phase rotation or time shift is fitted away. This retains interference
+  and propagation-phase information. Plain wrapped-angle MSE is not the primary
+  loss, and phase at scattering nulls is excluded from phase-only diagnostics.
+- Add a floored logarithmic RCS/scattering-width component:
+
+      delta_dB = 10*log10((width_pred + width_floor)/(width_ref + width_floor))
+      L_rcs = mean((delta_dB / (20/ln(10)))^2)
+      L_accuracy = lambda_complex*L_complex + lambda_rcs*L_rcs
+
+  Scaling the dB term by 20/ln(10) makes its small-amplitude-error limit comparable
+  to squared relative amplitude error. The implemented NumPy scorer starts with
+  **provisional** weights 1 and 0.25 and an RCS floor 1e-4 of each frequency's
+  reference peak, bounded below by an absolute floor. Calibrate these on training
+  pilots, then freeze them for validation/test; store components so reweighting
+  does not require rerunning FDTD. These are not tuned CNN loss weights.
+- Report weighted phase RMS, complex error, and RCS error separately. Include
+  worst-frequency performance and hard mesh-feasibility/settling/compute-budget
+  gates. Compare Pareto curves against uniform, wavelength/interface heuristics,
+  and classical solution/error-guided refinement. Do not inherit old loss weights.
 - Report family losses independently before choosing a combined weighted loss.
   Simple/sparse cases should receive substantial sampling and weight because they
   represent the intended use; complex stress cases must not overwhelm them.
 - A forward solver alone does not give training gradients. First implement
   budget-conditioned distillation from physics-evaluated candidate mesh searches;
   then evaluate an adjoint/differentiable path as a distinct validated extension.
+- Retain multiple good candidate meshes and their ranking, density maps, and cost.
+  Avoid one arbitrary ground-truth mesh per scene. Evaluate ranking/set-valued
+  supervision in the first model pilot before direct differentiable FDTD.
 
 ### M6 — frozen evaluation and campaign operation
 

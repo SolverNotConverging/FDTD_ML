@@ -15,7 +15,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from scattermesh import Circle, Grid, Material, PlaneWave, focused_axis, simulate
-from scattermesh.analytic import cylinder_width
+from scattermesh.analytic import cylinder_far_field, cylinder_width
+from scattermesh.metrics import compare_far_fields, scattering_loss
 
 
 def main():
@@ -54,6 +55,21 @@ def main():
             samples=samples,
         )
         width = result.monitor.scattering_width(angles)
+        field = result.monitor.normalized_far_field(angles)
+        reference_field = np.array(
+            [
+                cylinder_far_field(
+                    0.06,
+                    material,
+                    f,
+                    angles,
+                    source.angle,
+                    center=(0.6, 0.6),
+                    incident_origin=source.origin,
+                )
+                for f in frequencies
+            ]
+        )
         reference = np.array(
             [cylinder_width(0.06, material, f, angles, source.angle) for f in frequencies]
         )
@@ -64,11 +80,16 @@ def main():
                 strength=strength,
                 angle_degrees=angle,
                 width_relative_l2_by_frequency=error.tolist(),
+                **compare_far_fields(field, reference_field),
+                **scattering_loss(field, reference_field),
                 **result.diagnostics,
             )
         )
         curves[name] = width
         arrays[name + "_width"] = width
+        arrays[name + "_complex_far_field"] = field
+        arrays[name + "_analytic_complex_far_field"] = reference_field
+        arrays[name + "_incident_spectrum"] = result.monitor.incident.copy()
         arrays[name + "_analytic"] = reference
         arrays[name + "_x"] = axis
         print(
@@ -90,13 +111,20 @@ def main():
         "finer_quadrature": dict(samples=24),
     }
     sensitivities = {}
+    complex_sensitivities = {}
     for name, settings in variants.items():
         width = run(name, 128, 2, 30, **settings)
         sensitivities[name] = (
             np.linalg.norm(width - baseline, axis=1) / np.linalg.norm(baseline, axis=1)
         ).tolist()
+        complex_sensitivities[name] = compare_far_fields(
+            arrays[name + "_complex_far_field"], arrays["n128_focus2_angle30_complex_far_field"]
+        )
     report = dict(
-        schema=1,
+        schema=2,
+        primary_target="source-normalized complex far field A/Einc, sqrt(m)",
+        complex_storage="native complex128 in spectra.npz; real/imaginary parts must be retained",
+        phase_convention="exp(-i omega t), outgoing exp(+i k r), global far-field origin (0,0)",
         purpose="initial CPU dielectric-cylinder qualification, not campaign acceptance",
         created_utc=datetime.now(timezone.utc).isoformat(),
         python_version=platform.python_version(),
@@ -122,6 +150,7 @@ def main():
         metric="angular L2(width - analytic) / L2(analytic) at each frequency",
         records=records,
         relative_width_sensitivity=sensitivities,
+        complex_field_sensitivity=complex_sensitivities,
         limitations=[
             "TMz CPU prototype",
             "This report does not exercise PEC; no CUDA backend yet",
