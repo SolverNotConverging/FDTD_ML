@@ -8,6 +8,8 @@ from pathlib import Path
 
 import numpy as np
 
+from .sparse import sparse_cluster_metrics
+
 DOMAIN = 1.2
 
 
@@ -151,6 +153,133 @@ def rasterize_circle(geometry, resolution=128, *, domain=DOMAIN):
     return channels.astype(np.float32)
 
 
+def _scene_objects(example):
+    if "objects" in example:
+        return tuple(example["objects"])
+    if example.get("shape") == "circle":
+        return (
+            {
+                "shape": "circle",
+                "center_m": example["center_m"],
+                "radius_m": example["radius_m"],
+                "material": {
+                    "kind": "dielectric",
+                    "epsilon_r": example["epsilon_r"],
+                    "sigma_e_s_per_m": example["sigma_e_s_per_m"],
+                },
+            },
+        )
+    raise ValueError("Expanded rasterization requires circle/rectangle objects")
+
+
+def _object_signed_distance(definition, x, y):
+    if definition["shape"] == "circle":
+        center = definition["center_m"]
+        return float(definition["radius_m"]) - np.hypot(x - center[0], y - center[1])
+    if definition["shape"] == "rectangle":
+        left, right, bottom, top = map(float, definition["bounds_m"])
+        outside_x = np.maximum(np.maximum(left - x, x - right), 0.0)
+        outside_y = np.maximum(np.maximum(bottom - y, y - top), 0.0)
+        outside = np.hypot(outside_x, outside_y)
+        inside = np.minimum.reduce((x - left, right - x, y - bottom, top - y))
+        return np.where((x >= left) & (x <= right) & (y >= bottom) & (y <= top), inside, -outside)
+    raise ValueError(f"Unsupported learning geometry: {definition.get('shape')}")
+
+
+def _feature_size(example, objects):
+    sizes = []
+    for obj in objects:
+        if obj["shape"] == "circle":
+            sizes.append(2 * float(obj["radius_m"]))
+        else:
+            left, right, bottom, top = map(float, obj["bounds_m"])
+            sizes.append(min(right - left, top - bottom))
+    if len(objects) > 1:
+        sizes.append(sparse_cluster_metrics({"objects": objects})["minimum_gap_m"])
+    declared = example.get("feature_size_m")
+    if declared is not None:
+        sizes.append(float(declared))
+    return min(value for value in sizes if value > 0)
+
+
+def rasterize_scene(example, resolution=256, *, domain=DOMAIN):
+    """Rasterize circle/rectangle dielectric/PEC scenes into seven physical channels.
+
+    Channels are dielectric fill, log permittivity, conductivity, PEC fill,
+    normalized signed distance, interface proximity, and pair-clearance proximity.
+    The smooth fill estimate preserves subpixel boundary information without changing
+    the solver's independent conformal PEC or sampled dielectric representation.
+    """
+    if isinstance(resolution, bool) or int(resolution) != resolution or resolution < 16:
+        raise ValueError("resolution must be an integer >=16")
+    objects = _scene_objects(example)
+    coordinate = (np.arange(int(resolution)) + 0.5) * domain / resolution
+    x, y = np.meshgrid(coordinate, coordinate, indexing="xy")
+    distances = np.stack([_object_signed_distance(obj, x, y) for obj in objects])
+    winner = np.argmax(distances, axis=0)
+    signed_distance = np.max(distances, axis=0)
+    pixel = domain / resolution
+    fill = np.clip(0.5 + signed_distance / pixel, 0.0, 1.0)
+    dielectric_fill = np.zeros_like(signed_distance)
+    epsilon = np.zeros_like(signed_distance)
+    sigma = np.zeros_like(signed_distance)
+    pec_fill = np.zeros_like(signed_distance)
+    for index, obj in enumerate(objects):
+        selected = winner == index
+        material = obj["material"]
+        if material.get("kind") == "pec":
+            pec_fill[selected] = fill[selected]
+        else:
+            dielectric_fill[selected] = fill[selected]
+            epsilon[selected] = fill[selected] * np.log(float(material["epsilon_r"])) / np.log(30.0)
+            conductivity = float(material.get("sigma_e_s_per_m", 0.0))
+            sigma[selected] = fill[selected] * np.log1p(conductivity / 0.01) / np.log1p(0.35 / 0.01)
+    feature_size = _feature_size(example, objects)
+    normalized_distance = np.clip(
+        signed_distance / max(0.25 * feature_size, pixel), -1.0, 1.0
+    )
+    interface = np.exp(-np.abs(signed_distance) / (2 * pixel))
+    if len(objects) == 1:
+        pair_proximity = np.zeros_like(signed_distance)
+    else:
+        exterior = np.maximum(-distances, 0.0)
+        nearest_two = np.partition(exterior, 1, axis=0)[:2]
+        clearance = nearest_two.sum(axis=0)
+        pair_proximity = np.exp(-clearance / max(4 * pixel, 0.5 * feature_size))
+    return np.stack(
+        (
+            dielectric_fill,
+            epsilon,
+            sigma,
+            pec_fill,
+            normalized_distance,
+            interface,
+            pair_proximity,
+        )
+    ).astype(np.float32)
+
+
+def resample_axis_profiles(profiles, bins):
+    """Resample probability profiles by interpolating their piecewise-linear CDF."""
+    values = np.asarray(profiles, dtype=np.float64)
+    if values.ndim < 1 or values.shape[-1] < 8 or bins < 8:
+        raise ValueError("Profiles and destination require at least eight bins")
+    if not np.isfinite(values).all() or np.any(values < 0):
+        raise ValueError("Profiles must be finite and nonnegative")
+    values = values / values.sum(axis=-1, keepdims=True)
+    old_edges = np.linspace(0.0, 1.0, values.shape[-1] + 1)
+    new_edges = np.linspace(0.0, 1.0, int(bins) + 1)
+    flattened = values.reshape(-1, values.shape[-1])
+    result = np.empty((len(flattened), int(bins)), dtype=np.float64)
+    for index, profile in enumerate(flattened):
+        cumulative = np.r_[0.0, np.cumsum(profile)]
+        cumulative[-1] = 1.0
+        result[index] = np.diff(np.interp(new_edges, old_edges, cumulative))
+    result = np.maximum(result, 0.0)
+    result /= result.sum(axis=-1, keepdims=True)
+    return result.reshape(*values.shape[:-1], int(bins)).astype(np.float32)
+
+
 def conditioning_features(example, *, domain=DOMAIN, max_cells=128, max_ratio=3.0):
     """Return global source, budget, band, feature, and material conditioning."""
     frequencies = np.asarray(example["frequencies_hz"], dtype=np.float64)
@@ -172,6 +301,59 @@ def conditioning_features(example, *, domain=DOMAIN, max_cells=128, max_ratio=3.
     )
     if not np.isfinite(values).all():
         raise ValueError("Conditioning features must be finite")
+    return values
+
+
+def conditioning_features_v2(example, *, domain=DOMAIN, max_cells=128, max_ratio=3.0):
+    """Return source, budget, geometry, topology, and material conditioning."""
+    objects = _scene_objects(example)
+    frequencies = np.asarray(example["frequencies_hz"], dtype=np.float64)
+    dielectric = [obj["material"] for obj in objects if obj["material"].get("kind") != "pec"]
+    maximum_epsilon = max((float(item["epsilon_r"]) for item in dielectric), default=1.0)
+    maximum_sigma = max(
+        (float(item.get("sigma_e_s_per_m", 0.0)) for item in dielectric), default=0.0
+    )
+    if len(objects) > 1:
+        metrics = sparse_cluster_metrics({"objects": objects}, domain=domain)
+    else:
+        obj = objects[0]
+        if obj["shape"] == "circle":
+            area = np.pi * float(obj["radius_m"]) ** 2
+            x_support = y_support = 2 * float(obj["radius_m"]) / domain
+        else:
+            left, right, bottom, top = map(float, obj["bounds_m"])
+            area = (right - left) * (top - bottom)
+            x_support, y_support = (right - left) / domain, (top - bottom) / domain
+        metrics = {
+            "occupied_area_fraction": area / domain**2,
+            "projected_x_support_fraction": x_support,
+            "projected_y_support_fraction": y_support,
+            "pec_fraction": float(obj["material"].get("kind") == "pec"),
+            "object_count": 1,
+        }
+    angle = float(example["incidence_angle_rad"])
+    values = np.array(
+        [
+            np.sin(angle),
+            np.cos(angle),
+            example["cells_x"] / max_cells,
+            example["cells_y"] / max_cells,
+            frequencies.min() / 1.2e9,
+            frequencies.max() / 1.2e9,
+            _feature_size(example, objects) / domain,
+            np.log(maximum_epsilon) / np.log(30.0),
+            np.log1p(maximum_sigma / 0.01) / np.log1p(0.35 / 0.01),
+            max_ratio / 3.0,
+            len(objects) / 4.0,
+            metrics["pec_fraction"],
+            metrics["occupied_area_fraction"],
+            metrics["projected_x_support_fraction"],
+            metrics["projected_y_support_fraction"],
+        ],
+        dtype=np.float32,
+    )
+    if not np.isfinite(values).all():
+        raise ValueError("Expanded conditioning features must be finite")
     return values
 
 

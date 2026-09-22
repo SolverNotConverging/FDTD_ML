@@ -25,12 +25,15 @@ distribution.
 2. **One dielectric cylinder.** This is the first learned family. Begin with moderate
    lossless contrast, then include epsilon_r up to 30 and conductivity. Keep mu_r=1
    and sigma_h=0. Add resonant/high-contrast cases after time-settling qualification.
-3. **Sparse localized pairs.** Introduce two cylinders with log-spaced gaps, radius
-   ratio, material contrast, cluster scale, translation, and incidence. The pair
-   remains localized; close gaps create local difficulty without filling the domain.
-4. **Sparse 3–4 object and PEC/mixed clusters.** Add separated PEC/dielectric objects,
-   rectangles, corners, and later thin screens only after their operators are
-   qualified. Keep contacting/overlapping interfaces excluded until defined.
+3. **Sparse localized pairs.** First qualify two dielectric cylinders with log-spaced
+   gaps, radius ratio, material contrast, cluster scale, translation, and incidence.
+   Then add circle--rectangle and rectangle--rectangle topology together with
+   dielectric--PEC and PEC--PEC material pairs. Keep topology/material strata
+   separate in every promotion report. The pair remains localized; close gaps create
+   local difficulty without filling the domain.
+4. **Sparse 3–4 object and PEC/mixed clusters.** Extend the qualified pair primitives
+   to separated PEC/dielectric objects, corners, and later thin screens. Keep
+   contacting/overlapping interfaces excluded until defined.
 5. **Dense and complex arrangements as stress tests.** Use domain-spanning scenes,
    intersections, and resonance-heavy assemblies to measure failure modes. They do
    not dominate training and cannot compensate for a sparse-family gate failure.

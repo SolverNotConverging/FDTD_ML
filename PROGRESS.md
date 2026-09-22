@@ -353,6 +353,70 @@ condition remains excluded. A second disjoint remediation envelope therefore sam
 large lossy circles densely around all four corners and incidence angles bracketing
 the failed regime before the sparse-object curriculum proceeds.
 
+The second disjoint corner-focused remediation is complete. Its fresh combined fit
+again passes the original 448-case frozen validation/test physics gate with all cases
+settled. The unchanged 120-case circle position/scale suite now also passes every
+frozen check: all pairs settle, 93/120 improve by at least 5%, median joint-score
+improvement is 1.664x, and the worst improvement is 0.568x against the fixed 0.5x
+floor. This promotes the project to the sparse curriculum without weakening a gate.
+
+M4.3A implementation is underway as a restartable localized two-dielectric-cylinder
+headroom pilot. Eight scenes span close/moderate/wide gaps, unequal radii and
+materials, cluster translations/orientations, and incidence angles while retaining
+0.5--12% occupied area and less than 45% projected support per axis. Fine uniform
+192/256 references are convergence-checked before 168 exact 32/48/64 candidate
+simulations. Candidate policies include uniform, multi-interface, cluster, gap, and
+hybrid density placement. M4.3B is now explicitly reserved for circle--rectangle,
+rectangle--rectangle, dielectric--PEC, and PEC--PEC pair strata before moving to
+3--4 object clusters.
+
+M4.3A is now complete and passes its predeclared headroom gate. All 16 uniform
+192/256 references settle, with cross-resolution joint losses from 1.0e-5 to
+4.3e-4. All 168 exact-budget candidate cases also settle. Across the 16 low-budget
+32/48 scene-budget groups, 12 (75%) improve by at least 5% and median soft-Nt
+improvement is 1.402x. Close, moderate, and wide-gap strata pass separately at
+66.7%, 100%, and 66.7% meaningful-win fractions. This promotes M4.3B mixed-shape
+and mixed-material pair implementation.
+
+The planned model ablation is expanded to all nine combinations of 128/256/384
+input resolution and 16/24/32 U-Net base width. A direct FP32 benchmark on a
+24-GiB TITAN RTX measured 1.18--3.94 GiB peak allocation per job at the selected
+microbatches. With four identical GPUs, all nine fits can run concurrently with
+resolution-specific gradient accumulation and a common effective batch size. The
+input schema remains fixed across the grid; network width is the ablated channel
+count.
+
+M4.3B now also passes its predeclared mixed-pair headroom gate. Its 16 uniform
+192/256 references and all 168 exact-budget candidates settled. Reference
+cross-resolution joint losses range from 1.4e-5 to 1.2e-3. At 32/48 cells,
+11/16 scene-budget groups improve by at least 5%, with 1.356x median soft-Nt
+improvement. Circle--rectangle and rectangle--rectangle shape strata and each
+dielectric--dielectric, dielectric--PEC, and PEC--PEC material stratum pass their
+separate meaningful-win thresholds. All 184 saved cases were verified against the
+phase-specific source fingerprints reconstructed by
+`scripts/recover_sparse_mixed_provenance.py` after CNN-only source edits changed the
+package-wide hash. The continuous PEC objects in this pilot are rectangles.
+
+The first shared sparse-input ablation dataset, `sparse_joint_4e1cc5513e1b1335`,
+contains 1,936 historical single-circle examples and 48 new pair examples, split by
+entire sparse scene into 30 train, 6 validation, and 12 test conditions. Missing
+candidate policies are masked. Nine fresh U-Nets at all 128/256/384 by 16/24/32
+combinations have been launched concurrently on four GPUs under
+`runs/sparse_nine_model_grid/launch.json`. Every fit uses the same seven physical
+raster channels, 15 conditioning values, saved complex-field/RCS-ranked mesh targets,
+seed, optimizer, and effective batch size 96. The sampler gives sparse scenes 70%
+and simple controls 30% of training draws. This small sparse set is an initial
+capacity/resolution ablation; repeated draws do not create new geometry diversity.
+
+The follow-up scene-diverse campaign manifest, `sparse_pairs_4ce1a2f1820b2c52`,
+has 96 preflighted scenes: 24 each from two-dielectric circles, two-dielectric
+mixed shapes, dielectric/PEC pairs, and two-PEC rectangles. Each family contributes
+18 train, 3 validation, and 3 test scenes, giving 72/12/12 overall. It spans 38
+close, 34 moderate, and 24 wide-gap scenes; the smallest gap is 12.49 mm, about
+2.7 cells at the 256-cell fine reference grid. Every exact-budget candidate and
+192/256 reference grid passed grading, NF2FF monitor, and conformal-PEC preflight.
+Its 192-case reference phase has been launched alongside the nine training fits.
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong

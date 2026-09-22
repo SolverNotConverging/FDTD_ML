@@ -239,10 +239,14 @@ Start in controlled stages rather than immediately mixing every geometry family:
    frequency band, and compute budget; analytic complex references.
 2. Single dielectric cylinders: start with moderate lossless contrast, then extend
    epsilon_r to 30 and add conductivity; analytic complex references.
-3. Sparse two/multiple cylinders: keep a localized cluster while introducing
-   controlled gaps, size/material contrasts, and translations.
-4. Sparse dielectric/PEC rectangles, corners, and thin screens once their solver
-   treatment is qualified. Preserve low occupied and projected-support fractions.
+3. Sparse localized pairs, in two qualified substages. **M4.3A** starts with two
+   dielectric cylinders so reference convergence and gap effects can be isolated.
+   **M4.3B** adds circle--rectangle, rectangle--rectangle, dielectric--PEC, and
+   PEC--PEC pairs, with controlled gaps, size/material contrasts, translations,
+   and orientations. Report each topology/material stratum separately; do not let
+   the easier dielectric-circle stratum hide failure on PEC or rectangle pairs.
+4. Sparse 3--4 object dielectric/PEC clusters, corners, and thin screens once their
+   solver treatment is qualified. Preserve low occupied and projected-support fractions.
 5. Dense or domain-filling assemblies only as generalization/stress tests and
    negative controls, not as the production training distribution.
 
@@ -337,6 +341,32 @@ and PEC fraction for every scene. Measure headroom before freezing the final bou
 In combined training batches, sparse production scenes receive at least 70% of the
 sampling weight, analytic single-object controls retain at least 20%, and dense
 stress scenes receive at most 10%.
+
+Once M4.3 pair labels are qualified, run a full 3x3 residual-U-Net ablation crossing
+input resolutions 128/256/384 with 16/24/32 base feature channels. Every model uses
+the same seven physical input channels; "channels" in this ablation means network
+width, not withholding input variables. Reuse every compatible physics-evaluated
+single-object and sparse label by rerasterizing it into the expanded multi-object
+input schema. Hold dataset, split, seed, optimizer, effective batch size, and stopping
+policy fixed. Resolution-specific microbatches use gradient accumulation to retain
+the same effective batch. Select from frozen sparse-family physics gates, parameter
+count, and inference cost; distillation validation loss alone cannot promote a model.
+
+The hardware qualification measured all nine FP32 forward/backward combinations on
+one NVIDIA TITAN RTX. Peak allocation ranged from 1.18 GiB (128, width 16, batch 32)
+to 3.94 GiB (384, width 32, batch 6). The four 24-GiB GPUs can therefore run all nine
+fits concurrently when grouped by resolution, with effective-batch matching through
+accumulation. The immutable benchmark is `runs/model_grid_benchmark/report.json`.
+
+The first nine-fit launch uses qualified M4.3A/M4.3B pilot labels merged with the
+historical single-circle campaign. It is a capacity and input-resolution ablation,
+not the final sparse production campaign: only ten distinct sparse geometries are
+in its training split, so the declared 70% sparse sampler necessarily repeats them.
+Keep the scene-grouped sparse validation/test holdouts frozen; evaluate actual
+complex far-field and scattering-width physics for each model before drawing a
+capacity conclusion. Then generate a larger, more diverse sparse pair pool, retain
+the same nine-model comparison contract, and advance to 3--4 objects only after
+the pair topology/material gates remain stable across held-out scenes.
 
 - Mix locations/scales deliberately; do not fill every domain or use subpixel
   decorations. Require features to span multiple finest-reference cells. Resolve
@@ -441,12 +471,13 @@ Its thresholds are fixed in `configs/circle_position_scale_generalization.json`;
 failure triggers a broader translated/scaled simple-family training pool rather
 than progression to sparse scenes.
 
-After that gate passes, the next headroom pilot uses localized two-cylinder clusters,
-then 3–4 object clusters. Each pilot compares exact-budget uniform and nonuniform
-meshes at 32/48/64 cells per axis, stratified by occupied area, projected x/y support,
-minimum gap, object count, material topology, and incidence angle. Advancement
-requires a measurable low-budget advantage within each declared sparse stratum;
-dense-scene performance is reported separately.
+After that gate passes, the next headroom pilot uses localized two-dielectric-cylinder
+clusters as M4.3A, followed by mixed circle/rectangle and dielectric/PEC pairs as
+M4.3B, then 3–4 object clusters. Each pilot compares exact-budget uniform and
+nonuniform meshes at 32/48/64 cells per axis, stratified by occupied area, projected
+x/y support, minimum gap, object count, shape topology, material topology, and
+incidence angle. Advancement requires a measurable low-budget advantage within each
+declared sparse stratum; dense-scene performance is reported separately.
 
 The simple-family handoff is now automated. The label-to-training workflow requires
 one terminal record per candidate and an accepted uniform baseline per condition;

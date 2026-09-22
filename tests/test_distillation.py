@@ -7,9 +7,12 @@ from scattermesh.distillation import (
     axis_probability,
     build_distillation_dataset,
     conditioning_features,
+    conditioning_features_v2,
     merge_distillation_datasets,
     probability_axis,
     rasterize_circle,
+    rasterize_scene,
+    resample_axis_profiles,
 )
 
 
@@ -93,6 +96,49 @@ def test_model_returns_normalized_axis_probabilities():
     )
     assert torch.isfinite(masked_loss)
     assert torch.allclose(masked_loss, changed_loss)
+
+
+def test_expanded_raster_encodes_dielectric_pec_interface_and_gap():
+    example = {
+        "objects": [
+            {
+                "shape": "circle",
+                "center_m": [0.45, 0.60],
+                "radius_m": 0.05,
+                "material": {"kind": "dielectric", "epsilon_r": 6, "sigma_e_s_per_m": 0.04},
+            },
+            {
+                "shape": "rectangle",
+                "bounds_m": [0.53, 0.65, 0.54, 0.66],
+                "material": {"kind": "pec"},
+            },
+        ],
+        "incidence_angle_rad": 1.2,
+        "frequencies_hz": [0.8e9, 1.0e9, 1.2e9],
+        "cells_x": 32,
+        "cells_y": 48,
+    }
+    raster = rasterize_scene(example, 64)
+    conditioning = conditioning_features_v2(example)
+    assert raster.shape == (7, 64, 64)
+    assert np.isfinite(raster).all()
+    assert raster[0].max() > 0.9
+    assert raster[1].max() > 0
+    assert raster[2].max() > 0
+    assert raster[3].max() > 0.9
+    assert raster[5].max() > 0.9
+    assert raster[6].max() > 0
+    assert conditioning.shape == (15,)
+    assert conditioning[10] == pytest.approx(0.5)
+    assert conditioning[11] == pytest.approx(0.5)
+
+
+def test_probability_profile_resampling_preserves_mass_and_uniformity():
+    values = np.full((2, 3, 2, 128), 1 / 128, dtype=np.float32)
+    expanded = resample_axis_profiles(values, 384)
+    assert expanded.shape == (2, 3, 2, 384)
+    assert expanded.sum(axis=-1) == pytest.approx(np.ones((2, 3, 2)))
+    assert expanded == pytest.approx(np.full_like(expanded, 1 / 384), abs=1e-7)
 
 
 def test_dataset_builder_requires_and_preserves_exact_accepted_candidates(tmp_path):

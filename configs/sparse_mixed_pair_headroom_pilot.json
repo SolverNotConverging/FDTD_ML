@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "purpose": "localized mixed-shape and mixed-material exact-budget pair headroom pilot",
+  "domain_m": 1.2,
+  "frequencies_hz": [800000000.0, 1000000000.0, 1200000000.0],
+  "far_field_angle_count": 180,
+  "budgets": [32, 48, 64],
+  "reference_budgets": [192, 256],
+  "duration_schedule_s": [7e-8, 1.4e-7, 5.6e-7],
+  "pml_thickness_m": 0.12,
+  "tail_limit": 1e-5,
+  "material_samples_per_axis": 8,
+  "pec_mode": "conformal",
+  "ranking": {"mode": "fixed_axis_soft_nt", "nt_cost_exponent": 0.1},
+  "gate": {
+    "maximum_reference_convergence_loss": 0.05,
+    "minimum_meaningful_improvement": 1.05,
+    "minimum_low_budget_meaningful_fraction": 0.5,
+    "minimum_low_budget_median_improvement": 1.1,
+    "minimum_each_gap_stratum_meaningful_fraction": 0.4,
+    "minimum_each_shape_topology_meaningful_fraction": 0.4,
+    "minimum_each_material_topology_meaningful_fraction": 0.4,
+    "require_all_references_settled": true,
+    "require_all_uniform_baselines_settled": true
+  },
+  "policies": [
+    {"name": "uniform", "kind": "uniform", "max_ratio": 1.0},
+    {"name": "interface_wide", "kind": "interface", "interface_width_factor": 0.75, "interface_weight": 0.75, "max_ratio": 2.0},
+    {"name": "interface_medium", "kind": "interface", "interface_width_factor": 0.45, "interface_weight": 1.5, "max_ratio": 3.0},
+    {"name": "interface_strong", "kind": "interface", "interface_width_factor": 0.25, "interface_weight": 1.4, "max_ratio": 3.0},
+    {"name": "cluster", "kind": "cluster", "cluster_width_factor": 0.75, "cluster_weight": 1.2, "max_ratio": 2.0},
+    {"name": "gap", "kind": "gap", "gap_width_factor": 1.0, "gap_min_width_m": 0.008, "gap_weight": 2.5, "max_ratio": 3.0},
+    {"name": "hybrid", "kind": "hybrid", "interface_width_factor": 0.45, "interface_weight": 1.0, "cluster_width_factor": 0.8, "cluster_weight": 0.45, "gap_width_factor": 1.0, "gap_min_width_m": 0.008, "gap_weight": 1.75, "max_ratio": 3.0}
+  ],
+  "scenes": [
+    {
+      "scene_id": "dd_circle_rectangle_close",
+      "gap_stratum": "close",
+      "incidence_angle_rad": 0.42,
+      "objects": [
+        {"shape": "circle", "center_m": [0.46, 0.60], "radius_m": 0.05, "material": {"kind": "dielectric", "epsilon_r": 4.0, "sigma_e_s_per_m": 0.02}},
+        {"shape": "rectangle", "bounds_m": [0.53, 0.66, 0.54, 0.66], "material": {"kind": "dielectric", "epsilon_r": 8.0, "sigma_e_s_per_m": 0.07}}
+      ]
+    },
+    {
+      "scene_id": "dd_rectangle_rectangle_moderate",
+      "gap_stratum": "moderate",
+      "incidence_angle_rad": 1.37,
+      "objects": [
+        {"shape": "rectangle", "bounds_m": [0.323, 0.433, 0.353, 0.483], "material": {"kind": "dielectric", "epsilon_r": 3.0, "sigma_e_s_per_m": 0.0}},
+        {"shape": "rectangle", "bounds_m": [0.463, 0.603, 0.393, 0.533], "material": {"kind": "dielectric", "epsilon_r": 12.0, "sigma_e_s_per_m": 0.12}}
+      ]
+    },
+    {
+      "scene_id": "mixed_circle_rectangle_close",
+      "gap_stratum": "close",
+      "incidence_angle_rad": 2.24,
+      "objects": [
+        {"shape": "circle", "center_m": [0.58, 0.46], "radius_m": 0.055, "material": {"kind": "dielectric", "epsilon_r": 6.0, "sigma_e_s_per_m": 0.04}},
+        {"shape": "rectangle", "bounds_m": [0.655, 0.745, 0.405, 0.515], "material": {"kind": "pec"}}
+      ]
+    },
+    {
+      "scene_id": "mixed_circle_rectangle_moderate",
+      "gap_stratum": "moderate",
+      "incidence_angle_rad": 3.18,
+      "objects": [
+        {"shape": "circle", "center_m": [0.78, 0.72], "radius_m": 0.06, "material": {"kind": "dielectric", "epsilon_r": 20.0, "sigma_e_s_per_m": 0.14}},
+        {"shape": "rectangle", "bounds_m": [0.603, 0.703, 0.663, 0.783], "material": {"kind": "pec"}}
+      ]
+    },
+    {
+      "scene_id": "mixed_rectangle_rectangle_close",
+      "gap_stratum": "close",
+      "incidence_angle_rad": 4.06,
+      "objects": [
+        {"shape": "rectangle", "bounds_m": [0.323, 0.473, 0.723, 0.823], "material": {"kind": "dielectric", "epsilon_r": 5.0, "sigma_e_s_per_m": 0.03}},
+        {"shape": "rectangle", "bounds_m": [0.493, 0.603, 0.703, 0.863], "material": {"kind": "pec"}}
+      ]
+    },
+    {
+      "scene_id": "pec_rectangle_rectangle_wide_offset",
+      "gap_stratum": "wide",
+      "incidence_angle_rad": 4.91,
+      "objects": [
+        {"shape": "rectangle", "bounds_m": [0.713, 0.793, 0.323, 0.403], "material": {"kind": "pec"}},
+        {"shape": "rectangle", "bounds_m": [0.833, 0.913, 0.353, 0.433], "material": {"kind": "pec"}}
+      ]
+    },
+    {
+      "scene_id": "pec_rectangle_rectangle_moderate_small",
+      "gap_stratum": "moderate",
+      "incidence_angle_rad": 5.67,
+      "objects": [
+        {"shape": "rectangle", "bounds_m": [0.333, 0.423, 0.553, 0.643], "material": {"kind": "pec"}},
+        {"shape": "rectangle", "bounds_m": [0.453, 0.563, 0.543, 0.673], "material": {"kind": "pec"}}
+      ]
+    },
+    {
+      "scene_id": "pec_rectangle_rectangle_wide",
+      "gap_stratum": "wide",
+      "incidence_angle_rad": 0.94,
+      "objects": [
+        {"shape": "rectangle", "bounds_m": [0.673, 0.783, 0.723, 0.843], "material": {"kind": "pec"}},
+        {"shape": "rectangle", "bounds_m": [0.813, 0.933, 0.753, 0.883], "material": {"kind": "pec"}}
+      ]
+    }
+  ]
+}

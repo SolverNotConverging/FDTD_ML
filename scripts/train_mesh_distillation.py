@@ -12,7 +12,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, WeightedRandomSampler
 
 from scattermesh.distillation import probability_axis
 from scattermesh.model import AxisDensityUNet, MeshDistillationDataset, set_valued_profile_loss
@@ -79,9 +79,30 @@ def completed_run_matches(output, provenance):
     )
 
 
-def evaluate(model, loader, device):
+def _family(example):
+    return "sparse" if example["family"].startswith("sparse") else "simple"
+
+
+def _validation_weights(dataset, family_weights):
+    if not family_weights:
+        return None
+    counts = {
+        family: sum(_family(example) == family for example in dataset.examples)
+        for family in family_weights
+    }
+    if any(count == 0 for count in counts.values()):
+        raise ValueError("Every weighted validation family needs at least one example")
+    weights = np.array(
+        [family_weights[_family(example)] / counts[_family(example)] for example in dataset.examples],
+        dtype=np.float64,
+    )
+    return torch.from_numpy((weights / weights.sum()).astype(np.float32))
+
+
+def evaluate(model, loader, device, family_weights=None):
     model.eval()
     total, count = 0.0, 0
+    weights = _validation_weights(loader.dataset, family_weights)
     with torch.no_grad():
         for batch in loader:
             prediction = model(batch["raster"].to(device), batch["conditioning"].to(device))
@@ -91,14 +112,20 @@ def evaluate(model, loader, device):
                 batch["scores"].to(device),
                 batch["best_index"].to(device),
                 batch["candidate_mask"].to(device),
+                reduction="none" if weights is not None else "mean",
             )
-            total += float(loss) * len(prediction)
+            if weights is None:
+                total += float(loss) * len(prediction)
+            else:
+                row_weights = weights[batch["sample_index"]].to(device)
+                total += float((loss * row_weights).sum())
             count += len(prediction)
-    return total / count
+    return total if weights is not None else total / count
 
 
-def evaluate_uniform(loader, device):
+def evaluate_uniform(loader, device, family_weights=None):
     total, count = 0.0, 0
+    weights = _validation_weights(loader.dataset, family_weights)
     with torch.no_grad():
         for batch in loader:
             profiles = batch["profiles"].to(device)
@@ -113,10 +140,15 @@ def evaluate_uniform(loader, device):
                 batch["scores"].to(device),
                 batch["best_index"].to(device),
                 batch["candidate_mask"].to(device),
+                reduction="none" if weights is not None else "mean",
             )
-            total += float(loss) * len(prediction)
+            if weights is None:
+                total += float(loss) * len(prediction)
+            else:
+                row_weights = weights[batch["sample_index"]].to(device)
+                total += float((loss * row_weights).sum())
             count += len(prediction)
-    return total / count
+    return total if weights is not None else total / count
 
 
 def projected_examples(model, dataset, device, max_ratio):
@@ -184,22 +216,56 @@ def main():
         },
     )
 
-    train = MeshDistillationDataset(args.dataset, "train")
-    validation = MeshDistillationDataset(args.dataset, "validation")
-    test = MeshDistillationDataset(args.dataset, "test")
+    raster_resolution = config.get("raster_resolution")
+    input_schema = config.get("input_schema", "circle_v1")
+    dataset_options = {"raster_resolution": raster_resolution, "input_schema": input_schema}
+    train = MeshDistillationDataset(args.dataset, "train", **dataset_options)
+    validation = MeshDistillationDataset(args.dataset, "validation", **dataset_options)
+    test = MeshDistillationDataset(args.dataset, "test", **dataset_options)
     generator = torch.Generator().manual_seed(config["seed"])
+    family_weights = config.get("family_sampling_weights")
+    sampler = None
+    if family_weights:
+        allowed = {"simple", "sparse"}
+        if set(family_weights) != allowed or any(value <= 0 for value in family_weights.values()):
+            raise ValueError("Sampling weights require positive simple and sparse fractions")
+        counts = {
+            family: sum(_family(example) == family for example in train.examples)
+            for family in allowed
+        }
+        if any(count == 0 for count in counts.values()):
+            raise ValueError("Weighted training requires both simple and sparse examples")
+        sample_weights = [
+            family_weights[_family(example)] / counts[_family(example)]
+            for example in train.examples
+        ]
+        sampler = WeightedRandomSampler(
+            sample_weights,
+            num_samples=len(train),
+            replacement=True,
+            generator=generator,
+        )
     train_loader = DataLoader(
         train,
-        batch_size=config["batch_size"],
-        shuffle=True,
-        generator=generator,
+        batch_size=config.get("micro_batch_size", config["batch_size"]),
+        shuffle=sampler is None,
+        sampler=sampler,
+        generator=None if sampler is not None else generator,
         num_workers=0,
     )
-    validation_loader = DataLoader(validation, batch_size=config["batch_size"], num_workers=0)
-    test_loader = DataLoader(test, batch_size=config["batch_size"], num_workers=0)
-    uniform_validation_loss = evaluate_uniform(validation_loader, device)
-    uniform_test_loss = evaluate_uniform(test_loader, device)
-    model = AxisDensityUNet(base_channels=config["base_channels"]).to(device)
+    micro_batch = config.get("micro_batch_size", config["batch_size"])
+    effective_batch = config["batch_size"]
+    if effective_batch % micro_batch:
+        raise ValueError("Effective batch must be divisible by microbatch")
+    validation_loader = DataLoader(validation, batch_size=micro_batch, num_workers=0)
+    test_loader = DataLoader(test, batch_size=micro_batch, num_workers=0)
+    uniform_validation_loss = evaluate_uniform(validation_loader, device, family_weights)
+    uniform_test_loss = evaluate_uniform(test_loader, device, family_weights)
+    model = AxisDensityUNet(
+        input_channels=7 if input_schema == "sparse_v2" else 5,
+        conditioning_size=15 if input_schema == "sparse_v2" else 10,
+        base_channels=config["base_channels"],
+    ).to(device)
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=config["learning_rate"], weight_decay=config["weight_decay"]
     )
@@ -213,8 +279,9 @@ def main():
     for epoch in range(1, config["epochs"] + 1):
         model.train()
         train_values = []
+        optimizer.zero_grad(set_to_none=True)
+        accumulated = 0
         for batch in train_loader:
-            optimizer.zero_grad(set_to_none=True)
             prediction = model(batch["raster"].to(device), batch["conditioning"].to(device))
             loss, _ = set_valued_profile_loss(
                 prediction,
@@ -223,12 +290,20 @@ def main():
                 batch["best_index"].to(device),
                 batch["candidate_mask"].to(device),
             )
-            loss.backward()
+            (loss * (len(prediction) / effective_batch)).backward()
+            accumulated += len(prediction)
+            if accumulated >= effective_batch:
+                torch.nn.utils.clip_grad_norm_(model.parameters(), config["gradient_clip_norm"])
+                optimizer.step()
+                optimizer.zero_grad(set_to_none=True)
+                accumulated = 0
+            train_values.append(float(loss.detach()))
+        if accumulated:
             torch.nn.utils.clip_grad_norm_(model.parameters(), config["gradient_clip_norm"])
             optimizer.step()
-            train_values.append(float(loss.detach()))
+            optimizer.zero_grad(set_to_none=True)
         train_loss = float(np.mean(train_values))
-        validation_loss = evaluate(model, validation_loader, device)
+        validation_loss = evaluate(model, validation_loader, device, family_weights)
         row = {"epoch": epoch, "train_loss": train_loss, "validation_loss": validation_loss}
         history.append(row)
         if validation_loss < best_validation:
@@ -260,7 +335,7 @@ def main():
             break
 
     model.load_state_dict(best_state)
-    test_loss = evaluate(model, test_loader, device)
+    test_loss = evaluate(model, test_loader, device, family_weights)
     meshes, repair_summary = projected_examples(
         model, validation, device, config["max_grading_ratio"]
     )
@@ -268,7 +343,11 @@ def main():
     checkpoint = {
         "schema_version": 1,
         "model": "AxisDensityUNet",
-        "model_kwargs": {"base_channels": config["base_channels"]},
+        "model_kwargs": {
+            "input_channels": 7 if input_schema == "sparse_v2" else 5,
+            "conditioning_size": 15 if input_schema == "sparse_v2" else 10,
+            "base_channels": config["base_channels"],
+        },
         "model_state": best_state,
         "dataset": str(args.dataset),
         "config": config,

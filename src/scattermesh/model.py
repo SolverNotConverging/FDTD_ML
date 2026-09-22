@@ -2,6 +2,7 @@
 
 import json
 import math
+from collections import OrderedDict
 from pathlib import Path
 
 import numpy as np
@@ -10,7 +11,13 @@ from torch import nn
 from torch.nn import functional as F
 from torch.utils.data import Dataset
 
-from .distillation import conditioning_features, rasterize_circle
+from .distillation import (
+    conditioning_features,
+    conditioning_features_v2,
+    rasterize_circle,
+    rasterize_scene,
+    resample_axis_profiles,
+)
 
 
 class ResidualBlock(nn.Module):
@@ -85,7 +92,14 @@ class AxisDensityUNet(nn.Module):
 class MeshDistillationDataset(Dataset):
     """Lazy geometry rasterization with all physics-evaluated candidate targets."""
 
-    def __init__(self, dataset_path, split, *, raster_resolution=None):
+    def __init__(
+        self,
+        dataset_path,
+        split,
+        *,
+        raster_resolution=None,
+        input_schema="circle_v1",
+    ):
         metadata_path = Path(dataset_path)
         metadata = json.loads(metadata_path.read_text())
         arrays = np.load(metadata_path.parent / metadata["arrays"])
@@ -106,15 +120,34 @@ class MeshDistillationDataset(Dataset):
         arrays.close()
         self.resolution = int(raster_resolution or metadata["profile_bins"])
         if self.resolution != metadata["profile_bins"]:
-            raise ValueError("The first model stage requires raster and profile resolutions to match")
+            self.profiles = resample_axis_profiles(self.profiles, self.resolution)
+        if input_schema not in {"circle_v1", "sparse_v2"}:
+            raise ValueError(f"Unsupported model input schema: {input_schema}")
+        self.input_schema = input_schema
+        self._raster_cache = OrderedDict()
 
     def __len__(self):
         return len(self.examples)
 
     def __getitem__(self, index):
         example = self.examples[index]
-        raster = rasterize_circle(example, self.resolution)
-        conditioning = conditioning_features(example)
+        key = example["geometry_id"]
+        raster = self._raster_cache.get(key)
+        if raster is None:
+            if self.input_schema == "circle_v1":
+                raster = rasterize_circle(example, self.resolution)
+            else:
+                raster = rasterize_scene(example, self.resolution)
+            self._raster_cache[key] = raster
+            if len(self._raster_cache) > 96:
+                self._raster_cache.popitem(last=False)
+        else:
+            self._raster_cache.move_to_end(key)
+        conditioning = (
+            conditioning_features(example)
+            if self.input_schema == "circle_v1"
+            else conditioning_features_v2(example)
+        )
         return {
             "raster": torch.from_numpy(raster),
             "conditioning": torch.from_numpy(conditioning),
@@ -134,6 +167,7 @@ def set_valued_profile_loss(
     candidate_mask=None,
     *,
     score_temperature=4.0,
+    reduction="mean",
 ):
     """Combine best-candidate and physics-weighted set supervision in CDF space."""
     if prediction.ndim != 3 or targets.ndim != 4 or scores.ndim != 2:
@@ -156,7 +190,10 @@ def set_valued_profile_loss(
     weights = F.softmax(-score_temperature * relative_log_score, dim=1)
     weighted = (weights * candidate_loss).sum(dim=1)
     selected = candidate_loss.gather(1, best_index[:, None]).squeeze(1)
-    return (0.5 * selected + 0.5 * weighted).mean(), {
+    per_example = 0.5 * selected + 0.5 * weighted
+    if reduction not in {"mean", "none"}:
+        raise ValueError("Reduction must be mean or none")
+    return (per_example.mean() if reduction == "mean" else per_example), {
         "selected_cdf_l1": selected.detach().mean(),
         "weighted_set_loss": weighted.detach().mean(),
     }
