@@ -65,6 +65,9 @@ MPLCONFIGDIR=/tmp/scattermesh-mpl \
   .venv/bin/python scripts/pilot_mesh_headroom.py \
   --device cuda:0 --shard 0 --shards 4
 .venv/bin/python scripts/pilot_mesh_headroom.py --summarize
+.venv/bin/python scripts/run_uniform_headroom_controls.py \
+  --device cuda:0 --shard 0 --shards 4
+.venv/bin/python scripts/run_uniform_headroom_controls.py --summarize
 ```
 
 Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and

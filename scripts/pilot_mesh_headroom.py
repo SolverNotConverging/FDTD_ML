@@ -19,6 +19,7 @@ from scattermesh import (
     Grid,
     PlaneWave,
     circular_interface_axes,
+    density_axis,
     simulate_cuda,
 )
 from scattermesh.analytic import cylinder_far_field
@@ -35,12 +36,49 @@ SCENES = (
     dict(scene_id="large_reverse", radius=0.120, center=(0.6257, 0.5483), angle=3.91),
 )
 CANDIDATES = (
-    dict(candidate="uniform", width_factor=None, weight=0.0, max_ratio=1.0),
-    dict(candidate="interface_wide", width_factor=1.0, weight=0.75, max_ratio=1.4),
-    dict(candidate="interface_moderate", width_factor=0.75, weight=1.5, max_ratio=2.0),
-    dict(candidate="interface_medium", width_factor=0.5, weight=1.9, max_ratio=2.0),
-    dict(candidate="interface_strong", width_factor=0.35, weight=3.0, max_ratio=3.0),
-    dict(candidate="interface_narrow", width_factor=0.25, weight=3.0, max_ratio=3.0),
+    dict(candidate="uniform", kind="uniform", max_ratio=1.0),
+    dict(
+        candidate="interface_wide", kind="interface", width_factor=1.0, weight=0.75, max_ratio=1.4
+    ),
+    dict(
+        candidate="interface_moderate",
+        kind="interface",
+        width_factor=0.75,
+        weight=1.5,
+        max_ratio=2.0,
+    ),
+    dict(
+        candidate="interface_medium", kind="interface", width_factor=0.5, weight=1.9, max_ratio=2.0
+    ),
+    dict(
+        candidate="interface_strong", kind="interface", width_factor=0.35, weight=3.0, max_ratio=3.0
+    ),
+    dict(
+        candidate="interface_narrow", kind="interface", width_factor=0.25, weight=3.0, max_ratio=3.0
+    ),
+    dict(candidate="region_wide", kind="region", width_factor=3.0, weight=0.5, max_ratio=1.4),
+    dict(candidate="region_medium", kind="region", width_factor=2.0, weight=1.0, max_ratio=2.0),
+    dict(candidate="region_strong", kind="region", width_factor=1.25, weight=1.5, max_ratio=2.0),
+    dict(
+        candidate="hybrid_wide",
+        kind="hybrid",
+        width_factor=1.0,
+        weight=0.5,
+        region_width_factor=2.5,
+        region_weight=0.35,
+        max_ratio=1.4,
+    ),
+    dict(
+        candidate="hybrid_medium",
+        kind="hybrid",
+        width_factor=0.75,
+        weight=0.8,
+        region_width_factor=1.75,
+        region_weight=0.6,
+        max_ratio=2.0,
+    ),
+    dict(candidate="random_density_0", kind="random", random_index=0, max_ratio=2.0),
+    dict(candidate="random_density_1", kind="random", random_index=1, max_ratio=2.0),
 )
 
 
@@ -50,7 +88,7 @@ def parse_args():
     parser.add_argument("--shard", type=int, default=0)
     parser.add_argument("--shards", type=int, default=1)
     parser.add_argument("--summarize", action="store_true")
-    parser.add_argument("--output", type=Path, default=Path("runs/mesh_headroom_pilot"))
+    parser.add_argument("--output", type=Path, default=Path("runs/mesh_headroom_expanded"))
     return parser.parse_args()
 
 
@@ -97,15 +135,37 @@ def definitions():
                     frequencies=FREQUENCIES.tolist(),
                     angles=len(ANGLES),
                 )
+                if config["kind"] == "random":
+                    token = f"{scene['scene_id']}:{cells}:{config['random_index']}"
+                    seed = int.from_bytes(hashlib.sha256(token.encode()).digest()[:8], "big")
+                    rng = np.random.default_rng(seed)
+                    config["random_seed"] = seed
+                    config["random_foci_x"] = [
+                        [
+                            float(rng.uniform(0.2, 1.0)),
+                            float(rng.uniform(0.06, 0.20)),
+                            float(rng.uniform(0.2, 0.9)),
+                        ]
+                        for _ in range(3)
+                    ]
+                    config["random_foci_y"] = [
+                        [
+                            float(rng.uniform(0.2, 1.0)),
+                            float(rng.uniform(0.06, 0.20)),
+                            float(rng.uniform(0.2, 0.9)),
+                        ]
+                        for _ in range(3)
+                    ]
                 config["case_id"] = f"{scene['scene_id']}_n{cells}_{candidate['candidate']}"
                 rows.append(config)
     return rows
 
 
 def make_grid(config):
-    if config["candidate"] == "uniform":
+    kind = config["kind"]
+    if kind == "uniform":
         x = y = np.linspace(0, DOMAIN, config["cells"] + 1)
-    else:
+    elif kind == "interface":
         x, y = circular_interface_axes(
             DOMAIN,
             config["cells"],
@@ -114,6 +174,35 @@ def make_grid(config):
             width=config["width_factor"] * config["scene"]["radius"],
             weight=config["weight"],
         )
+    elif kind in {"region", "hybrid"}:
+        center, radius = config["scene"]["center"], config["scene"]["radius"]
+        x_foci = [(center[0], config["width_factor"] * radius, config["weight"])]
+        y_foci = [(center[1], config["width_factor"] * radius, config["weight"])]
+        if kind == "hybrid":
+            for offset in (-radius, radius):
+                x_foci.append(
+                    (center[0] + offset, config["width_factor"] * radius, config["weight"])
+                )
+                y_foci.append(
+                    (center[1] + offset, config["width_factor"] * radius, config["weight"])
+                )
+            x_foci[0] = (
+                center[0],
+                config["region_width_factor"] * radius,
+                config["region_weight"],
+            )
+            y_foci[0] = (
+                center[1],
+                config["region_width_factor"] * radius,
+                config["region_weight"],
+            )
+        x = density_axis(DOMAIN, config["cells"], x_foci)
+        y = density_axis(DOMAIN, config["cells"], y_foci)
+    elif kind == "random":
+        x = density_axis(DOMAIN, config["cells"], config["random_foci_x"])
+        y = density_axis(DOMAIN, config["cells"], config["random_foci_y"])
+    else:
+        raise ValueError(f"Unsupported candidate kind: {kind}")
     return Grid(x, y, max_ratio=config["max_ratio"])
 
 
@@ -313,7 +402,7 @@ def plot(records, path):
             [row["joint_scattering_loss"] for row in focused],
             s=22,
             alpha=0.65,
-            label="interface candidates",
+            label="nonuniform candidates",
         )
         axis.plot(
             [row["cell_updates"] for row in uniform],

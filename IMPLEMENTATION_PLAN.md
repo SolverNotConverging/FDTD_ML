@@ -197,7 +197,10 @@ The first 96-case interface-only search is complete and negative: uniform grids 
 the entire Pareto frontier for four PEC-cylinder scenes. Accepted focused meshes use
 more updates and have more joint complex/RCS loss; see the
 [measured pilot](docs/validation/mesh_headroom_pilot.md). Do not train from these
-targets. Continue M3 with object-region, hybrid, and randomized densities.
+targets. The 208-case object-region/hybrid/randomized expansion plus 96 dense
+uniform controls is also negative after a targeted 67² control removes the last
+apparent advantage. Continue M3 with simple dielectric cylinders, whose shorter
+internal wavelength can create genuine allocation headroom.
 
 - Pilot 32/48/64 cells per axis and 96/128 controls, subject to actual feasibility.
   These are proposed scattering budgets, not continuation of the retired campaign.

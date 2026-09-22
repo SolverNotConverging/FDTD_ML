@@ -205,6 +205,14 @@ grids. This teacher family is rejected; training remains gated on a broader obje
 region, hybrid, and randomized density search. See the
 [headroom pilot](docs/validation/mesh_headroom_pilot.md).
 
+That broader search is now measured. It contains 208 candidates and 96 dense
+uniform controls through 128 cells per axis. Mild object-region focus produced an
+apparent 2.47% advantage only while controls were four cells apart. A targeted 67²
+uniform grid then beat the candidate in both loss and updates. Every final Pareto
+point is uniform across all four isolated PEC scenes. M3 therefore moves to simple
+dielectric cylinders; PEC cylinders remain valuable analytic validation cases but
+do not supply useful mesh-policy labels by themselves.
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong
@@ -216,7 +224,7 @@ region, hybrid, and randomized density search. See the
    the new scene schema. Extend mixed coupling to declared contact/overlap priority
    only after deriving its operator. NF2FF is currently a post-step host calculation.
    Float32 is accurate but has no throughput benefit here, so retain float64.
-4. Extend the measured single-cylinder candidate search beyond the rejected
-   interface-only family to object-region, hybrid, and randomized densities. Train
-   only if a nonuniform candidate improves the matched-update Pareto frontier.
-   Expand the curriculum gradually and report simple/sparse/complex separately.
+4. Run the same matched-update headroom search on simple dielectric cylinders,
+   starting at moderate contrast and then qualified high contrast/loss. Train only
+   if a nonuniform candidate improves the dense-control Pareto frontier. Expand the
+   curriculum gradually and report simple/sparse/complex separately.

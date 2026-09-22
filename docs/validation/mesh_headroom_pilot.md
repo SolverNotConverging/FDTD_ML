@@ -31,6 +31,26 @@ global CFL step. The next search must include object-region, hybrid, and randomi
 density candidates before the low-budget-headroom gate can pass. CNN training must
 not use the current interface candidates as teacher targets.
 
+## Expanded search and dense controls
+
+The follow-up search added object-region, hybrid region/interface, and two
+deterministic randomized densities at every scene and primary budget, for 208 total
+candidates. Of these, 173 settled, 16 were geometrically infeasible, and 19 missed
+the 50 ns tail gate. Mild region focus initially added apparent Pareto points for the
+medium and large cylinders when uniform controls were spaced only at 32/48/64/96.
+
+We therefore added 96 uniform controls: every four cells through 128, plus 65--67
+around the only remaining close comparison. The large-cylinder 64-cell wide-region
+candidate used 6.12 million updates with joint loss `3.0125e-4`. A 67-cell uniform
+grid used fewer updates, 5.91 million, and achieved lower loss, `2.5629e-4`.
+After this refinement every Pareto point is uniform in all four scenes.
+
+The M3 headroom gate is therefore **not passed for isolated PEC cylinders**. This
+is useful curriculum evidence: the analytic PEC family remains a solver and loss
+validation family, but it should not dominate mesh-policy supervision. The next
+simple headroom search moves to dielectric cylinders, where internal wavelength and
+material averaging create a physical reason to redistribute resolution.
+
 The initial 35 ns attempt is retained locally: 18 candidates failed settling, which
 triggered the common-duration rerun rather than selective time extensions. Reproduce
 the restartable four-way search and summary with:
@@ -41,7 +61,13 @@ MPLCONFIGDIR=/tmp/scattermesh-mpl \
   --device cuda:0 --shard 0 --shards 4
 MPLCONFIGDIR=/tmp/scattermesh-mpl \
   .venv/bin/python scripts/pilot_mesh_headroom.py --summarize
+MPLCONFIGDIR=/tmp/scattermesh-mpl \
+  .venv/bin/python scripts/run_uniform_headroom_controls.py \
+  --device cuda:0 --shard 0 --shards 4
+MPLCONFIGDIR=/tmp/scattermesh-mpl \
+  .venv/bin/python scripts/run_uniform_headroom_controls.py --summarize
 ```
 
 Local records, complex spectra, report, retained 35 ns attempt summary, and plot are
-under `runs/mesh_headroom_pilot/`.
+under `runs/mesh_headroom_pilot/`. Expanded-search and dense-control artifacts are
+under `runs/mesh_headroom_expanded/`.
