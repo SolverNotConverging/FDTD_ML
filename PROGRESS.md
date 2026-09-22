@@ -260,6 +260,15 @@ validation and test use disjoint factor levels and angles. The manifest and its
 split/count invariants are tested. Candidate physics waits for the training-only
 scaled-resolution search to choose a compact frozen policy set.
 
+The intermediate-resolution search is complete. Its training-only campaign has
+59/72 meaningful wins, and a separately frozen held-out campaign recovers 19/32
+validation and 28/32 test wins. This proves the original strict-update failure came
+from the coarse resolution ladder. The user has fixed the product contract at exact
+requested `Nx` and `Ny`, so scaled candidates are diagnostic only. The next pilot
+uses six exact-axis policies and ranks them with a configurable soft `Nt` exponent,
+initially 0.1. See the
+[scaled candidate validation](docs/validation/scaled_candidate_search.md).
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong

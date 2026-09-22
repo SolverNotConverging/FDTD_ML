@@ -285,6 +285,20 @@ extrapolation levels for all three factors and disjoint incidence angles. This
 manifest is the destination for the policies selected by the scaled-resolution
 training search; it is not launched until that search fixes the candidate set.
 
+The scaled-resolution search and its separately frozen held-out evaluation are now
+complete. Their combined 1,472 cases pass every predeclared strict-compute headroom
+check: training has 59/72 meaningful wins across three lineages and all four
+budgets, validation has 19/32 wins, and test has 28/32 wins. This is diagnostic
+evidence that the earlier failure came from the coarse resolution ladder.
+
+The final model contract requires exactly the requested `Nx` and `Ny`; candidate
+meshes and CNN outputs may redistribute those lines but may not reduce their count.
+Rank exact-axis candidates by
+`physics_loss * (Nt/Nt_uniform)^lambda`, starting with configurable `lambda=0.1`.
+Store raw physics loss, `Nt`, cell updates, runtime, and rankings at multiple lambda
+values. Retain strict matched-update evaluation separately. Never change the stable
+CFL time step to alter the ranking penalty.
+
 As stages expand, keep three separately tagged families and report their results separately:
 
 | Family | Initial contents | Controlled difficulty |

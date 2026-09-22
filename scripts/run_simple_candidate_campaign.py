@@ -73,6 +73,20 @@ def load_inputs(manifest_path, campaign_path):
         )
     if not set(campaign["candidate_names"]) <= candidate_map.keys():
         raise ValueError("Campaign contains an unknown mesh candidate")
+    ranking = campaign.get("ranking", {"mode": "matched_cell_updates"})
+    if ranking["mode"] not in {"matched_cell_updates", "fixed_axis_soft_nt"}:
+        raise ValueError(f"Unsupported candidate ranking mode: {ranking['mode']}")
+    if ranking["mode"] == "fixed_axis_soft_nt":
+        exponent = ranking.get("nt_cost_exponent")
+        if not np.isfinite(exponent) or exponent < 0:
+            raise ValueError("fixed_axis_soft_nt requires a nonnegative nt_cost_exponent")
+        scaled = [
+            name
+            for name in campaign["candidate_names"]
+            if candidate_map[name].get("cell_factor", 1.0) != 1.0
+        ]
+        if scaled:
+            raise ValueError(f"Exact-axis ranking cannot use scaled candidates: {scaled}")
     return manifest, campaign, geometries, conditions, candidate_map
 
 
@@ -257,8 +271,37 @@ def training_readiness(diversity, campaign_complete):
     )
 
 
-def candidate_scorecard(groups, *, meaningful_improvement=1.05):
+def ranked_candidates(rows, baseline, budget, ranking):
+    """Return accepted candidates and comparable scores for one budget label."""
+    mode = ranking.get("mode", "matched_cell_updates")
+    accepted = [row for row in rows if row["accepted"]]
+    if mode == "matched_cell_updates":
+        feasible = [row for row in accepted if row["cell_updates"] <= baseline["cell_updates"]]
+        return [(row, row["joint_scattering_loss"]) for row in feasible]
+    if mode == "fixed_axis_soft_nt":
+        exponent = ranking["nt_cost_exponent"]
+        exact = [
+            row
+            for row in accepted
+            if row["config"].get("target_cells_x", row["config"]["cells"]) == budget
+            and row["config"]["cells"] == budget
+            and row["Nx"] == baseline["Nx"]
+            and row["Ny"] == baseline["Ny"]
+        ]
+        return [
+            (
+                row,
+                row["joint_scattering_loss"]
+                * (row["Nt"] / baseline["Nt"]) ** exponent,
+            )
+            for row in exact
+        ]
+    raise ValueError(f"Unsupported candidate ranking mode: {mode}")
+
+
+def candidate_scorecard(groups, ranking=None, *, meaningful_improvement=1.05):
     """Compare each policy family with every affordable uniform update cap."""
+    ranking = {"mode": "matched_cell_updates"} if ranking is None else ranking
     status_counts = defaultdict(Counter)
     improvements = defaultdict(list)
     for rows in groups.values():
@@ -275,18 +318,17 @@ def candidate_scorecard(groups, *, meaningful_improvement=1.05):
             for row in rows
             if row["config"]["candidate"] != "uniform"
         }
-        for baseline in uniform.values():
+        for budget, baseline in uniform.items():
             for candidate_name in candidate_names:
-                feasible = [
-                    row
-                    for row in accepted
+                ranked = [
+                    (row, score)
+                    for row, score in ranked_candidates(rows, baseline, budget, ranking)
                     if row["config"]["candidate"] == candidate_name
-                    and row["cell_updates"] <= baseline["cell_updates"]
                 ]
-                if feasible:
-                    best = min(feasible, key=lambda row: row["joint_scattering_loss"])
+                if ranked:
+                    _, score = min(ranked, key=lambda item: item[1])
                     improvements[candidate_name].append(
-                        baseline["joint_scattering_loss"] / best["joint_scattering_loss"]
+                        baseline["joint_scattering_loss"] / score
                     )
     result = {}
     for candidate_name in sorted(status_counts):
@@ -324,8 +366,13 @@ def summarize(cases, output, sources, campaign):
             invalid_groups.append(illumination_id)
         budget_labels = {}
         for cells, baseline in sorted(uniform.items()):
-            feasible = [row for row in accepted if row["cell_updates"] <= baseline["cell_updates"]]
-            best = min(feasible, key=lambda row: row["joint_scattering_loss"])
+            ranked = ranked_candidates(
+                rows,
+                baseline,
+                cells,
+                campaign.get("ranking", {"mode": "matched_cell_updates"}),
+            )
+            best, best_score = min(ranked, key=lambda item: item[1])
             budget_labels[str(cells)] = dict(
                 update_cap=baseline["cell_updates"],
                 uniform_case=baseline["case_id"],
@@ -335,8 +382,14 @@ def summarize(cases, output, sources, campaign):
                 best_cells=best["config"]["cells"],
                 best_cell_factor=best["config"].get("candidate_cell_factor", 1.0),
                 best_updates=best["cell_updates"],
+                best_nt=best["Nt"],
                 best_loss=best["joint_scattering_loss"],
-                improvement=baseline["joint_scattering_loss"] / best["joint_scattering_loss"],
+                raw_accuracy_improvement=(
+                    baseline["joint_scattering_loss"] / best["joint_scattering_loss"]
+                ),
+                update_cost_ratio=best["cell_updates"] / baseline["cell_updates"],
+                selection_score=best_score,
+                improvement=baseline["joint_scattering_loss"] / best_score,
             )
         first = rows[0]["config"]
         labels[illumination_id] = dict(
@@ -364,8 +417,9 @@ def summarize(cases, output, sources, campaign):
         invalid_uniform_groups=invalid_groups,
         nonuniform_budget_win_count=sum(value > 1 for value in improvements),
         maximum_improvement=max(improvements, default=1.0),
+        ranking=campaign.get("ranking", {"mode": "matched_cell_updates"}),
         label_diversity=diversity,
-        candidate_scorecard=candidate_scorecard(groups),
+        candidate_scorecard=candidate_scorecard(groups, campaign.get("ranking")),
         training_readiness=training_readiness(diversity, campaign_complete),
         labels_path=str(output / "labels.json"),
     )

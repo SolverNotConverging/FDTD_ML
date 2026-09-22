@@ -189,3 +189,79 @@ def test_candidate_scorecard_uses_best_affordable_resolution():
     assert scorecard["region_f90"]["meaningful_wins"] == 2
     assert scorecard["region_f90"]["maximum_improvement"] == pytest.approx(4 / 3)
     assert scorecard["region_f80"]["status_counts"] == {"accepted": 2, "unsettled": 1}
+
+
+def test_scaled_holdout_plan_uses_only_frozen_splits_and_candidates():
+    runner = load_runner()
+    campaign_path = ROOT / "configs/simple_candidate_scaled_holdout.json"
+    campaign = json.loads(campaign_path.read_text())
+    cases = runner.case_definitions(
+        *runner.load_inputs(ROOT / "configs/simple_dielectric_pool.json", campaign_path)
+    )
+    assert len(cases) == 320
+    assert {case["split"] for case in cases} == {"validation", "test"}
+    assert {case["lineage_id"] for case in cases} == {
+        "simple_dk_lineage_06",
+        "simple_dk_lineage_07",
+    }
+    assert {case["candidate"] for case in cases} == set(campaign["candidate_names"])
+    assert campaign["selection_source_campaign_id"] == (
+        "simple_candidate_scaled_train_b7d0de8eb710babc"
+    )
+
+
+def test_factorial_exact_pilot_covers_extremes_and_all_splits():
+    runner = load_runner()
+    manifest_path = ROOT / "configs/simple_dielectric_factorial_pool.json"
+    campaign_path = ROOT / "configs/simple_factorial_exact_candidate_pilot.json"
+    campaign = json.loads(campaign_path.read_text())
+    cases = runner.case_definitions(*runner.load_inputs(manifest_path, campaign_path))
+    assert len(cases) == 312
+    assert Counter(case["split"] for case in cases) == {
+        "train": 216,
+        "validation": 48,
+        "test": 48,
+    }
+    assert len({case["geometry_id"] for case in cases}) == 5
+    assert {case["candidate"] for case in cases} == set(campaign["candidate_names"])
+    assert all(case["cells"] in {32, 48, 64, 96} for case in cases)
+    assert all("candidate_cell_factor" not in case for case in cases)
+    assert campaign["ranking"] == {
+        "mode": "fixed_axis_soft_nt",
+        "nt_cost_exponent": 0.1,
+    }
+
+
+def test_fixed_axis_ranking_uses_soft_nt_penalty():
+    runner = load_runner()
+    baseline = {
+        "accepted": True,
+        "joint_scattering_loss": 0.2,
+        "cell_updates": 100,
+        "Nt": 100,
+        "Nx": 48,
+        "Ny": 48,
+        "config": {"candidate": "uniform", "cells": 48},
+    }
+    focused = {
+        "accepted": True,
+        "joint_scattering_loss": 0.1,
+        "cell_updates": 160,
+        "Nt": 160,
+        "Nx": 48,
+        "Ny": 48,
+        "config": {"candidate": "region_medium", "cells": 48},
+    }
+    wrong_budget = {
+        **focused,
+        "Nx": 47,
+        "config": {"candidate": "region_medium", "cells": 47},
+    }
+    ranked = runner.ranked_candidates(
+        [baseline, focused, wrong_budget],
+        baseline,
+        48,
+        {"mode": "fixed_axis_soft_nt", "nt_cost_exponent": 0.1},
+    )
+    assert [row["config"]["candidate"] for row, _ in ranked] == ["uniform", "region_medium"]
+    assert ranked[1][1] == pytest.approx(0.1 * 1.6**0.1)
