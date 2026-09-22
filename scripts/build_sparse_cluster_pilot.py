@@ -83,7 +83,13 @@ def build(template, output, *, count_per_family=8, seed=20260924, max_attempts=2
     rng = np.random.default_rng(seed)
     scenes = []
     attempts = Counter()
-    for family in FAMILIES:
+    held_out_gaps = (
+        ("close", "moderate"),
+        ("moderate", "wide"),
+        ("wide", "close"),
+        ("close", "wide"),
+    )
+    for family_index, family in enumerate(FAMILIES):
         accepted = []
         while len(accepted) < count_per_family:
             attempts[family] += 1
@@ -100,14 +106,28 @@ def build(template, output, *, count_per_family=8, seed=20260924, max_attempts=2
                 continue
             if feasible:
                 accepted.append(scene)
-        order = rng.permutation(len(accepted))
-        train_count = 3 * count_per_family // 4
         validation_count = count_per_family // 8
-        for rank, index in enumerate(order):
-            accepted[index]["split"] = (
-                "train" if rank < train_count else
-                "validation" if rank < train_count + validation_count else "test"
-            )
+        test_count = count_per_family // 8
+        for scene in accepted:
+            scene["split"] = "train"
+        for split, target_gap, count in (
+            ("validation", held_out_gaps[family_index][0], validation_count),
+            ("test", held_out_gaps[family_index][1], test_count),
+        ):
+            eligible = [
+                index for index, scene in enumerate(accepted)
+                if scene["split"] == "train" and scene["gap_stratum"] == target_gap
+            ]
+            chosen = [int(rng.choice(eligible))]
+            remaining = [
+                index for index, scene in enumerate(accepted)
+                if scene["split"] == "train" and index not in chosen
+            ]
+            chosen.extend(int(index) for index in rng.choice(
+                remaining, size=count - 1, replace=False,
+            ))
+            for index in chosen:
+                accepted[index]["split"] = split
         scenes.extend(accepted)
     config["purpose"] = "stage-four sparse three/four-object headroom pilot"
     config["generator"] = {
