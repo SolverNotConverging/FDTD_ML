@@ -86,6 +86,18 @@ MPLCONFIGDIR=/tmp/scattermesh-mpl \
   --device cuda:0 --shard 0 --shards 4
 .venv/bin/python scripts/candidate_campaign_status.py
 .venv/bin/python scripts/run_simple_candidate_campaign.py --summarize
+.venv/bin/python scripts/continue_exact_mesh_pipeline.py \
+  --manifest configs/simple_dielectric_factorial_pool.json \
+  --campaign configs/simple_factorial_exact_candidate_full.json \
+  --campaign-output runs/simple_factorial_exact_candidate_full_6916879 \
+  --dataset-output runs/simple_factorial_exact_distillation_6916879 \
+  --training-config configs/mesh_distillation_full.json \
+  --training-output runs/simple_factorial_exact_training_6916879
+.venv/bin/python scripts/continue_learned_mesh_evaluation.py \
+  --dataset runs/simple_factorial_exact_distillation_6916879/dataset.json \
+  --training-output runs/simple_factorial_exact_training_6916879 \
+  --candidate-output runs/simple_factorial_exact_candidate_full_6916879 \
+  --output runs/simple_factorial_exact_physics_6916879
 ```
 
 Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and

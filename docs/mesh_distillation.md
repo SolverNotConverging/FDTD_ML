@@ -51,3 +51,18 @@ The first profile-learning result is recorded in the
 [mesh-distillation pilot report](validation/mesh_distillation_pilot.md), and its
 held-out CUDA result is in the
 [learned-mesh physics pilot](validation/learned_mesh_physics_pilot.md).
+
+## Full-stage handoff
+
+`scripts/continue_exact_mesh_pipeline.py` waits until every candidate record is
+accepted, reruns the frozen label gate, builds the immutable set-valued dataset,
+and trains the full checkpoint. It records hashes of the dataset, configuration,
+training entry point, and every active `scattermesh` source module.
+
+`scripts/continue_learned_mesh_evaluation.py` then waits for that checkpoint and
+runs all validation and test examples through the CUDA solver. Cases are assigned
+to GPUs by a stable hash of the case ID, so dataset ordering cannot concentrate one
+budget or material tier on a worker. Failed worker processes have a fixed retry
+limit and reuse fingerprint-validated cached attempts. The final report compares
+the learned mesh with both exact-budget uniform and the best searched teacher and
+records split-level tail statistics before declaring the frozen physics gate.

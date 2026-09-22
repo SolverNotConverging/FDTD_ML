@@ -407,6 +407,13 @@ As stages expand, keep three separately tagged families and report their results
   retry limits, progress/timing script, and no automatic training on partial or
   unqualified reference outputs.
 
+The simple-family handoff is now automated. The label-to-training workflow refuses
+partial or nonaccepted campaigns. A second workflow waits for the completed full
+checkpoint, assigns every frozen validation/test case to one of four GPUs by stable
+case-ID hash, retries failed worker processes within a fixed limit, reuses only
+fingerprint-valid attempts, and runs the uniform/teacher physics gate after all
+shards finish. The workflow is ready while the 9,312-case label campaign runs.
+
 ## Numerical references
 
 - [Scattered-field ADE-FDTD paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC2763393/):

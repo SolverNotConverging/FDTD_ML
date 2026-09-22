@@ -53,7 +53,14 @@ def source_hashes(checkpoint, dataset):
     }
     result["checkpoint"] = sha256_file(checkpoint)
     result["dataset"] = sha256_file(dataset)
+    result[str(Path(__file__).resolve().relative_to(root))] = sha256_file(__file__)
     return result
+
+
+def stable_shard(case_id, shards):
+    """Assign cases reproducibly without coupling work to dataset ordering."""
+    digest = hashlib.sha256(case_id.encode()).digest()
+    return int.from_bytes(digest[:8], "big") % shards
 
 
 def predicted_cases(dataset_path, checkpoint_path, splits, max_ratio):
@@ -201,7 +208,13 @@ def run_case(case, output, device, sources):
     raise RuntimeError("Unreachable duration schedule")
 
 
-def summarize(cases, output, candidate_output, exponent):
+def summarize(
+    cases,
+    output,
+    candidate_output,
+    exponent,
+    success_decision="passes_physics_pilot",
+):
     rows = []
     for case in cases:
         learned_path = output / "cases" / case["case_id"] / "record.json"
@@ -253,10 +266,14 @@ def summarize(cases, output, candidate_output, exponent):
             "case_count": len(selected),
             "accepted_count": sum(row["accepted"] for row in selected),
             "meaningful_uniform_wins": sum(value >= 1.05 for value in improvements),
+            "p10_improvement_over_uniform": float(np.quantile(improvements, 0.10)),
             "median_improvement_over_uniform": float(np.median(improvements)),
             "minimum_improvement_over_uniform": min(improvements),
             "median_score_ratio_to_teacher": float(np.median(teacher_ratios)),
+            "p90_score_ratio_to_teacher": float(np.quantile(teacher_ratios, 0.90)),
             "maximum_score_ratio_to_teacher": max(teacher_ratios),
+            "maximum_learned_loss": max(row["learned_loss"] for row in selected),
+            "maximum_nt_ratio_to_uniform": max(row["Nt_ratio_to_uniform"] for row in selected),
         }
     checks = {
         "all_cases_settled": all(row["accepted"] for row in rows),
@@ -273,7 +290,11 @@ def summarize(cases, output, candidate_output, exponent):
     }
     report = {
         "schema_version": 1,
-        "decision": "passes_physics_pilot" if all(checks.values()) else "does_not_pass_physics_pilot",
+        "decision": (
+            success_decision
+            if all(checks.values())
+            else success_decision.replace("passes_", "fails_", 1)
+        ),
         "checks": checks,
         "case_count": len(rows),
         "status_counts": dict(sorted(Counter("accepted" if r["accepted"] else "unsettled" for r in rows).items())),
@@ -294,7 +315,13 @@ def main():
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--shard", type=int, default=0)
     parser.add_argument("--shards", type=int, default=1)
+    parser.add_argument("--shard-mode", choices=("hash", "index"), default="hash")
     parser.add_argument("--summarize", action="store_true")
+    parser.add_argument(
+        "--success-decision",
+        default="passes_physics_pilot",
+        choices=("passes_physics_pilot", "passes_frozen_physics_evaluation"),
+    )
     parser.add_argument("--max-ratio", type=float, default=3.0)
     args = parser.parse_args()
     if args.shards < 1 or not 0 <= args.shard < args.shards:
@@ -305,10 +332,23 @@ def main():
     metadata = json.loads(args.dataset.read_text())
     exponent = float(metadata["ranking"]["nt_cost_exponent"])
     if args.summarize:
-        summarize(cases, args.output, args.candidate_output, exponent)
+        summarize(
+            cases,
+            args.output,
+            args.candidate_output,
+            exponent,
+            success_decision=args.success_decision,
+        )
         return
     sources = source_hashes(args.checkpoint, args.dataset)
-    selected = [case for index, case in enumerate(cases) if index % args.shards == args.shard]
+    if args.shard_mode == "hash":
+        selected = [
+            case for case in cases if stable_shard(case["case_id"], args.shards) == args.shard
+        ]
+    else:
+        selected = [
+            case for index, case in enumerate(cases) if index % args.shards == args.shard
+        ]
     for index, case in enumerate(selected, 1):
         record, cached = run_case(case, args.output, args.device, sources)
         print(

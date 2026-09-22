@@ -305,6 +305,14 @@ soft-Nt score gaps to the searched teacher are 1.356x and 1.259x. One validation
 target. The diagnostic physics gate passes. See the
 [learned-mesh physics report](docs/validation/learned_mesh_physics_pilot.md).
 
+The remaining simple-family stages now have executable handoffs. The first workflow
+waits for all 9,312 candidate cases to be accepted, reruns the label gate, builds
+the immutable distillation artifact, and starts full training. The second waits for
+the completed checkpoint and runs the complete frozen validation/test physics set
+as four deterministic hash-balanced CUDA shards with bounded process retries. The
+final report includes lower-tail improvement, upper-tail teacher gap, worst learned
+loss, and maximum Nt ratio in addition to the pilot gates.
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong
@@ -316,7 +324,6 @@ target. The diagnostic physics gate passes. See the
    the new scene schema. Extend mixed coupling to declared contact/overlap priority
    only after deriving its operator. NF2FF is currently a post-step host calculation.
    Float32 is accurate but has no throughput benefit here, so retain float64.
-4. Finish and validate the 9,312-case exact-budget campaign, build its immutable
-   set-valued training artifact, train the full simple-family checkpoint, and rerun
-   frozen validation/test physics. Expand to sparse and complex families only after
-   this full simple-family gate passes.
+4. Let the live 9,312-case exact-budget campaign and its automated training and
+   frozen-physics handoffs finish. Audit the resulting full report, then expand to
+   sparse and complex families only after the simple-family gate passes.
