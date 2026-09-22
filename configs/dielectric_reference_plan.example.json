@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "campaign_id": "dielectric_reference_example_v1",
+  "output_root": "../runs/dielectric_reference_campaign",
+  "tasks": [
+    {
+      "task_id": "eps12_reference",
+      "scene": "eps12_small",
+      "cells": 512,
+      "duration_ns": 400,
+      "samples": 24,
+      "pml": 0.15,
+      "larger_contour": false,
+      "device": "cuda:0"
+    },
+    {
+      "task_id": "eps30_lossy_reference",
+      "scene": "eps30_lossy",
+      "cells": 512,
+      "duration_ns": 50,
+      "samples": 24,
+      "pml": 0.15,
+      "larger_contour": false,
+      "device": "cuda:1"
+    },
+    {
+      "task_id": "eps30_lossless_duration_probe",
+      "scene": "eps30_small",
+      "cells": 512,
+      "duration_ns": 400,
+      "samples": 24,
+      "pml": 0.15,
+      "larger_contour": false,
+      "device": "cuda:2"
+    },
+    {
+      "task_id": "eps30_lossless_spatial_probe",
+      "scene": "eps30_small",
+      "cells": 768,
+      "duration_ns": 100,
+      "samples": 24,
+      "pml": 0.15,
+      "larger_contour": false,
+      "device": "cuda:3"
+    }
+  ]
+}

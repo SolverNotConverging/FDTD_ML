@@ -21,6 +21,7 @@ subsequent milestones.
 - [Simple-first training curriculum and joint loss](docs/curriculum.md)
 - [High-contrast dielectric reference escalation](docs/validation/dielectric_reference_escalation.md)
 - [CUDA float32 qualification](docs/validation/cuda_precision.md)
+- [Restartable multi-GPU scheduler](docs/validation/multi_gpu_scheduler.md)
 - [Archived receiver-CNN project](archive/receiver_cnn_2026-09-22/README.md)
 
 ## Run the initial validation
@@ -46,6 +47,10 @@ MPLCONFIGDIR=/tmp/scattermesh-mpl \
   .venv/bin/python scripts/summarize_dielectric_escalation.py
 .venv/bin/python scripts/qualify_cuda_precision.py --case eps12_small --device cuda:0
 .venv/bin/python scripts/summarize_cuda_precision.py
+.venv/bin/python scripts/run_multi_gpu_campaign.py \
+  --plan configs/dielectric_reference_plan.example.json \
+  --output runs/dielectric_reference_campaign/coordinator \
+  --devices cuda:0 cuda:1 cuda:2 cuda:3
 ```
 
 Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and

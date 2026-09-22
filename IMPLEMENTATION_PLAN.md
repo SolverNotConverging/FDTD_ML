@@ -178,7 +178,10 @@ see the [precision qualification](docs/validation/cuda_precision.md).
   retain the measured float32/float64 comparison when changing reduction kernels.
 - Test CPU/GPU equivalence on uniform, graded, lossy, PEC, and oblique cases;
   benchmark memory, wall time, cell updates, and DFT overhead separately.
-- Batch compatible scenes if beneficial; no host-device field transfer each step.
+- The implemented restartable scheduler assigns attempts deterministically across
+  GPUs, validates source hashes, preserves nonconvergence, retries process failures,
+  and resumes atomically. Add batching only if measured beneficial; no host-device
+  field transfer each step.
 
 ### M3 — prove low-budget mesh headroom before training
 

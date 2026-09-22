@@ -156,8 +156,12 @@ complex-field, phase, analytic-degradation, and settling gates for accepted
 epsilon_r=12, conductive epsilon_r=30, and enlarged-PEC cases. It is slower than
 float64 in both 512² probes (0.87x dielectric and 0.78x PEC), so float64 remains
 the production default. See the [precision record](docs/validation/cuda_precision.md).
-Mixed-material CUDA coupling, a campaign-level multi-GPU scheduler, and broader
-production reference escalation remain open.
+The restartable campaign scheduler now pins tasks across four GPUs, validates current
+solver hashes before cache reuse, writes atomic state and per-attempt logs, retains
+scientific nonconvergence, and retries only process failures. A real four-GPU smoke
+completed four concurrent attempts in one launch and resumed without another GPU
+run. See the [scheduler validation](docs/validation/multi_gpu_scheduler.md).
+Mixed-material CUDA coupling and broader production reference escalation remain open.
 
 ## Joint loss and initial training curriculum
 
@@ -187,9 +191,10 @@ low-budget mesh improvements before fitting a new small CNN.
    before choosing a default. Plain conformal remains the current default.
 2. Resolve observation/CPML convergence across the benchmark range; add the
    openEMS-style TFSF comparison and an external solver cross-check.
-3. Add campaign-level multi-GPU scheduling, then qualify mixed-material coupling;
-   NF2FF is currently a post-step host calculation. Float32 is accurate but has no
-   throughput benefit on this server, so keep production references in float64.
+3. Qualify mixed-material coupling and add an explicit automatic convergence-policy
+   layer above the implemented multi-GPU attempt scheduler. NF2FF is currently a
+   post-step host calculation. Float32 is accurate but has no throughput benefit on
+   this server, so keep production references in float64.
 4. Run the small single-cylinder candidate search with the joint loss and matched
    update budgets, then train only if there is useful mesh headroom. Expand the
    curriculum gradually and report simple/sparse/complex families separately.
