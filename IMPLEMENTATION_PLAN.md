@@ -182,6 +182,10 @@ see the [precision qualification](docs/validation/cuda_precision.md).
   GPUs, validates source hashes, preserves nonconvergence, retries process failures,
   and resumes atomically. Add batching only if measured beneficial; no host-device
   field transfer each step.
+- The implemented adaptive policy advances mesh/time from measured individual gates,
+  requires independent spatial/duration/quadrature/contour agreement, and skips at
+  declared hard limits. Generalize it from the analytic-cylinder runner when the M4
+  scene schema is implemented.
 
 ### M3 — prove low-budget mesh headroom before training
 

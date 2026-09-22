@@ -22,6 +22,7 @@ subsequent milestones.
 - [High-contrast dielectric reference escalation](docs/validation/dielectric_reference_escalation.md)
 - [CUDA float32 qualification](docs/validation/cuda_precision.md)
 - [Restartable multi-GPU scheduler](docs/validation/multi_gpu_scheduler.md)
+- [Adaptive convergence policy](docs/validation/adaptive_convergence_policy.md)
 - [Archived receiver-CNN project](archive/receiver_cnn_2026-09-22/README.md)
 
 ## Run the initial validation
@@ -50,6 +51,10 @@ MPLCONFIGDIR=/tmp/scattermesh-mpl \
 .venv/bin/python scripts/run_multi_gpu_campaign.py \
   --plan configs/dielectric_reference_plan.example.json \
   --output runs/dielectric_reference_campaign/coordinator \
+  --devices cuda:0 cuda:1 cuda:2 cuda:3
+.venv/bin/python scripts/run_reference_convergence_policy.py \
+  --policy configs/dielectric_convergence_pilot.json \
+  --output runs/dielectric_convergence_pilot/policy \
   --devices cuda:0 cuda:1 cuda:2 cuda:3
 ```
 

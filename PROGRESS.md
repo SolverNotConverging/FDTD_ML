@@ -161,7 +161,13 @@ solver hashes before cache reuse, writes atomic state and per-attempt logs, reta
 scientific nonconvergence, and retries only process failures. A real four-GPU smoke
 completed four concurrent attempts in one launch and resumed without another GPU
 run. See the [scheduler validation](docs/validation/multi_gpu_scheduler.md).
-Mixed-material CUDA coupling and broader production reference escalation remain open.
+The adaptive policy layer now interprets individual accuracy/phase/settling gates,
+promotes mesh and time independently, requires spatial/duration/quadrature/contour
+agreement, and records hard-limit skips. Its conductive epsilon_r=30 pilot accepted
+the 512²/50 ns base after five attempts in two waves; the largest independent change
+was 0.3374% under 640² spatial refinement. Resume revalidated all artifacts without
+GPU work. See the [policy validation](docs/validation/adaptive_convergence_policy.md).
+Mixed-material CUDA coupling and broader scene generation remain open.
 
 ## Joint loss and initial training curriculum
 
@@ -191,8 +197,8 @@ low-budget mesh improvements before fitting a new small CNN.
    before choosing a default. Plain conformal remains the current default.
 2. Resolve observation/CPML convergence across the benchmark range; add the
    openEMS-style TFSF comparison and an external solver cross-check.
-3. Qualify mixed-material coupling and add an explicit automatic convergence-policy
-   layer above the implemented multi-GPU attempt scheduler. NF2FF is currently a
+3. Qualify mixed-material coupling and generalize the implemented adaptive policy
+   from the analytic-cylinder runner to the new scene schema. NF2FF is currently a
    post-step host calculation. Float32 is accurate but has no throughput benefit on
    this server, so keep production references in float64.
 4. Run the small single-cylinder candidate search with the joint loss and matched
