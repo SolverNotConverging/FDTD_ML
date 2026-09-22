@@ -63,14 +63,23 @@ def main():
     parser.add_argument("--dataset", type=Path, default=ROOT / "runs/sparse_joint_dataset_pairs/dataset.json")
     parser.add_argument("--output", type=Path, default=ROOT / "runs/sparse_nine_model_physics")
     parser.add_argument("--devices", nargs="+", default=["cuda:0", "cuda:1", "cuda:2", "cuda:3"])
+    parser.add_argument("--pilot", nargs=2, action="append", metavar=("CONFIG", "OUTPUT"))
     parser.add_argument("--poll-seconds", type=float, default=60.0)
     parser.add_argument("--check-only", action="store_true")
     args = parser.parse_args()
     if args.poll_seconds <= 0 or not args.devices:
         raise ValueError("A positive poll interval and at least one device are required")
     grid, dataset, output = args.grid.resolve(), args.dataset.resolve(), args.output.resolve()
-    if not dataset.is_file():
-        raise FileNotFoundError(dataset)
+    while not dataset.is_file() or not (grid / "launch.json").is_file():
+        message = "waiting for dataset" if not dataset.is_file() else "waiting for training launch"
+        print(message, flush=True)
+        if args.check_only:
+            return
+        time.sleep(args.poll_seconds)
+    pilots = tuple(
+        (Path(config).resolve(), Path(pilot_output).resolve())
+        for config, pilot_output in (args.pilot or PILOTS)
+    )
     launch = json.loads((grid / "launch.json").read_text())
     dataset_arrays = dataset.parent / json.loads(dataset.read_text())["arrays"]
     if (launch["dataset_sha256"] != _sha256_file(dataset)
@@ -98,7 +107,7 @@ def main():
             sys.executable, "-u", str(evaluator), "--dataset", str(dataset),
             "--checkpoint", str(checkpoint_path), "--output", str(model_output),
         ]
-        for config_path, pilot_output in PILOTS:
+        for config_path, pilot_output in pilots:
             base.extend(("--pilot", str(config_path), str(pilot_output)))
         processes = []
         for shard, device in enumerate(args.devices):
