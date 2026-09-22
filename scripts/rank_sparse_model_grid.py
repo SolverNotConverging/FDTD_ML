@@ -4,6 +4,8 @@
 import argparse
 import json
 import math
+import os
+import time
 from collections import defaultdict
 from pathlib import Path
 
@@ -127,6 +129,21 @@ def rank(comparison_path, report_dir, dataset_path, *, low_budgets=(32, 48)):
     }
 
 
+def comparison_ready(comparison_path, report_dir):
+    comparison_path, report_dir = Path(comparison_path), Path(report_dir)
+    if not comparison_path.is_file():
+        return False, "waiting for nine-model comparison"
+    models = json.loads(comparison_path.read_text()).get("models", {})
+    if len(models) < 9:
+        return False, f"waiting for model reports ({len(models)}/9)"
+    if len(models) > 9:
+        raise ValueError("Comparison contains more than nine models")
+    missing = [name for name in models if not (report_dir / name / "report.json").is_file()]
+    if missing:
+        return False, f"waiting for reports: {', '.join(sorted(missing))}"
+    return True, "nine-model comparison complete"
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--comparison", type=Path, required=True)
@@ -134,11 +151,23 @@ def main():
     parser.add_argument("--dataset", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--low-budgets", type=int, nargs="+", default=[32, 48])
+    parser.add_argument("--poll-seconds", type=float, default=0.0)
     args = parser.parse_args()
+    if args.poll_seconds < 0:
+        raise ValueError("Poll interval cannot be negative")
+    if args.poll_seconds:
+        while True:
+            ready, message = comparison_ready(args.comparison, args.reports)
+            print(message, flush=True)
+            if ready:
+                break
+            time.sleep(args.poll_seconds)
     result = rank(args.comparison, args.reports, args.dataset,
                   low_budgets=tuple(args.low_budgets))
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n")
+    temporary = args.output.with_suffix(args.output.suffix + ".tmp")
+    temporary.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n")
+    os.replace(temporary, args.output)
     chosen = result["selected_model"]
     if chosen is None:
         print("No model accepted every low-budget validation case; inspect ranked_models")

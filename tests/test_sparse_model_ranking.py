@@ -76,3 +76,13 @@ def test_ranking_rejects_missing_cluster_validation_case(tmp_path):
     path.write_text(json.dumps(report))
     with pytest.raises(ValueError, match="coverage differs from dataset"):
         _ranker().rank(comparison, reports, dataset)
+
+
+def test_comparison_waits_for_all_nine_reports(tmp_path):
+    comparison, reports, _ = _fixture(tmp_path)
+    ranker = _ranker()
+    assert ranker.comparison_ready(comparison, reports)[0] is True
+    (reports / "m8" / "report.json").unlink()
+    assert ranker.comparison_ready(comparison, reports)[0] is False
+    comparison.unlink()
+    assert ranker.comparison_ready(comparison, reports)[0] is False
