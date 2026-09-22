@@ -117,7 +117,7 @@ def circle_generalization_plan():
     identity = {
         "examples": examples,
         "ranking": {"mode": "fixed_axis_soft_nt", "nt_cost_exponent": 0.1},
-        "duration_schedule_s": [70e-9, 140e-9, 560e-9],
+        "duration_schedule_s": [70e-9, 140e-9, 560e-9, 1.12e-6, 2.24e-6],
         "max_grading_ratio": 3.0,
         "pml_thickness_m": PML_THICKNESS,
         "monitor_policy": "widest_non_pml_enclosing",

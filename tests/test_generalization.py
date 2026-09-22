@@ -59,6 +59,7 @@ def test_circle_generalization_plan_is_factorial_frozen_and_outside_pml():
     }
     assert plan["pml_thickness_m"] == PML_THICKNESS == 0.12
     assert plan["monitor_policy"] == "widest_non_pml_enclosing"
+    assert plan["duration_schedule_s"] == [70e-9, 140e-9, 560e-9, 1.12e-6, 2.24e-6]
 
 
 def test_checked_in_circle_generalization_plan_matches_generator():
