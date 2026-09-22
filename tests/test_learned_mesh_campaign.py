@@ -112,10 +112,32 @@ def test_summary_can_name_the_frozen_physics_gate(tmp_path):
         for path, payload in (
             (
                 learned,
-                {"accepted": True, "joint_scattering_loss": 0.1, "Nt": 100},
+                {
+                    "accepted": True,
+                    "joint_scattering_loss": 0.1,
+                    "complex_mse_loss": 0.08,
+                    "rcs_log_loss": 0.08,
+                    "Nt": 100,
+                },
             ),
-            (uniform, {"joint_scattering_loss": 0.2, "Nt": 100}),
-            (teacher, {"joint_scattering_loss": 0.08, "Nt": 100}),
+            (
+                uniform,
+                {
+                    "joint_scattering_loss": 0.2,
+                    "complex_mse_loss": 0.16,
+                    "rcs_log_loss": 0.16,
+                    "Nt": 100,
+                },
+            ),
+            (
+                teacher,
+                {
+                    "joint_scattering_loss": 0.08,
+                    "complex_mse_loss": 0.064,
+                    "rcs_log_loss": 0.064,
+                    "Nt": 100,
+                },
+            ),
         ):
             path.parent.mkdir(parents=True)
             path.write_text(json.dumps(payload))
@@ -124,7 +146,12 @@ def test_summary_can_name_the_frozen_physics_gate(tmp_path):
                 "case_id": case_id,
                 "sample_id": sample_id,
                 "split": split,
-                "example": {"cells_x": 48, "best_candidate": "region"},
+                "example": {
+                    "cells_x": 48,
+                    "epsilon_r": 20 if split == "validation" else 5,
+                    "sigma_e_s_per_m": 0.1,
+                    "best_candidate": "region",
+                },
             }
         )
 
@@ -140,3 +167,10 @@ def test_summary_can_name_the_frozen_physics_gate(tmp_path):
     assert report["decision"] == "passes_frozen_physics_evaluation"
     assert report["splits"]["validation"]["p10_improvement_over_uniform"] == 2.0
     assert report["splits"]["test"]["p90_score_ratio_to_teacher"] == 1.25
+    assert report["by_budget"]["48"]["median_complex_improvement_over_uniform"] == 2.0
+    assert report["by_contrast_tier"]["epsilon_r_gt_10"][
+        "median_rcs_improvement_over_uniform"
+    ] == 2.0
+    assert report["by_split_and_contrast_tier"]["test"]["epsilon_r_le_10"][
+        "case_count"
+    ] == 1

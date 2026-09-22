@@ -14,6 +14,14 @@ grading repair.
 | Validation | 8/8 | 7/8 | 3.135x | 0.893x | 1.356x |
 | Test | 8/8 | 8/8 | 2.641x | 1.311x | 1.259x |
 
+The expanded diagnostic report also keeps the two physics components separate.
+Median complex-field improvements are 3.303x on validation and 2.860x on test;
+median log-RCS improvements are 3.222x and 2.567x. At 32, 64, and 96 cells all
+four pilot cases beat uniform. At 48 cells, three of four do; the same validation
+regression has a 0.496x RCS improvement even though its complex component remains
+1.217x better than uniform. This makes it a specific RCS allocation problem rather
+than a general settling or complex-phase failure.
+
 The diagnostic gate requires all cases settled, at least 75% meaningful wins in
 each split, median improvement above 1.2x, and median teacher gap below 1.5x. The
 pilot passes all four checks. The CNN even beats the searched teacher in two cases,

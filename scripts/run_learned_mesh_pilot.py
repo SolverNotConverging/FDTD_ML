@@ -208,6 +208,48 @@ def run_case(case, output, device, sources):
     raise RuntimeError("Unreachable duration schedule")
 
 
+def aggregate_rows(rows):
+    """Return distribution and component metrics for one evaluation slice."""
+    improvements = [row["improvement_over_uniform"] for row in rows]
+    teacher_ratios = [row["score_ratio_to_teacher"] for row in rows]
+    complex_improvements = [
+        row["uniform_complex_loss"]
+        / max(row["learned_complex_loss"], np.finfo(np.float64).tiny)
+        for row in rows
+    ]
+    rcs_improvements = [
+        row["uniform_rcs_loss"]
+        / max(row["learned_rcs_loss"], np.finfo(np.float64).tiny)
+        for row in rows
+    ]
+    meaningful_wins = sum(value >= 1.05 for value in improvements)
+    return {
+        "case_count": len(rows),
+        "accepted_count": sum(row["accepted"] for row in rows),
+        "meaningful_uniform_wins": meaningful_wins,
+        "meaningful_uniform_win_fraction": meaningful_wins / len(rows),
+        "p10_improvement_over_uniform": float(np.quantile(improvements, 0.10)),
+        "median_improvement_over_uniform": float(np.median(improvements)),
+        "minimum_improvement_over_uniform": min(improvements),
+        "median_complex_improvement_over_uniform": float(np.median(complex_improvements)),
+        "minimum_complex_improvement_over_uniform": min(complex_improvements),
+        "median_rcs_improvement_over_uniform": float(np.median(rcs_improvements)),
+        "minimum_rcs_improvement_over_uniform": min(rcs_improvements),
+        "median_score_ratio_to_teacher": float(np.median(teacher_ratios)),
+        "p90_score_ratio_to_teacher": float(np.quantile(teacher_ratios, 0.90)),
+        "maximum_score_ratio_to_teacher": max(teacher_ratios),
+        "maximum_learned_loss": max(row["learned_loss"] for row in rows),
+        "maximum_nt_ratio_to_uniform": max(row["Nt_ratio_to_uniform"] for row in rows),
+    }
+
+
+def grouped_summary(rows, key):
+    groups = defaultdict(list)
+    for row in rows:
+        groups[str(key(row))].append(row)
+    return {name: aggregate_rows(selected) for name, selected in sorted(groups.items())}
+
+
 def summarize(
     cases,
     output,
@@ -244,10 +286,16 @@ def summarize(
                 "sample_id": case["sample_id"],
                 "split": case["split"],
                 "budget": example["cells_x"],
+                "epsilon_r": example["epsilon_r"],
+                "sigma_e_s_per_m": example["sigma_e_s_per_m"],
                 "accepted": learned["accepted"],
                 "learned_loss": learned["joint_scattering_loss"],
+                "learned_complex_loss": learned["complex_mse_loss"],
+                "learned_rcs_loss": learned["rcs_log_loss"],
                 "learned_score": learned_score,
                 "uniform_score": uniform_score,
+                "uniform_complex_loss": uniform["complex_mse_loss"],
+                "uniform_rcs_loss": uniform["rcs_log_loss"],
                 "best_candidate": example["best_candidate"],
                 "best_teacher_score": best_score,
                 "improvement_over_uniform": uniform_score / learned_score,
@@ -260,21 +308,7 @@ def summarize(
         by_split[row["split"]].append(row)
     splits = {}
     for split, selected in sorted(by_split.items()):
-        improvements = [row["improvement_over_uniform"] for row in selected]
-        teacher_ratios = [row["score_ratio_to_teacher"] for row in selected]
-        splits[split] = {
-            "case_count": len(selected),
-            "accepted_count": sum(row["accepted"] for row in selected),
-            "meaningful_uniform_wins": sum(value >= 1.05 for value in improvements),
-            "p10_improvement_over_uniform": float(np.quantile(improvements, 0.10)),
-            "median_improvement_over_uniform": float(np.median(improvements)),
-            "minimum_improvement_over_uniform": min(improvements),
-            "median_score_ratio_to_teacher": float(np.median(teacher_ratios)),
-            "p90_score_ratio_to_teacher": float(np.quantile(teacher_ratios, 0.90)),
-            "maximum_score_ratio_to_teacher": max(teacher_ratios),
-            "maximum_learned_loss": max(row["learned_loss"] for row in selected),
-            "maximum_nt_ratio_to_uniform": max(row["Nt_ratio_to_uniform"] for row in selected),
-        }
+        splits[split] = aggregate_rows(selected)
     checks = {
         "all_cases_settled": all(row["accepted"] for row in rows),
         "each_split_has_75_percent_meaningful_wins": all(
@@ -300,6 +334,24 @@ def summarize(
         "status_counts": dict(sorted(Counter("accepted" if r["accepted"] else "unsettled" for r in rows).items())),
         "ranking": {"mode": "fixed_axis_soft_nt", "nt_cost_exponent": exponent},
         "splits": splits,
+        "by_budget": grouped_summary(rows, lambda row: row["budget"]),
+        "by_contrast_tier": grouped_summary(
+            rows,
+            lambda row: "epsilon_r_gt_10" if row["epsilon_r"] > 10 else "epsilon_r_le_10",
+        ),
+        "by_split_and_budget": {
+            split: grouped_summary(selected, lambda row: row["budget"])
+            for split, selected in sorted(by_split.items())
+        },
+        "by_split_and_contrast_tier": {
+            split: grouped_summary(
+                selected,
+                lambda row: (
+                    "epsilon_r_gt_10" if row["epsilon_r"] > 10 else "epsilon_r_le_10"
+                ),
+            )
+            for split, selected in sorted(by_split.items())
+        },
         "cases": rows,
     }
     atomic_json(output / "report.json", report)
