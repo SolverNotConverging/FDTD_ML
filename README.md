@@ -8,9 +8,10 @@ The current implementation is an independent **NumPy CPU reference solver** for
 conductivity, oblique broadband illumination, CPML, streaming surface DFT, and
 near-to-far transformation. Experimental PEC rectangles/circles support cut edges
 and cell enlargement without boundary anchors. Output is 2D scattering width in
-metres. A validated PyTorch CUDA backend now accelerates fine dielectric references.
-CUDA PEC, mixed PEC/dielectric scenes, thin screens, reference campaigns, and CNN
-training remain subsequent milestones.
+metres. A validated PyTorch CUDA backend now accelerates fine dielectric and
+PEC-only references, including conformal cuts and cell enlargement. Mixed
+PEC/dielectric scenes, thin screens, reference campaigns, and CNN training remain
+subsequent milestones.
 
 - [Implementation plan](IMPLEMENTATION_PLAN.md)
 - [Measured progress and limitations](PROGRESS.md)

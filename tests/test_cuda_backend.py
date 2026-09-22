@@ -9,6 +9,7 @@ from scattermesh import (
     Grid,
     Material,
     PlaneWave,
+    Rectangle,
     focused_axis,
     simulate,
     simulate_cuda,
@@ -75,12 +76,51 @@ def test_cuda_float64_matches_numpy_reference():
     assert candidate.diagnostics["backend"] == "torch_cuda"
 
 
-def test_cuda_backend_rejects_unported_pec_and_invalid_controls():
+@pytest.mark.parametrize("pec_mode", ["staircase", "conformal", "enlarged"])
+@pytest.mark.parametrize(
+    "device",
+    [
+        "cpu",
+        pytest.param(
+            "cuda:0",
+            marks=pytest.mark.skipif(
+                not torch.cuda.is_available(), reason="CUDA device not visible"
+            ),
+        ),
+    ],
+)
+def test_torch_pec_modes_match_numpy(pec_mode, device):
+    axis = np.linspace(0, 1.2, 33)
+    grid = Grid(axis, axis)
+    objects = [Rectangle((0.388, 0.812, 0.401, 0.799), PEC())]
+    source = PlaneWave(1e9, 1e-9, 9e-9, angle=0.7, origin=(0.6, 0.6))
+    settings = dict(
+        frequencies=[1e9],
+        duration=12e-9,
+        pml_thickness=0.15,
+        pec_mode=pec_mode,
+    )
+    reference = simulate(grid, objects, source, **settings)
+    candidate = simulate_cuda(grid, objects, source, device=device, dtype="float64", **settings)
+    _assert_equivalent(reference, candidate, rtol=3e-12, atol=3e-14)
+    assert candidate.diagnostics["pec_mode"] == pec_mode
+    assert candidate.diagnostics["pec_boundary_edge_count"] > 0
+    assert candidate.diagnostics["dt_fraction_of_grid_cfl"] == pytest.approx(
+        reference.diagnostics["dt_fraction_of_grid_cfl"]
+    )
+    if pec_mode == "enlarged":
+        assert candidate.diagnostics["pec_enlarged_nodes"] > 0
+
+
+def test_cuda_backend_rejects_mixed_materials_and_invalid_controls():
     grid, _, source, settings = _problem()
-    with pytest.raises(ValueError, match="PEC"):
+    with pytest.raises(ValueError, match="Mixed PEC"):
         simulate_cuda(
             grid,
-            [Circle((0.6, 0.6), 0.06, PEC())],
+            [
+                Circle((0.5, 0.6), 0.04, PEC()),
+                Circle((0.7, 0.6), 0.04, Material(4)),
+            ],
             source,
             device="cpu",
             **settings,

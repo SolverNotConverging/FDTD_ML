@@ -140,16 +140,20 @@ and [high-contrast escalation](docs/validation/dielectric_reference_escalation.m
 
 ### CUDA dielectric backend
 
-The first M2 backend now runs dielectric nonuniform Yee/CPML updates, analytic
-plane-wave forcing, and stagger-aware streaming complex DFTs on a Torch device.
+The M2 backend now runs dielectric and PEC-only nonuniform Yee/CPML updates,
+analytic plane-wave forcing, and stagger-aware streaming complex DFTs on a Torch device.
 Float64 CUDA agrees with NumPy final fields and far fields to below 5e-15 in the
 bounded real-GPU test. At 512² and 2,010 steps, one TITAN RTX completes the benchmark
 in 4.79 s versus 34.65 s for NumPy, a 7.23x speedup. At 128² CUDA startup/launch
 overhead still makes it slower. See the [CUDA validation](docs/validation/cuda_foundation.md).
 
-The restartable per-attempt runner has now exercised all four GPUs independently and
-retains failed attempts. PEC CUDA updates, float32 qualification, a campaign-level
-multi-GPU scheduler, and broader production reference escalation remain open.
+Staircase, conformal, and enlarged PEC modes now match NumPy across fields, DFTs,
+far fields, CFL diagnostics, and projected transfers. On the TITAN RTX, enlarged
+PEC at 512²/2,010 steps takes 7.03 s versus 37.03 s for NumPy, a 5.27x speedup;
+complex far fields differ by 4.13e-15. The restartable per-attempt runner has
+exercised all four GPUs independently and retains failed attempts. Float32
+qualification, mixed-material CUDA coupling, a campaign-level multi-GPU scheduler,
+and broader production reference escalation remain open.
 
 ## Joint loss and initial training curriculum
 
@@ -179,9 +183,8 @@ low-budget mesh improvements before fitting a new small CNN.
    before choosing a default. Plain conformal remains the current default.
 2. Resolve observation/CPML convergence across the benchmark range; add the
    openEMS-style TFSF comparison and an external solver cross-check.
-3. Port qualified PEC updates and aggregation transfers to GPU; dielectric field
-   updates and surface DFT already run there, while NF2FF is currently a post-step
-   host calculation.
+3. Qualify float32 and mixed-material CUDA coupling, then add campaign-level
+   multi-GPU scheduling; NF2FF is currently a post-step host calculation.
 4. Run the small single-cylinder candidate search with the joint loss and matched
    update budgets, then train only if there is useful mesh headroom. Expand the
    curriculum gradually and report simple/sparse/complex families separately.

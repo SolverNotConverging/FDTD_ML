@@ -154,10 +154,11 @@ not exterior free-space resolution alone.
 
 ### M2 — CUDA solver and observables
 
-Foundation implemented: a PyTorch float64 backend now covers dielectric updates,
-CPML, analytic source evaluation, and streaming complex DFT on one GPU. It matches
-NumPy to roundoff and is 7.23x faster at 512² in the bounded throughput benchmark.
-Small 128² runs remain launch-overhead dominated. See the
+Foundation implemented: a PyTorch float64 backend now covers dielectric and PEC-only
+updates, conformal cuts, Galerkin enlargement transfers, CPML, analytic source
+evaluation, and streaming complex DFT on one GPU. It matches NumPy to roundoff and
+is 7.23x faster for dielectric and 5.27x faster for enlarged PEC at 512² in bounded
+throughput benchmarks. Small 128² runs remain launch-overhead dominated. See the
 [measured CUDA foundation](docs/validation/cuda_foundation.md). The remaining items
 below are still required before M2 is complete.
 
@@ -165,9 +166,9 @@ below are still required before M2 is complete.
   legacy experiment policy. Keep fields, CPML state, source evaluation, and DFT on GPU.
 - Implement fused/batched surface DFT kernels; use phase recurrence with bounded
   drift or direct phases validated against CPU. Preserve half-step H timing.
-- Port PEC intersection metadata, cut-edge updates, and conservative aggregation
-  transfers. Avoid race conditions in shared-master reductions; validate geometry
-  and field constraints after each GPU update on small tests.
+- Extend the implemented PEC intersection, cut-edge, and conservative aggregation
+  port to mixed-material coupling after that CPU formulation is qualified. Continue
+  validating shared-master reductions and active-source field constraints.
 - Implement NF2FF reductions after time stepping. Start with accurate accumulation;
   quantify float32 versus float64 and reduction errors before reducing precision.
 - Test CPU/GPU equivalence on uniform, graded, lossy, PEC, and oblique cases;

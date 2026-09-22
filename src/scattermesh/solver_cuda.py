@@ -1,16 +1,17 @@
-"""PyTorch CUDA backend for dielectric TMz scattering and streaming surface DFT.
+"""PyTorch CUDA backend for TMz scattering and streaming surface DFT.
 
 The numerical equations match ``solver.simulate``. Geometry averaging remains a
 one-time CPU preprocessing step; fields, CPML state, analytic source evaluation,
 and DFT accumulation stay on the selected Torch device during time stepping.
-PEC is deliberately rejected until its projected aggregation has an equivalent
-validated GPU implementation.
+PEC intersection geometry remains one-time CPU preprocessing. Cut-edge gradients,
+total-field constraints, and projected cell-enlargement transfers run on device.
 """
 
 from time import perf_counter
 
 import numpy as np
 
+from .conformal import CutCellPEC
 from .constants import C0, EPS0, MU0
 from .geometry import PEC, average_materials
 from .observables import Contour, SurfaceDFT
@@ -54,6 +55,88 @@ def _as_tensor(torch, value, *, device, dtype):
     return torch.as_tensor(value, device=device, dtype=dtype)
 
 
+class _TorchPEC:
+    """Device representation of a CPU-constructed ``CutCellPEC`` operator."""
+
+    def __init__(self, torch, cut, source, *, device, dtype):
+        self.torch, self.cut, self.source = torch, cut, source
+
+        def real(value):
+            return torch.as_tensor(value, device=device, dtype=dtype)
+
+        def index(value):
+            return torch.as_tensor(value, device=device, dtype=torch.long)
+
+        self.inverse_lengths = tuple(real(value) for value in cut.inverse_lengths)
+        self.inside = torch.as_tensor(cut.inside, device=device, dtype=torch.bool)
+        retardation = source.retardation(cut.grid.x[:, None], cut.grid.y[None, :])
+        self.inside_delay = real(retardation[cut.inside])
+        self.boundaries = []
+        for boundary in cut.boundaries:
+            if boundary is None:
+                self.boundaries.append(None)
+                continue
+            i, j, ei, ej, x, y, sign = boundary
+            delay = source.retardation(x, y)
+            self.boundaries.append(
+                (index(i), index(j), index(ei), index(ej), real(delay), real(sign))
+            )
+
+        enlargement = cut.enlargement
+        self.enlargement = enlargement is not None
+        if enlargement is None:
+            return
+        self.masters = index(enlargement.masters)
+        self.slaves = index(enlargement.slaves)
+        self.roots = index(enlargement.roots)
+        self.slave_owners = index(enlargement.slave_owners)
+        self.slave_weights = real(enlargement.slave_weights)
+        self.master_mass = real(enlargement.master_mass)
+        self.slave_mass_weight = real(enlargement.slave_mass_weight)
+        self.mass = real(enlargement.mass)
+        self.slave_delay = real(source.retardation(*enlargement.slave_positions))
+        self.root_delay = real(source.retardation(*enlargement.root_positions))
+        self.previous_g = self._incident_offset(0.0)
+
+    def _incident_offset(self, time):
+        return self.slave_weights * _pulse(
+            self.torch, time - self.root_delay, self.source
+        ) - _pulse(self.torch, time - self.slave_delay, self.source)
+
+    def initialize(self, ez):
+        self.impose_inside(ez, 0.0)
+        if self.enlargement:
+            flat = ez.ravel()
+            flat[self.slaves] = self.slave_weights * flat[self.roots] + self.previous_g
+
+    def impose_inside(self, ez, time):
+        ez[self.inside] = -_pulse(self.torch, time - self.inside_delay, self.source)
+
+    def gradients(self, ez, time):
+        gradients = [
+            self.torch.diff(ez, dim=axis) * inverse
+            for axis, inverse in enumerate(self.inverse_lengths)
+        ]
+        for gradient, inverse, boundary in zip(gradients, self.inverse_lengths, self.boundaries):
+            if boundary is None:
+                continue
+            i, j, ei, ej, delay, sign = boundary
+            incident = _pulse(self.torch, time - delay, self.source)
+            gradient[i, j] = sign * (ez[ei, ej] + incident) * inverse[i, j]
+        return gradients
+
+    def advance(self, ez, increment, time):
+        g = self._incident_offset(time)
+        delta = increment.ravel()
+        numerator = self.master_mass * delta[self.masters]
+        transferred = self.slave_mass_weight * (delta[self.slaves] - (g - self.previous_g))
+        numerator = numerator.index_add(0, self.slave_owners, transferred)
+        flat = ez.ravel()
+        flat[self.masters] += numerator / self.mass
+        flat[self.slaves] = self.slave_weights * flat[self.roots] + g
+        self.previous_g = g
+
+
 def simulate_cuda(
     grid,
     objects,
@@ -70,8 +153,9 @@ def simulate_cuda(
     dtype="float64",
     phase_reanchor_interval=2048,
     check_interval=256,
+    pec_mode="conformal",
 ):
-    """Run the dielectric scattered-field solver on a Torch device.
+    """Run the scattered-field solver on a Torch device.
 
     ``device="cpu"`` exists for deterministic backend-equivalence tests. CUDA
     production checks should use float64 first; float32 requires separate error
@@ -96,8 +180,6 @@ def simulate_cuda(
     ):
         raise ValueError("Phase reanchor and check intervals must be positive integers")
     objects = tuple(objects)
-    if any(isinstance(obj.material, PEC) for obj in objects):
-        raise ValueError("CUDA PEC updates are not implemented yet")
     started = perf_counter()
     lx, ly = grid.x[-1], grid.y[-1]
     thickness = np.broadcast_to(np.asarray(pml_thickness, dtype=float), (2,))
@@ -110,8 +192,13 @@ def simulate_cuda(
     if not np.isfinite(safety) or not 0 < safety < 1 or not np.isfinite(duration) or duration <= 0:
         raise ValueError("Positive duration and CFL safety between 0 and 1 required")
     dx, dy = np.diff(grid.x), np.diff(grid.y)
+    pec_objects = tuple(obj for obj in objects if isinstance(obj.material, PEC))
+    if pec_objects and len(pec_objects) != len(objects):
+        raise ValueError("Mixed PEC/dielectric coupling is not yet qualified in this prototype")
+    cut_pec = CutCellPEC(grid, pec_objects, pec_mode) if pec_objects else None
     grid_dt = 1 / (C0 * np.sqrt(dx.min() ** -2 + dy.min() ** -2))
-    dt = safety * grid_dt
+    stable_dt = min(grid_dt, cut_pec.stable_time_step()) if cut_pec else grid_dt
+    dt = safety * stable_dt
     nt = int(np.ceil(duration / dt))
     if nt > max_steps:
         raise ValueError(f"Simulation requires {nt} steps, exceeding {max_steps}")
@@ -144,7 +231,7 @@ def simulate_cuda(
             raise ValueError(
                 "Every scatterer must lie strictly inside the monitor with a vacuum buffer"
             )
-    eps, sigma = average_materials(grid, objects, samples)
+    eps, sigma = average_materials(grid, () if cut_pec else objects, samples)
     retardation = source.retardation(grid.x[:, None], grid.y[None, :])
     if np.max(source.envelope(-retardation)) > 1e-8:
         raise ValueError("Source starts before the simulation: increase pulse delay")
@@ -168,6 +255,11 @@ def simulate_cuda(
     hy = torch.zeros((len(grid.x) - 1, len(grid.y)), device=device, dtype=real_dtype)
     phx, phy = torch.zeros_like(hx), torch.zeros_like(hy)
     pex, pey = torch.zeros_like(ez), torch.zeros_like(ez)
+    torch_pec = (
+        _TorchPEC(torch, cut_pec, source, device=device, dtype=real_dtype) if cut_pec else None
+    )
+    if torch_pec:
+        torch_pec.initialize(ez)
     xc, yc = grid.centers
     ex, ey = [
         tuple(tensor(value) for value in _pml_profile(axis, length, thick, dt))
@@ -196,8 +288,11 @@ def simulate_cuda(
     step_started = perf_counter()
     with torch.inference_mode():
         for n in range(nt):
-            gy = torch.diff(ez, dim=1) / dy_t[None, :]
-            gx = torch.diff(ez, dim=0) / dx_t[:, None]
+            if torch_pec:
+                gx, gy = torch_pec.gradients(ez, n * dt)
+            else:
+                gy = torch.diff(ez, dim=1) / dy_t[None, :]
+                gx = torch.diff(ez, dim=0) / dx_t[:, None]
             phx.mul_(hpy[1][None, :]).add_(hpy[2][None, :] * gy)
             phy.mul_(hpx[1][:, None]).add_(hpx[2][:, None] * gx)
             hx.sub_(dt / MU0 * (hpy[0][None, :] * gy + phx))
@@ -207,13 +302,20 @@ def simulate_cuda(
             pex[interior].mul_(ex[1][1:-1, None]).add_(ex[2][1:-1, None] * gx)
             pey[interior].mul_(ey[1][None, 1:-1]).add_(ey[2][None, 1:-1] * gy)
             curl = ex[0][1:-1, None] * gx + pex[interior] - ey[0][None, 1:-1] * gy - pey[interior]
-            ez[interior].mul_(ca[interior]).add_(cb[interior] * curl)
             te = electric_times[n]
+            if torch_pec and torch_pec.enlargement:
+                increment = torch.zeros_like(ez)
+                increment[interior] = cb[interior] * curl
+                torch_pec.advance(ez, increment, te)
+            else:
+                ez[interior].mul_(ca[interior]).add_(cb[interior] * curl)
             incident = _pulse(torch, te - delay, source)
             ez[active] -= contrast[active] * (incident - previous_incident) + conduction[active] * (
                 incident + previous_incident
             )
             previous_incident = incident
+            if torch_pec:
+                torch_pec.impose_inside(ez, te)
             e_surface, h_surface = _contour_fields(torch, ez, hx, hy, contour)
             electric_dft.add_(dt * phase_e[:, None] * e_surface[None, :])
             magnetic_dft.add_(dt * phase_h[:, None] * h_surface[None, :])
@@ -271,14 +373,16 @@ def simulate_cuda(
         far_field_origin=[0.0, 0.0],
         fourier_convention="integral f(t) exp(+i omega t) dt",
         pml_thickness=thickness.tolist(),
-        pec_mode=None,
-        pec_node_count=0,
-        pec_boundary_edge_count=0,
-        pec_subcell_edge_count=0,
-        pec_minimum_open_fraction=1.0,
-        dt_fraction_of_grid_cfl=1.0,
-        pec_enlarged_nodes=0,
-        pec_coordinate_tolerance_m=0.0,
+        pec_mode=pec_mode if cut_pec else None,
+        pec_node_count=int(cut_pec.inside.sum()) if cut_pec else 0,
+        pec_boundary_edge_count=cut_pec.boundary_edge_count if cut_pec else 0,
+        pec_subcell_edge_count=cut_pec.subcell_edge_count if cut_pec else 0,
+        pec_minimum_open_fraction=cut_pec.minimum_fraction if cut_pec else 1.0,
+        dt_fraction_of_grid_cfl=stable_dt / grid_dt,
+        pec_enlarged_nodes=len(cut_pec.enlargement.slaves)
+        if cut_pec and cut_pec.enlargement is not None
+        else 0,
+        pec_coordinate_tolerance_m=cut_pec.coordinate_tolerance if cut_pec else 0.0,
         dft_phase_method="recurrence_with_analytic_reanchor",
         dft_phase_reanchor_interval=int(phase_reanchor_interval),
         finite_check_interval=int(check_interval),
