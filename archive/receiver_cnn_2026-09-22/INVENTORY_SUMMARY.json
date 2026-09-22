@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "archive_root": "archive/receiver_cnn_2026-09-22",
+  "regular_file_count": 95496,
+  "regular_file_bytes": 1539867582,
+  "regular_files_sha256_manifest": "4a5428cf9328242da69b13ec1b743dbb0d9a795c75238c4600aad1b11c875ee3",
+  "symlink_count": 404,
+  "broken_symlink_count": 0,
+  "broken_symlinks": [],
+  "required_files": [
+    {
+      "path": "artifacts/reference_combined_v7_3000/accepted_manifest.json",
+      "exists": true,
+      "bytes": 15315558
+    },
+    {
+      "path": "artifacts/training_mixed_v7_3000/pretraining/best.pt",
+      "exists": true,
+      "bytes": 534045
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/distillation/best.pt",
+      "exists": true,
+      "bytes": 534109
+    }
+  ],
+  "all_required_files_present": true,
+  "all_symlinks_resolve": true
+}

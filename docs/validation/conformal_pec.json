@@ -1,0 +1,1995 @@
+{
+  "schema": 1,
+  "created_utc": "2026-09-22T03:39:01.788389+00:00",
+  "formulation": "TMz cut-edge PEC with unchanged Yee electric dual metrics",
+  "time_step": "min(background CFL, conservative cut-edge Gershgorin bound), safety=0.9",
+  "frequencies_hz": [
+    800000000.0,
+    1000000000.0,
+    1200000000.0
+  ],
+  "domain_m": [
+    1.2,
+    1.2
+  ],
+  "records": [
+    {
+      "name": "circle_n48_staircase",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.02499999999999991,
+      "dx_max": 0.025000000000000133,
+      "x_grading": 1.0000000000000089,
+      "dy_min": 0.02499999999999991,
+      "dy_max": 0.025000000000000133,
+      "y_grading": 1.0000000000000089,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 5.3069722576866555e-11,
+      "Nt": 660,
+      "simulated_time": 3.502601690073193e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 1520640,
+      "wall_seconds": 0.2292364127933979,
+      "peak_scattered_e": 0.9999989786920583,
+      "tail_peak_over_global_peak": 4.6202515042427434e-06,
+      "incident_tail_at_origin": 6.6567123680370545e-295,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "staircase",
+      "pec_node_count": 32,
+      "pec_boundary_edge_count": 24,
+      "pec_subcell_edge_count": 0,
+      "pec_minimum_open_fraction": 1.0,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.17101839161820043,
+        0.16983329018307192,
+        0.2265798585139167
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_n48_conformal",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.02499999999999991,
+      "dx_max": 0.025000000000000133,
+      "x_grading": 1.0000000000000089,
+      "dy_min": 0.02499999999999991,
+      "dy_max": 0.025000000000000133,
+      "y_grading": 1.0000000000000089,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 3.730077732955916e-11,
+      "Nt": 939,
+      "simulated_time": 3.502542991245605e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 2163456,
+      "wall_seconds": 0.3149299006909132,
+      "peak_scattered_e": 1.0133914458594102,
+      "tail_peak_over_global_peak": 3.834545636416319e-06,
+      "incident_tail_at_origin": 6.867366210804705e-295,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "conformal",
+      "pec_node_count": 32,
+      "pec_boundary_edge_count": 24,
+      "pec_subcell_edge_count": 24,
+      "pec_minimum_open_fraction": 0.1962048106743673,
+      "dt_fraction_of_grid_cfl": 0.7028636201278885,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.018843715968853977,
+        0.028657710572377492,
+        0.036838723933720605
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_n48_enlarged",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.02499999999999991,
+      "dx_max": 0.025000000000000133,
+      "x_grading": 1.0000000000000089,
+      "dy_min": 0.02499999999999991,
+      "dy_max": 0.025000000000000133,
+      "y_grading": 1.0000000000000089,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 5.3069722576866555e-11,
+      "Nt": 660,
+      "simulated_time": 3.502601690073193e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 1520640,
+      "wall_seconds": 0.27071385830640793,
+      "peak_scattered_e": 1.0028371005598529,
+      "tail_peak_over_global_peak": 4.733215822671999e-06,
+      "incident_tail_at_origin": 6.6567123680370545e-295,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 32,
+      "pec_boundary_edge_count": 24,
+      "pec_subcell_edge_count": 24,
+      "pec_minimum_open_fraction": 0.1962048106743673,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 10,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.01959603793040619,
+        0.03502952192038402,
+        0.04561320600167595
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_n64_staircase",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.018749999999999822,
+      "dx_max": 0.018750000000000044,
+      "x_grading": 1.0000000000000118,
+      "dy_min": 0.018749999999999822,
+      "dy_max": 0.018750000000000044,
+      "y_grading": 1.0000000000000118,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 3.980229193264968e-11,
+      "Nt": 880,
+      "simulated_time": 3.5026016900731717e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 3604480,
+      "wall_seconds": 0.3563765026628971,
+      "peak_scattered_e": 0.9999263997031765,
+      "tail_peak_over_global_peak": 2.8963668553496083e-06,
+      "incident_tail_at_origin": 6.656712368111173e-295,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "staircase",
+      "pec_node_count": 56,
+      "pec_boundary_edge_count": 32,
+      "pec_subcell_edge_count": 0,
+      "pec_minimum_open_fraction": 1.0,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.12483307792313958,
+        0.1442791868193344,
+        0.16275774380884567
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_n64_conformal",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.018749999999999822,
+      "dx_max": 0.018750000000000044,
+      "x_grading": 1.0000000000000118,
+      "dy_min": 0.018749999999999822,
+      "dy_max": 0.018750000000000044,
+      "y_grading": 1.0000000000000118,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 1.881203640197778e-11,
+      "Nt": 1861,
+      "simulated_time": 3.5009199744080645e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 7622656,
+      "wall_seconds": 0.7499178238213062,
+      "peak_scattered_e": 1.0022138825603815,
+      "tail_peak_over_global_peak": 2.2195472723887187e-06,
+      "incident_tail_at_origin": 1.615871513414223e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "conformal",
+      "pec_node_count": 56,
+      "pec_boundary_edge_count": 32,
+      "pec_subcell_edge_count": 32,
+      "pec_minimum_open_fraction": 0.06708597461179487,
+      "dt_fraction_of_grid_cfl": 0.4726370138134265,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.011636803101215225,
+        0.015984948848750805,
+        0.020122979000780455
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_n64_enlarged",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.018749999999999822,
+      "dx_max": 0.018750000000000044,
+      "x_grading": 1.0000000000000118,
+      "dy_min": 0.018749999999999822,
+      "dy_max": 0.018750000000000044,
+      "y_grading": 1.0000000000000118,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 3.980229193264968e-11,
+      "Nt": 880,
+      "simulated_time": 3.5026016900731717e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 3604480,
+      "wall_seconds": 0.42110754176974297,
+      "peak_scattered_e": 1.0012668589385054,
+      "tail_peak_over_global_peak": 2.9779498252315844e-06,
+      "incident_tail_at_origin": 6.656712368111173e-295,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 56,
+      "pec_boundary_edge_count": 32,
+      "pec_subcell_edge_count": 32,
+      "pec_minimum_open_fraction": 0.06708597461179487,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 16,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.010960595894992124,
+        0.01772957482449576,
+        0.020908193839062846
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_n96_staircase",
+      "Nx": 96,
+      "Ny": 96,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.012499999999999956,
+      "dx_max": 0.012500000000000178,
+      "x_grading": 1.0000000000000178,
+      "dy_min": 0.012499999999999956,
+      "dy_max": 0.012500000000000178,
+      "y_grading": 1.0000000000000178,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 2.6534861288433278e-11,
+      "Nt": 1320,
+      "simulated_time": 3.502601690073193e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 12165120,
+      "wall_seconds": 0.9266203325241804,
+      "peak_scattered_e": 0.9999999905447421,
+      "tail_peak_over_global_peak": 1.0694900215063692e-06,
+      "incident_tail_at_origin": 6.6567123680370545e-295,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "staircase",
+      "pec_node_count": 130,
+      "pec_boundary_edge_count": 52,
+      "pec_subcell_edge_count": 0,
+      "pec_minimum_open_fraction": 1.0,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.06366154731156874,
+        0.07074868530349088,
+        0.07957920604307075
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_n96_conformal",
+      "Nx": 96,
+      "Ny": 96,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.012499999999999956,
+      "dx_max": 0.012500000000000178,
+      "x_grading": 1.0000000000000178,
+      "dy_min": 0.012499999999999956,
+      "dy_max": 0.012500000000000178,
+      "y_grading": 1.0000000000000178,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 8.954399901686588e-12,
+      "Nt": 3909,
+      "simulated_time": 3.500274921569287e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 36025344,
+      "wall_seconds": 2.7124705594033003,
+      "peak_scattered_e": 1.0031190318248044,
+      "tail_peak_over_global_peak": 8.309245096075609e-07,
+      "incident_tail_at_origin": 2.263475278390513e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "conformal",
+      "pec_node_count": 130,
+      "pec_boundary_edge_count": 52,
+      "pec_subcell_edge_count": 52,
+      "pec_minimum_open_fraction": 0.04563659958228581,
+      "dt_fraction_of_grid_cfl": 0.3374579502923526,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.004950627442556871,
+        0.006193231161737767,
+        0.0079390245904358
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_n96_enlarged",
+      "Nx": 96,
+      "Ny": 96,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.012499999999999956,
+      "dx_max": 0.012500000000000178,
+      "x_grading": 1.0000000000000178,
+      "dy_min": 0.012499999999999956,
+      "dy_max": 0.012500000000000178,
+      "y_grading": 1.0000000000000178,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 2.653486128843304e-11,
+      "Nt": 1320,
+      "simulated_time": 3.502601690073161e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 12165120,
+      "wall_seconds": 1.2196397092193365,
+      "peak_scattered_e": 1.001287208158274,
+      "tail_peak_over_global_peak": 1.0901021150592367e-06,
+      "incident_tail_at_origin": 6.6567123681490035e-295,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 130,
+      "pec_boundary_edge_count": 52,
+      "pec_subcell_edge_count": 52,
+      "pec_minimum_open_fraction": 0.04563659958228581,
+      "dt_fraction_of_grid_cfl": 0.999999999999991,
+      "pec_enlarged_nodes": 15,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.0051459681876921725,
+        0.006924062458059395,
+        0.007733427046373465
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_n128_staircase",
+      "Nx": 128,
+      "Ny": 128,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.009374999999999911,
+      "dx_max": 0.009375000000000133,
+      "x_grading": 1.0000000000000238,
+      "dy_min": 0.009374999999999911,
+      "dy_max": 0.009375000000000133,
+      "y_grading": 1.0000000000000238,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 1.990114596632484e-11,
+      "Nt": 1759,
+      "simulated_time": 3.500611575476539e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 28819456,
+      "wall_seconds": 1.7476301696151495,
+      "peak_scattered_e": 0.9999999991685316,
+      "tail_peak_over_global_peak": 5.246868535070666e-07,
+      "incident_tail_at_origin": 1.8988002005844745e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "staircase",
+      "pec_node_count": 229,
+      "pec_boundary_edge_count": 68,
+      "pec_subcell_edge_count": 0,
+      "pec_minimum_open_fraction": 1.0,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.05095654672028693,
+        0.05578469754570989,
+        0.06077684440974037
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_n128_conformal",
+      "Nx": 128,
+      "Ny": 128,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.009374999999999911,
+      "dx_max": 0.009375000000000133,
+      "x_grading": 1.0000000000000238,
+      "dy_min": 0.009374999999999911,
+      "dy_max": 0.009375000000000133,
+      "y_grading": 1.0000000000000238,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 7.290467414947036e-12,
+      "Nt": 4801,
+      "simulated_time": 3.500153405916072e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 78659584,
+      "wall_seconds": 4.66864294372499,
+      "peak_scattered_e": 1.0023088827782005,
+      "tail_peak_over_global_peak": 4.4250347979892774e-07,
+      "incident_tail_at_origin": 2.4113758019965192e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "conformal",
+      "pec_node_count": 229,
+      "pec_boundary_edge_count": 68,
+      "pec_subcell_edge_count": 68,
+      "pec_minimum_open_fraction": 0.05448568453276187,
+      "dt_fraction_of_grid_cfl": 0.36633405067644814,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.00275196025751298,
+        0.003521593929799997,
+        0.004278170994377337
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_n128_enlarged",
+      "Nx": 128,
+      "Ny": 128,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.009374999999999911,
+      "dx_max": 0.009375000000000133,
+      "x_grading": 1.0000000000000238,
+      "dy_min": 0.009374999999999911,
+      "dy_max": 0.009375000000000133,
+      "y_grading": 1.0000000000000238,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 1.990114596632484e-11,
+      "Nt": 1759,
+      "simulated_time": 3.500611575476539e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 28819456,
+      "wall_seconds": 2.2376803420484066,
+      "peak_scattered_e": 1.0021849154660873,
+      "tail_peak_over_global_peak": 5.325821078843487e-07,
+      "incident_tail_at_origin": 1.8988002005844745e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 229,
+      "pec_boundary_edge_count": 68,
+      "pec_subcell_edge_count": 68,
+      "pec_minimum_open_fraction": 0.05448568453276187,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 22,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.002865576570139407,
+        0.0039638587965729576,
+        0.004252813299852781
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_graded_n48_staircase",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.011309689117540267,
+      "dx_max": 0.033862269249473546,
+      "x_grading": 1.157067820521426,
+      "dy_min": 0.011309689117540267,
+      "dy_max": 0.033862269249473546,
+      "y_grading": 1.157067820521426,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 2.4008082555938836e-11,
+      "Nt": 1458,
+      "simulated_time": 3.5003784366558826e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 3359232,
+      "wall_seconds": 0.710292836651206,
+      "peak_scattered_e": 0.9999999034047807,
+      "tail_peak_over_global_peak": 2.4271551943620144e-06,
+      "incident_tail_at_origin": 2.1445575000505826e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3046540476638544,
+        0.8953459523361477,
+        0.3046540476638544,
+        0.8953459523361477
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "staircase",
+      "pec_node_count": 137,
+      "pec_boundary_edge_count": 52,
+      "pec_subcell_edge_count": 0,
+      "pec_minimum_open_fraction": 1.0,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.11123936843869625,
+        0.10880733755052163,
+        0.05797123139377627
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_graded_n48_conformal",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.011309689117540267,
+      "dx_max": 0.033862269249473546,
+      "x_grading": 1.157067820521426,
+      "dy_min": 0.011309689117540267,
+      "dy_max": 0.033862269249473546,
+      "y_grading": 1.157067820521426,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 4.830656685038955e-12,
+      "Nt": 7246,
+      "simulated_time": 3.500293833979227e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 16694784,
+      "wall_seconds": 3.506952801719308,
+      "peak_scattered_e": 1.0033618586447608,
+      "tail_peak_over_global_peak": 1.8603483792958748e-06,
+      "incident_tail_at_origin": 2.2412743320523644e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3046540476638544,
+        0.8953459523361477,
+        0.3046540476638544,
+        0.8953459523361477
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "conformal",
+      "pec_node_count": 137,
+      "pec_boundary_edge_count": 52,
+      "pec_subcell_edge_count": 52,
+      "pec_minimum_open_fraction": 0.0068741828839150145,
+      "dt_fraction_of_grid_cfl": 0.2012095998830196,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.05284272867319097,
+        0.03841536061266945,
+        0.04897069481007273
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_graded_n48_enlarged",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.011309689117540267,
+      "dx_max": 0.033862269249473546,
+      "x_grading": 1.157067820521426,
+      "dy_min": 0.011309689117540267,
+      "dy_max": 0.033862269249473546,
+      "y_grading": 1.157067820521426,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 2.4008082555938836e-11,
+      "Nt": 1458,
+      "simulated_time": 3.5003784366558826e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 3359232,
+      "wall_seconds": 0.8423276226967573,
+      "peak_scattered_e": 1.0006046012308456,
+      "tail_peak_over_global_peak": 2.365122944286388e-06,
+      "incident_tail_at_origin": 2.1445575000505826e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3046540476638544,
+        0.8953459523361477,
+        0.3046540476638544,
+        0.8953459523361477
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 137,
+      "pec_boundary_edge_count": 52,
+      "pec_subcell_edge_count": 52,
+      "pec_minimum_open_fraction": 0.0068741828839150145,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 19,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.06656916656229175,
+        0.040794476004432326,
+        0.06476563992899849
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_graded_n64_staircase",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.008474947739586791,
+      "dx_max": 0.025396701938506627,
+      "x_grading": 1.116170768350546,
+      "dy_min": 0.008474947739586791,
+      "dy_max": 0.025396701938506627,
+      "y_grading": 1.116170768350546,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 1.7990525015732597e-11,
+      "Nt": 1946,
+      "simulated_time": 3.500956168061563e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 7970816,
+      "wall_seconds": 1.1138273049145937,
+      "peak_scattered_e": 0.9999999980344767,
+      "tail_peak_over_global_peak": 3.0995277813686135e-06,
+      "incident_tail_at_origin": 1.5855205310073886e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3046540476638544,
+        0.8953459523361479,
+        0.3046540476638544,
+        0.8953459523361479
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "staircase",
+      "pec_node_count": 244,
+      "pec_boundary_edge_count": 68,
+      "pec_subcell_edge_count": 0,
+      "pec_minimum_open_fraction": 1.0,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.05906538798237906,
+        0.06543175788398152,
+        0.09125311455613487
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_graded_n64_conformal",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.008474947739586791,
+      "dx_max": 0.025396701938506627,
+      "x_grading": 1.116170768350546,
+      "dy_min": 0.008474947739586791,
+      "dy_max": 0.025396701938506627,
+      "y_grading": 1.116170768350546,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 4.051406920438843e-12,
+      "Nt": 8639,
+      "simulated_time": 3.500010438567116e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 35385344,
+      "wall_seconds": 4.883642602711916,
+      "peak_scattered_e": 1.0016654241573661,
+      "tail_peak_over_global_peak": 2.6186793901483023e-06,
+      "incident_tail_at_origin": 2.5976029029766806e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3046540476638544,
+        0.8953459523361479,
+        0.3046540476638544,
+        0.8953459523361479
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "conformal",
+      "pec_node_count": 244,
+      "pec_boundary_edge_count": 68,
+      "pec_subcell_edge_count": 68,
+      "pec_minimum_open_fraction": 0.013134246771024923,
+      "dt_fraction_of_grid_cfl": 0.22519670309209508,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.011861902354998965,
+        0.02232078386794418,
+        0.026606229726906554
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_graded_n64_enlarged",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.008474947739586791,
+      "dx_max": 0.025396701938506627,
+      "x_grading": 1.116170768350546,
+      "dy_min": 0.008474947739586791,
+      "dy_max": 0.025396701938506627,
+      "y_grading": 1.116170768350546,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 1.7990525015732597e-11,
+      "Nt": 1946,
+      "simulated_time": 3.500956168061563e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 7970816,
+      "wall_seconds": 1.1846181247383356,
+      "peak_scattered_e": 0.9999999980344767,
+      "tail_peak_over_global_peak": 3.1320027387214305e-06,
+      "incident_tail_at_origin": 1.5855205310073886e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3046540476638544,
+        0.8953459523361479,
+        0.3046540476638544,
+        0.8953459523361479
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 244,
+      "pec_boundary_edge_count": 68,
+      "pec_subcell_edge_count": 68,
+      "pec_minimum_open_fraction": 0.013134246771024923,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 23,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.01224862041579294,
+        0.024456093801781004,
+        0.02993925610212071
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_graded_n96_staircase",
+      "Nx": 96,
+      "Ny": 96,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.00564648822946523,
+      "dx_max": 0.016931134626233302,
+      "x_grading": 1.0764028852203622,
+      "dy_min": 0.00564648822946523,
+      "dy_max": 0.016931134626233302,
+      "y_grading": 1.0764028852203622,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 1.1986302554850529e-11,
+      "Nt": 2920,
+      "simulated_time": 3.5000003460163546e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 26910720,
+      "wall_seconds": 2.1182972211390734,
+      "peak_scattered_e": 0.9999999930980474,
+      "tail_peak_over_global_peak": 1.6793195003992077e-06,
+      "incident_tail_at_origin": 2.611271876121158e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3046540476638544,
+        0.8953459523361477,
+        0.3046540476638544,
+        0.8953459523361477
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "staircase",
+      "pec_node_count": 546,
+      "pec_boundary_edge_count": 104,
+      "pec_subcell_edge_count": 0,
+      "pec_minimum_open_fraction": 1.0,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.03571070904062193,
+        0.04015836555917322,
+        0.044661505154769264
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_graded_n96_conformal",
+      "Nx": 96,
+      "Ny": 96,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.00564648822946523,
+      "dx_max": 0.016931134626233302,
+      "x_grading": 1.0764028852203622,
+      "dy_min": 0.00564648822946523,
+      "dy_max": 0.016931134626233302,
+      "y_grading": 1.0764028852203622,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 2.000218526524047e-12,
+      "Nt": 17499,
+      "simulated_time": 3.5001823995644293e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 161270784,
+      "wall_seconds": 12.676260974258184,
+      "peak_scattered_e": 1.0012838690331682,
+      "tail_peak_over_global_peak": 1.4549958503213821e-06,
+      "incident_tail_at_origin": 2.3752449447218284e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3046540476638544,
+        0.8953459523361477,
+        0.3046540476638544,
+        0.8953459523361477
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "conformal",
+      "pec_node_count": 546,
+      "pec_boundary_edge_count": 104,
+      "pec_subcell_edge_count": 104,
+      "pec_minimum_open_fraction": 0.006882261639513027,
+      "dt_fraction_of_grid_cfl": 0.1668753577152625,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.005426030711720874,
+        0.008948010320731638,
+        0.009356267085964091
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_graded_n96_enlarged",
+      "Nx": 96,
+      "Ny": 96,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.00564648822946523,
+      "dx_max": 0.016931134626233302,
+      "x_grading": 1.0764028852203622,
+      "dy_min": 0.00564648822946523,
+      "dy_max": 0.016931134626233302,
+      "y_grading": 1.0764028852203622,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 1.1986302554850529e-11,
+      "Nt": 2920,
+      "simulated_time": 3.5000003460163546e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 26910720,
+      "wall_seconds": 2.675651589408517,
+      "peak_scattered_e": 1.0008326780504506,
+      "tail_peak_over_global_peak": 1.6897513092194198e-06,
+      "incident_tail_at_origin": 2.611271876121158e-294,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3046540476638544,
+        0.8953459523361477,
+        0.3046540476638544,
+        0.8953459523361477
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 546,
+      "pec_boundary_edge_count": 104,
+      "pec_subcell_edge_count": 104,
+      "pec_minimum_open_fraction": 0.006882261639513027,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 36,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.005479683221084224,
+        0.009172383832320122,
+        0.009337981508415551
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_angle0",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.018749999999999822,
+      "dx_max": 0.018750000000000044,
+      "x_grading": 1.0000000000000118,
+      "dy_min": 0.018749999999999822,
+      "dy_max": 0.018750000000000044,
+      "y_grading": 1.0000000000000118,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 3.980229193264968e-11,
+      "Nt": 880,
+      "simulated_time": 3.5026016900731717e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 3604480,
+      "wall_seconds": 0.4345738925039768,
+      "peak_scattered_e": 1.0006020607573245,
+      "tail_peak_over_global_peak": 2.9616383055722297e-06,
+      "incident_tail_at_origin": 6.656712368111173e-295,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.0,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 56,
+      "pec_boundary_edge_count": 32,
+      "pec_subcell_edge_count": 32,
+      "pec_minimum_open_fraction": 0.06708597461179487,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 16,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.009874081756302739,
+        0.012023028305083084,
+        0.019521365980628157
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_angle113",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.018749999999999822,
+      "dx_max": 0.018750000000000044,
+      "x_grading": 1.0000000000000118,
+      "dy_min": 0.018749999999999822,
+      "dy_max": 0.018750000000000044,
+      "y_grading": 1.0000000000000118,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 3.980229193264968e-11,
+      "Nt": 880,
+      "simulated_time": 3.5026016900731717e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 3604480,
+      "wall_seconds": 0.4233101159334183,
+      "peak_scattered_e": 1.0023011880940496,
+      "tail_peak_over_global_peak": 2.9822979815181402e-06,
+      "incident_tail_at_origin": 6.656712368111173e-295,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 1.9722220547535925,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 56,
+      "pec_boundary_edge_count": 32,
+      "pec_subcell_edge_count": 32,
+      "pec_minimum_open_fraction": 0.06708597461179487,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 16,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.010270195722813713,
+        0.016596564731817542,
+        0.015142534241353022
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_angle227",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.018749999999999822,
+      "dx_max": 0.018750000000000044,
+      "x_grading": 1.0000000000000118,
+      "dy_min": 0.018749999999999822,
+      "dy_max": 0.018750000000000044,
+      "y_grading": 1.0000000000000118,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 3.980229193264968e-11,
+      "Nt": 880,
+      "simulated_time": 3.5026016900731717e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 3604480,
+      "wall_seconds": 0.42432480305433273,
+      "peak_scattered_e": 0.9999871393009141,
+      "tail_peak_over_global_peak": 2.9890413647837344e-06,
+      "incident_tail_at_origin": 6.656712368111173e-295,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 3.961897402027128,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 56,
+      "pec_boundary_edge_count": 32,
+      "pec_subcell_edge_count": 32,
+      "pec_minimum_open_fraction": 0.06708597461179487,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 16,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.010645273565695395,
+        0.017272701544666827,
+        0.017810482113654186
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.613,
+          0.591
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_shift0.0021",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.018749999999999822,
+      "dx_max": 0.018750000000000044,
+      "x_grading": 1.0000000000000118,
+      "dy_min": 0.018749999999999822,
+      "dy_max": 0.018750000000000044,
+      "y_grading": 1.0000000000000118,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 3.980229193264968e-11,
+      "Nt": 880,
+      "simulated_time": 3.5026016900731717e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 3604480,
+      "wall_seconds": 0.48456578701734543,
+      "peak_scattered_e": 1.00157031944524,
+      "tail_peak_over_global_peak": 2.9790385099430196e-06,
+      "incident_tail_at_origin": 6.656712368111173e-295,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 58,
+      "pec_boundary_edge_count": 34,
+      "pec_subcell_edge_count": 34,
+      "pec_minimum_open_fraction": 0.18218480793301195,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 12,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.010273268450481344,
+        0.01628418115851173,
+        0.018633381036278752
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.6151,
+          0.5897
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "circle_shift-0.0042",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.018749999999999822,
+      "dx_max": 0.018750000000000044,
+      "x_grading": 1.0000000000000118,
+      "dy_min": 0.018749999999999822,
+      "dy_max": 0.018750000000000044,
+      "y_grading": 1.0000000000000118,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 3.980229193264968e-11,
+      "Nt": 880,
+      "simulated_time": 3.5026016900731717e-08,
+      "requested_time": 3.5e-08,
+      "cell_updates": 3604480,
+      "wall_seconds": 0.42983655259013176,
+      "peak_scattered_e": 1.001643420634554,
+      "tail_peak_over_global_peak": 2.9712364106976915e-06,
+      "incident_tail_at_origin": 6.656712368111173e-295,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 56,
+      "pec_boundary_edge_count": 32,
+      "pec_subcell_edge_count": 32,
+      "pec_minimum_open_fraction": 0.041891894686117016,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 16,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "width_relative_l2_by_frequency": [
+        0.010645669253586605,
+        0.017130421604933298,
+        0.019034503621398514
+      ],
+      "geometry": {
+        "kind": "circle",
+        "center": [
+          0.6088,
+          0.5947
+        ],
+        "radius": 0.08
+      }
+    },
+    {
+      "name": "box_fraction0.2_conformal",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.02499999999999991,
+      "dx_max": 0.025000000000000133,
+      "x_grading": 1.0000000000000089,
+      "dy_min": 0.02499999999999991,
+      "dy_max": 0.025000000000000133,
+      "y_grading": 1.0000000000000089,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 3.752596070979129e-11,
+      "Nt": 1599,
+      "simulated_time": 6.000401117495627e-08,
+      "requested_time": 6e-08,
+      "cell_updates": 3684096,
+      "wall_seconds": 0.633106542751193,
+      "peak_scattered_e": 1.0227613894878815,
+      "tail_peak_over_global_peak": 1.423130401553074e-06,
+      "incident_tail_at_origin": 0.0,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "conformal",
+      "pec_node_count": 72,
+      "pec_boundary_edge_count": 34,
+      "pec_subcell_edge_count": 34,
+      "pec_minimum_open_fraction": 0.20000000000000046,
+      "dt_fraction_of_grid_cfl": 0.70710678118655,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "geometry": {
+        "kind": "rectangle",
+        "bounds": [
+          0.48,
+          0.71025,
+          0.4873,
+          0.6891
+        ]
+      }
+    },
+    {
+      "name": "box_fraction0.2_enlarged",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.02499999999999991,
+      "dx_max": 0.025000000000000133,
+      "x_grading": 1.0000000000000089,
+      "dy_min": 0.02499999999999991,
+      "dy_max": 0.025000000000000133,
+      "y_grading": 1.0000000000000089,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 5.3069722576866555e-11,
+      "Nt": 1131,
+      "simulated_time": 6.002185623443608e-08,
+      "requested_time": 6e-08,
+      "cell_updates": 2605824,
+      "wall_seconds": 0.5262455027550459,
+      "peak_scattered_e": 1.010267817680734,
+      "tail_peak_over_global_peak": 1.9603317111002214e-06,
+      "incident_tail_at_origin": 0.0,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 72,
+      "pec_boundary_edge_count": 34,
+      "pec_subcell_edge_count": 34,
+      "pec_minimum_open_fraction": 0.20000000000000046,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 26,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "geometry": {
+        "kind": "rectangle",
+        "bounds": [
+          0.48,
+          0.71025,
+          0.4873,
+          0.6891
+        ]
+      }
+    },
+    {
+      "name": "box_fraction0.02_conformal",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.02499999999999991,
+      "dx_max": 0.025000000000000133,
+      "x_grading": 1.0000000000000089,
+      "dy_min": 0.02499999999999991,
+      "dy_max": 0.025000000000000133,
+      "y_grading": 1.0000000000000089,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 1.4579374043517788e-11,
+      "Nt": 4116,
+      "simulated_time": 6.000870356311922e-08,
+      "requested_time": 6e-08,
+      "cell_updates": 9483264,
+      "wall_seconds": 1.7284506186842918,
+      "peak_scattered_e": 1.0236304371352103,
+      "tail_peak_over_global_peak": 8.307153432134343e-07,
+      "incident_tail_at_origin": 0.0,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "conformal",
+      "pec_node_count": 72,
+      "pec_boundary_edge_count": 34,
+      "pec_subcell_edge_count": 34,
+      "pec_minimum_open_fraction": 0.020000000000000046,
+      "dt_fraction_of_grid_cfl": 0.2747211278973792,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "geometry": {
+        "kind": "rectangle",
+        "bounds": [
+          0.4755,
+          0.71025,
+          0.4873,
+          0.6891
+        ]
+      }
+    },
+    {
+      "name": "box_fraction0.02_enlarged",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.02499999999999991,
+      "dx_max": 0.025000000000000133,
+      "x_grading": 1.0000000000000089,
+      "dy_min": 0.02499999999999991,
+      "dy_max": 0.025000000000000133,
+      "y_grading": 1.0000000000000089,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 5.3069722576866555e-11,
+      "Nt": 1131,
+      "simulated_time": 6.002185623443608e-08,
+      "requested_time": 6e-08,
+      "cell_updates": 2605824,
+      "wall_seconds": 0.5324883610010147,
+      "peak_scattered_e": 1.0103670943490453,
+      "tail_peak_over_global_peak": 1.9641777040696682e-06,
+      "incident_tail_at_origin": 0.0,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 72,
+      "pec_boundary_edge_count": 34,
+      "pec_subcell_edge_count": 34,
+      "pec_minimum_open_fraction": 0.020000000000000046,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 26,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "geometry": {
+        "kind": "rectangle",
+        "bounds": [
+          0.4755,
+          0.71025,
+          0.4873,
+          0.6891
+        ]
+      }
+    },
+    {
+      "name": "box_fraction0.002_conformal",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.02499999999999991,
+      "dx_max": 0.025000000000000133,
+      "x_grading": 1.0000000000000089,
+      "dy_min": 0.02499999999999991,
+      "dy_max": 0.025000000000000133,
+      "y_grading": 1.0000000000000089,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 4.732523950014156e-12,
+      "Nt": 12679,
+      "simulated_time": 6.000367116222948e-08,
+      "requested_time": 6e-08,
+      "cell_updates": 29212416,
+      "wall_seconds": 5.067869387567043,
+      "peak_scattered_e": 1.0238643248812893,
+      "tail_peak_over_global_peak": 6.354801122971492e-07,
+      "incident_tail_at_origin": 0.0,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "conformal",
+      "pec_node_count": 72,
+      "pec_boundary_edge_count": 34,
+      "pec_subcell_edge_count": 34,
+      "pec_minimum_open_fraction": 0.0019999999999997823,
+      "dt_fraction_of_grid_cfl": 0.0891755924135374,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "geometry": {
+        "kind": "rectangle",
+        "bounds": [
+          0.47505,
+          0.71025,
+          0.4873,
+          0.6891
+        ]
+      }
+    },
+    {
+      "name": "box_fraction0.002_enlarged",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.02499999999999991,
+      "dx_max": 0.025000000000000133,
+      "x_grading": 1.0000000000000089,
+      "dy_min": 0.02499999999999991,
+      "dy_max": 0.025000000000000133,
+      "y_grading": 1.0000000000000089,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 5.3069722576866555e-11,
+      "Nt": 1131,
+      "simulated_time": 6.002185623443608e-08,
+      "requested_time": 6e-08,
+      "cell_updates": 2605824,
+      "wall_seconds": 0.5359128173440695,
+      "peak_scattered_e": 1.0103786648747854,
+      "tail_peak_over_global_peak": 1.964566981310427e-06,
+      "incident_tail_at_origin": 0.0,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 72,
+      "pec_boundary_edge_count": 34,
+      "pec_subcell_edge_count": 34,
+      "pec_minimum_open_fraction": 0.0019999999999997823,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 26,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "geometry": {
+        "kind": "rectangle",
+        "bounds": [
+          0.47505,
+          0.71025,
+          0.4873,
+          0.6891
+        ]
+      }
+    },
+    {
+      "name": "box_fraction1e-6_enlarged",
+      "Nx": 48,
+      "Ny": 48,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.02499999999999991,
+      "dx_max": 0.025000000000000133,
+      "x_grading": 1.0000000000000089,
+      "dy_min": 0.02499999999999991,
+      "dy_max": 0.025000000000000133,
+      "y_grading": 1.0000000000000089,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 5.3069722576866555e-11,
+      "Nt": 1131,
+      "simulated_time": 6.002185623443608e-08,
+      "requested_time": 6e-08,
+      "cell_updates": 2605824,
+      "wall_seconds": 0.5436806697398424,
+      "peak_scattered_e": 1.0103799677533212,
+      "tail_peak_over_global_peak": 1.9646102457120362e-06,
+      "incident_tail_at_origin": 0.0,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3,
+        0.8999999999999999,
+        0.3,
+        0.8999999999999999
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 72,
+      "pec_boundary_edge_count": 34,
+      "pec_subcell_edge_count": 34,
+      "pec_minimum_open_fraction": 1.0000000005838684e-06,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 26,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "geometry": {
+        "kind": "rectangle",
+        "bounds": [
+          0.475000025,
+          0.71025,
+          0.4873,
+          0.6891
+        ]
+      }
+    },
+    {
+      "name": "box_graded_conformal",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.008474947739586791,
+      "dx_max": 0.025396701938506627,
+      "x_grading": 1.116170768350546,
+      "dy_min": 0.008474947739586791,
+      "dy_max": 0.025396701938506627,
+      "y_grading": 1.116170768350546,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 1.1361570585210879e-11,
+      "Nt": 5281,
+      "simulated_time": 6.000045426049864e-08,
+      "requested_time": 6e-08,
+      "cell_updates": 21630976,
+      "wall_seconds": 2.7053573671728373,
+      "peak_scattered_e": 1.0086676607102405,
+      "tail_peak_over_global_peak": 8.073962853929899e-07,
+      "incident_tail_at_origin": 0.0,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3046540476638544,
+        0.8953459523361479,
+        0.3046540476638544,
+        0.8953459523361479
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "conformal",
+      "pec_node_count": 460,
+      "pec_boundary_edge_count": 86,
+      "pec_subcell_edge_count": 86,
+      "pec_minimum_open_fraction": 0.053427893277748335,
+      "dt_fraction_of_grid_cfl": 0.6315307960871214,
+      "pec_enlarged_nodes": 0,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "geometry": {
+        "kind": "rectangle",
+        "bounds": [
+          0.4781,
+          0.7113,
+          0.4917,
+          0.6851
+        ]
+      }
+    },
+    {
+      "name": "box_graded_enlarged",
+      "Nx": 64,
+      "Ny": 64,
+      "max_ratio_limit": 3.0,
+      "dx_min": 0.008474947739586791,
+      "dx_max": 0.025396701938506627,
+      "x_grading": 1.116170768350546,
+      "dy_min": 0.008474947739586791,
+      "dy_max": 0.025396701938506627,
+      "y_grading": 1.116170768350546,
+      "backend": "numpy_reference",
+      "formulation": "analytic_incident_scattered_field",
+      "dt": 1.7990525015732597e-11,
+      "Nt": 3336,
+      "simulated_time": 6.001639145248394e-08,
+      "requested_time": 6e-08,
+      "cell_updates": 13664256,
+      "wall_seconds": 1.9559665247797966,
+      "peak_scattered_e": 1.008453158029253,
+      "tail_peak_over_global_peak": 9.577761027311185e-07,
+      "incident_tail_at_origin": 0.0,
+      "averaging_samples_per_axis": 8,
+      "monitor_bounds": [
+        0.3046540476638544,
+        0.8953459523361479,
+        0.3046540476638544,
+        0.8953459523361479
+      ],
+      "incident_angle_radians": 0.7,
+      "pml_thickness": [
+        0.15,
+        0.15
+      ],
+      "pec_mode": "enlarged",
+      "pec_node_count": 460,
+      "pec_boundary_edge_count": 86,
+      "pec_subcell_edge_count": 86,
+      "pec_minimum_open_fraction": 0.053427893277748335,
+      "dt_fraction_of_grid_cfl": 1.0,
+      "pec_enlarged_nodes": 43,
+      "pec_coordinate_tolerance_m": 1.7053025658242404e-14,
+      "finite_fields": true,
+      "geometry": {
+        "kind": "rectangle",
+        "bounds": [
+          0.4781,
+          0.7113,
+          0.4917,
+          0.6851
+        ]
+      }
+    }
+  ],
+  "source_sha256": {
+    "src/scattermesh/__init__.py": "2acdc7ec66f9ae4ce252beeeffbf055e3c5f21e219c3d25f5c17a8dde88e478a",
+    "src/scattermesh/analytic.py": "507b43782a1b700396e16544bbb3a73b1e91f3ee734950611f4ebafa531c0947",
+    "src/scattermesh/conformal.py": "da902813571881c7908bbe831d7a1fbb2b8f718e1dbe8c1063e52d54df00194b",
+    "src/scattermesh/constants.py": "b99b765671464c860e9f78625f12bea6b52daeea52a4000f6404bd69b04efef1",
+    "src/scattermesh/geometry.py": "66abbcde65223e0a3f009fa767e599a79bf4b8bda992068859de5b1d13b6c4f9",
+    "src/scattermesh/grid.py": "2a7cd3e1489eaff9e0e3038123ea162f79d1eb7bad082cada197dbe08f633df2",
+    "src/scattermesh/observables.py": "662cfeb442a66337dbe298bda057bef78ceee2b0770679afe978c134f9a8fe67",
+    "src/scattermesh/solver.py": "0a1c1abfd9111ef035d0e86e302ebd334295eed4fcef9d7603e2c062402c3e02",
+    "src/scattermesh/source.py": "8376321b4de6b4c2ebd04b09d650dd4f2bf00cbfb121b0c5a1e2359abfa79f1f"
+  },
+  "limitations": [
+    "CPU TMz only, no general 3D cut faces",
+    "Mixed PEC/dielectric and split-edge thin screens not implemented",
+    "Rectangle runs check stability/settling, not analytic accuracy",
+    "Finite tests do not prove all offsets/grading stable with CPML",
+    "Enlargement is a local TMz Galerkin aggregation, not a general 3D algorithm",
+    "An independent CFL bound is still enforced after enlargement"
+  ]
+}

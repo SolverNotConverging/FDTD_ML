@@ -11,10 +11,5 @@ dist/
 *.obj
 src/fdtdmesh/solver/cuda_runtime.cpp
 artifacts/
-archive/**/artifacts/
-archive/**/build/
-archive/**/INVENTORY.json
-archive/**/src/*.egg-info/
-runs/
 *.pt
 .idea/

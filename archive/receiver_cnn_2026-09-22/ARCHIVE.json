@@ -1,0 +1,29 @@
+{
+  "created_unix": 1790046086.6672835,
+  "source_commit": "5878ddd",
+  "source_branch": "codex/archive-receiver-cnn-20260922",
+  "active_branch": "codex/plane-wave-scattering",
+  "moved_paths": [
+    "src",
+    "tests",
+    "scripts",
+    "docs",
+    "examples",
+    "benchmarks",
+    "build",
+    "artifacts",
+    "IMPLEMENTATION_PLAN.md",
+    "PROGRESS.md",
+    "README.md",
+    "pyproject.toml",
+    "setup.py",
+    "uv.lock"
+  ],
+  "artifact_compatibility_link": "../../artifacts",
+  "retained_shared_environment": [
+    ".venv",
+    ".venv-bootstrap",
+    ".uv-cache"
+  ],
+  "status": "retired; no further training"
+}
