@@ -90,7 +90,7 @@ def main():
             last_completed = snapshot["completed"]
         atomic_json(
             workflow_path,
-            {"schema_version": 1, "stage": "waiting_for_accepted_labels", **snapshot},
+            {"schema_version": 1, "stage": "waiting_for_terminal_labels", **snapshot},
         )
         if snapshot["ready"]:
             break

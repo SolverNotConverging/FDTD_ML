@@ -8,6 +8,14 @@ from collections import Counter
 from pathlib import Path
 
 
+def record_is_retryable(payload, duration_schedule):
+    """Return whether an unsettled record still has a declared duration retry."""
+    if str(payload.get("status")) != "unsettled" or duration_schedule is None:
+        return False
+    attempt_index = payload.get("config", {}).get("duration_attempt_index")
+    return attempt_index is not None and int(attempt_index) < len(duration_schedule) - 1
+
+
 def lineage_progress(config, manifest, completed):
     """Return cache progress grouped by declared geometry lineage."""
     manifest = json.loads(Path(manifest).read_text())
@@ -67,7 +75,7 @@ def snapshot(campaign, output, window_minutes=10, now=None, manifest=None):
         for candidate in config.get("candidate_names", ())
     }
     now = time.time() if now is None else now
-    completed = {}
+    observed = {}
     malformed = 0
     mtimes = []
     for case_id in expected:
@@ -81,36 +89,57 @@ def snapshot(campaign, output, window_minutes=10, now=None, manifest=None):
             if path.exists():
                 malformed += 1
             continue
-        completed[case_id] = payload
+        observed[case_id] = payload
         mtimes.append(mtime)
+
+    duration_schedule = config.get("duration_schedule_s")
+    retrying = {
+        case_id: payload
+        for case_id, payload in observed.items()
+        if record_is_retryable(payload, duration_schedule)
+    }
+    completed = {
+        case_id: payload for case_id, payload in observed.items() if case_id not in retrying
+    }
+    terminal_mtimes = [
+        (output / "cases" / case_id / "record.json").stat().st_mtime
+        for case_id in completed
+    ]
 
     window_seconds = max(0.0, window_minutes) * 60
     cutoff = now - window_seconds
-    recent = [mtime for mtime in mtimes if mtime >= cutoff]
-    observed_seconds = min(window_seconds, now - min(mtimes)) if mtimes else 0.0
+    recent = [mtime for mtime in terminal_mtimes if mtime >= cutoff]
+    observed_seconds = (
+        min(window_seconds, now - min(terminal_mtimes)) if terminal_mtimes else 0.0
+    )
     rate = len(recent) * 3600 / observed_seconds if recent and observed_seconds > 0 else None
     remaining = len(expected) - len(completed)
     eta = remaining * 3600 / rate if rate and remaining else (0.0 if not remaining else None)
     outcomes = Counter(str(payload.get("status", "unknown")) for payload in completed.values())
+    retrying_outcomes = Counter(
+        str(payload.get("status", "unknown")) for payload in retrying.values()
+    )
     cache_states = {
-        "valid": len(completed),
+        "valid": len(observed),
         "malformed": malformed,
-        "missing": len(expected) - len(completed) - malformed,
+        "missing": len(expected) - len(observed) - malformed,
     }
     result = {
         "campaign": str(campaign),
         "output": str(output),
         "planned": len(expected),
         "completed": len(completed),
+        "observed_records": len(observed),
         "remaining": remaining,
         "simulation_status_counts": dict(sorted(outcomes.items())),
+        "retrying_status_counts": dict(sorted(retrying_outcomes.items())),
         "cache_status_counts": cache_states,
         "malformed_expected_records": malformed,
         "recent_completions": len(recent),
         "recent_completion_rate_per_hour": rate,
         "estimated_remaining_seconds": eta,
-        "earliest_mtime": min(mtimes) if mtimes else None,
-        "latest_mtime": max(mtimes) if mtimes else None,
+        "earliest_mtime": min(terminal_mtimes) if terminal_mtimes else None,
+        "latest_mtime": max(terminal_mtimes) if terminal_mtimes else None,
     }
     if manifest is not None:
         result["lineage_progress"] = lineage_progress(config, manifest, completed)

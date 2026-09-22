@@ -72,8 +72,10 @@ def status(campaign, campaign_output, training_output, physics_output, window_mi
         campaign_info = {
             "planned": snapshot["planned"],
             "completed": snapshot["completed"],
+            "observed_records": snapshot.get("observed_records", snapshot["completed"]),
             "accepted": accepted,
             "unsettled": unsettled,
+            "retrying": sum(snapshot.get("retrying_status_counts", {}).values()),
             "other_outcomes": snapshot["completed"] - accepted - unsettled,
             "malformed": snapshot.get("malformed_expected_records", 0),
             "remaining": snapshot["remaining"],
@@ -84,8 +86,10 @@ def status(campaign, campaign_output, training_output, physics_output, window_mi
         campaign_info = {
             "planned": 0,
             "completed": 0,
+            "observed_records": 0,
             "accepted": 0,
             "unsettled": 0,
+            "retrying": 0,
             "malformed": 0,
             "remaining": 0,
             "rate_per_hour": None,

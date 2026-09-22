@@ -21,6 +21,8 @@ def test_label_generation(tmp_path):
     campaign, output = setup_campaign(tmp_path)
     result = status(campaign, output, tmp_path / "train", tmp_path / "physics")
     assert result["active_stage"] == "label_generation"
+    assert result["campaign"]["observed_records"] == 0
+    assert result["campaign"]["retrying"] == 0
 
 
 def test_training_stage(tmp_path):

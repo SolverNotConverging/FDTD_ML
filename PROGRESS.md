@@ -306,8 +306,10 @@ target. The diagnostic physics gate passes. See the
 [learned-mesh physics report](docs/validation/learned_mesh_physics_pilot.md).
 
 The remaining simple-family stages now have executable handoffs. The first workflow
-waits for all 9,312 candidate cases to be accepted, reruns the label gate, builds
-the immutable distillation artifact, and starts full training. The second waits for
+waits for all 9,312 candidate cases to reach a terminal duration attempt, requires
+an accepted uniform baseline for each condition, masks hard-limit rejected
+nonuniform candidates, reruns the label gate, builds the immutable distillation
+artifact, and starts full training. The second waits for
 the completed checkpoint and runs the complete frozen validation/test physics set
 as four deterministic hash-balanced CUDA shards with bounded process retries. The
 final report includes lower-tail improvement, upper-tail teacher gap, worst learned

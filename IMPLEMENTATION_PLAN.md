@@ -407,8 +407,10 @@ As stages expand, keep three separately tagged families and report their results
   retry limits, progress/timing script, and no automatic training on partial or
   unqualified reference outputs.
 
-The simple-family handoff is now automated. The label-to-training workflow refuses
-partial or nonaccepted campaigns. A second workflow waits for the completed full
+The simple-family handoff is now automated. The label-to-training workflow requires
+one terminal record per candidate and an accepted uniform baseline per condition;
+hard-limit rejected nonuniform candidates are masked from distillation. A second
+workflow waits for the completed full
 checkpoint, assigns every frozen validation/test case to one of four GPUs by stable
 case-ID hash, retries failed worker processes within a fixed limit, reuses only
 fingerprint-valid attempts, and runs the uniform/teacher physics gate after all

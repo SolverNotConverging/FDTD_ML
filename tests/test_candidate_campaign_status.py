@@ -28,8 +28,10 @@ def test_snapshot_counts_expected_records_and_recent_rate(tmp_path):
     result = status.snapshot(campaign, tmp_path / "out", window_minutes=10, now=now)
     assert result["planned"] == 4
     assert result["completed"] == 1
+    assert result["observed_records"] == 1
     assert result["remaining"] == 3
     assert result["simulation_status_counts"] == {"ok": 1}
+    assert result["retrying_status_counts"] == {}
     assert result["cache_status_counts"] == {"valid": 1, "malformed": 1, "missing": 2}
     assert result["recent_completions"] == 1
     assert result["recent_completion_rate_per_hour"] == 30.0
@@ -97,3 +99,38 @@ def test_snapshot_reports_lineage_progress(tmp_path):
             "simulation_status_counts": {"accepted": 1},
         },
     }
+
+
+def test_snapshot_does_not_count_intermediate_unsettled_record_as_terminal(tmp_path):
+    status = load_status()
+    campaign = tmp_path / "campaign.json"
+    campaign.write_text(
+        json.dumps(
+            {
+                "condition_ids": ["a", "b"],
+                "candidate_names": ["u"],
+                "duration_schedule_s": [1.0, 2.0, 4.0],
+            }
+        )
+    )
+    cases = tmp_path / "out" / "cases"
+    for case_id, attempt_index in (("a_u", 1), ("b_u", 2)):
+        path = cases / case_id / "record.json"
+        path.parent.mkdir(parents=True)
+        path.write_text(
+            json.dumps(
+                {
+                    "status": "unsettled",
+                    "config": {"duration_attempt_index": attempt_index},
+                }
+            )
+        )
+
+    result = status.snapshot(campaign, tmp_path / "out")
+
+    assert result["observed_records"] == 2
+    assert result["completed"] == 1
+    assert result["remaining"] == 1
+    assert result["simulation_status_counts"] == {"unsettled": 1}
+    assert result["retrying_status_counts"] == {"unsettled": 1}
+    assert result["cache_status_counts"] == {"valid": 2, "malformed": 0, "missing": 0}
