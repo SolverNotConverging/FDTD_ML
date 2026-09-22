@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "evaluation_id": "circle_position_scale_0a77ba460cf3dbf4",
+  "evaluation_id": "circle_position_scale_b7454a62dce31d22",
   "purpose": "frozen analytic-circle position and scale generalization",
   "examples": [
     {
@@ -3254,6 +3254,8 @@
     5.6e-07
   ],
   "max_grading_ratio": 3.0,
+  "pml_thickness_m": 0.12,
+  "monitor_policy": "widest_non_pml_enclosing",
   "gate": {
     "minimum_meaningful_win_fraction": 0.7,
     "minimum_each_size_regime_win_fraction": 0.5,

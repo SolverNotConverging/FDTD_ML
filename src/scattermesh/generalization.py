@@ -8,7 +8,10 @@ import numpy as np
 from .constants import EPS0
 
 DOMAIN = 1.2
-PML_THICKNESS = 0.15
+# The translated r=0.135 m cases need a legal NF2FF contour on the exact 32-cell
+# grid.  A 0.15 m PML leaves enough geometric clearance but not enough mesh nodes
+# for both the contour interpolation stencil and one full vacuum buffer cell.
+PML_THICKNESS = 0.12
 REFERENCE_FREQUENCY_HZ = 1.0e9
 FREQUENCIES_HZ = (0.8e9, 1.0e9, 1.2e9)
 GENERALIZATION_BUDGETS = (32, 48)
@@ -83,6 +86,8 @@ def circle_generalization_plan():
         "ranking": {"mode": "fixed_axis_soft_nt", "nt_cost_exponent": 0.1},
         "duration_schedule_s": [70e-9, 140e-9, 560e-9],
         "max_grading_ratio": 3.0,
+        "pml_thickness_m": PML_THICKNESS,
+        "monitor_policy": "widest_non_pml_enclosing",
         "gate": {
             "minimum_meaningful_win_fraction": 0.70,
             "minimum_each_size_regime_win_fraction": 0.50,

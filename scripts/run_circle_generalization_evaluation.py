@@ -63,15 +63,16 @@ def stable_shard(sample_id, shards):
     return int.from_bytes(digest[:8], "big") % shards
 
 
-def mesh_cases(plan, checkpoint_path):
+def mesh_cases(plan, checkpoint_path, examples=None):
     checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
     model = AxisDensityUNet(**checkpoint["model_kwargs"])
     model.load_state_dict(checkpoint["model_state"])
     model.eval()
     max_ratio = float(plan["max_grading_ratio"])
     cases = []
+    examples = plan["examples"] if examples is None else list(examples)
     with torch.no_grad():
-        for example in plan["examples"]:
+        for example in examples:
             raster = torch.from_numpy(rasterize_circle(example, 128))[None]
             features = torch.from_numpy(conditioning_features(example, max_ratio=max_ratio))[None]
             profiles = model(raster, features)[0].numpy()
@@ -104,6 +105,39 @@ def mesh_cases(plan, checkpoint_path):
     return cases
 
 
+def widest_non_pml_monitor_bounds(grid, object_bounds, pml_thickness):
+    """Choose the widest legal contour with a full vacuum cell around all objects."""
+    thickness = np.broadcast_to(np.asarray(pml_thickness, dtype=float), (2,))
+    if not np.isfinite(thickness).all() or np.any(thickness <= 0):
+        raise ValueError("Positive finite PML thickness is required")
+    bounds = np.asarray(tuple(object_bounds), dtype=float)
+    if bounds.ndim != 2 or bounds.shape[1] != 4 or not np.isfinite(bounds).all():
+        raise ValueError("Finite object bounds are required")
+
+    indices = []
+    for axis, pml, lower, upper in (
+        (grid.x, thickness[0], bounds[:, 0].min(), bounds[:, 1].max()),
+        (grid.y, thickness[1], bounds[:, 2].min(), bounds[:, 3].max()),
+    ):
+        length = axis[-1]
+        left = [index for index in range(1, len(axis) - 1) if axis[index - 1] > pml]
+        right = [
+            index
+            for index in range(1, len(axis) - 1)
+            if axis[index + 1] < length - pml
+        ]
+        if not left or not right:
+            raise ValueError("PML leaves no legal monitor interpolation stencil")
+        i0, i1 = min(left), max(right)
+        if not (i0 + 1 < i1 - 1 and axis[i0 + 1] < lower < upper < axis[i1 - 1]):
+            raise ValueError(
+                "Grid and PML cannot enclose every scatterer with a full vacuum cell"
+            )
+        indices.append((i0, i1))
+    (i0, i1), (j0, j1) = indices
+    return float(grid.x[i0]), float(grid.x[i1]), float(grid.y[j0]), float(grid.y[j1])
+
+
 def valid_attempt(directory, fingerprint):
     record_path, arrays_path = directory / "record.json", directory / "spectra.npz"
     if not record_path.exists() or not arrays_path.exists():
@@ -117,8 +151,14 @@ def valid_attempt(directory, fingerprint):
         return None
 
 
-def run_attempt(case, duration, output, device, sources, evaluation_id):
+def run_attempt(case, duration, output, device, sources, evaluation_id, pml_thickness):
     example = case["example"]
+    grid = Grid(case["x"], case["y"], max_ratio=case["max_grading_ratio"])
+    material = Material(example["epsilon_r"], example["sigma_e_s_per_m"])
+    scatterer = Circle(example["center_m"], example["radius_m"], material)
+    monitor_bounds = widest_non_pml_monitor_bounds(
+        grid, [scatterer.bounds], pml_thickness
+    )
     config = {
         "schema_version": 1,
         "evaluation_id": evaluation_id,
@@ -130,6 +170,9 @@ def run_attempt(case, duration, output, device, sources, evaluation_id):
         "max_grading_ratio": case["max_grading_ratio"],
         "x_uniform_repair_fraction": case["x_uniform_repair_fraction"],
         "y_uniform_repair_fraction": case["y_uniform_repair_fraction"],
+        "pml_thickness_m": pml_thickness,
+        "monitor_policy": "widest_non_pml_enclosing",
+        "monitor_bounds_m": monitor_bounds,
         "example": example,
     }
     fingerprint = sha256_json({"config": config, "sources": sources})
@@ -138,8 +181,6 @@ def run_attempt(case, duration, output, device, sources, evaluation_id):
     cached = valid_attempt(directory, fingerprint)
     if cached is not None:
         return cached, directory, True
-    grid = Grid(case["x"], case["y"], max_ratio=case["max_grading_ratio"])
-    material = Material(example["epsilon_r"], example["sigma_e_s_per_m"])
     source = PlaneWave(
         1e9,
         1e-9,
@@ -150,11 +191,12 @@ def run_attempt(case, duration, output, device, sources, evaluation_id):
     frequencies = np.asarray(example["frequencies_hz"])
     result = simulate_cuda(
         grid,
-        [Circle(example["center_m"], example["radius_m"], material)],
+        [scatterer],
         source,
         frequencies=frequencies,
         duration=duration,
-        pml_thickness=0.15,
+        pml_thickness=pml_thickness,
+        monitor_bounds=monitor_bounds,
         pec_mode=None,
         device=device,
         dtype="float64",
@@ -207,7 +249,13 @@ def run_case(case, plan, output, device, sources):
     durations = plan["duration_schedule_s"]
     for duration in durations:
         record, attempt, cached = run_attempt(
-            case, duration, output, device, sources, plan["evaluation_id"]
+            case,
+            duration,
+            output,
+            device,
+            sources,
+            plan["evaluation_id"],
+            plan["pml_thickness_m"],
         )
         if record["accepted"] or duration == durations[-1]:
             final.mkdir(parents=True, exist_ok=True)
@@ -497,17 +545,19 @@ def main():
     if args.shards < 1 or not 0 <= args.shard < args.shards:
         raise ValueError("Require 0 <= shard < shards")
     plan = json.loads(args.plan.read_text())
-    cases = mesh_cases(plan, args.checkpoint)
+    if plan.get("monitor_policy") != "widest_non_pml_enclosing":
+        raise ValueError("Unsupported generalization monitor policy")
     if args.summarize:
+        cases = mesh_cases(plan, args.checkpoint)
         summarize(plan, cases, args.output)
         return
     sources = source_hashes(args.checkpoint, args.plan)
-    sample_ids = {
-        example["sample_id"]
+    selected_examples = [
+        example
         for example in plan["examples"]
         if stable_shard(example["sample_id"], args.shards) == args.shard
-    }
-    selected = [case for case in cases if case["sample_id"] in sample_ids]
+    ]
+    selected = mesh_cases(plan, args.checkpoint, selected_examples)
     for index, case in enumerate(selected, 1):
         record, cached = run_case(case, plan, args.output, args.device, sources)
         print(

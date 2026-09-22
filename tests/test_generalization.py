@@ -57,6 +57,8 @@ def test_circle_generalization_plan_is_factorial_frozen_and_outside_pml():
         "minimum_worst_case_improvement": 0.5,
         "require_all_cases_settled": True,
     }
+    assert plan["pml_thickness_m"] == PML_THICKNESS == 0.12
+    assert plan["monitor_policy"] == "widest_non_pml_enclosing"
 
 
 def test_checked_in_circle_generalization_plan_matches_generator():
@@ -106,6 +108,8 @@ def test_generalization_runner_projects_exact_paired_meshes_and_summarizes(tmp_p
     assert all(len(case["y"]) == case["example"]["cells_y"] + 1 for case in cases)
     assert all(np.isfinite(case["x"]).all() and np.isfinite(case["y"]).all() for case in cases)
 
+    selected = runner.mesh_cases(plan, checkpoint, plan["examples"][:1])
+    assert len(selected) == 2
     output = tmp_path / "output"
     for case in cases:
         learned = case["mesh_kind"] == "cnn"
@@ -129,6 +133,17 @@ def test_generalization_runner_projects_exact_paired_meshes_and_summarizes(tmp_p
     assert all(report["checks"].values())
     assert report["overall"]["median_improvement_over_uniform"] == pytest.approx(2.0)
     assert (output / "evaluation_summary.png").is_file()
+
+
+def test_generalization_monitor_encloses_extreme_circle_on_coarse_grid():
+    from scattermesh import Grid
+
+    runner = load_runner()
+    axis = np.linspace(0.0, 1.2, 33)
+    grid = Grid(axis, axis)
+    bounds = [(0.82 - 0.135, 0.82 + 0.135, 0.82 - 0.135, 0.82 + 0.135)]
+    monitor = runner.widest_non_pml_monitor_bounds(grid, bounds, PML_THICKNESS)
+    assert monitor == pytest.approx((0.1875, 1.0125, 0.1875, 1.0125))
 
 
 def test_generalization_continuation_waits_for_passing_main_gate(tmp_path):
