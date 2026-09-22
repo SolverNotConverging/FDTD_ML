@@ -118,21 +118,25 @@ def save_training_state(path, *, provenance, epoch, model, optimizer, generator,
     os.replace(temporary, path)
 
 
-def _family(example):
-    return "sparse" if example["family"].startswith("sparse") else "simple"
+def _family(example, family_weights):
+    name = example["family"]
+    if name.startswith("sparse"):
+        return "sparse" if "sparse" in family_weights else name
+    return "simple"
 
 
 def _validation_weights(dataset, family_weights):
     if not family_weights:
         return None
     counts = {
-        family: sum(_family(example) == family for example in dataset.examples)
+        family: sum(_family(example, family_weights) == family for example in dataset.examples)
         for family in family_weights
     }
     if any(count == 0 for count in counts.values()):
         raise ValueError("Every weighted validation family needs at least one example")
     weights = np.array(
-        [family_weights[_family(example)] / counts[_family(example)] for example in dataset.examples],
+        [family_weights[_family(example, family_weights)]
+         / counts[_family(example, family_weights)] for example in dataset.examples],
         dtype=np.float64,
     )
     return torch.from_numpy((weights / weights.sum()).astype(np.float32))
@@ -267,17 +271,20 @@ def main():
     family_weights = config.get("family_sampling_weights")
     sampler = None
     if family_weights:
-        allowed = {"simple", "sparse"}
-        if set(family_weights) != allowed or any(value <= 0 for value in family_weights.values()):
-            raise ValueError("Sampling weights require positive simple and sparse fractions")
+        allowed = ({"simple", "sparse"}, {"simple", "sparse_pair", "sparse_cluster"})
+        if (set(family_weights) not in allowed
+                or any(not np.isfinite(value) or value <= 0 for value in family_weights.values())
+                or not np.isclose(sum(family_weights.values()), 1.0)):
+            raise ValueError("Sampling weights require positive simple/sparse fractions summing to one")
         counts = {
-            family: sum(_family(example) == family for example in train.examples)
-            for family in allowed
+            family: sum(_family(example, family_weights) == family for example in train.examples)
+            for family in family_weights
         }
         if any(count == 0 for count in counts.values()):
-            raise ValueError("Weighted training requires both simple and sparse examples")
+            raise ValueError("Weighted training requires examples from every requested family")
         sample_weights = [
-            family_weights[_family(example)] / counts[_family(example)]
+            family_weights[_family(example, family_weights)]
+            / counts[_family(example, family_weights)]
             for example in train.examples
         ]
         sampler = WeightedRandomSampler(

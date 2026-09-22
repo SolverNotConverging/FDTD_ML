@@ -88,6 +88,7 @@ def main():
     parser.add_argument("--init-grid", type=Path, default=ROOT / "runs/sparse_nine_model_grid")
     parser.add_argument("--output", type=Path, default=ROOT / "runs/sparse_nine_model_finetune_96")
     parser.add_argument("--devices", nargs="+", default=["cuda:0", "cuda:1", "cuda:2", "cuda:3"])
+    parser.add_argument("--family-weight", action="append", metavar="NAME=FRACTION")
     parser.add_argument("--poll-seconds", type=float, default=60.0)
     parser.add_argument("--check-only", action="store_true")
     args = parser.parse_args()
@@ -113,6 +114,8 @@ def main():
         "--dataset", str(dataset), "--output", str(args.output.resolve()),
         "--init-grid", str(args.init_grid.resolve()), "--devices", *args.devices,
     ]
+    for weight in args.family_weight or []:
+        command.extend(("--family-weight", weight))
     subprocess.run(command, cwd=ROOT, env=environment, check=True)
 
 

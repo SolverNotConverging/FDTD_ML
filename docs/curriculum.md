@@ -124,6 +124,10 @@ sparse-cluster family if qualified.
 After its report and dataset are verified, warm-start the same nine architectures
 from the completed pair fine-tune grid. Evaluate held-out three- and four-object
 scenes, including both circular-PEC families, alongside the earlier sparse pairs.
+The multi-object fine-tune samples 20% simple controls, 35% sparse pairs, and 45%
+sparse clusters. This increases exposure to three/four-object and circular-PEC
+geometry while retaining pair and analytic-control coverage. The preceding pair
+fine-tune keeps its 70% sparse / 30% simple setting.
 Rank each nine-model physics grid with `scripts/rank_sparse_model_grid.py` on
 validation cases at exact 32/48 budgets: maximize accepted-case coverage, then
 the equal-family geometric mean improvement over uniform, breaking ties by smaller

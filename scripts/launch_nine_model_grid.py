@@ -4,6 +4,7 @@
 import argparse
 import hashlib
 import json
+import math
 import os
 import subprocess
 import sys
@@ -23,7 +24,8 @@ def _atomic_json(path, value):
     os.replace(temporary, path)
 
 
-def grid_configs():
+def grid_configs(family_weights=None):
+    family_weights = family_weights or {"sparse": 0.70, "simple": 0.30}
     for resolution, microbatch in ((128, 32), (256, 12), (384, 6)):
         for channels in (16, 24, 32):
             yield {
@@ -36,7 +38,7 @@ def grid_configs():
                 "micro_batch_size": microbatch,
                 "raster_resolution": resolution,
                 "input_schema": "sparse_v2",
-                "family_sampling_weights": {"sparse": 0.70, "simple": 0.30},
+                "family_sampling_weights": family_weights,
                 "base_channels": channels,
                 "learning_rate": 0.0003,
                 "weight_decay": 0.0001,
@@ -76,6 +78,22 @@ def initial_checkpoints(grid):
     return checkpoints
 
 
+def parse_family_weights(values):
+    if not values:
+        return None
+    weights = {}
+    for value in values:
+        name, separator, fraction = value.partition("=")
+        if not separator or name in weights:
+            raise ValueError(f"Expected unique NAME=FRACTION family weight: {value}")
+        weights[name] = float(fraction)
+    if (set(weights) != {"simple", "sparse_pair", "sparse_cluster"}
+            or any(not math.isfinite(value) or value <= 0 for value in weights.values())
+            or not math.isclose(sum(weights.values()), 1.0, abs_tol=1e-9)):
+        raise ValueError("Cluster family weights must be positive and sum to one")
+    return weights
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", type=Path, required=True)
@@ -83,6 +101,7 @@ def main():
     parser.add_argument("--devices", nargs="+", default=["cuda:0", "cuda:1", "cuda:2", "cuda:3"])
     parser.add_argument("--init-grid", type=Path)
     parser.add_argument("--finetune-learning-rate", type=float, default=0.0001)
+    parser.add_argument("--family-weight", action="append", metavar="NAME=FRACTION")
     args = parser.parse_args()
     dataset = args.dataset.resolve()
     if not dataset.is_file():
@@ -97,7 +116,8 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     processes = []
     entries = []
-    for index, config in enumerate(grid_configs()):
+    family_weights = parse_family_weights(args.family_weight)
+    for index, config in enumerate(grid_configs(family_weights)):
         resolution = config["raster_resolution"]
         channels = config["base_channels"]
         name = f"r{resolution}_c{channels}"
@@ -153,6 +173,7 @@ def main():
         "dataset": str(dataset),
         "dataset_sha256": _sha256_file(dataset),
         "dataset_arrays_sha256": _sha256_file(dataset.parent / metadata["arrays"]),
+        "family_sampling_weights": family_weights or {"sparse": 0.70, "simple": 0.30},
         "initial_grid": str(args.init_grid.resolve()) if args.init_grid else None,
         "initial_checkpoint_sha256": {
             name: _sha256_file(checkpoint) for name, checkpoint in checkpoints.items()
