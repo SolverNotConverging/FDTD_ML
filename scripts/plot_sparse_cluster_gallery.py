@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 import matplotlib
@@ -30,9 +31,10 @@ def main():
     args = parser.parse_args()
     config = json.loads(args.config.read_text())
     families = sorted({scene["family_id"] for scene in config["scenes"]})
-    if len(families) != 4:
-        raise ValueError("Gallery expects four cluster families")
-    fig, axes = plt.subplots(2, 2, figsize=(10, 9), constrained_layout=True)
+    columns = min(3, len(families))
+    rows = math.ceil(len(families) / columns)
+    fig, axes = plt.subplots(rows, columns, figsize=(5 * columns, 4.5 * rows),
+                            constrained_layout=True, squeeze=False)
     for axis, family in zip(axes.flat, families):
         scenes = [
             scene for scene in config["scenes"]
@@ -69,6 +71,8 @@ def main():
             f"minimum gap {metrics['minimum_gap_m'] * 1000:.1f} mm, "
             f"incidence {scene['incidence_angle_rad'] * 180 / 3.141592653589793:.0f}°"
         )
+    for axis in list(axes.flat)[len(families):]:
+        axis.set_visible(False)
     fig.suptitle("Preflighted sparse multi-object pilot examples", fontsize=15)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(args.output, dpi=170)

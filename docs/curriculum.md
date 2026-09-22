@@ -32,8 +32,11 @@ distribution.
    separate in every promotion report. The pair remains localized; close gaps create
    local difficulty without filling the domain.
 4. **Sparse 3–4 object and PEC/mixed clusters.** Extend the qualified pair primitives
-   to separated PEC/dielectric objects, corners, and later thin screens. Keep
-   contacting/overlapping interfaces excluded until defined.
+   to separated PEC/dielectric objects, including circular PEC as well as PEC
+   rectangles, corners, and later thin screens. Keep contacting/overlapping
+   interfaces excluded until defined. The 48-scene pilot in
+   `configs/sparse_cluster_pilot_32.json` has separate three- and four-object
+   PEC-circle families in train, validation, and test splits.
 5. **Dense and complex arrangements as stress tests.** Use domain-spanning scenes,
    intersections, and resonance-heavy assemblies to measure failure modes. They do
    not dominate training and cannot compensate for a sparse-family gate failure.
@@ -50,6 +53,16 @@ For single cylinders, analytic series evaluation replaces expensive fine-FDTD
 reference generation. Check series truncation and phase conventions. Candidate
 FDTD runs still require source/PML/NF2FF/time qualification; an analytic target
 does not make the candidate numerical solution converged.
+
+The circular-PEC gap pilot in `configs/pec_circle_gap_pilot.json` compares exact
+32/48/64 meshes for two PEC circles across close, moderate, and wide gaps and
+horizontal/vertical orientations. Uniform, interface, and three gap-focus strengths
+are scored against converged 192/256 references using the same complex far-field,
+RCS, and soft-Nt objective. Preserve the uniform policy in the teacher search:
+one held-out PEC-rectangle pair at 48×48 had lower scattering loss on uniform
+than on an interface-focused mesh, so finer boundary spacing is not presumed to
+help under conformal PEC treatment. Candidate feasibility and per-gap outcomes
+decide whether gap-focused labels should enter the multi-object curriculum.
 
 Do not start a large campaign or CNN fit until low-budget candidate searches show
 useful accuracy-versus-cost differences. The existing fixed-focus examples are

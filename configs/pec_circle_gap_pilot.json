@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "purpose": "circular PEC pair gap-refinement pilot; compare exact-budget meshes, not PEC shapes",
+  "domain_m": 1.2,
+  "frequencies_hz": [
+    800000000.0,
+    1000000000.0,
+    1200000000.0
+  ],
+  "far_field_angle_count": 180,
+  "budgets": [
+    32,
+    48,
+    64
+  ],
+  "reference_budgets": [
+    192,
+    256
+  ],
+  "duration_schedule_s": [
+    7e-08,
+    1.4e-07,
+    5.6e-07
+  ],
+  "pml_thickness_m": 0.12,
+  "tail_limit": 1e-05,
+  "material_samples_per_axis": 8,
+  "pec_mode": "conformal",
+  "ranking": {
+    "mode": "fixed_axis_soft_nt",
+    "nt_cost_exponent": 0.1
+  },
+  "gate": {
+    "maximum_reference_convergence_loss": 0.05,
+    "minimum_meaningful_improvement": 1.05,
+    "minimum_low_budget_meaningful_fraction": 0.5,
+    "minimum_low_budget_median_improvement": 1.1,
+    "minimum_each_gap_stratum_meaningful_fraction": 0.4,
+    "minimum_each_shape_topology_meaningful_fraction": 0.4,
+    "minimum_each_material_topology_meaningful_fraction": 0.4,
+    "require_all_references_settled": true,
+    "require_all_uniform_baselines_settled": true
+  },
+  "policies": [
+    {
+      "name": "uniform",
+      "kind": "uniform",
+      "max_ratio": 1.0
+    },
+    {
+      "name": "interface_wide",
+      "kind": "interface",
+      "interface_width_factor": 0.75,
+      "interface_weight": 0.75,
+      "max_ratio": 2.0
+    },
+    {
+      "name": "gap_weak",
+      "kind": "gap",
+      "gap_width_factor": 2.0,
+      "gap_min_width_m": 0.008,
+      "gap_weight": 1.0,
+      "max_ratio": 3.0
+    },
+    {
+      "name": "gap_medium",
+      "kind": "gap",
+      "gap_width_factor": 1.0,
+      "gap_min_width_m": 0.008,
+      "gap_weight": 2.5,
+      "max_ratio": 3.0
+    },
+    {
+      "name": "gap_strong",
+      "kind": "gap",
+      "gap_width_factor": 0.5,
+      "gap_min_width_m": 0.008,
+      "gap_weight": 4.0,
+      "max_ratio": 3.0
+    }
+  ],
+  "scenes": [
+    {
+      "scene_id": "pec_circles_close_horizontal",
+      "family_id": "pec_circles",
+      "gap_stratum": "close",
+      "incidence_angle_rad": 3.209000520838489,
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.6694406808308179,
+            0.6276630585832433
+          ],
+          "radius_m": 0.06,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.8064406808308179,
+            0.6276630585832433
+          ],
+          "radius_m": 0.055,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "pec_circles_close_vertical",
+      "family_id": "pec_circles",
+      "gap_stratum": "close",
+      "incidence_angle_rad": 1.1603745951167412,
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5753345337524738,
+            0.3142211955505837
+          ],
+          "radius_m": 0.06,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5753345337524738,
+            0.4512211955505837
+          ],
+          "radius_m": 0.055,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "pec_circles_moderate_horizontal",
+      "family_id": "pec_circles",
+      "gap_stratum": "moderate",
+      "incidence_angle_rad": 2.123179632111967,
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.4182273975951782,
+            0.6328417871375029
+          ],
+          "radius_m": 0.06,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5712273975951782,
+            0.6328417871375029
+          ],
+          "radius_m": 0.055,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "pec_circles_moderate_vertical",
+      "family_id": "pec_circles",
+      "gap_stratum": "moderate",
+      "incidence_angle_rad": 4.32656512139443,
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.7051726028059255,
+            0.6858487559224731
+          ],
+          "radius_m": 0.06,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.7051726028059255,
+            0.8388487559224731
+          ],
+          "radius_m": 0.055,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "pec_circles_wide_horizontal",
+      "family_id": "pec_circles",
+      "gap_stratum": "wide",
+      "incidence_angle_rad": 2.725332582500842,
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.4736399860838818,
+            0.4596457270512325
+          ],
+          "radius_m": 0.06,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.6636399860838817,
+            0.4596457270512325
+          ],
+          "radius_m": 0.055,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "pec_circles_wide_vertical",
+      "family_id": "pec_circles",
+      "gap_stratum": "wide",
+      "incidence_angle_rad": 3.8264380843793226,
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.46414019799968814,
+            0.5575629177355108
+          ],
+          "radius_m": 0.06,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.46414019799968814,
+            0.7475629177355108
+          ],
+          "radius_m": 0.055,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ]
+    }
+  ],
+  "generator": {
+    "script_sha256": "9785cacf1f0bc62a394047865493bf62e8e22f5423e8c36770569bb46aa91c09",
+    "template_sha256": "601cfc2e764a02be94388d15268652a56e419f1544cdb0ce41e76a3ed8be82ab",
+    "seed": 20260922
+  }
+}

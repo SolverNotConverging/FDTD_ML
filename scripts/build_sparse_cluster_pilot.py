@@ -18,6 +18,8 @@ FAMILIES = {
     "three_mixed": (False, False, True),
     "four_dielectric": (False, False, False, False),
     "four_mixed": (False, True, False, True),
+    "three_mixed_circle_pec": (False, False, True),
+    "four_mixed_circle_pec": (False, True, False, True),
 }
 GAP_RANGES = ((0.012, 0.022), (0.026, 0.042), (0.050, 0.070))
 
@@ -31,12 +33,21 @@ def _digest(value):
 def _scene(rng, family, serial, domain):
     pec_flags = FAMILIES[family]
     shapes = [
+        "circle" if pec and family.endswith("circle_pec") else
         "rectangle" if pec or (serial + index) % 2 else "circle"
         for index, pec in enumerate(pec_flags)
     ]
     definitions, halves = [], []
     for shape, pec in zip(shapes, pec_flags):
-        definition, half = _shape(rng, shape, np.zeros(2), _material(rng, pec))
+        if pec and shape == "circle":
+            radius = float(rng.uniform(0.055, 0.075))
+            definition = {
+                "shape": "circle", "center_m": [0.0, 0.0], "radius_m": radius,
+                "material": {"kind": "pec"},
+            }
+            half = np.array([radius, radius])
+        else:
+            definition, half = _shape(rng, shape, np.zeros(2), _material(rng, pec))
         definitions.append(definition)
         halves.append(half)
     low, high = GAP_RANGES[serial % len(GAP_RANGES)]
@@ -88,6 +99,8 @@ def build(template, output, *, count_per_family=8, seed=20260924, max_attempts=2
         ("moderate", "wide"),
         ("wide", "close"),
         ("close", "wide"),
+        ("moderate", "close"),
+        ("wide", "moderate"),
     )
     for family_index, family in enumerate(FAMILIES):
         accepted = []

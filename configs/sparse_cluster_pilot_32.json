@@ -2076,10 +2076,946 @@
       ],
       "gap_stratum": "moderate",
       "split": "train"
+    },
+    {
+      "scene_id": "sparse_three_mixed_circle_pec_000_c84880d6",
+      "family_id": "three_mixed_circle_pec",
+      "incidence_angle_rad": 2.9521386240747254,
+      "nominal_gaps_m": [
+        0.05868481258473309,
+        0.013472238711680268
+      ],
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.7767397427127146,
+            0.4913493054469845
+          ],
+          "radius_m": 0.04586748815293305,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 2.0,
+            "sigma_e_s_per_m": 0.008901200443582964,
+            "loss_tangent_at_1ghz": 0.08
+          }
+        },
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.5301084165288977,
+            0.6721874419750485,
+            0.4346853684844189,
+            0.5480132424095502
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 8.0,
+            "sigma_e_s_per_m": 0.035604801774331854,
+            "loss_tangent_at_1ghz": 0.08
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.7767397427127146,
+            0.3720002068098023
+          ],
+          "radius_m": 0.06000937177256889,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "close",
+      "split": "train"
+    },
+    {
+      "scene_id": "sparse_three_mixed_circle_pec_001_1ef94f46",
+      "family_id": "three_mixed_circle_pec",
+      "incidence_angle_rad": 5.785798737114093,
+      "nominal_gaps_m": [
+        0.03866065064062384,
+        0.06384765205177628
+      ],
+      "objects": [
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.3033500308858436,
+            0.44171996284743303,
+            0.5755276193991448,
+            0.6731535838078262
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 30.0,
+            "sigma_e_s_per_m": 0.3337950166343611,
+            "loss_tangent_at_1ghz": 0.2
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5402919026912195,
+            0.6243406016034855
+          ],
+          "radius_m": 0.05991128920316265,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 2.0,
+            "sigma_e_s_per_m": 0.0033379501663436113,
+            "loss_tangent_at_1ghz": 0.03
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.3725349968666383,
+            0.8016036870845354
+          ],
+          "radius_m": 0.06460245122493309,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "moderate",
+      "split": "validation"
+    },
+    {
+      "scene_id": "sparse_three_mixed_circle_pec_002_1509e274",
+      "family_id": "three_mixed_circle_pec",
+      "incidence_angle_rad": 3.9716221982015023,
+      "nominal_gaps_m": [
+        0.06354354117573956,
+        0.06556102488816022
+      ],
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.42531590747516257,
+            0.6567610879677179
+          ],
+          "radius_m": 0.0520589908180024,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 2.0,
+            "sigma_e_s_per_m": 0.008901200443582964,
+            "loss_tangent_at_1ghz": 0.08
+          }
+        },
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.5409184394689045,
+            0.6880997679356297,
+            0.6113191286470818,
+            0.702203047288354
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 30.0,
+            "sigma_e_s_per_m": 0.25034626247577085,
+            "loss_tangent_at_1ghz": 0.15
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.42531590747516257,
+            0.830133148223636
+          ],
+          "radius_m": 0.05575204454975561,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "wide",
+      "split": "train"
+    },
+    {
+      "scene_id": "sparse_three_mixed_circle_pec_003_b7ac271d",
+      "family_id": "three_mixed_circle_pec",
+      "incidence_angle_rad": 3.625172479802453,
+      "nominal_gaps_m": [
+        0.02128855336920112,
+        0.06084181761287805
+      ],
+      "objects": [
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.4624736979582125,
+            0.5628527707597899,
+            0.3490836685138504,
+            0.4965559199740943
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 30.0,
+            "sigma_e_s_per_m": 0.3337950166343611,
+            "loss_tangent_at_1ghz": 0.2
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.6251887663514184,
+            0.42281979424397237
+          ],
+          "radius_m": 0.04104744222242741,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 6.0,
+            "sigma_e_s_per_m": 0.02670360133074889,
+            "loss_tangent_at_1ghz": 0.08
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5126632343590012,
+            0.6312510828497166
+          ],
+          "radius_m": 0.07385334526274437,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "close",
+      "split": "test"
+    },
+    {
+      "scene_id": "sparse_three_mixed_circle_pec_004_02bc04d2",
+      "family_id": "three_mixed_circle_pec",
+      "incidence_angle_rad": 1.0717788982811163,
+      "nominal_gaps_m": [
+        0.05705838089001135,
+        0.029282407754882313
+      ],
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.8026554341997582,
+            0.6196303957897793
+          ],
+          "radius_m": 0.04994603435511157,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 3.0,
+            "sigma_e_s_per_m": 0.005006925249515417,
+            "loss_tangent_at_1ghz": 0.03
+          }
+        },
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.606556626074437,
+            0.6956510189546352,
+            0.5498640620763864,
+            0.6893967295031722
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 12.0,
+            "sigma_e_s_per_m": 0.13351800665374444,
+            "loss_tangent_at_1ghz": 0.2
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.8026554341997582,
+            0.4659002208916785
+          ],
+          "radius_m": 0.07450173278810689,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "moderate",
+      "split": "train"
+    },
+    {
+      "scene_id": "sparse_three_mixed_circle_pec_005_b0b6ac5c",
+      "family_id": "three_mixed_circle_pec",
+      "incidence_angle_rad": 3.703622922586575,
+      "nominal_gaps_m": [
+        0.05293113236590302,
+        0.06292254124114817
+      ],
+      "objects": [
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.3492455557434685,
+            0.43717623007804884,
+            0.6132059836426391,
+            0.6856826267728788
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 12.0,
+            "sigma_e_s_per_m": 0.06675900332687222,
+            "loss_tangent_at_1ghz": 0.1
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.39321089291075867,
+            0.49289441477983725
+          ],
+          "radius_m": 0.05965342089472858,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 2.0,
+            "sigma_e_s_per_m": 0.008901200443582964,
+            "loss_tangent_at_1ghz": 0.08
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.561787188079643,
+            0.649444305207759
+          ],
+          "radius_m": 0.06941543236261641,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "wide",
+      "split": "train"
+    },
+    {
+      "scene_id": "sparse_three_mixed_circle_pec_006_baaa49dc",
+      "family_id": "three_mixed_circle_pec",
+      "incidence_angle_rad": 5.659913967854238,
+      "nominal_gaps_m": [
+        0.05431133970034242,
+        0.019603258677957692
+      ],
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.7493576129271229,
+            0.6450815242168237
+          ],
+          "radius_m": 0.061601870779270554,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 20.0,
+            "sigma_e_s_per_m": 0.11126500554478704,
+            "loss_tangent_at_1ghz": 0.1
+          }
+        },
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.5350525617548234,
+            0.6334444024475099,
+            0.6049889309976236,
+            0.6851741174360239
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 20.0,
+            "sigma_e_s_per_m": 0.22253001108957407,
+            "loss_tangent_at_1ghz": 0.2
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.7493576129271229,
+            0.5081096096938311
+          ],
+          "radius_m": 0.05576678506576438,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "close",
+      "split": "train"
+    },
+    {
+      "scene_id": "sparse_three_mixed_circle_pec_007_07518a10",
+      "family_id": "three_mixed_circle_pec",
+      "incidence_angle_rad": 0.016006464095609716,
+      "nominal_gaps_m": [
+        0.030274243918813296,
+        0.05290614440160002
+      ],
+      "objects": [
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.6087031715745498,
+            0.6903906936487879,
+            0.5880886760611106,
+            0.665978558806152
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 4.0,
+            "sigma_e_s_per_m": 0.0,
+            "loss_tangent_at_1ghz": 0.0
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5077488977099908,
+            0.6270336174336313
+          ],
+          "radius_m": 0.07068002994574564,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 2.0,
+            "sigma_e_s_per_m": 0.016689750831718055,
+            "loss_tangent_at_1ghz": 0.15
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.6495469326116688,
+            0.4615816628779923
+          ],
+          "radius_m": 0.07360086878151828,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "moderate",
+      "split": "train"
+    },
+    {
+      "scene_id": "sparse_four_mixed_circle_pec_000_86073daf",
+      "family_id": "four_mixed_circle_pec",
+      "incidence_angle_rad": 3.280001097380456,
+      "nominal_gaps_m": [
+        0.05801919415370541,
+        0.01750351249764641
+      ],
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5660023115680902,
+            0.7274478639656806
+          ],
+          "radius_m": 0.05556857634341403,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 12.0,
+            "sigma_e_s_per_m": 0.06675900332687222,
+            "loss_tangent_at_1ghz": 0.1
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5660023115680902,
+            0.5434553778652101
+          ],
+          "radius_m": 0.07040471560335096,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.688675180947945,
+            0.7274478639656806
+          ],
+          "radius_m": 0.04960078053879439,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 30.0,
+            "sigma_e_s_per_m": 0.25034626247577085,
+            "loss_tangent_at_1ghz": 0.15
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.7125578041799204,
+            0.5434553778652101
+          ],
+          "radius_m": 0.05864726451083287,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "close",
+      "split": "train"
+    },
+    {
+      "scene_id": "sparse_four_mixed_circle_pec_001_71f7a193",
+      "family_id": "four_mixed_circle_pec",
+      "incidence_angle_rad": 0.12112994639462317,
+      "nominal_gaps_m": [
+        0.03596800467919186,
+        0.054578502126639596
+      ],
+      "objects": [
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.35633068209730234,
+            0.49284650797010043,
+            0.3049729119917592,
+            0.3910566872412143
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 6.0,
+            "sigma_e_s_per_m": 0.05006925249515416,
+            "loss_tangent_at_1ghz": 0.15
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5932110275362286,
+            0.34801479961648674
+          ],
+          "radius_m": 0.06439651488693636,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.3644434711302867,
+            0.4847337189371161,
+            0.44563518936785385,
+            0.5951218883098299
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 12.0,
+            "sigma_e_s_per_m": 0.10013850499030832,
+            "loss_tangent_at_1ghz": 0.15
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5932110275362286,
+            0.5326254830508594
+          ],
+          "radius_m": 0.06563566642079681,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "moderate",
+      "split": "test"
+    },
+    {
+      "scene_id": "sparse_four_mixed_circle_pec_002_05630fab",
+      "family_id": "four_mixed_circle_pec",
+      "incidence_angle_rad": 0.7257998565213091,
+      "nominal_gaps_m": [
+        0.06708786912854096,
+        0.05870669827536168
+      ],
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.4571407518641991,
+            0.8585881658166812
+          ],
+          "radius_m": 0.04362472620673751,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 20.0,
+            "sigma_e_s_per_m": 0.22253001108957407,
+            "loss_tangent_at_1ghz": 0.2
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.4571407518641991,
+            0.6773695612359683
+          ],
+          "radius_m": 0.07050600924543458,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.6070007953108766,
+            0.8585881658166812
+          ],
+          "radius_m": 0.047528618964578336,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 12.0,
+            "sigma_e_s_per_m": 0.06675900332687222,
+            "loss_tangent_at_1ghz": 0.1
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.6606966117529326,
+            0.6773695612359683
+          ],
+          "radius_m": 0.07434315236793729,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "wide",
+      "split": "train"
+    },
+    {
+      "scene_id": "sparse_four_mixed_circle_pec_003_7fefdd89",
+      "family_id": "four_mixed_circle_pec",
+      "incidence_angle_rad": 5.127400181400023,
+      "nominal_gaps_m": [
+        0.013148365497925538,
+        0.06362254479691859
+      ],
+      "objects": [
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.6725000927982298,
+            0.777341811135189,
+            0.6421544984439937,
+            0.7160285967646205
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 4.0,
+            "sigma_e_s_per_m": 0.006675900332687223,
+            "loss_tangent_at_1ghz": 0.03
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5915327624127588,
+            0.6790915476043071
+          ],
+          "radius_m": 0.06781896488754555,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.6835520690784016,
+            0.7662898348550171,
+            0.46524184002037205,
+            0.5785319536470751
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 2.0,
+            "sigma_e_s_per_m": 0.016689750831718055,
+            "loss_tangent_at_1ghz": 0.15
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5915327624127588,
+            0.48212058342006503
+          ],
+          "radius_m": 0.06552945449977801,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "close",
+      "split": "train"
+    },
+    {
+      "scene_id": "sparse_four_mixed_circle_pec_004_aed6dead",
+      "family_id": "four_mixed_circle_pec",
+      "incidence_angle_rad": 4.2481380291695725,
+      "nominal_gaps_m": [
+        0.06979770064678639,
+        0.029217611183625106
+      ],
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.6153977077272494,
+            0.3272482942029697
+          ],
+          "radius_m": 0.0626411354048883,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 6.0,
+            "sigma_e_s_per_m": 0.010013850499030834,
+            "loss_tangent_at_1ghz": 0.03
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.6153977077272494,
+            0.5344363764202658
+          ],
+          "radius_m": 0.07474924616562131,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.46768040015195655,
+            0.3272482942029697
+          ],
+          "radius_m": 0.05585856098677951,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 2.0,
+            "sigma_e_s_per_m": 0.016689750831718055,
+            "loss_tangent_at_1ghz": 0.15
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.4409108520490399,
+            0.5344363764202658
+          ],
+          "radius_m": 0.07051999832896313,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "moderate",
+      "split": "train"
+    },
+    {
+      "scene_id": "sparse_four_mixed_circle_pec_005_3e4da67f",
+      "family_id": "four_mixed_circle_pec",
+      "incidence_angle_rad": 5.7387658683041805,
+      "nominal_gaps_m": [
+        0.054626494043295275,
+        0.050985483529099276
+      ],
+      "objects": [
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.3936869962313493,
+            0.5117598047293626,
+            0.5702755989696654,
+            0.6797199280948473
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 12.0,
+            "sigma_e_s_per_m": 0.06675900332687222,
+            "loss_tangent_at_1ghz": 0.1
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.6391287469132811,
+            0.6249977635322563
+          ],
+          "radius_m": 0.07274244814062339,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.41632687867627644,
+            0.4891199222844354,
+            0.7307054116239464,
+            0.8358956511231326
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 8.0,
+            "sigma_e_s_per_m": 0.0,
+            "loss_tangent_at_1ghz": 0.0
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.6391287469132811,
+            0.8181458763817393
+          ],
+          "radius_m": 0.0694201811797604,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "wide",
+      "split": "validation"
+    },
+    {
+      "scene_id": "sparse_four_mixed_circle_pec_006_6e452216",
+      "family_id": "four_mixed_circle_pec",
+      "incidence_angle_rad": 2.1368237353036856,
+      "nominal_gaps_m": [
+        0.051652650234007204,
+        0.013325602385349475
+      ],
+      "objects": [
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5327453692572482,
+            0.37504691272835516
+          ],
+          "radius_m": 0.041168918035743705,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 6.0,
+            "sigma_e_s_per_m": 0.05006925249515416,
+            "loss_tangent_at_1ghz": 0.15
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.6909001977801402,
+            0.37504691272835516
+          ],
+          "radius_m": 0.06533326025314104,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.5327453692572482,
+            0.48484978705572435
+          ],
+          "radius_m": 0.055308353906276024,
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 3.0,
+            "sigma_e_s_per_m": 0.005006925249515417,
+            "loss_tangent_at_1ghz": 0.03
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.6909001977801402,
+            0.52589155921302
+          ],
+          "radius_m": 0.07218578384617438,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "close",
+      "split": "train"
+    },
+    {
+      "scene_id": "sparse_four_mixed_circle_pec_007_8d894551",
+      "family_id": "four_mixed_circle_pec",
+      "incidence_angle_rad": 0.8569865784098908,
+      "nominal_gaps_m": [
+        0.034385836163946054,
+        0.06622986334502842
+      ],
+      "objects": [
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.47143068300827184,
+            0.6207241986699951,
+            0.5363814924240635,
+            0.6557435556856825
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 6.0,
+            "sigma_e_s_per_m": 0.02670360133074889,
+            "loss_tangent_at_1ghz": 0.08
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.37814597783393405,
+            0.596062524054873
+          ],
+          "radius_m": 0.05889886901039175,
+          "material": {
+            "kind": "pec"
+          }
+        },
+        {
+          "shape": "rectangle",
+          "bounds_m": [
+            0.5001491099900324,
+            0.5920057716882345,
+            0.39154722344880555,
+            0.47015162907903507
+          ],
+          "material": {
+            "kind": "dielectric",
+            "epsilon_r": 4.0,
+            "sigma_e_s_per_m": 0.0,
+            "loss_tangent_at_1ghz": 0.0
+          }
+        },
+        {
+          "shape": "circle",
+          "center_m": [
+            0.37814597783393405,
+            0.39652833683978106
+          ],
+          "radius_m": 0.07440545485967175,
+          "material": {
+            "kind": "pec"
+          }
+        }
+      ],
+      "gap_stratum": "moderate",
+      "split": "train"
     }
   ],
   "generator": {
-    "script_sha256": "b96581000fcb414ee25057672c2a3044211e8406e6fcad90ea513cc8067d625d",
+    "script_sha256": "6bf0308b343d9eff2dc4d667988439ba53c3905a084e3b3e04826bc9883db20a",
     "template_sha256": "99a435ed6ef7bc20332944c2ecd01de29bcfa7b448c17467ba647f3ea99fd4d4",
     "seed": 20260924,
     "count_per_family": 8,
@@ -2087,8 +3023,10 @@
       "three_dielectric": 9,
       "three_mixed": 12,
       "four_dielectric": 9,
-      "four_mixed": 15
+      "four_mixed": 15,
+      "three_mixed_circle_pec": 290,
+      "four_mixed_circle_pec": 11221
     }
   },
-  "campaign_id": "sparse_clusters_6e144e4fdef0d0e6"
+  "campaign_id": "sparse_clusters_977aa01b5e036e32"
 }
