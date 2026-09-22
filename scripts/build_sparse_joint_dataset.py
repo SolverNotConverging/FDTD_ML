@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Merge qualified pair pilots with historical single-circle distillation labels."""
+"""Merge qualified sparse pilots with historical single-circle distillation labels."""
 
 import argparse
 import hashlib
@@ -135,7 +135,7 @@ def build(base_path, pilots, output):
                         "geometry_id": scene["scene_id"],
                         "lineage_id": scene["scene_id"],
                         "split": split,
-                        "family": "sparse_pair",
+                        "family": "sparse_pair" if len(scene["objects"]) == 2 else "sparse_cluster",
                         "objects": scene["objects"],
                         "shape_topology": metrics["shape_topology"],
                         "material_topology": metrics["material_topology"],

@@ -44,6 +44,8 @@ def main():
     parser.add_argument("--campaign-config", type=Path, default=Path("configs/sparse_pair_campaign_96.json"))
     parser.add_argument("--clusters", type=Path, default=Path("runs/sparse_cluster_pilot_32"))
     parser.add_argument("--cluster-config", type=Path, default=Path("configs/sparse_cluster_pilot_32.json"))
+    parser.add_argument("--pec-circles", type=Path, default=Path("runs/pec_circle_gap_pilot"))
+    parser.add_argument("--pec-circle-config", type=Path, default=Path("configs/pec_circle_gap_pilot.json"))
     parser.add_argument("--physics", type=Path, default=Path("runs/sparse_nine_model_physics"))
     args = parser.parse_args()
     launch_path = args.grid / "launch.json"
@@ -76,6 +78,8 @@ def main():
 
     print_campaign_progress("Sparse pair campaign", args.campaign_config, args.references)
     print_campaign_progress("Sparse cluster pilot", args.cluster_config, args.clusters)
+    if args.pec_circle_config.is_file():
+        print_campaign_progress("Circular PEC gap pilot", args.pec_circle_config, args.pec_circles)
 
     print("Nine-model held-out physics")
     for entry in launch["entries"]:
