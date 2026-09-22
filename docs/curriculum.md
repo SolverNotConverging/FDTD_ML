@@ -109,16 +109,26 @@ The six exact-axis policies preserve every requested Nx and Ny. They are ranked 
 remain a separate diagnostic. The 312-case pilot passed the label-diversity gate,
 and the full 9,312-case campaign is restartable with 70/140/560 ns duration retries.
 
-The current 96-scene sparse-pair campaign has 72 train, 12 validation, and 12
-test geometries, balanced across dielectric pairs, mixed dielectric/PEC pairs,
-and PEC rectangles. After its convergence and headroom gate passes, append its
-288 exact-budget conditions to the sparse dataset. Warm-start each of the nine
-128/256/384-resolution, 16/24/32-width CNNs from its matching verified checkpoint
-at learning rate 1e-4, then evaluate complex far-field and RCS error on all 90
-old-plus-new held-out sparse-pair conditions. Select using validation physics and
-inspect PEC and low-budget strata separately; test remains a final check. The
-48-scene multi-object pilot, including circular PEC, is queued behind the pair
-campaign and the pair-data nine-model physics ranking. This sequences the GPU-heavy
+The 96-scene sparse-pair campaign `sparse_pairs_4ce1a2f1820b2c52` has 72 train,
+12 validation, and 12 test geometries, balanced across dielectric pairs, mixed
+dielectric/PEC pairs, and PEC rectangles. Its frozen report in
+`runs/sparse_pair_campaign_96/report.json` passed every declared check: all
+192 references and uniform baselines settled, and 2,016 candidate records were
+completed (four nonuniform candidates reached the hard settling limit). At low
+exact budgets, 131/192 conditions had at least 1.05x soft-Nt improvement over
+uniform, with median 1.498x. By material topology, dielectric/dielectric won
+77/96 (median 1.823x), dielectric/PEC 31/48 (1.545x), and PEC/PEC 23/48
+(1.034x). PEC/PEC clears the frozen 40% stratum gate but often favors uniform;
+keep uniform as a valid teacher label and report this family separately.
+
+The verified expansion `sparse_joint_a92de49cb9221e36` adds 288 exact-budget
+conditions to the sparse dataset, reaching 2,272 examples. Nine matching
+128/256/384-resolution, 16/24/32-width CNNs are warm-starting from verified
+checkpoints at learning rate 1e-4. Next, evaluate complex far-field and RCS error
+on all 90 old-plus-new held-out sparse-pair conditions. Select using validation
+physics and inspect PEC and low-budget strata separately; test remains a final
+check. The 48-scene multi-object pilot, including circular PEC, is queued behind
+the pair campaign and its nine-model physics ranking. This sequences the GPU-heavy
 pilot after pair fine-tuning and evaluation, and it will supply the next distinct
 sparse-cluster family if qualified.
 After its report and dataset are verified, warm-start the same nine architectures
