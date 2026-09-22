@@ -235,6 +235,27 @@ def test_factorial_exact_pilot_covers_extremes_and_all_splits():
     }
 
 
+def test_factorial_exact_full_covers_every_condition_at_exact_budgets():
+    runner = load_runner()
+    manifest_path = ROOT / "configs/simple_dielectric_factorial_pool.json"
+    campaign_path = ROOT / "configs/simple_factorial_exact_candidate_full.json"
+    manifest = json.loads(manifest_path.read_text())
+    campaign = json.loads(campaign_path.read_text())
+    cases = runner.case_definitions(*runner.load_inputs(manifest_path, campaign_path))
+    assert len(cases) == 1552 * 6
+    assert {case["condition_id"] for case in cases} == {
+        row["task_id"] for row in manifest["conditions"]
+    }
+    target_cells = {row["task_id"]: row["cells_x"] for row in manifest["conditions"]}
+    assert all(case["cells"] == target_cells[case["condition_id"]] for case in cases)
+    assert all("candidate_cell_factor" not in case for case in cases)
+    assert all(case["duration_schedule_s"] == [70e-9, 140e-9, 560e-9] for case in cases)
+    assert (
+        campaign["pilot_campaign_id"]
+        == "simple_factorial_exact_candidate_pilot_6fb40ec9fe0fe154"
+    )
+
+
 def test_fixed_axis_ranking_uses_soft_nt_penalty():
     runner = load_runner()
     baseline = {

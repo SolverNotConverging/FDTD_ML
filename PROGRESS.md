@@ -273,6 +273,14 @@ uses six exact-axis policies and ranks them with a configurable soft `Nt` expone
 initially 0.1. See the
 [scaled candidate validation](docs/validation/scaled_candidate_search.md).
 
+The replacement exact-budget pilot is complete on the expanded high-contrast
+pool. All 312 cases settled at 70 ns. It selects nonuniform meshes for 49/52 labels
+and passes every readiness check: training has 32/36 meaningful wins, while
+validation and test each have 8/8. The full 9,312-case simple-curriculum campaign
+uses the same six policies, exact axis budgets, soft Nt exponent 0.1, and adaptive
+70/140/560 ns retries. See the
+[exact-budget pilot report](docs/validation/factorial_exact_budget_pilot.md).
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong

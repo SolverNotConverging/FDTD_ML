@@ -301,6 +301,13 @@ Store raw physics loss, `Nt`, cell updates, runtime, and rankings at multiple la
 values. Retain strict matched-update evaluation separately. Never change the stable
 CFL time step to alter the ranking penalty.
 
+The 312-case exact-axis pilot is complete: every case settled at 70 ns, and the
+readiness gate passes with 32/36 meaningful training wins plus 8/8 validation and
+8/8 test wins. The full simple-curriculum campaign therefore uses the same six
+policies, exact 32/48/64/96 axis budgets, lambda=0.1, and adaptive
+70/140/560 ns duration schedule. See the
+[exact-budget pilot report](docs/validation/factorial_exact_budget_pilot.md).
+
 As stages expand, keep three separately tagged families and report their results separately:
 
 | Family | Initial contents | Controlled difficulty |
