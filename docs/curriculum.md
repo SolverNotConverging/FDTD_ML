@@ -64,6 +64,15 @@ than on an interface-focused mesh, so finer boundary spacing is not presumed to
 help under conformal PEC treatment. Candidate feasibility and per-gap outcomes
 decide whether gap-focused labels should enter the multi-object curriculum.
 
+The completed six-scene circular-PEC pilot qualified all 12 references (worst
+192/256 joint loss 1.16e-5) and all 90 candidates. Uniform had the best soft-Nt
+score in 17 of 18 scene-budget conditions; weak gap focus won only the moderate,
+horizontal 32×32 case by 1.056×. Median gap-focus Nt was 1.63–2.04× uniform,
+and the pilot failed its declared nonuniform-headroom gate. Keep these circular
+PEC pairs as controls rather than forcing gap-refinement labels. The stage-four
+multi-object pilot still contains PEC circles with dielectric/PEC neighbors and
+will test whether their joint geometry creates useful localized headroom.
+
 Do not start a large campaign or CNN fit until low-budget candidate searches show
 useful accuracy-versus-cost differences. The existing fixed-focus examples are
 solver checks; their performance does not establish an optimal meshing policy.
