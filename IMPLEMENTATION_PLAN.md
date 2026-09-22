@@ -246,6 +246,14 @@ Its 24/4/4 geometry split holds every translated/scaled lineage together and use
 disjoint validation/test size and angle regimes. The manifest precedes candidate
 physics generation; it must not be treated as completed labels or training data.
 
+The candidate-label runner is now verified by the 270-case campaign
+`simple_candidate_pilot_e38c11dcf8b35fc8`. It produces reusable per-case spectra and
+grouped Pareto labels, with four explicit unsettled rejections and valid uniform
+baselines throughout. Its selected training subset has no positive budget win while
+the epsilon_r=5 test geometry has two; do not train on that imbalance. Execute the
+generated 3,168-case full plan `simple_candidate_full_d535ccac015b3cd8`, then audit
+train/validation label diversity before starting M5.
+
 As stages expand, keep three separately tagged families and report their results separately:
 
 | Family | Initial contents | Controlled difficulty |

@@ -229,6 +229,15 @@ illumination/budget conditions. Records include physical feature size, its 256²
 input-grid span, minimum internal wavelength, material, and analytic-reference type.
 The next executable stage is the restartable candidate-label runner for this manifest.
 
+That runner now passes a 270-case end-to-end pilot. It accepts 266 cases, retains
+four unsettled randomized candidates, and writes Pareto labels for all ten grouped
+illumination sets. Two held-out epsilon_r=5 test conditions show 2.003x and 1.648x
+matched-cap improvements. The selected train/validation subset has no positive win,
+so training remains blocked by data adequacy rather than software. The generated
+full plan `simple_candidate_full_d535ccac015b3cd8` expands all 32 geometries and 352
+conditions into 3,168 restartable cases, including the epsilon_r=4.5 train lineage.
+See the [candidate pilot](docs/validation/simple_candidate_pilot.md).
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong
