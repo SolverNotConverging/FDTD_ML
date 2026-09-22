@@ -136,6 +136,11 @@ def build(base_path, pilots, output):
                         "lineage_id": scene["scene_id"],
                         "split": split,
                         "family": "sparse_pair" if len(scene["objects"]) == 2 else "sparse_cluster",
+                        "scene_family_id": scene.get("family_id"),
+                        "pec_circle_count": sum(
+                            obj["shape"] == "circle" and obj["material"]["kind"] == "pec"
+                            for obj in scene["objects"]
+                        ),
                         "objects": scene["objects"],
                         "shape_topology": metrics["shape_topology"],
                         "material_topology": metrics["material_topology"],

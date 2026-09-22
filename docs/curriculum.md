@@ -36,7 +36,11 @@ distribution.
    rectangles, corners, and later thin screens. Keep contacting/overlapping
    interfaces excluded until defined. The 48-scene pilot in
    `configs/sparse_cluster_pilot_32.json` has separate three- and four-object
-   PEC-circle families in train, validation, and test splits.
+   PEC-circle families in train, validation, and test splits. Circular PEC is part
+   of the final multi-object training and evaluation target, even though its
+   isolated two-circle gap pilot favored uniform meshes. Preserve the uniform
+   candidate when it gives the best label; do not remove circular PEC scenes
+   merely because a nonuniform policy does not win on them.
 5. **Dense and complex arrangements as stress tests.** Use domain-spanning scenes,
    intersections, and resonance-heavy assemblies to measure failure modes. They do
    not dominate training and cannot compensate for a sparse-family gate failure.
@@ -71,7 +75,11 @@ horizontal 32×32 case by 1.056×. Median gap-focus Nt was 1.63–2.04× uniform
 and the pilot failed its declared nonuniform-headroom gate. Keep these circular
 PEC pairs as controls rather than forcing gap-refinement labels. The stage-four
 multi-object pilot still contains PEC circles with dielectric/PEC neighbors and
-will test whether their joint geometry creates useful localized headroom.
+will test whether their joint geometry creates useful localized headroom. Track
+the three-object one-PEC-circle and four-object two-PEC-circle families separately
+in held-out physics reports, with complex far-field/RCS error and uniform-versus-
+learned mesh cost at each exact budget and gap stratum. A final multi-object
+promotion cannot rely solely on aggregate results that hide circular-PEC failures.
 
 Do not start a large campaign or CNN fit until low-budget candidate searches show
 useful accuracy-versus-cost differences. The existing fixed-focus examples are
