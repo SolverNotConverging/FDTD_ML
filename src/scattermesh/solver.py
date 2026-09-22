@@ -12,7 +12,7 @@ import numpy as np
 
 from .conformal import CutCellPEC
 from .constants import C0, EPS0, MU0, Z0
-from .geometry import PEC, average_materials
+from .geometry import average_materials, split_material_objects
 from .observables import Contour, SurfaceDFT
 
 
@@ -65,9 +65,7 @@ def simulate(
     if not np.isfinite(safety) or not 0 < safety < 1 or not np.isfinite(duration) or duration <= 0:
         raise ValueError("Positive duration and CFL safety between 0 and 1 required")
     dx, dy = np.diff(grid.x), np.diff(grid.y)
-    pec_objects = tuple(obj for obj in objects if isinstance(obj.material, PEC))
-    if pec_objects and len(pec_objects) != len(objects):
-        raise ValueError("Mixed PEC/dielectric coupling is not yet qualified in this prototype")
+    pec_objects, dielectric_objects = split_material_objects(objects)
     cut_pec = CutCellPEC(grid, pec_objects, pec_mode) if pec_objects else None
     grid_dt = 1 / (C0 * np.sqrt(dx.min() ** -2 + dy.min() ** -2))
     stable_dt = min(grid_dt, cut_pec.stable_time_step()) if cut_pec else grid_dt
@@ -95,7 +93,7 @@ def simulate(
             raise ValueError(
                 "Every scatterer must lie strictly inside the monitor with a vacuum buffer"
             )
-    eps, sigma = average_materials(grid, () if cut_pec else objects, samples)
+    eps, sigma = average_materials(grid, dielectric_objects, samples)
     loss = sigma * dt / (2 * EPS0 * eps)
     ca, cb = (1 - loss) / (1 + loss), dt / (EPS0 * eps * (1 + loss))
     contrast, conduction = (1 - 1 / eps) / (1 + loss), loss / (1 + loss)
@@ -104,6 +102,16 @@ def simulate(
         raise ValueError("Source starts before the simulation: increase pulse delay")
     # Restrict source evaluation to material nodes. Empty space remains exactly zero.
     active = (contrast != 0) | (conduction != 0)
+    if cut_pec:
+        active[cut_pec.inside] = False
+        if cut_pec.enlargement is not None:
+            aggregate = cut_pec.enlargement
+            transfer_nodes = np.r_[aggregate.slaves, aggregate.roots]
+            if active.ravel()[transfer_nodes].any():
+                raise ValueError(
+                    "PEC enlargement transfer stencil intersects dielectric material; "
+                    "use conformal mode or separate the objects"
+                )
     delay = retardation[active]
     previous_incident = source.pulse(-delay)
     dualx, dualy = (dx[:-1] + dx[1:]) / 2, (dy[:-1] + dy[1:]) / 2
@@ -148,7 +156,7 @@ def simulate(
         te, th = (n + 1) * dt, (n + 0.5) * dt
         if cut_pec and cut_pec.enlargement is not None:
             increment = np.zeros_like(ez)
-            increment[interior] = cb[interior] * curl
+            increment[interior] = (ca[interior] - 1) * ez[interior] + cb[interior] * curl
             cut_pec.enlargement.advance(ez, increment, source, te)
         else:
             ez[interior] = ca[interior] * ez[interior] + cb[interior] * curl

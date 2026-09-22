@@ -80,8 +80,8 @@ No minimum open fraction is substituted into the geometry to obtain that result.
   mesh resolutions, incidence angles, subcell positions, and three frequencies.
 - Compare plain conformal versus enlarged runs at identical geometry/grid.
 - Test rectangle cut fractions down to 1e-6 with longer post-pulse simulation.
-- Reject unresolved PEC, unsupported split intervals, and mixed dielectric/PEC
-  input instead of generating misleading results.
+- Reject unresolved PEC, unsupported split intervals, contacting mixed interfaces,
+  and dielectric-loaded enlargement transfers instead of generating misleading results.
 
 Run `scripts/pilot_conformal_pec.py`; see [progress](../PROGRESS.md) for the measured
 table and `runs/conformal_pec_pilot/` for raw spectra, report, and plots. Reported
@@ -89,7 +89,8 @@ runtime includes CPU setup and streaming observations and is not a GPU benchmark
 
 Enlargement changes the approximation near the boundary and removes some local
 degrees of freedom. Accuracy must be compared at equal budgets and actual runtime,
-not inferred from restored dt alone. Thin screens, subcell narrow gaps, mixed
-PEC/dielectric coupling, strong-grading PEC stress cases, cavities, and resonances
-remain future qualification. The default stays plain conformal for now; enlarged
-mode is explicit while this evidence is collected.
+not inferred from restored dt alone. Separated mixed PEC/dielectric scenes now have
+their own [bounded qualification](validation/mixed_scattering.md). Thin screens,
+subcell narrow gaps, contacting interfaces, strong-grading PEC stress cases,
+cavities, and resonances remain future qualification. The default stays plain
+conformal for now; enlarged mode is explicit while this evidence is collected.

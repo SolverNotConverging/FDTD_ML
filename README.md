@@ -8,10 +8,10 @@ The current implementation is an independent **NumPy CPU reference solver** for
 conductivity, oblique broadband illumination, CPML, streaming surface DFT, and
 near-to-far transformation. Experimental PEC rectangles/circles support cut edges
 and cell enlargement without boundary anchors. Output is 2D scattering width in
-metres. A validated PyTorch CUDA backend now accelerates fine dielectric and
-PEC-only references, including conformal cuts and cell enlargement. Mixed
-PEC/dielectric scenes, thin screens, reference campaigns, and CNN training remain
-subsequent milestones.
+metres. A validated PyTorch CUDA backend now accelerates fine dielectric, PEC-only,
+and separated mixed PEC/dielectric references, including conformal cuts and cell
+enlargement. Contacting mixed interfaces, thin screens, broader reference campaigns,
+and CNN training remain subsequent milestones.
 
 - [Implementation plan](IMPLEMENTATION_PLAN.md)
 - [Measured progress and limitations](PROGRESS.md)
@@ -23,6 +23,7 @@ subsequent milestones.
 - [CUDA float32 qualification](docs/validation/cuda_precision.md)
 - [Restartable multi-GPU scheduler](docs/validation/multi_gpu_scheduler.md)
 - [Adaptive convergence policy](docs/validation/adaptive_convergence_policy.md)
+- [Separated mixed PEC/dielectric qualification](docs/validation/mixed_scattering.md)
 - [Archived receiver-CNN project](archive/receiver_cnn_2026-09-22/README.md)
 
 ## Run the initial validation
@@ -56,6 +57,9 @@ MPLCONFIGDIR=/tmp/scattermesh-mpl \
   --policy configs/dielectric_convergence_pilot.json \
   --output runs/dielectric_convergence_pilot/policy \
   --devices cuda:0 cuda:1 cuda:2 cuda:3
+.venv/bin/python scripts/qualify_mixed_scattering.py \
+  --scene close_gap_circles --profile close_final --device cuda:0
+.venv/bin/python scripts/summarize_mixed_scattering.py
 ```
 
 Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and

@@ -8,12 +8,13 @@ selected device. Only bounded scalar health checks and the final fields/DFTs ret
 to the host. DFT phases use recurrence with an exact analytic reanchor every 2,048
 steps.
 
-The backend supports dielectric scenes with mu_r=1 and sigma_h=0 plus PEC-only
-circle/rectangle scenes in staircase, conformal, and enlarged modes. PEC geometry,
-cut intersections, and the enlargement operator are constructed once on the CPU;
-inverse-length gradients, affine total-field constraints, and projected mass
-transfers remain on the selected Torch device during stepping. Mixed PEC/dielectric
-scenes remain rejected until their coupling is qualified. Float32 is accurate in
+The backend supports dielectric, PEC-only, and separated mixed scenes with mu_r=1
+and sigma_h=0. PEC circles/rectangles use staircase, conformal, or enlarged modes.
+PEC geometry, cut intersections, and the enlargement operator are constructed once
+on the CPU; inverse-length gradients, affine total-field constraints, and projected
+mass transfers remain on the selected Torch device during stepping. Enlarged mixed
+scenes require a vacuum transfer stencil; contacting/overlapping materials remain
+rejected. See the [mixed qualification](mixed_scattering.md). Float32 is accurate in
 the bounded [precision qualification](cuda_precision.md), but slower in both 512²
 probes on this server, so production references remain float64.
 

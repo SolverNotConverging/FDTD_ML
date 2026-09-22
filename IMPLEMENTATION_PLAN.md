@@ -58,8 +58,10 @@ parameterization before allocating more training compute.
    through an energy-consistent Galerkin projection and checks the reduced operator's
    CFL bound. Do not obtain speed by silently clipping cut fractions or shifting PEC.
    Single PEC circles are the first training family, with analytic complex-field
-   references. Rectangles/corners follow after cylinder stages. Zero-thickness screens, split edges,
-   unresolved gaps, and mixed dielectric/PEC coupling remain explicit next work.
+   references. Rectangles/corners follow after cylinder stages. Separated mixed
+   dielectric/PEC scenes are supported when enlargement transfers remain in vacuum.
+   Zero-thickness screens, split edges, unresolved gaps, and contacting mixed
+   interfaces remain explicit next work.
    A 2D thin segment represents an extruded screen, not a finite 3D wire antenna.
 
 ## Source design and openEMS review
@@ -132,7 +134,7 @@ Reference escalation therefore uses material wavelength and settling evidence,
 not exterior free-space resolution alone.
 
 - Extend the implemented PEC rectangle/cylinder prototype to split-edge thin
-  segments and mixed dielectric/PEC scenes; preserve total-field cancellation.
+  segments and contacting mixed interfaces; preserve total-field cancellation.
 - Qualify enlargement across location/scale/angle, strong grading, close gaps,
   cavities, resonant structures, and late-time energy. A local aggregation can
   sacrifice boundary accuracy; measure its error and cost against unreduced cuts.
@@ -171,9 +173,11 @@ see the [precision qualification](docs/validation/cuda_precision.md).
   legacy experiment policy. Keep fields, CPML state, source evaluation, and DFT on GPU.
 - Implement fused/batched surface DFT kernels; use phase recurrence with bounded
   drift or direct phases validated against CPU. Preserve half-step H timing.
-- Extend the implemented PEC intersection, cut-edge, and conservative aggregation
-  port to mixed-material coupling after that CPU formulation is qualified. Continue
-  validating shared-master reductions and active-source field constraints.
+- Separated mixed PEC/dielectric coupling is implemented and qualified for conformal
+  and enlarged modes when the enlargement transfer stencil remains in vacuum.
+  Derive a material-weighted projection before supporting dielectric-loaded
+  aggregation or contacting/overlapping interfaces. Continue validating shared-
+  master reductions and active-source field constraints.
 - Implement NF2FF reductions after time stepping. Start with accurate accumulation;
   retain the measured float32/float64 comparison when changing reduction kernels.
 - Test CPU/GPU equivalence on uniform, graded, lossy, PEC, and oblique cases;

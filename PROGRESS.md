@@ -92,8 +92,8 @@ times lower joint loss than plain conformal across all five scenes. Duration and
 sensitivity are negligible in the tested baseline. Near-to-far contour sensitivity
 at 1.2 GHz is 0.521% at 128², but falls to 0.334% at 160². Reference generation
 must therefore check this independently and escalate when needed. Broader M1
-qualification remains open for close gaps, cavities, thin screens, mixed materials,
-and external comparison. See the
+qualification remains open for PEC close gaps, cavities, thin screens, contacting
+PEC/dielectric combinations, and external comparison. See the
 [qualification record](docs/validation/pec_cylinder_qualification.md) and local
 `runs/pec_cylinder_qualification/qualification.png`.
 
@@ -167,7 +167,12 @@ agreement, and records hard-limit skips. Its conductive epsilon_r=30 pilot accep
 the 512²/50 ns base after five attempts in two waves; the largest independent change
 was 0.3374% under 640² spatial refinement. Resume revalidated all artifacts without
 GPU work. See the [policy validation](docs/validation/adaptive_convergence_policy.md).
-Mixed-material CUDA coupling and broader scene generation remain open.
+Separated mixed PEC/dielectric coupling now passes CPU/GPU equivalence and three
+complex-field self-convergence profiles: wide-gap circles, a 15 mm close gap, and a
+PEC rectangle with lossy epsilon_r=12 material. Maximum spatial changes are 0.123%,
+0.433%, and 0.392%; all duration/quadrature/contour changes are below 0.322%, and
+all tails are below `1e-5`. See the [mixed validation](docs/validation/mixed_scattering.md).
+Contacting/overlapping interfaces and broader scene generation remain open.
 
 ## Joint loss and initial training curriculum
 
@@ -197,10 +202,10 @@ low-budget mesh improvements before fitting a new small CNN.
    before choosing a default. Plain conformal remains the current default.
 2. Resolve observation/CPML convergence across the benchmark range; add the
    openEMS-style TFSF comparison and an external solver cross-check.
-3. Qualify mixed-material coupling and generalize the implemented adaptive policy
-   from the analytic-cylinder runner to the new scene schema. NF2FF is currently a
-   post-step host calculation. Float32 is accurate but has no throughput benefit on
-   this server, so keep production references in float64.
+3. Generalize the implemented adaptive policy from the analytic-cylinder runner to
+   the new scene schema. Extend mixed coupling to declared contact/overlap priority
+   only after deriving its operator. NF2FF is currently a post-step host calculation.
+   Float32 is accurate but has no throughput benefit here, so retain float64.
 4. Run the small single-cylinder candidate search with the joint loss and matched
    update budgets, then train only if there is useful mesh headroom. Expand the
    curriculum gradually and report simple/sparse/complex families separately.

@@ -15,7 +15,8 @@ solver claims are validated independently in this project.
    lossless contrast, then include epsilon_r up to 30 and conductivity. Keep mu_r=1
    and sigma_h=0. Add resonant/high-contrast cases after time-settling qualification.
 3. **Two and multiple cylinders.** Introduce gap distance and size contrast gradually.
-   Qualify mixed PEC/dielectric coupling before generating those combinations.
+   Separated mixed PEC/dielectric coupling is now qualified for initial combinations;
+   keep contacting or overlapping interfaces excluded until their operator is defined.
 4. **Rectangles and corners, then thin screens.** Add only after PEC topology and
    boundary handling are qualified. Keep family-specific accuracy/failure reports.
 5. **More varied shapes and complex arrangements.** Use them for later expansion

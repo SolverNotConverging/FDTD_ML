@@ -111,7 +111,7 @@ def test_unresolved_or_unsupported_pec_is_rejected_instead_of_disappearing():
             ],
         )
     wave = PlaneWave(1e9, 1e-9, 9e-9)
-    with pytest.raises(ValueError, match="Mixed PEC"):
+    with pytest.raises(ValueError, match="Overlapping or touching"):
         simulate(
             grid,
             [Rectangle((0.31, 0.6, 0.31, 0.6), PEC()), Circle((0.5, 0.5), 0.1, Material(4))],
@@ -119,6 +119,26 @@ def test_unresolved_or_unsupported_pec_is_rejected_instead_of_disappearing():
             frequencies=[1e9],
             duration=10e-9,
             pml_thickness=0.1,
+        )
+
+
+def test_enlargement_rejects_dielectric_loaded_transfer_stencil():
+    axis = np.linspace(0, 1.2, 25)
+    grid = Grid(axis, axis)
+    objects = [
+        Rectangle((0.50005, 0.7, 0.45, 0.65), PEC()),
+        Rectangle((0.351, 0.499, 0.45, 0.65), Material(4, 0.01)),
+    ]
+    source = PlaneWave(1e9, 1e-9, 9e-9, angle=0.7, origin=(0.6, 0.6))
+    with pytest.raises(ValueError, match="transfer stencil"):
+        simulate(
+            grid,
+            objects,
+            source,
+            frequencies=[1e9],
+            duration=12e-9,
+            pml_thickness=0.15,
+            pec_mode="enlarged",
         )
 
 

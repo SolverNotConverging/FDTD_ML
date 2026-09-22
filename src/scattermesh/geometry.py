@@ -62,6 +62,40 @@ class Rectangle:
         return (x >= a) & (x <= b) & (y >= c) & (y <= d)
 
 
+def _intersects(left, right):
+    """Return whether two supported closed primitives overlap or touch."""
+    if isinstance(left, Circle) and isinstance(right, Circle):
+        separation = np.hypot(left.center[0] - right.center[0], left.center[1] - right.center[1])
+        return separation <= left.radius + right.radius
+    if isinstance(left, Rectangle) and isinstance(right, Rectangle):
+        a0, a1, a2, a3 = left.bounds
+        b0, b1, b2, b3 = right.bounds
+        return max(a0, b0) <= min(a1, b1) and max(a2, b2) <= min(a3, b3)
+    circle, rectangle = (left, right) if isinstance(left, Circle) else (right, left)
+    if not isinstance(circle, Circle) or not isinstance(rectangle, Rectangle):
+        raise ValueError("Only circle and rectangle intersections are supported")
+    a, b, c, d = rectangle.bounds
+    closest_x = np.clip(circle.center[0], a, b)
+    closest_y = np.clip(circle.center[1], c, d)
+    return (circle.center[0] - closest_x) ** 2 + (
+        circle.center[1] - closest_y
+    ) ** 2 <= circle.radius**2
+
+
+def split_material_objects(objects):
+    """Partition PEC/dielectric objects and reject undefined material overlap."""
+    objects = tuple(objects)
+    pec = tuple(obj for obj in objects if isinstance(obj.material, PEC))
+    dielectric = tuple(obj for obj in objects if not isinstance(obj.material, PEC))
+    for conductor in pec:
+        for material in dielectric:
+            if _intersects(conductor, material):
+                raise ValueError(
+                    "Overlapping or touching PEC/dielectric geometry needs an explicit interface policy"
+                )
+    return pec, dielectric
+
+
 def average_materials(grid, objects, samples=8):
     """Midpoint filling fractions; later objects override earlier ones at each sample."""
     objects = tuple(objects)
