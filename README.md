@@ -24,6 +24,7 @@ and CNN training remain subsequent milestones.
 - [Restartable multi-GPU scheduler](docs/validation/multi_gpu_scheduler.md)
 - [Adaptive convergence policy](docs/validation/adaptive_convergence_policy.md)
 - [Separated mixed PEC/dielectric qualification](docs/validation/mixed_scattering.md)
+- [Low-budget mesh-headroom pilot](docs/validation/mesh_headroom_pilot.md)
 - [Archived receiver-CNN project](archive/receiver_cnn_2026-09-22/README.md)
 
 ## Run the initial validation
@@ -60,6 +61,10 @@ MPLCONFIGDIR=/tmp/scattermesh-mpl \
 .venv/bin/python scripts/qualify_mixed_scattering.py \
   --scene close_gap_circles --profile close_final --device cuda:0
 .venv/bin/python scripts/summarize_mixed_scattering.py
+MPLCONFIGDIR=/tmp/scattermesh-mpl \
+  .venv/bin/python scripts/pilot_mesh_headroom.py \
+  --device cuda:0 --shard 0 --shards 4
+.venv/bin/python scripts/pilot_mesh_headroom.py --summarize
 ```
 
 Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and

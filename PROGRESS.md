@@ -195,6 +195,16 @@ Compare candidates at matched cell-update budgets, retain multiple good meshes,
 and group related geometry variants into the same split. Demonstrate useful
 low-budget mesh improvements before fitting a new small CNN.
 
+The first M3 headroom search evaluated 96 true-uniform and interface-focused PEC-
+cylinder candidates at 32/48/64/96 cells per axis with a common 50 ns duration.
+Seventy-seven settled, fourteen were geometrically infeasible, and five aggressive
+32-cell meshes missed the settling gate. Uniform grids form the complete Pareto
+frontier in all four scenes. Accepted focused candidates cost 1.39--3.61 times more
+updates and have 1.25--5.44 times more joint complex/RCS loss than same-cell uniform
+grids. This teacher family is rejected; training remains gated on a broader object-
+region, hybrid, and randomized density search. See the
+[headroom pilot](docs/validation/mesh_headroom_pilot.md).
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong
@@ -206,6 +216,7 @@ low-budget mesh improvements before fitting a new small CNN.
    the new scene schema. Extend mixed coupling to declared contact/overlap priority
    only after deriving its operator. NF2FF is currently a post-step host calculation.
    Float32 is accurate but has no throughput benefit here, so retain float64.
-4. Run the small single-cylinder candidate search with the joint loss and matched
-   update budgets, then train only if there is useful mesh headroom. Expand the
-   curriculum gradually and report simple/sparse/complex families separately.
+4. Extend the measured single-cylinder candidate search beyond the rejected
+   interface-only family to object-region, hybrid, and randomized densities. Train
+   only if a nonuniform candidate improves the matched-update Pareto frontier.
+   Expand the curriculum gradually and report simple/sparse/complex separately.
