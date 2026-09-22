@@ -18,6 +18,7 @@ training remain subsequent milestones.
 - [openEMS implementation review](docs/openems_review.md)
 - [Conformal PEC and cell enlargement](docs/conformal_pec.md)
 - [Simple-first training curriculum and joint loss](docs/curriculum.md)
+- [High-contrast dielectric reference escalation](docs/validation/dielectric_reference_escalation.md)
 - [Archived receiver-CNN project](archive/receiver_cnn_2026-09-22/README.md)
 
 ## Run the initial validation
@@ -37,6 +38,10 @@ PYTHONPATH=src OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/scattermesh-mpl \
   .venv/bin/python scripts/qualify_dielectric_cylinders.py
 PYTHONPATH=src OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/scattermesh-mpl \
   .venv/bin/python scripts/benchmark_cuda.py
+PYTHONPATH=src .venv/bin/python scripts/run_dielectric_reference_attempt.py \
+  --scene eps12_small --cells 512 --duration-ns 400 --device cuda:0
+MPLCONFIGDIR=/tmp/scattermesh-mpl \
+  .venv/bin/python scripts/summarize_dielectric_escalation.py
 ```
 
 Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and
@@ -52,6 +57,10 @@ The matching [dielectric qualification](docs/validation/dielectric_cylinder_qual
 starts with epsilon_r<=4 and records epsilon_r=12/30 as deferred contrast stages.
 The [CUDA foundation](docs/validation/cuda_foundation.md) accelerates fine dielectric
 references and preserves the complex fields/DFTs to float64 roundoff.
+The restartable [high-contrast escalation](docs/validation/dielectric_reference_escalation.md)
+accepts lossless epsilon_r=12 and conductive epsilon_r=30 cylinders after independent
+duration, quadrature, and contour probes. The unresolved lossless epsilon_r=30 case
+is retained as nonconverged and skipped at the bounded pilot hard limit.
 
 For a fresh environment, install this package and the tools:
 

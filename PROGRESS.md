@@ -125,11 +125,18 @@ difficulty. At 192², the initial epsilon_r<=4 family passes: worst complex erro
 variation 0.232%. These cases have at least 19.99 cells per shortest internal
 wavelength.
 
-Epsilon_r=12 and 30 are not accepted yet. At 128² they have only 7.69 and 4.87
-cells per shortest internal wavelength. The lossless cases show 30.8% and 63.5%
-complex error with persistent resonant tails. This directly supports keeping feature
-size/material wavelength in the model inputs and using automatic mesh/time escalation.
-See the [dielectric qualification](docs/validation/dielectric_cylinder_qualification.md).
+At 128², epsilon_r=12 and 30 initially had only 7.69 and 4.87 cells per shortest
+internal wavelength, with large error and resonant tails. CUDA escalation now accepts
+the lossless epsilon_r=12 cylinder at 512²/400 ns: maximum complex error 1.668%,
+phase RMS 0.842°, and tail/peak 7.20e-6. Duration, quadrature, and contour changes
+are at most 0.0358%. A conductive epsilon_r=30, sigma_e=0.2 S/m cylinder passes at
+512²/50 ns with 0.885% complex error and at most 0.0340% independent variation.
+
+The lossless epsilon_r=30 high-Q scene remains nonconverged and is skipped. At the
+bounded pilot hard limit, 512²/400 ns still has tail/peak 0.0356 and a 1.979%
+duration change; a 768²/100 ns probe changes the complex field by 1.896%. See the
+[initial dielectric qualification](docs/validation/dielectric_cylinder_qualification.md)
+and [high-contrast escalation](docs/validation/dielectric_reference_escalation.md).
 
 ### CUDA dielectric backend
 
@@ -140,8 +147,9 @@ bounded real-GPU test. At 512² and 2,010 steps, one TITAN RTX completes the ben
 in 4.79 s versus 34.65 s for NumPy, a 7.23x speedup. At 128² CUDA startup/launch
 overhead still makes it slower. See the [CUDA validation](docs/validation/cuda_foundation.md).
 
-PEC CUDA updates, float32 qualification, multi-GPU scene scheduling, and production
-reference escalation remain open.
+The restartable per-attempt runner has now exercised all four GPUs independently and
+retains failed attempts. PEC CUDA updates, float32 qualification, a campaign-level
+multi-GPU scheduler, and broader production reference escalation remain open.
 
 ## Joint loss and initial training curriculum
 
@@ -171,7 +179,9 @@ low-budget mesh improvements before fitting a new small CNN.
    before choosing a default. Plain conformal remains the current default.
 2. Resolve observation/CPML convergence across the benchmark range; add the
    openEMS-style TFSF comparison and an external solver cross-check.
-3. Port qualified updates, PEC aggregation transfers, surface DFT, and NF2FF to GPU.
+3. Port qualified PEC updates and aggregation transfers to GPU; dielectric field
+   updates and surface DFT already run there, while NF2FF is currently a post-step
+   host calculation.
 4. Run the small single-cylinder candidate search with the joint loss and matched
    update budgets, then train only if there is useful mesh headroom. Expand the
    curriculum gradually and report simple/sparse/complex families separately.

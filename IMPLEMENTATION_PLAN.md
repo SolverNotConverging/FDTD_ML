@@ -122,11 +122,13 @@ for the other geometries, topologies, and external comparisons below; see the
 [measured qualification](docs/validation/pec_cylinder_qualification.md).
 
 The first dielectric substage is also measured. Three epsilon_r<=4 cases pass the
-initial analytic-reference gates at 192². Epsilon_r=12 and 30 remain deferred:
-their 128² grids have fewer than eight and five cells per shortest internal
-wavelength and show large resonant error/tails. See the
-[dielectric qualification](docs/validation/dielectric_cylinder_qualification.md).
-Reference escalation must therefore use material wavelength and settling evidence,
+initial analytic-reference gates at 192². CUDA escalation accepts lossless
+epsilon_r=12 at 512²/400 ns and conductive epsilon_r=30 at 512²/50 ns after
+independent duration, quadrature, and contour changes remain below 0.5%. Lossless
+epsilon_r=30 remains nonconverged at the bounded pilot hard limit and is skipped.
+See the [initial qualification](docs/validation/dielectric_cylinder_qualification.md)
+and [high-contrast escalation](docs/validation/dielectric_reference_escalation.md).
+Reference escalation therefore uses material wavelength and settling evidence,
 not exterior free-space resolution alone.
 
 - Extend the implemented PEC rectangle/cylinder prototype to split-edge thin
