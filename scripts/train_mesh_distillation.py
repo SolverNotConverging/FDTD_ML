@@ -70,7 +70,11 @@ def completed_run_matches(output, provenance):
         summary = json.loads((output / "summary.json").read_text())
     except (OSError, json.JSONDecodeError):
         return False
-    return summary.get("status") == "complete" and summary.get("source_hashes") == provenance
+    return bool(
+        summary.get("status") == "complete"
+        and summary.get("source_hashes") == provenance
+        and summary.get("checkpoint_sha256") == sha256_file(output / "checkpoint.pt")
+    )
 
 
 def evaluate(model, loader, device):

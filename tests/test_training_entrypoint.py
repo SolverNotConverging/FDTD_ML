@@ -18,11 +18,17 @@ def test_completed_run_requires_all_outputs_and_matching_provenance(tmp_path):
 
     for name in ("checkpoint.pt", "history.json", "predicted_meshes.json"):
         (tmp_path / name).write_bytes(b"complete")
-    (tmp_path / "summary.json").write_text(
-        json.dumps({"status": "complete", "source_hashes": provenance})
-    )
+    summary = {
+        "status": "complete",
+        "source_hashes": provenance,
+        "checkpoint_sha256": trainer.sha256_file(tmp_path / "checkpoint.pt"),
+    }
+    (tmp_path / "summary.json").write_text(json.dumps(summary))
     assert trainer.completed_run_matches(tmp_path, provenance) is True
     assert trainer.completed_run_matches(tmp_path, {"dataset": "changed"}) is False
+
+    (tmp_path / "checkpoint.pt").write_bytes(b"corrupt checkpoint")
+    assert trainer.completed_run_matches(tmp_path, provenance) is False
 
 
 def test_training_lock_can_be_acquired_and_released(tmp_path):
