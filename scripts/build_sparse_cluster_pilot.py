@@ -40,8 +40,11 @@ def _scene(rng, family, serial, domain):
         definitions.append(definition)
         halves.append(half)
     low, high = GAP_RANGES[serial % len(GAP_RANGES)]
-    gap_x = float(rng.uniform(low, high))
-    gap_y = float(rng.uniform(low, high))
+    primary_gap = float(rng.uniform(low, high))
+    wide_gap = float(rng.uniform(*GAP_RANGES[-1]))
+    gap_x, gap_y = (
+        (primary_gap, wide_gap) if serial % 2 else (wide_gap, primary_gap)
+    )
     centers = [np.zeros(2)]
     centers.append(np.array([halves[0][0] + halves[1][0] + gap_x, 0.0]))
     centers.append(np.array([0.0, halves[0][1] + halves[2][1] + gap_y]))
@@ -63,6 +66,7 @@ def _scene(rng, family, serial, domain):
         "scene_id": f"sparse_{family}_{serial:03d}_{_digest(objects)[:8]}",
         "family_id": family,
         "incidence_angle_rad": float(rng.uniform(0, 2 * np.pi)),
+        "nominal_gaps_m": [gap_x, gap_y],
         "objects": objects,
     }
     metrics = sparse_cluster_metrics(scene, domain=domain)
