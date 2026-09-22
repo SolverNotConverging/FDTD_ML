@@ -20,6 +20,7 @@ subsequent milestones.
 - [Conformal PEC and cell enlargement](docs/conformal_pec.md)
 - [Simple-first training curriculum and joint loss](docs/curriculum.md)
 - [High-contrast dielectric reference escalation](docs/validation/dielectric_reference_escalation.md)
+- [CUDA float32 qualification](docs/validation/cuda_precision.md)
 - [Archived receiver-CNN project](archive/receiver_cnn_2026-09-22/README.md)
 
 ## Run the initial validation
@@ -43,6 +44,8 @@ PYTHONPATH=src .venv/bin/python scripts/run_dielectric_reference_attempt.py \
   --scene eps12_small --cells 512 --duration-ns 400 --device cuda:0
 MPLCONFIGDIR=/tmp/scattermesh-mpl \
   .venv/bin/python scripts/summarize_dielectric_escalation.py
+.venv/bin/python scripts/qualify_cuda_precision.py --case eps12_small --device cuda:0
+.venv/bin/python scripts/summarize_cuda_precision.py
 ```
 
 Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and
@@ -62,6 +65,9 @@ The restartable [high-contrast escalation](docs/validation/dielectric_reference_
 accepts lossless epsilon_r=12 and conductive epsilon_r=30 cylinders after independent
 duration, quadrature, and contour probes. The unresolved lossless epsilon_r=30 case
 is retained as nonconverged and skipped at the bounded pilot hard limit.
+The [precision qualification](docs/validation/cuda_precision.md) finds float32
+accurate in three representative cases, but slower than float64 in both 512²
+throughput probes. Production references therefore remain float64 on this server.
 
 For a fresh environment, install this package and the tools:
 

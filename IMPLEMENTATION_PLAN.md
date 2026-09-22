@@ -162,6 +162,11 @@ throughput benchmarks. Small 128² runs remain launch-overhead dominated. See th
 [measured CUDA foundation](docs/validation/cuda_foundation.md). The remaining items
 below are still required before M2 is complete.
 
+Float32 passes the bounded precision gates for accepted epsilon_r=12, conductive
+epsilon_r=30, and enlarged-PEC references, but is slower than float64 in both 512²
+throughput probes on this server. Float64 therefore remains the production default;
+see the [precision qualification](docs/validation/cuda_precision.md).
+
 - Port validated update equations and coefficient construction without importing
   legacy experiment policy. Keep fields, CPML state, source evaluation, and DFT on GPU.
 - Implement fused/batched surface DFT kernels; use phase recurrence with bounded
@@ -170,7 +175,7 @@ below are still required before M2 is complete.
   port to mixed-material coupling after that CPU formulation is qualified. Continue
   validating shared-master reductions and active-source field constraints.
 - Implement NF2FF reductions after time stepping. Start with accurate accumulation;
-  quantify float32 versus float64 and reduction errors before reducing precision.
+  retain the measured float32/float64 comparison when changing reduction kernels.
 - Test CPU/GPU equivalence on uniform, graded, lossy, PEC, and oblique cases;
   benchmark memory, wall time, cell updates, and DFT overhead separately.
 - Batch compatible scenes if beneficial; no host-device field transfer each step.

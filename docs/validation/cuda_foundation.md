@@ -13,8 +13,9 @@ circle/rectangle scenes in staircase, conformal, and enlarged modes. PEC geometr
 cut intersections, and the enlargement operator are constructed once on the CPU;
 inverse-length gradients, affine total-field constraints, and projected mass
 transfers remain on the selected Torch device during stepping. Mixed PEC/dielectric
-scenes remain rejected until their coupling is qualified. Float64 is the qualified
-starting precision; float32 remains an explicit future accuracy study.
+scenes remain rejected until their coupling is qualified. Float32 is accurate in
+the bounded [precision qualification](cuda_precision.md), but slower in both 512²
+probes on this server, so production references remain float64.
 
 ## Equivalence
 

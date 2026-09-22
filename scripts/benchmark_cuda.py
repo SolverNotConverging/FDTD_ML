@@ -57,7 +57,7 @@ def _environment(device):
     return result
 
 
-def _case(size, duration, device, scene):
+def _case(size, duration, device, scene, dtype):
     grid = Grid(np.linspace(0.0, 1.2, size + 1), np.linspace(0.0, 1.2, size + 1))
     material = Material(12.0) if scene == "dielectric" else PEC()
     objects = [Circle((0.6387, 0.5669), 0.05, material)]
@@ -69,7 +69,7 @@ def _case(size, duration, device, scene):
     reference = simulate(grid, objects, source, **settings)
     numpy_wall = time.perf_counter() - started
     started = time.perf_counter()
-    candidate = simulate_cuda(grid, objects, source, device=device, dtype="float64", **settings)
+    candidate = simulate_cuda(grid, objects, source, device=device, dtype=dtype, **settings)
     cuda_wall = time.perf_counter() - started
     field_errors = {
         name: _relative_l2(reference.fields[name], candidate.fields[name])
@@ -101,11 +101,12 @@ def main():
     parser.add_argument("--sizes", nargs="+", type=int, default=[128, 512])
     parser.add_argument("--duration", type=float, default=10e-9)
     parser.add_argument("--scene", choices=["dielectric", "pec_enlarged"], default="dielectric")
+    parser.add_argument("--dtype", choices=["float32", "float64"], default="float64")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     rows, times = [], []
     for size in args.sizes:
-        row, numpy_wall, cuda_wall = _case(size, args.duration, args.device, args.scene)
+        row, numpy_wall, cuda_wall = _case(size, args.duration, args.device, args.scene, args.dtype)
         row["cuda"]["speedup_vs_numpy_wall"] = numpy_wall / max(cuda_wall, 1e-30)
         row["cuda"]["cell_updates_per_second"] = row["cuda"]["cell_updates"] / max(cuda_wall, 1e-30)
         rows.append(row)
@@ -126,6 +127,7 @@ def main():
             "pml": 0.15,
             "samples": 24,
             "scene": args.scene,
+            "dtype": args.dtype,
         },
         "source_sha256": source_hash,
         "environment": _environment(args.device),
@@ -142,7 +144,7 @@ def main():
     sizes, numpy_times, cuda_times = zip(*times)
     fig, axis = plt.subplots()
     axis.plot(sizes, numpy_times, "o-", label="NumPy float64")
-    axis.plot(sizes, cuda_times, "o-", label=f"CUDA float64 ({args.device})")
+    axis.plot(sizes, cuda_times, "o-", label=f"CUDA {args.dtype} ({args.device})")
     axis.set(
         xlabel="Grid cells per axis", ylabel="Wall time (s)", title="CUDA throughput benchmark"
     )
