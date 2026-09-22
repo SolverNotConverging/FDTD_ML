@@ -17,6 +17,7 @@ from scattermesh import (
     PEC,
     Circle,
     Grid,
+    Material,
     PlaneWave,
     circular_interface_axes,
     density_axis,
@@ -80,6 +81,7 @@ CANDIDATES = (
     dict(candidate="random_density_0", kind="random", random_index=0, max_ratio=2.0),
     dict(candidate="random_density_1", kind="random", random_index=1, max_ratio=2.0),
 )
+NUMERICAL_SCHEMA = 2
 
 
 def parse_args():
@@ -100,10 +102,12 @@ def sha256_json(value):
 
 def source_hashes():
     root = Path(__file__).resolve().parents[1]
-    paths = [*sorted((root / "src/scattermesh").glob("*.py")), Path(__file__).resolve()]
-    return {
+    paths = sorted((root / "src/scattermesh").glob("*.py"))
+    result = {
         str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
     }
+    result["pilot_mesh_numerical_schema"] = str(NUMERICAL_SCHEMA)
+    return result
 
 
 def atomic_json(path, value):
@@ -119,19 +123,26 @@ def atomic_npz(path, **arrays):
     os.replace(temporary, path)
 
 
-def definitions():
+def definitions(
+    scenes=SCENES,
+    cells_set=CELLS,
+    candidates=CANDIDATES,
+    *,
+    duration=50e-9,
+    pec_mode="enlarged",
+):
     rows = []
-    for scene in SCENES:
-        for cells in CELLS:
-            for candidate in CANDIDATES:
+    for scene in scenes:
+        for cells in cells_set:
+            for candidate in candidates:
                 config = dict(
                     schema_version=1,
                     scene=scene,
                     cells=cells,
                     **candidate,
-                    duration=50e-9,
+                    duration=duration,
                     pml_thickness=0.15,
-                    pec_mode="enlarged",
+                    pec_mode=pec_mode,
                     frequencies=FREQUENCIES.tolist(),
                     angles=len(ANGLES),
                 )
@@ -206,12 +217,18 @@ def make_grid(config):
     return Grid(x, y, max_ratio=config["max_ratio"])
 
 
+def scene_material(scene):
+    material = scene.get("material")
+    return PEC() if material is None else Material(material["epsilon_r"], material["sigma_e"])
+
+
 def analytic_reference(scene, source):
+    material = scene_material(scene)
     return np.array(
         [
             cylinder_far_field(
                 scene["radius"],
-                PEC(),
+                material,
                 frequency,
                 ANGLES,
                 scene["angle"],
@@ -259,7 +276,7 @@ def run_case(config, output, device, sources):
     try:
         result = simulate_cuda(
             grid,
-            [Circle(scene["center"], scene["radius"], PEC())],
+            [Circle(scene["center"], scene["radius"], scene_material(scene))],
             source,
             frequencies=FREQUENCIES,
             duration=config["duration"],
@@ -326,8 +343,8 @@ def pareto(records):
     return frontier
 
 
-def summarize(output, sources):
-    expected = definitions()
+def summarize(output, sources, expected=None, scenes=SCENES, cells_set=CELLS):
+    expected = definitions() if expected is None else expected
     records = []
     for config in expected:
         directory = output / "cases" / config["case_id"]
@@ -336,12 +353,12 @@ def summarize(output, sources):
         if record is None:
             raise ValueError(f"Missing or stale pilot case: {config['case_id']}")
         records.append(record)
-    scenes, all_accepted = {}, [row for row in records if row["accepted"]]
-    for scene in SCENES:
+    scene_reports, all_accepted = {}, [row for row in records if row["accepted"]]
+    for scene in scenes:
         scene_id = scene["scene_id"]
         selected = [row for row in all_accepted if row["config"]["scene"]["scene_id"] == scene_id]
         budgets = {}
-        for cells in CELLS:
+        for cells in cells_set:
             uniform = next(
                 (
                     row
@@ -368,7 +385,7 @@ def summarize(output, sources):
                 best_same_cells_loss=best_same["joint_scattering_loss"],
                 best_same_cells_update_ratio=best_same["cell_updates"] / uniform["cell_updates"],
             )
-        scenes[scene_id] = dict(budgets=budgets, pareto_cases=pareto(selected))
+        scene_reports[scene_id] = dict(budgets=budgets, pareto_cases=pareto(selected))
     infeasible = [row for row in records if row["status"] == "mesh_infeasible"]
     unsettled = [row for row in records if row["status"] == "unsettled"]
     summary = dict(
@@ -380,16 +397,16 @@ def summarize(output, sources):
         unsettled_count=len(unsettled),
         loss="complex far-field + floored log scattering width",
         cost="Nx*Ny*Nt",
-        scenes=scenes,
+        scenes=scene_reports,
     )
     atomic_json(output / "report.json", summary)
-    plot(records, output / "headroom.png")
+    plot(records, output / "headroom.png", scenes)
     return summary
 
 
-def plot(records, path):
+def plot(records, path, scenes=SCENES):
     figure, axes = plt.subplots(2, 2, figsize=(11, 8), constrained_layout=True)
-    for axis, scene in zip(axes.flat, SCENES):
+    for axis, scene in zip(axes.flat, scenes):
         selected = [
             row
             for row in records

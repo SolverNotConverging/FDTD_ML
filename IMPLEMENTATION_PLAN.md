@@ -202,6 +202,13 @@ uniform controls is also negative after a targeted 67² control removes the last
 apparent advantage. Continue M3 with simple dielectric cylinders, whose shorter
 internal wavelength can create genuine allocation headroom.
 
+The simple dielectric follow-up passes this gate. A 364-run candidate/control matrix
+shows matched-update advantages up to 1.896x for epsilon_r=4 and 1.448x for its
+lossy case, with both complex and scattering-width components improving. See the
+[qualification](docs/validation/dielectric_mesh_headroom.md). M3 can now feed the
+first M4 simple-scene candidate-label pool; the result does not justify CNN training
+before that larger pool and its grouped splits are validated.
+
 - Pilot 32/48/64 cells per axis and 96/128 controls, subject to actual feasibility.
   These are proposed scattering budgets, not continuation of the retired campaign.
 - Compare true uniform, simple feature-based nonuniform, randomized density, and

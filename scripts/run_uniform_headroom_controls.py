@@ -18,7 +18,16 @@ PILOT = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(PILOT)
 
 CONTROL_CELLS = tuple(
-    cells for cells in sorted({*range(32, 129, 4), 65, 66, 67}) if cells not in PILOT.CELLS
+    cells
+    for cells in sorted(
+        {
+            *range(32, 129, 4),
+            *range(33, 40),
+            *range(53, 56),
+            *range(65, 76),
+        }
+    )
+    if cells not in PILOT.CELLS
 )
 
 
@@ -32,9 +41,9 @@ def parse_args():
     return parser.parse_args()
 
 
-def definitions():
+def definitions(scenes=PILOT.SCENES, *, duration=50e-9, pec_mode="enlarged"):
     rows = []
-    for scene in PILOT.SCENES:
+    for scene in scenes:
         for cells in CONTROL_CELLS:
             rows.append(
                 dict(
@@ -44,9 +53,9 @@ def definitions():
                     candidate="uniform",
                     kind="uniform",
                     max_ratio=1.0,
-                    duration=50e-9,
+                    duration=duration,
                     pml_thickness=0.15,
-                    pec_mode="enlarged",
+                    pec_mode=pec_mode,
                     frequencies=PILOT.FREQUENCIES.tolist(),
                     angles=len(PILOT.ANGLES),
                     case_id=f"{scene['scene_id']}_n{cells}_uniform",
@@ -70,11 +79,19 @@ def load_verified(config, output, source_hashes):
     return record
 
 
-def summarize(output):
+def summarize(
+    output,
+    scenes=PILOT.SCENES,
+    pilot_definitions=None,
+    control_definitions=None,
+    cells_set=PILOT.CELLS,
+):
     pilot_sources = PILOT.source_hashes()
-    PILOT.summarize(output, pilot_sources)
+    pilot_definitions = PILOT.definitions() if pilot_definitions is None else pilot_definitions
+    control_definitions = definitions() if control_definitions is None else control_definitions
+    PILOT.summarize(output, pilot_sources, pilot_definitions, scenes, cells_set)
     pilot_records = []
-    for config in PILOT.definitions():
+    for config in pilot_definitions:
         fingerprint = PILOT.sha256_json(dict(config=config, sources=pilot_sources))
         directory = output / "cases" / config["case_id"]
         record = PILOT.valid_cache(
@@ -84,10 +101,10 @@ def summarize(output):
             raise ValueError(f"Missing or stale expanded case: {config['case_id']}")
         pilot_records.append(record)
     control_sources = sources()
-    controls = [load_verified(config, output, control_sources) for config in definitions()]
+    controls = [load_verified(config, output, control_sources) for config in control_definitions]
     accepted = [record for record in [*pilot_records, *controls] if record["accepted"]]
-    scenes = {}
-    for scene in PILOT.SCENES:
+    scene_reports = {}
+    for scene in scenes:
         scene_id = scene["scene_id"]
         selected = [
             record for record in accepted if record["config"]["scene"]["scene_id"] == scene_id
@@ -103,6 +120,20 @@ def summarize(output):
                 for control in uniform
                 if control["cell_updates"] <= candidate["cell_updates"]
             ]
+            if not affordable:
+                comparisons.append(
+                    dict(
+                        candidate=candidate["case_id"],
+                        candidate_updates=candidate["cell_updates"],
+                        candidate_loss=candidate["joint_scattering_loss"],
+                        uniform_control=None,
+                        uniform_updates=None,
+                        uniform_loss=None,
+                        nonuniform_advantage=None,
+                        status="no_settled_uniform_within_budget",
+                    )
+                )
+                continue
             baseline = min(affordable, key=lambda row: row["joint_scattering_loss"])
             comparisons.append(
                 dict(
@@ -116,14 +147,15 @@ def summarize(output):
                     / candidate["joint_scattering_loss"],
                 )
             )
-        scenes[scene_id] = dict(
+        scene_reports[scene_id] = dict(
             pareto_cases=frontier_ids,
             nonuniform_pareto_comparisons=comparisons,
         )
     advantages = [
         row["nonuniform_advantage"]
-        for scene in scenes.values()
+        for scene in scene_reports.values()
         for row in scene["nonuniform_pareto_comparisons"]
+        if row["nonuniform_advantage"] is not None
     ]
     report = dict(
         schema_version=1,
@@ -132,16 +164,16 @@ def summarize(output):
         uniform_control_count=len(controls),
         accepted_count=len(accepted),
         maximum_nonuniform_advantage=max(advantages, default=None),
-        scenes=scenes,
+        scenes=scene_reports,
     )
     PILOT.atomic_json(output / "dense_uniform_report.json", report)
-    plot(accepted, output / "dense_uniform_headroom.png")
+    plot(accepted, output / "dense_uniform_headroom.png", scenes)
     print(json.dumps(report, indent=2))
 
 
-def plot(records, path):
+def plot(records, path, scenes=PILOT.SCENES):
     figure, axes = plt.subplots(2, 2, figsize=(11, 8), constrained_layout=True)
-    for axis, scene in zip(axes.flat, PILOT.SCENES):
+    for axis, scene in zip(axes.flat, scenes):
         selected = [
             record
             for record in records

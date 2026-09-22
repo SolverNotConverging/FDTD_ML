@@ -25,6 +25,7 @@ and CNN training remain subsequent milestones.
 - [Adaptive convergence policy](docs/validation/adaptive_convergence_policy.md)
 - [Separated mixed PEC/dielectric qualification](docs/validation/mixed_scattering.md)
 - [Low-budget mesh-headroom pilot](docs/validation/mesh_headroom_pilot.md)
+- [Simple dielectric mesh-headroom qualification](docs/validation/dielectric_mesh_headroom.md)
 - [Archived receiver-CNN project](archive/receiver_cnn_2026-09-22/README.md)
 
 ## Run the initial validation
@@ -68,6 +69,11 @@ MPLCONFIGDIR=/tmp/scattermesh-mpl \
 .venv/bin/python scripts/run_uniform_headroom_controls.py \
   --device cuda:0 --shard 0 --shards 4
 .venv/bin/python scripts/run_uniform_headroom_controls.py --summarize
+.venv/bin/python scripts/pilot_dielectric_mesh_headroom.py \
+  --device cuda:0 --shard 0 --shards 4
+.venv/bin/python scripts/run_dielectric_uniform_headroom_controls.py \
+  --device cuda:0 --shard 0 --shards 4
+.venv/bin/python scripts/run_dielectric_uniform_headroom_controls.py --summarize
 ```
 
 Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and

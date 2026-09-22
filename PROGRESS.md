@@ -213,6 +213,15 @@ point is uniform across all four isolated PEC scenes. M3 therefore moves to simp
 dielectric cylinders; PEC cylinders remain valuable analytic validation cases but
 do not supply useful mesh-policy labels by themselves.
 
+The follow-up dielectric search passes the headroom gate. Across 208 candidates and
+156 dense uniform controls, 355 of 364 runs settle. For epsilon_r=4, a 64² region-
+focused grid has 1.896 times lower joint loss than the best affordable 75² uniform
+grid at nearly equal updates; a 96² hybrid has a 1.863x advantage over 108² uniform.
+The lossy epsilon_r=4 scene reaches 1.448x. Both complex-field and log-width terms
+improve, and the best candidate uses only 1.058 grading. See the
+[dielectric headroom qualification](docs/validation/dielectric_mesh_headroom.md).
+M3 now has enough evidence to begin the larger simple-scene candidate-label pool.
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong
@@ -224,7 +233,7 @@ do not supply useful mesh-policy labels by themselves.
    the new scene schema. Extend mixed coupling to declared contact/overlap priority
    only after deriving its operator. NF2FF is currently a post-step host calculation.
    Float32 is accurate but has no throughput benefit here, so retain float64.
-4. Run the same matched-update headroom search on simple dielectric cylinders,
-   starting at moderate contrast and then qualified high contrast/loss. Train only
-   if a nonuniform candidate improves the dense-control Pareto frontier. Expand the
-   curriculum gradually and report simple/sparse/complex separately.
+4. Build the first 32--64-geometry simple dielectric pool with grouped lineage
+   splits, multiple illumination/budget conditions, and multiple retained Pareto
+   candidates. Keep PEC controls and dense uniform baselines. Expand to sparse and
+   complex families only after this label pipeline is verified.
