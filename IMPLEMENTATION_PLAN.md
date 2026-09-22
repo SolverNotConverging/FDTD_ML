@@ -409,11 +409,13 @@ As stages expand, keep three separately tagged families and report their results
 
 After the main held-out simple-family gate, run the separately frozen analytic-circle
 position/scale suite before adding multi-object scenes. It spans center and four
-near-corner placements, radii below/inside/above the training range, low lossless and
-high lossy contrast, unseen incidence angles, and exact 32/48 budgets. Its thresholds
-are fixed in `configs/circle_position_scale_generalization.json`; failure triggers a
-broader translated/scaled simple-family training pool rather than progression to
-sparse scenes.
+translated quadrant placements, radii below/inside/above the training range, low
+lossless and high lossy contrast, unseen incidence angles, and exact 32/48 budgets.
+Even the largest circle retains at least 2.5 cells of free space before the PML at
+the 32-cell budget, isolating translation generalization from near-PML truncation.
+Its thresholds are fixed in `configs/circle_position_scale_generalization.json`;
+failure triggers a broader translated/scaled simple-family training pool rather
+than progression to sparse scenes.
 
 The simple-family handoff is now automated. The label-to-training workflow requires
 one terminal record per candidate and an accepted uniform baseline per condition;

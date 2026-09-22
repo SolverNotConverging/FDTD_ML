@@ -315,12 +315,13 @@ as four deterministic hash-balanced CUDA shards with bounded process retries. Th
 final report includes lower-tail improvement, upper-tail teacher gap, worst learned
 loss, and maximum Nt ratio in addition to the pilot gates.
 
-The separately frozen post-gate circle suite is now materialized as
-`circle_position_scale_a181498ff8b7f500`. Its 120 conditions cross five positions,
-three radii below/inside/above the training range, two material regimes, two unseen
-angles, and exact 32/48 budgets. The restartable paired learned/uniform runner and
-four-GPU continuation wait for the main frozen physics gate before launching 240
-solver cases. Passing this gate is now required before progression to sparse scenes.
+The separately frozen post-gate circle suite has 120 conditions crossing five
+positions, three radii below/inside/above the training range, two material regimes,
+two unseen angles, and exact 32/48 budgets. The quadrant centers preserve at least
+2.5 coarse cells between the largest circle and the PML. The restartable paired
+learned/uniform runner and four-GPU continuation wait for the main frozen physics
+gate before launching 240 solver cases. Passing this gate is now required before
+progression to sparse scenes.
 
 ## Next work
 

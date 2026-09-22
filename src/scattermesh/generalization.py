@@ -15,10 +15,10 @@ GENERALIZATION_BUDGETS = (32, 48)
 GENERALIZATION_ANGLES = (0.35, 4.9)
 GENERALIZATION_CENTERS = {
     "center": (0.60, 0.60),
-    "southwest": (0.31, 0.31),
-    "southeast": (0.89, 0.31),
-    "northwest": (0.31, 0.89),
-    "northeast": (0.89, 0.89),
+    "southwest": (0.38, 0.38),
+    "southeast": (0.82, 0.38),
+    "northwest": (0.38, 0.82),
+    "northeast": (0.82, 0.82),
 }
 GENERALIZATION_RADII = {
     "below_training_range": 0.040,
@@ -37,14 +37,7 @@ def _identifier(value):
 
 
 def _conductivity(epsilon_r, loss_tangent):
-    return (
-        loss_tangent
-        * 2
-        * np.pi
-        * REFERENCE_FREQUENCY_HZ
-        * EPS0
-        * epsilon_r
-    )
+    return loss_tangent * 2 * np.pi * REFERENCE_FREQUENCY_HZ * EPS0 * epsilon_r
 
 
 def circle_generalization_examples():
@@ -76,9 +69,7 @@ def circle_generalization_examples():
                                 **definition,
                                 "angle_index": angle_index,
                                 "feature_size_m": 2 * radius,
-                                "sigma_e_s_per_m": _conductivity(
-                                    epsilon_r, loss_tangent
-                                ),
+                                "sigma_e_s_per_m": _conductivity(epsilon_r, loss_tangent),
                                 "frequencies_hz": list(FREQUENCIES_HZ),
                             }
                         )

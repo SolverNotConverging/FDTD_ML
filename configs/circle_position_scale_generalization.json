@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "evaluation_id": "circle_position_scale_a181498ff8b7f500",
+  "evaluation_id": "circle_position_scale_0a77ba460cf3dbf4",
   "purpose": "frozen analytic-circle position and scale generalization",
   "examples": [
     {
@@ -220,7 +220,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_e12f4463a647bb1a",
+      "sample_id": "circle_generalization_d7481ca452528c8e",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -228,8 +228,8 @@
       "radius_m": 0.04,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -247,7 +247,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_8e80522f118e6cb5",
+      "sample_id": "circle_generalization_07c4941acc72157a",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -255,8 +255,8 @@
       "radius_m": 0.04,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -274,7 +274,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_4b2b914c9477b6d8",
+      "sample_id": "circle_generalization_d5d76aac7be1a6c3",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -282,8 +282,8 @@
       "radius_m": 0.04,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -301,7 +301,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_b849396c319e6b49",
+      "sample_id": "circle_generalization_e3def05b6c9c9a3b",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -309,8 +309,8 @@
       "radius_m": 0.04,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -328,7 +328,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_26d8bb7de7faeb96",
+      "sample_id": "circle_generalization_d9753d061af5916d",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -336,8 +336,8 @@
       "radius_m": 0.04,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -355,7 +355,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_8a2cee5b1d1ed9b5",
+      "sample_id": "circle_generalization_2f0da50c3d80d01b",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -363,8 +363,8 @@
       "radius_m": 0.04,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -382,7 +382,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_08e7491c447edb4d",
+      "sample_id": "circle_generalization_7fe827bacd5c5e9f",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -390,8 +390,8 @@
       "radius_m": 0.04,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -409,7 +409,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_2941a66571764c00",
+      "sample_id": "circle_generalization_be6615c42ec80f98",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -417,8 +417,8 @@
       "radius_m": 0.04,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -436,7 +436,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_76339d4d716a1ccc",
+      "sample_id": "circle_generalization_cbc77729e132e0b4",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -444,8 +444,8 @@
       "radius_m": 0.04,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -463,7 +463,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_f0de7cfb8ae0cf0c",
+      "sample_id": "circle_generalization_58449a16a71fb2ab",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -471,8 +471,8 @@
       "radius_m": 0.04,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -490,7 +490,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_94cae745437ddd83",
+      "sample_id": "circle_generalization_3eb3c4a0ef6ad1fc",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -498,8 +498,8 @@
       "radius_m": 0.04,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -517,7 +517,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_5230cc62c8dc8159",
+      "sample_id": "circle_generalization_6d87a7fcbf3f1de9",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -525,8 +525,8 @@
       "radius_m": 0.04,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -544,7 +544,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_0f9167bcf76bce92",
+      "sample_id": "circle_generalization_daece9a6f03ac917",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -552,8 +552,8 @@
       "radius_m": 0.04,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -571,7 +571,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_116d0ae98baec777",
+      "sample_id": "circle_generalization_21029a8b353312ae",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -579,8 +579,8 @@
       "radius_m": 0.04,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -598,7 +598,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_36a3da561a5f7307",
+      "sample_id": "circle_generalization_310de7161b8c6c6f",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -606,8 +606,8 @@
       "radius_m": 0.04,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -625,7 +625,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_340a4f25b9c0ebe4",
+      "sample_id": "circle_generalization_004cb6a840e81472",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -633,8 +633,8 @@
       "radius_m": 0.04,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -652,7 +652,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_6a18c6f4e660f089",
+      "sample_id": "circle_generalization_cac246fde0ec09c3",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -660,8 +660,8 @@
       "radius_m": 0.04,
       "position_id": "northwest",
       "center_m": [
-        0.31,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -679,7 +679,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_ae619728677b8207",
+      "sample_id": "circle_generalization_ae54a89b5b24bfc1",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -687,224 +687,8 @@
       "radius_m": 0.04,
       "position_id": "northwest",
       "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "low_lossless",
-      "epsilon_r": 4.0,
-      "loss_tangent_at_1ghz": 0.0,
-      "incidence_angle_rad": 0.35,
-      "cells_x": 48,
-      "cells_y": 48,
-      "angle_index": 0,
-      "feature_size_m": 0.08,
-      "sigma_e_s_per_m": 0.0,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_f8411105c864c77b",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "below_training_range",
-      "radius_m": 0.04,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "low_lossless",
-      "epsilon_r": 4.0,
-      "loss_tangent_at_1ghz": 0.0,
-      "incidence_angle_rad": 4.9,
-      "cells_x": 32,
-      "cells_y": 32,
-      "angle_index": 1,
-      "feature_size_m": 0.08,
-      "sigma_e_s_per_m": 0.0,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_51e6c697737d3c6f",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "below_training_range",
-      "radius_m": 0.04,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "low_lossless",
-      "epsilon_r": 4.0,
-      "loss_tangent_at_1ghz": 0.0,
-      "incidence_angle_rad": 4.9,
-      "cells_x": 48,
-      "cells_y": 48,
-      "angle_index": 1,
-      "feature_size_m": 0.08,
-      "sigma_e_s_per_m": 0.0,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_6f12d314102ebaef",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "below_training_range",
-      "radius_m": 0.04,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "high_lossy",
-      "epsilon_r": 20.0,
-      "loss_tangent_at_1ghz": 0.14,
-      "incidence_angle_rad": 0.35,
-      "cells_x": 32,
-      "cells_y": 32,
-      "angle_index": 0,
-      "feature_size_m": 0.08,
-      "sigma_e_s_per_m": 0.1557710077627019,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_bba79fad0e98c283",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "below_training_range",
-      "radius_m": 0.04,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "high_lossy",
-      "epsilon_r": 20.0,
-      "loss_tangent_at_1ghz": 0.14,
-      "incidence_angle_rad": 0.35,
-      "cells_x": 48,
-      "cells_y": 48,
-      "angle_index": 0,
-      "feature_size_m": 0.08,
-      "sigma_e_s_per_m": 0.1557710077627019,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_1e2ad1ec1a0db803",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "below_training_range",
-      "radius_m": 0.04,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "high_lossy",
-      "epsilon_r": 20.0,
-      "loss_tangent_at_1ghz": 0.14,
-      "incidence_angle_rad": 4.9,
-      "cells_x": 32,
-      "cells_y": 32,
-      "angle_index": 1,
-      "feature_size_m": 0.08,
-      "sigma_e_s_per_m": 0.1557710077627019,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_75b6478a83575d15",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "below_training_range",
-      "radius_m": 0.04,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "high_lossy",
-      "epsilon_r": 20.0,
-      "loss_tangent_at_1ghz": 0.14,
-      "incidence_angle_rad": 4.9,
-      "cells_x": 48,
-      "cells_y": 48,
-      "angle_index": 1,
-      "feature_size_m": 0.08,
-      "sigma_e_s_per_m": 0.1557710077627019,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_cafb19ba700b764d",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "below_training_range",
-      "radius_m": 0.04,
-      "position_id": "northeast",
-      "center_m": [
-        0.89,
-        0.89
-      ],
-      "material_id": "low_lossless",
-      "epsilon_r": 4.0,
-      "loss_tangent_at_1ghz": 0.0,
-      "incidence_angle_rad": 0.35,
-      "cells_x": 32,
-      "cells_y": 32,
-      "angle_index": 0,
-      "feature_size_m": 0.08,
-      "sigma_e_s_per_m": 0.0,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_361a8b41d7bdb02e",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "below_training_range",
-      "radius_m": 0.04,
-      "position_id": "northeast",
-      "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -922,16 +706,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_59519fd26693e191",
+      "sample_id": "circle_generalization_f62c701b2d0ffe9c",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "below_training_range",
       "radius_m": 0.04,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -949,16 +733,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_18d4162eb9f85930",
+      "sample_id": "circle_generalization_95b84b8ab1d29ef3",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "below_training_range",
       "radius_m": 0.04,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -976,16 +760,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_fd466c89a9c3ecc8",
+      "sample_id": "circle_generalization_43380d5b032c43cf",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "below_training_range",
       "radius_m": 0.04,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -1003,16 +787,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_ad2fb4d7979b017d",
+      "sample_id": "circle_generalization_682c9aff57f4691b",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "below_training_range",
       "radius_m": 0.04,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -1030,16 +814,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_d9b742d87ff8f13b",
+      "sample_id": "circle_generalization_1b932200eb463d9a",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "below_training_range",
       "radius_m": 0.04,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -1057,7 +841,34 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_3a26299ff2d0a637",
+      "sample_id": "circle_generalization_0bcf22d9b0965210",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northwest",
+      "center_m": [
+        0.38,
+        0.82
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_3117fbad267474a3",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1065,8 +876,197 @@
       "radius_m": 0.04,
       "position_id": "northeast",
       "center_m": [
-        0.89,
-        0.89
+        0.82,
+        0.82
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_b860ca92e6627f61",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_a077940ad6c06b84",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_029ba2ed5861df3b",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_20d410fe5fe7b162",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_7ce90b5093aae29e",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_8c93f88fe8e617a0",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_0bb9268d6eb5259e",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -1300,7 +1300,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_3e6f5a8e06f1ee4d",
+      "sample_id": "circle_generalization_909c2fdd8e075998",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1308,8 +1308,8 @@
       "radius_m": 0.075,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -1327,7 +1327,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_1527f30c5788d8bf",
+      "sample_id": "circle_generalization_cd27aa1816188472",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1335,8 +1335,8 @@
       "radius_m": 0.075,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -1354,7 +1354,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_bd309686808b7569",
+      "sample_id": "circle_generalization_296cccb8dc96eb13",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1362,8 +1362,8 @@
       "radius_m": 0.075,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -1381,7 +1381,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_d4f45dc377c1ebe6",
+      "sample_id": "circle_generalization_1c4a29af6a4fa8d9",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1389,8 +1389,8 @@
       "radius_m": 0.075,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -1408,7 +1408,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_1b809abb11ccde62",
+      "sample_id": "circle_generalization_e9c5e9f05fb378e6",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1416,8 +1416,8 @@
       "radius_m": 0.075,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -1435,7 +1435,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_099e411e112ce5c0",
+      "sample_id": "circle_generalization_2b83cdcc849f24f6",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1443,8 +1443,8 @@
       "radius_m": 0.075,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -1462,7 +1462,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_d9845049c40ce5f8",
+      "sample_id": "circle_generalization_ae23f24be7b2ea7e",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1470,8 +1470,8 @@
       "radius_m": 0.075,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -1489,7 +1489,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_742aacf6b9857548",
+      "sample_id": "circle_generalization_bb3c7c6c52f9c3cf",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1497,8 +1497,8 @@
       "radius_m": 0.075,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -1516,7 +1516,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_eb7eed299a28a29b",
+      "sample_id": "circle_generalization_794e26b79e3e2d62",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1524,8 +1524,8 @@
       "radius_m": 0.075,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -1543,7 +1543,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_2cc89f33aed76d7a",
+      "sample_id": "circle_generalization_b57c3f972ca9b78b",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1551,8 +1551,8 @@
       "radius_m": 0.075,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -1570,7 +1570,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_9ef5a080ce6c5a71",
+      "sample_id": "circle_generalization_fba8ede8a37e45af",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1578,8 +1578,8 @@
       "radius_m": 0.075,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -1597,7 +1597,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_fdcc9b87177ae7d2",
+      "sample_id": "circle_generalization_e90fb51ae19a0007",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1605,8 +1605,8 @@
       "radius_m": 0.075,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -1624,7 +1624,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_30beb3ccb5e76120",
+      "sample_id": "circle_generalization_03537deddb0de2e3",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1632,8 +1632,8 @@
       "radius_m": 0.075,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -1651,7 +1651,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_266f41851a2b9609",
+      "sample_id": "circle_generalization_aaddd2a87f4bd448",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1659,8 +1659,8 @@
       "radius_m": 0.075,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -1678,7 +1678,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_03c692697d762dcb",
+      "sample_id": "circle_generalization_05edd174c8033d8a",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1686,8 +1686,8 @@
       "radius_m": 0.075,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -1705,7 +1705,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_03c693f4706cfdf3",
+      "sample_id": "circle_generalization_9700846d77af46f4",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1713,8 +1713,8 @@
       "radius_m": 0.075,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -1732,7 +1732,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_3a18f10cb76b167e",
+      "sample_id": "circle_generalization_daabac0007ab7f0a",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1740,8 +1740,8 @@
       "radius_m": 0.075,
       "position_id": "northwest",
       "center_m": [
-        0.31,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -1759,7 +1759,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_386fc69a4811f19e",
+      "sample_id": "circle_generalization_5727122921017690",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -1767,224 +1767,8 @@
       "radius_m": 0.075,
       "position_id": "northwest",
       "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "low_lossless",
-      "epsilon_r": 4.0,
-      "loss_tangent_at_1ghz": 0.0,
-      "incidence_angle_rad": 0.35,
-      "cells_x": 48,
-      "cells_y": 48,
-      "angle_index": 0,
-      "feature_size_m": 0.15,
-      "sigma_e_s_per_m": 0.0,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_0972b463e416615c",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "interpolation",
-      "radius_m": 0.075,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "low_lossless",
-      "epsilon_r": 4.0,
-      "loss_tangent_at_1ghz": 0.0,
-      "incidence_angle_rad": 4.9,
-      "cells_x": 32,
-      "cells_y": 32,
-      "angle_index": 1,
-      "feature_size_m": 0.15,
-      "sigma_e_s_per_m": 0.0,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_40b111f06da4a89a",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "interpolation",
-      "radius_m": 0.075,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "low_lossless",
-      "epsilon_r": 4.0,
-      "loss_tangent_at_1ghz": 0.0,
-      "incidence_angle_rad": 4.9,
-      "cells_x": 48,
-      "cells_y": 48,
-      "angle_index": 1,
-      "feature_size_m": 0.15,
-      "sigma_e_s_per_m": 0.0,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_a29479eaf10554e0",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "interpolation",
-      "radius_m": 0.075,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "high_lossy",
-      "epsilon_r": 20.0,
-      "loss_tangent_at_1ghz": 0.14,
-      "incidence_angle_rad": 0.35,
-      "cells_x": 32,
-      "cells_y": 32,
-      "angle_index": 0,
-      "feature_size_m": 0.15,
-      "sigma_e_s_per_m": 0.1557710077627019,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_8508f97a004d5071",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "interpolation",
-      "radius_m": 0.075,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "high_lossy",
-      "epsilon_r": 20.0,
-      "loss_tangent_at_1ghz": 0.14,
-      "incidence_angle_rad": 0.35,
-      "cells_x": 48,
-      "cells_y": 48,
-      "angle_index": 0,
-      "feature_size_m": 0.15,
-      "sigma_e_s_per_m": 0.1557710077627019,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_f4edf13d7ddeccd7",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "interpolation",
-      "radius_m": 0.075,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "high_lossy",
-      "epsilon_r": 20.0,
-      "loss_tangent_at_1ghz": 0.14,
-      "incidence_angle_rad": 4.9,
-      "cells_x": 32,
-      "cells_y": 32,
-      "angle_index": 1,
-      "feature_size_m": 0.15,
-      "sigma_e_s_per_m": 0.1557710077627019,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_1a9c7d00be43c715",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "interpolation",
-      "radius_m": 0.075,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "high_lossy",
-      "epsilon_r": 20.0,
-      "loss_tangent_at_1ghz": 0.14,
-      "incidence_angle_rad": 4.9,
-      "cells_x": 48,
-      "cells_y": 48,
-      "angle_index": 1,
-      "feature_size_m": 0.15,
-      "sigma_e_s_per_m": 0.1557710077627019,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_c89e257d477788cd",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "interpolation",
-      "radius_m": 0.075,
-      "position_id": "northeast",
-      "center_m": [
-        0.89,
-        0.89
-      ],
-      "material_id": "low_lossless",
-      "epsilon_r": 4.0,
-      "loss_tangent_at_1ghz": 0.0,
-      "incidence_angle_rad": 0.35,
-      "cells_x": 32,
-      "cells_y": 32,
-      "angle_index": 0,
-      "feature_size_m": 0.15,
-      "sigma_e_s_per_m": 0.0,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_bd78710c94ea21dc",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "interpolation",
-      "radius_m": 0.075,
-      "position_id": "northeast",
-      "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -2002,16 +1786,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_797762ba19fe4839",
+      "sample_id": "circle_generalization_85adda80e0eff6f0",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "interpolation",
       "radius_m": 0.075,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -2029,16 +1813,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_4cc17ad46fffb8c6",
+      "sample_id": "circle_generalization_3f63c30a36184890",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "interpolation",
       "radius_m": 0.075,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -2056,16 +1840,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_903ce36c1bc2e59b",
+      "sample_id": "circle_generalization_0f00d245c0ba63ee",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "interpolation",
       "radius_m": 0.075,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -2083,16 +1867,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_84095e6d771ee1d8",
+      "sample_id": "circle_generalization_088256483d82c468",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "interpolation",
       "radius_m": 0.075,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -2110,16 +1894,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_b085020824590a52",
+      "sample_id": "circle_generalization_1951cac9cb3a26f3",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "interpolation",
       "radius_m": 0.075,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -2137,7 +1921,34 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_bfd0bbf00ed07e96",
+      "sample_id": "circle_generalization_6f90787421290126",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northwest",
+      "center_m": [
+        0.38,
+        0.82
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_5959aa9888af6ebc",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2145,8 +1956,197 @@
       "radius_m": 0.075,
       "position_id": "northeast",
       "center_m": [
-        0.89,
-        0.89
+        0.82,
+        0.82
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_6a11c8f96de341f5",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_a2ed707a9fe80ecc",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_7566f7921a3ef521",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_3259867d5af86314",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_9f96cca46191fdfb",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_a691775abaa569e5",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_f606578b4c4d4d0f",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -2380,7 +2380,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_87c5a316558419f0",
+      "sample_id": "circle_generalization_fab6dfdddf956a4f",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2388,8 +2388,8 @@
       "radius_m": 0.135,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -2407,7 +2407,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_b68f6753a33fab13",
+      "sample_id": "circle_generalization_276fb47f5d44705a",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2415,8 +2415,8 @@
       "radius_m": 0.135,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -2434,7 +2434,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_5bf0dc627ee2abef",
+      "sample_id": "circle_generalization_fd88e53c8a148ba9",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2442,8 +2442,8 @@
       "radius_m": 0.135,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -2461,7 +2461,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_28e708849810f03f",
+      "sample_id": "circle_generalization_f7e6ad3f3ab29994",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2469,8 +2469,8 @@
       "radius_m": 0.135,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -2488,7 +2488,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_d7179b813dc75ccb",
+      "sample_id": "circle_generalization_f87a7678965629cd",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2496,8 +2496,8 @@
       "radius_m": 0.135,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -2515,7 +2515,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_9bbb0b461f256fd8",
+      "sample_id": "circle_generalization_ab12204aac188d44",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2523,8 +2523,8 @@
       "radius_m": 0.135,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -2542,7 +2542,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_f82a43fb614fe564",
+      "sample_id": "circle_generalization_e1754990aed5cf0b",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2550,8 +2550,8 @@
       "radius_m": 0.135,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -2569,7 +2569,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_8ace83a6ac48cbda",
+      "sample_id": "circle_generalization_9ba680b8550d1fee",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2577,8 +2577,8 @@
       "radius_m": 0.135,
       "position_id": "southwest",
       "center_m": [
-        0.31,
-        0.31
+        0.38,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -2596,7 +2596,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_afed21085de3299f",
+      "sample_id": "circle_generalization_fd0d012a0efb52bd",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2604,8 +2604,8 @@
       "radius_m": 0.135,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -2623,7 +2623,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_71657db419f7f55c",
+      "sample_id": "circle_generalization_a8f5559df40c242c",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2631,8 +2631,8 @@
       "radius_m": 0.135,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -2650,7 +2650,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_690e3f58b77c82ca",
+      "sample_id": "circle_generalization_0c4cfd9848c9d691",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2658,8 +2658,8 @@
       "radius_m": 0.135,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -2677,7 +2677,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_a8f37ab9d452de3b",
+      "sample_id": "circle_generalization_864181c45a60d336",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2685,8 +2685,8 @@
       "radius_m": 0.135,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -2704,7 +2704,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_e84cbeafb0aa04c7",
+      "sample_id": "circle_generalization_373332de8f92536f",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2712,8 +2712,8 @@
       "radius_m": 0.135,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -2731,7 +2731,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_b8425be771d54a0a",
+      "sample_id": "circle_generalization_50b4a7bcc09d8806",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2739,8 +2739,8 @@
       "radius_m": 0.135,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -2758,7 +2758,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_ad5a78d780552c7f",
+      "sample_id": "circle_generalization_975198b0a84a31bb",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2766,8 +2766,8 @@
       "radius_m": 0.135,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -2785,7 +2785,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_7d550f5b59368feb",
+      "sample_id": "circle_generalization_4f5ac3e566f1dca5",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2793,8 +2793,8 @@
       "radius_m": 0.135,
       "position_id": "southeast",
       "center_m": [
-        0.89,
-        0.31
+        0.82,
+        0.38
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -2812,7 +2812,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_cc3c9fdba150abe1",
+      "sample_id": "circle_generalization_f8064d2f32d1f006",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2820,8 +2820,8 @@
       "radius_m": 0.135,
       "position_id": "northwest",
       "center_m": [
-        0.31,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -2839,7 +2839,7 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_64c02348702ed7b6",
+      "sample_id": "circle_generalization_5309e07589679f6f",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -2847,224 +2847,8 @@
       "radius_m": 0.135,
       "position_id": "northwest",
       "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "low_lossless",
-      "epsilon_r": 4.0,
-      "loss_tangent_at_1ghz": 0.0,
-      "incidence_angle_rad": 0.35,
-      "cells_x": 48,
-      "cells_y": 48,
-      "angle_index": 0,
-      "feature_size_m": 0.27,
-      "sigma_e_s_per_m": 0.0,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_0bd373f50069fba9",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "above_training_range",
-      "radius_m": 0.135,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "low_lossless",
-      "epsilon_r": 4.0,
-      "loss_tangent_at_1ghz": 0.0,
-      "incidence_angle_rad": 4.9,
-      "cells_x": 32,
-      "cells_y": 32,
-      "angle_index": 1,
-      "feature_size_m": 0.27,
-      "sigma_e_s_per_m": 0.0,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_3e992af04ced9b18",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "above_training_range",
-      "radius_m": 0.135,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "low_lossless",
-      "epsilon_r": 4.0,
-      "loss_tangent_at_1ghz": 0.0,
-      "incidence_angle_rad": 4.9,
-      "cells_x": 48,
-      "cells_y": 48,
-      "angle_index": 1,
-      "feature_size_m": 0.27,
-      "sigma_e_s_per_m": 0.0,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_fac6a4be1599cf52",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "above_training_range",
-      "radius_m": 0.135,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "high_lossy",
-      "epsilon_r": 20.0,
-      "loss_tangent_at_1ghz": 0.14,
-      "incidence_angle_rad": 0.35,
-      "cells_x": 32,
-      "cells_y": 32,
-      "angle_index": 0,
-      "feature_size_m": 0.27,
-      "sigma_e_s_per_m": 0.1557710077627019,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_7d18578154f869e6",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "above_training_range",
-      "radius_m": 0.135,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "high_lossy",
-      "epsilon_r": 20.0,
-      "loss_tangent_at_1ghz": 0.14,
-      "incidence_angle_rad": 0.35,
-      "cells_x": 48,
-      "cells_y": 48,
-      "angle_index": 0,
-      "feature_size_m": 0.27,
-      "sigma_e_s_per_m": 0.1557710077627019,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_7956aed397f840c2",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "above_training_range",
-      "radius_m": 0.135,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "high_lossy",
-      "epsilon_r": 20.0,
-      "loss_tangent_at_1ghz": 0.14,
-      "incidence_angle_rad": 4.9,
-      "cells_x": 32,
-      "cells_y": 32,
-      "angle_index": 1,
-      "feature_size_m": 0.27,
-      "sigma_e_s_per_m": 0.1557710077627019,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_950b0e76ffda543d",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "above_training_range",
-      "radius_m": 0.135,
-      "position_id": "northwest",
-      "center_m": [
-        0.31,
-        0.89
-      ],
-      "material_id": "high_lossy",
-      "epsilon_r": 20.0,
-      "loss_tangent_at_1ghz": 0.14,
-      "incidence_angle_rad": 4.9,
-      "cells_x": 48,
-      "cells_y": 48,
-      "angle_index": 1,
-      "feature_size_m": 0.27,
-      "sigma_e_s_per_m": 0.1557710077627019,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_51f746269dad6c4b",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "above_training_range",
-      "radius_m": 0.135,
-      "position_id": "northeast",
-      "center_m": [
-        0.89,
-        0.89
-      ],
-      "material_id": "low_lossless",
-      "epsilon_r": 4.0,
-      "loss_tangent_at_1ghz": 0.0,
-      "incidence_angle_rad": 0.35,
-      "cells_x": 32,
-      "cells_y": 32,
-      "angle_index": 0,
-      "feature_size_m": 0.27,
-      "sigma_e_s_per_m": 0.0,
-      "frequencies_hz": [
-        800000000.0,
-        1000000000.0,
-        1200000000.0
-      ]
-    },
-    {
-      "sample_id": "circle_generalization_1c4edd8a0d7d6307",
-      "split": "generalization",
-      "family": "simple_ood",
-      "shape": "circle",
-      "size_regime": "above_training_range",
-      "radius_m": 0.135,
-      "position_id": "northeast",
-      "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -3082,16 +2866,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_ce361ff81fa89bb5",
+      "sample_id": "circle_generalization_1c1bcdede43c2cfb",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "above_training_range",
       "radius_m": 0.135,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -3109,16 +2893,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_8467603659d07f63",
+      "sample_id": "circle_generalization_c350297b7805c806",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "above_training_range",
       "radius_m": 0.135,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "low_lossless",
       "epsilon_r": 4.0,
@@ -3136,16 +2920,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_deb28de805c34632",
+      "sample_id": "circle_generalization_81a82b97d7356804",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "above_training_range",
       "radius_m": 0.135,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -3163,16 +2947,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_37be9be11b9ace44",
+      "sample_id": "circle_generalization_7823b77206182aa6",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "above_training_range",
       "radius_m": 0.135,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -3190,16 +2974,16 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_fbe65b25a37f7767",
+      "sample_id": "circle_generalization_3de4b8d4e8914509",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
       "size_regime": "above_training_range",
       "radius_m": 0.135,
-      "position_id": "northeast",
+      "position_id": "northwest",
       "center_m": [
-        0.89,
-        0.89
+        0.38,
+        0.82
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,
@@ -3217,7 +3001,34 @@
       ]
     },
     {
-      "sample_id": "circle_generalization_19479651e7a3163a",
+      "sample_id": "circle_generalization_f998ddae99346229",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northwest",
+      "center_m": [
+        0.38,
+        0.82
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_0f286e825fab6ced",
       "split": "generalization",
       "family": "simple_ood",
       "shape": "circle",
@@ -3225,8 +3036,197 @@
       "radius_m": 0.135,
       "position_id": "northeast",
       "center_m": [
-        0.89,
-        0.89
+        0.82,
+        0.82
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_eb6820082c44f460",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_62c567222126887e",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_177a4584d4bc16ca",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_ff57c909f63cbe53",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_ce2bc421b65f29a2",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_34203072da4f9298",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_61d0972502ee2f3f",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.82,
+        0.82
       ],
       "material_id": "high_lossy",
       "epsilon_r": 20.0,

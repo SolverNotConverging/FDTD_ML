@@ -37,13 +37,17 @@ def test_circle_generalization_plan_is_factorial_frozen_and_outside_pml():
     }
     assert {row["cells_x"] for row in examples} == set(GENERALIZATION_BUDGETS)
     assert {row["incidence_angle_rad"] for row in examples} == set(GENERALIZATION_ANGLES)
+    coarse_cell = 1.2 / min(GENERALIZATION_BUDGETS)
     for row in examples:
         x, y = row["center_m"]
         radius = row["radius_m"]
-        assert x - radius > PML_THICKNESS
-        assert y - radius > PML_THICKNESS
-        assert x + radius < 1.2 - PML_THICKNESS
-        assert y + radius < 1.2 - PML_THICKNESS
+        clearances = (
+            x - radius - PML_THICKNESS,
+            y - radius - PML_THICKNESS,
+            1.2 - PML_THICKNESS - x - radius,
+            1.2 - PML_THICKNESS - y - radius,
+        )
+        assert min(clearances) >= 2.5 * coarse_cell
         assert row["cells_x"] == row["cells_y"]
     assert plan["gate"] == {
         "minimum_meaningful_win_fraction": 0.70,
@@ -53,6 +57,12 @@ def test_circle_generalization_plan_is_factorial_frozen_and_outside_pml():
         "minimum_worst_case_improvement": 0.5,
         "require_all_cases_settled": True,
     }
+
+
+def test_checked_in_circle_generalization_plan_matches_generator():
+    path = Path(__file__).resolve().parents[1] / "configs/circle_position_scale_generalization.json"
+    generated = json.loads(json.dumps(circle_generalization_plan()))
+    assert json.loads(path.read_text()) == generated
 
 
 def load_runner():
