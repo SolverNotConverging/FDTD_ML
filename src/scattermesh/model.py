@@ -98,6 +98,11 @@ class MeshDistillationDataset(Dataset):
         self.examples = [metadata["examples"][index] for index in indices]
         self.profiles = arrays["profiles"][indices].copy()
         self.scores = arrays["scores"][indices].copy()
+        self.candidate_mask = (
+            arrays["candidate_mask"][indices].copy()
+            if "candidate_mask" in arrays
+            else np.ones_like(self.scores, dtype=bool)
+        )
         arrays.close()
         self.resolution = int(raster_resolution or metadata["profile_bins"])
         if self.resolution != metadata["profile_bins"]:
@@ -115,21 +120,39 @@ class MeshDistillationDataset(Dataset):
             "conditioning": torch.from_numpy(conditioning),
             "profiles": torch.from_numpy(self.profiles[index]),
             "scores": torch.from_numpy(self.scores[index].astype(np.float32)),
+            "candidate_mask": torch.from_numpy(self.candidate_mask[index]),
             "best_index": torch.tensor(example["best_candidate_index"], dtype=torch.long),
             "sample_index": torch.tensor(index, dtype=torch.long),
         }
 
 
-def set_valued_profile_loss(prediction, targets, scores, best_index, *, score_temperature=4.0):
+def set_valued_profile_loss(
+    prediction,
+    targets,
+    scores,
+    best_index,
+    candidate_mask=None,
+    *,
+    score_temperature=4.0,
+):
     """Combine best-candidate and physics-weighted set supervision in CDF space."""
     if prediction.ndim != 3 or targets.ndim != 4 or scores.ndim != 2:
         raise ValueError("Expected prediction [B,2,R], targets [B,K,2,R], scores [B,K]")
+    if candidate_mask is None:
+        candidate_mask = torch.ones_like(scores, dtype=torch.bool)
+    if candidate_mask.shape != scores.shape or not candidate_mask.any(dim=1).all():
+        raise ValueError("Each example requires at least one valid candidate")
+    if not candidate_mask.gather(1, best_index[:, None]).all():
+        raise ValueError("Selected best candidate must be valid")
     cumulative_prediction = prediction.cumsum(dim=-1)[:, None]
     cumulative_targets = targets.cumsum(dim=-1)
     cdf_loss = (cumulative_prediction - cumulative_targets).square().mean(dim=(-1, -2))
     density_loss = (prediction[:, None] - targets).abs().mean(dim=(-1, -2))
     candidate_loss = cdf_loss + 0.05 * density_loss
-    relative_log_score = torch.log(scores / scores.min(dim=1, keepdim=True).values)
+    masked_scores = scores.masked_fill(~candidate_mask, torch.inf)
+    relative_log_score = torch.log(
+        masked_scores / masked_scores.min(dim=1, keepdim=True).values
+    )
     weights = F.softmax(-score_temperature * relative_log_score, dim=1)
     weighted = (weights * candidate_loss).sum(dim=1)
     selected = candidate_loss.gather(1, best_index[:, None]).squeeze(1)

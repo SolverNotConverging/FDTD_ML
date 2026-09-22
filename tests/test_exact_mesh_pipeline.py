@@ -15,11 +15,11 @@ def load_pipeline():
 
 def write_record(root, case_id, payload):
     path = root / "cases" / case_id / "record.json"
-    path.parent.mkdir(parents=True)
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(payload if isinstance(payload, str) else json.dumps(payload))
 
 
-def test_campaign_snapshot_requires_every_record_to_be_accepted(tmp_path):
+def test_campaign_snapshot_counts_terminal_rejections_without_a_retry_schedule(tmp_path):
     pipeline = load_pipeline()
     campaign = tmp_path / "campaign.json"
     campaign.write_text(
@@ -38,6 +38,7 @@ def test_campaign_snapshot_requires_every_record_to_be_accepted(tmp_path):
         "remaining": 2,
         "malformed": 1,
         "status_counts": {"accepted": 1, "unsettled": 1},
+        "retrying_counts": {},
         "ready": False,
     }
 
@@ -58,3 +59,48 @@ def test_campaign_snapshot_is_ready_only_after_all_accept(tmp_path):
     assert snapshot["completed"] == snapshot["planned"] == 4
     assert snapshot["remaining"] == 0
     assert snapshot["status_counts"] == {"accepted": 4}
+    assert snapshot["retrying_counts"] == {}
+
+
+def test_campaign_snapshot_distinguishes_retryable_and_terminal_unsettled(tmp_path):
+    pipeline = load_pipeline()
+    campaign = tmp_path / "campaign.json"
+    campaign.write_text(
+        json.dumps(
+            {
+                "condition_ids": ["a"],
+                "candidate_names": ["uniform", "region"],
+                "duration_schedule_s": [1.0, 2.0, 4.0],
+            }
+        )
+    )
+    output = tmp_path / "output"
+    write_record(
+        output,
+        "a_uniform",
+        {"status": "accepted", "config": {"duration_attempt_index": 0}},
+    )
+    write_record(
+        output,
+        "a_region",
+        {"status": "unsettled", "config": {"duration_attempt_index": 1}},
+    )
+
+    retrying = pipeline.campaign_snapshot(campaign, output)
+    assert retrying["completed"] == 1
+    assert retrying["remaining"] == 1
+    assert retrying["status_counts"] == {"accepted": 1}
+    assert retrying["retrying_counts"] == {"unsettled": 1}
+    assert retrying["ready"] is False
+
+    write_record(
+        output,
+        "a_region",
+        {"status": "unsettled", "config": {"duration_attempt_index": 2}},
+    )
+    terminal = pipeline.campaign_snapshot(campaign, output)
+    assert terminal["completed"] == terminal["planned"] == 2
+    assert terminal["remaining"] == 0
+    assert terminal["status_counts"] == {"accepted": 1, "unsettled": 1}
+    assert terminal["retrying_counts"] == {}
+    assert terminal["ready"] is True

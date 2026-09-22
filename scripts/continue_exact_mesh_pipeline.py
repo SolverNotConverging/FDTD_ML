@@ -20,12 +20,14 @@ def atomic_json(path, value):
 
 def campaign_snapshot(campaign, campaign_output):
     config = json.loads(Path(campaign).read_text())
+    duration_schedule = config.get("duration_schedule_s")
     expected = [
         f"{condition}_{candidate}"
         for condition in config["condition_ids"]
         for candidate in config["candidate_names"]
     ]
     statuses = Counter()
+    retrying = Counter()
     malformed = 0
     for case_id in expected:
         path = Path(campaign_output) / "cases" / case_id / "record.json"
@@ -33,7 +35,18 @@ def campaign_snapshot(campaign, campaign_output):
             continue
         try:
             payload = json.loads(path.read_text())
-            statuses[str(payload["status"])] += 1
+            status = str(payload["status"])
+            attempt_index = payload.get("config", {}).get("duration_attempt_index")
+            retryable = (
+                status == "unsettled"
+                and duration_schedule is not None
+                and attempt_index is not None
+                and int(attempt_index) < len(duration_schedule) - 1
+            )
+            if retryable:
+                retrying[status] += 1
+            else:
+                statuses[status] += 1
         except (OSError, KeyError, ValueError, TypeError, json.JSONDecodeError):
             malformed += 1
     completed = sum(statuses.values())
@@ -43,9 +56,9 @@ def campaign_snapshot(campaign, campaign_output):
         "remaining": len(expected) - completed,
         "malformed": malformed,
         "status_counts": dict(sorted(statuses.items())),
+        "retrying_counts": dict(sorted(retrying.items())),
         "ready": completed == len(expected)
-        and malformed == 0
-        and statuses == {"accepted": len(expected)},
+        and malformed == 0,
     }
 
 

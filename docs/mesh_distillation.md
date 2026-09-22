@@ -23,11 +23,13 @@ quantities the CNN must infer from a low-resolution mask.
 ## Set-valued targets
 
 `scripts/build_mesh_distillation_dataset.py` refuses partial campaigns. The source
-report must identify the exact campaign, have decision `accepted`, and show every
-candidate case accepted. It also requires every pre-M5 label-diversity check to
-pass, so an orchestration error cannot train from complete but uninformative labels.
-The builder checks each saved axis against its requested Nx and Ny and independently
-recomputes the soft-Nt ranking.
+report must identify the exact campaign, have decision `accepted`, and contain one
+terminal record for every candidate. An accepted uniform baseline is mandatory for
+each condition. A nonuniform candidate that remains unsettled at the hard duration
+limit is retained for provenance, but a saved validity mask excludes its profile
+and score from the set-valued loss. The builder also requires every pre-M5
+label-diversity check to pass, verifies each saved axis against its requested Nx and
+Ny, and independently recomputes the soft-Nt ranking.
 
 Each candidate axis becomes probability mass on 128 fixed spatial bins. Every mesh
 cell contributes equal mass, distributed uniformly across its interval. The
@@ -57,9 +59,10 @@ held-out CUDA result is in the
 ## Full-stage handoff
 
 `scripts/continue_exact_mesh_pipeline.py` waits until every candidate record is
-accepted, reruns the frozen label gate, builds the immutable set-valued dataset,
-and trains the full checkpoint. It records hashes of the dataset, configuration,
-training entry point, and every active `scattermesh` source module.
+terminal, including all declared duration retries, reruns the frozen label gate,
+builds the immutable set-valued dataset, and trains the full checkpoint. It records
+hashes of the dataset, configuration, training entry point, and every active
+`scattermesh` source module.
 
 `scripts/continue_learned_mesh_evaluation.py` then waits for that checkpoint and
 runs all validation and test examples through the CUDA solver. Cases are assigned

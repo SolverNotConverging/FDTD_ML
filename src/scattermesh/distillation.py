@@ -200,10 +200,9 @@ def build_distillation_dataset(
     ):
         raise ValueError("Training data require a passing pre-M5 label-diversity gate")
     expected_cases = len(campaign["condition_ids"]) * len(campaign["candidate_names"])
-    if report.get("case_count") != expected_cases or report.get("status_counts") != {
-        "accepted": expected_cases
-    }:
-        raise ValueError("Training data require every campaign case to be accepted")
+    status_counts = report.get("status_counts", {})
+    if report.get("case_count") != expected_cases or sum(status_counts.values()) != expected_cases:
+        raise ValueError("Training data require one terminal record per campaign case")
     ranking = campaign["ranking"]
     if ranking.get("mode") != "fixed_axis_soft_nt":
         raise ValueError("Distillation requires exact-axis soft-Nt labels")
@@ -216,6 +215,7 @@ def build_distillation_dataset(
         dtype=np.float32,
     )
     scores = np.zeros((len(campaign["condition_ids"]), len(candidates)), dtype=np.float64)
+    candidate_mask = np.zeros((len(campaign["condition_ids"]), len(candidates)), dtype=bool)
     examples = []
     split_counts = Counter()
     exponent = float(ranking["nt_cost_exponent"])
@@ -224,30 +224,37 @@ def build_distillation_dataset(
         geometry = geometries[condition["geometry_id"]]
         records = {}
         axes = {}
-        for candidate in candidates:
+        for candidate_index, candidate in enumerate(candidates):
             case_id = f"{condition_id}_{candidate}"
             directory = campaign_output / "cases" / case_id
             record = json.loads((directory / "record.json").read_text())
-            if not record.get("accepted") or record["config"]["cells"] != condition["cells_x"]:
+            if record["config"]["cells"] != condition["cells_x"]:
                 raise ValueError(f"Invalid exact-budget training case: {case_id}")
             with np.load(directory / "spectra.npz") as arrays:
                 x, y = arrays["x"].copy(), arrays["y"].copy()
             if len(x) - 1 != condition["cells_x"] or len(y) - 1 != condition["cells_y"]:
                 raise ValueError(f"Axis count differs from requested budget: {case_id}")
             records[candidate], axes[candidate] = record, (x, y)
+            candidate_mask[sample_index, candidate_index] = bool(record.get("accepted"))
         baseline = records["uniform"]
+        if not baseline.get("accepted"):
+            raise ValueError(f"Training condition lacks an accepted uniform baseline: {condition_id}")
         for candidate_index, candidate in enumerate(candidates):
             record = records[candidate]
-            scores[sample_index, candidate_index] = record["joint_scattering_loss"] * (
-                record["Nt"] / baseline["Nt"]
-            ) ** exponent
+            if record.get("accepted"):
+                scores[sample_index, candidate_index] = record["joint_scattering_loss"] * (
+                    record["Nt"] / baseline["Nt"]
+                ) ** exponent
+            else:
+                scores[sample_index, candidate_index] = 1.0
             profiles[sample_index, candidate_index, 0] = axis_probability(
                 axes[candidate][0], profile_bins
             )
             profiles[sample_index, candidate_index, 1] = axis_probability(
                 axes[candidate][1], profile_bins
             )
-        best_index = int(np.argmin(scores[sample_index]))
+        ranked_scores = np.where(candidate_mask[sample_index], scores[sample_index], np.inf)
+        best_index = int(np.argmin(ranked_scores))
         budget_label = labels[condition["illumination_id"]]["budgets"][
             str(condition["cells_x"])
         ]
@@ -281,7 +288,12 @@ def build_distillation_dataset(
 
     destination.mkdir(parents=True, exist_ok=True)
     arrays_path = destination / "targets.npz"
-    _atomic_npz(arrays_path, profiles=profiles, scores=scores)
+    _atomic_npz(
+        arrays_path,
+        profiles=profiles,
+        scores=scores,
+        candidate_mask=candidate_mask,
+    )
     payload = {
         "schema_version": 1,
         "dataset_id": manifest["dataset_id"],
@@ -289,6 +301,8 @@ def build_distillation_dataset(
         "ranking": ranking,
         "profile_bins": int(profile_bins),
         "candidate_names": list(candidates),
+        "accepted_candidate_count": int(candidate_mask.sum()),
+        "rejected_candidate_count": int(candidate_mask.size - candidate_mask.sum()),
         "example_count": len(examples),
         "split_counts": dict(sorted(split_counts.items())),
         "source_hashes": {

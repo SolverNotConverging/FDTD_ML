@@ -51,6 +51,7 @@ def evaluate(model, loader, device):
                 batch["profiles"].to(device),
                 batch["scores"].to(device),
                 batch["best_index"].to(device),
+                batch["candidate_mask"].to(device),
             )
             total += float(loss) * len(prediction)
             count += len(prediction)
@@ -72,6 +73,7 @@ def evaluate_uniform(loader, device):
                 profiles,
                 batch["scores"].to(device),
                 batch["best_index"].to(device),
+                batch["candidate_mask"].to(device),
             )
             total += float(loss) * len(prediction)
             count += len(prediction)
@@ -179,6 +181,7 @@ def main():
                 batch["profiles"].to(device),
                 batch["scores"].to(device),
                 batch["best_index"].to(device),
+                batch["candidate_mask"].to(device),
             )
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), config["gradient_clip_norm"])

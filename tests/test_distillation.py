@@ -77,6 +77,22 @@ def test_model_returns_normalized_axis_probabilities():
     assert torch.isfinite(loss)
     assert set(components) == {"selected_cdf_l1", "weighted_set_loss"}
 
+    mask = torch.tensor([[True, False, True], [True, True, False]])
+    masked_loss, _ = set_valued_profile_loss(
+        prediction, targets, scores, torch.tensor([0, 1]), mask
+    )
+    changed_targets = targets.clone()
+    changed_targets[~mask] = torch.softmax(
+        torch.randn_like(changed_targets[~mask]) * 20, dim=-1
+    )
+    changed_scores = scores.clone()
+    changed_scores[~mask] = 1e-9
+    changed_loss, _ = set_valued_profile_loss(
+        prediction, changed_targets, changed_scores, torch.tensor([0, 1]), mask
+    )
+    assert torch.isfinite(masked_loss)
+    assert torch.allclose(masked_loss, changed_loss)
+
 
 def test_dataset_builder_requires_and_preserves_exact_accepted_candidates(tmp_path):
     geometry = {
@@ -162,10 +178,13 @@ def test_dataset_builder_requires_and_preserves_exact_accepted_candidates(tmp_pa
     )
     assert payload["example_count"] == 1
     assert payload["split_counts"] == {"train": 1}
+    assert payload["accepted_candidate_count"] == 2
+    assert payload["rejected_candidate_count"] == 0
     assert payload["examples"][0]["best_candidate"] == "region"
     with np.load(tmp_path / "dataset" / "targets.npz") as arrays:
         assert arrays["profiles"].shape == (1, 2, 2, 64)
         assert arrays["scores"][0, 1] < arrays["scores"][0, 0]
+        assert arrays["candidate_mask"].tolist() == [[True, True]]
 
     broken = json.loads((run / "report.json").read_text())
     broken["decision"] = "incomplete_uniform_baselines"
@@ -179,3 +198,89 @@ def test_dataset_builder_requires_and_preserves_exact_accepted_candidates(tmp_pa
     (run / "report.json").write_text(json.dumps(broken))
     with pytest.raises(ValueError, match="label-diversity gate"):
         build_distillation_dataset(manifest_path, campaign_path, run, tmp_path / "not_ready")
+
+
+def test_dataset_builder_masks_terminal_rejected_nonuniform_candidate(tmp_path):
+    geometry = {
+        "geometry_id": "g1",
+        "lineage_id": "lineage1",
+        "split": "train",
+        "family": "simple",
+        **circle_example(),
+    }
+    condition = {
+        "task_id": "c1",
+        "geometry_id": "g1",
+        "lineage_id": "lineage1",
+        "split": "train",
+        "family": "simple",
+        "illumination_id": "i1",
+        "incidence_angle_rad": 0.7,
+        "cells_x": 32,
+        "cells_y": 32,
+    }
+    manifest = {"dataset_id": "dataset1", "geometries": [geometry], "conditions": [condition]}
+    campaign = {
+        "dataset_id": "dataset1",
+        "campaign_id": "campaign1",
+        "condition_ids": ["c1"],
+        "candidate_names": ["uniform", "region"],
+        "ranking": {"mode": "fixed_axis_soft_nt", "nt_cost_exponent": 0.1},
+    }
+    manifest_path, campaign_path = tmp_path / "manifest.json", tmp_path / "campaign.json"
+    manifest_path.write_text(json.dumps(manifest))
+    campaign_path.write_text(json.dumps(campaign))
+    run = tmp_path / "run"
+    (run / "cases").mkdir(parents=True)
+    (run / "report.json").write_text(
+        json.dumps(
+            {
+                "campaign_id": "campaign1",
+                "decision": "accepted",
+                "case_count": 2,
+                "status_counts": {"accepted": 1, "unsettled": 1},
+                "training_readiness": {
+                    "decision": "ready_for_m5_pilot",
+                    "checks": {
+                        "campaign_complete": True,
+                        "train_has_multiple_winning_lineages": True,
+                        "train_has_multiple_winning_candidates": True,
+                        "train_has_multiple_winning_budgets": True,
+                        "validation_has_headroom": True,
+                        "test_has_headroom": True,
+                    },
+                },
+            }
+        )
+    )
+    (run / "labels.json").write_text(
+        json.dumps({"groups": {"i1": {"budgets": {"32": {"best_case": "c1_uniform"}}}}})
+    )
+    axes = {
+        "uniform": np.linspace(0, 1.2, 33),
+        "region": np.r_[np.linspace(0, 0.5, 12), np.linspace(0.52, 1.2, 21)],
+    }
+    for candidate, accepted in (("uniform", True), ("region", False)):
+        directory = run / "cases" / f"c1_{candidate}"
+        directory.mkdir()
+        (directory / "record.json").write_text(
+            json.dumps(
+                {
+                    "accepted": accepted,
+                    "status": "accepted" if accepted else "unsettled",
+                    "config": {"cells": 32},
+                    "joint_scattering_loss": 0.2,
+                    "Nt": 100,
+                }
+            )
+        )
+        np.savez(directory / "spectra.npz", x=axes[candidate], y=axes[candidate])
+
+    payload = build_distillation_dataset(
+        manifest_path, campaign_path, run, tmp_path / "dataset", profile_bins=64
+    )
+    assert payload["accepted_candidate_count"] == 1
+    assert payload["rejected_candidate_count"] == 1
+    assert payload["examples"][0]["best_candidate"] == "uniform"
+    with np.load(tmp_path / "dataset" / "targets.npz") as arrays:
+        assert arrays["candidate_mask"].tolist() == [[True, False]]
