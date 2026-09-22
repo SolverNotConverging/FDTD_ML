@@ -72,7 +72,8 @@ def case_definitions():
             cases.append(dict(**scene, cells=cells, mesh="uniform", mode="enlarged"))
         cases.append(dict(**scene, cells=64, mesh="uniform", mode="conformal"))
     baseline = next(scene for scene in scene_definitions() if scene["scene_id"] == "medium_oblique")
-    for cells in (96, 128):
+    cases.append(dict(**baseline, cells=160, mesh="uniform", mode="enlarged"))
+    for cells in (96, 128, 160):
         cases.extend(
             [
                 dict(
@@ -219,7 +220,7 @@ def cached_case(record_path, array_path, expected_hash):
 
 def field_sensitivities(case_directory):
     sensitivities = {}
-    for cells in (96, 128):
+    for cells in (96, 128, 160):
         base_name = f"medium_oblique_uniform{cells}_enlarged_base.npz"
         with np.load(case_directory / base_name) as baseline:
             baseline_field = baseline["complex_far_field"]
@@ -266,7 +267,7 @@ def summarize(records, case_directory):
             )
         )
     sensitivities = {}
-    for cells in (96, 128):
+    for cells in (96, 128, 160):
         baseline = next(
             record
             for record in base
@@ -321,6 +322,10 @@ def summarize(records, case_directory):
         contour_change_128=dict(
             threshold=0.005,
             measured=max(field_changes["128"]["larger_contour"]),
+        ),
+        contour_change_160=dict(
+            threshold=0.005,
+            measured=max(field_changes["160"]["larger_contour"]),
         ),
     )
     for gate in gates.values():
