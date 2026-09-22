@@ -1,6 +1,7 @@
 """Scattered-field TMz solver; explicit NumPy reference backend for qualification."""
 
 from .curriculum import (
+    circle_corner_remediation_pool,
     circle_remediation_pool,
     factorial_simple_dielectric_pool,
     simple_candidate_tasks,
@@ -32,6 +33,7 @@ __all__ = [
     "circular_interface_axes",
     "simple_dielectric_pool",
     "circle_remediation_pool",
+    "circle_corner_remediation_pool",
     "factorial_simple_dielectric_pool",
     "simple_candidate_tasks",
     "axis_probability",

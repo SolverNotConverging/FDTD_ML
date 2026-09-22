@@ -19,6 +19,11 @@ REMEDIATION_ANGLES = {
     "validation": (0.65, 4.45),
     "test": (2.35, 5.15),
 }
+CORNER_REMEDIATION_ANGLES = {
+    "train": (4.15, 4.55, 5.25, 5.65),
+    "validation": (4.35, 5.45),
+    "test": (4.70, 5.10),
+}
 LOSS_TANGENT_REFERENCE_FREQUENCY_HZ = 1.0e9
 
 
@@ -298,6 +303,100 @@ def circle_remediation_pool():
                     "minimum_internal_wavelength_m": C0
                     / (max(FREQUENCIES) * np.sqrt(epsilon_r)),
                     "incidence_angles_rad": list(REMEDIATION_ANGLES[split]),
+                    "frequencies_hz": list(FREQUENCIES),
+                    "analytic_reference": "infinite_TM_z_dielectric_cylinder",
+                }
+            )
+    return pool
+
+
+def circle_corner_remediation_pool():
+    """Dense, split-disjoint coverage around the remaining lossy corner failure regime."""
+    corner_centers = {
+        "northeast": (0.79, 0.79),
+        "northwest": (0.41, 0.79),
+        "southeast": (0.79, 0.41),
+        "southwest": (0.41, 0.41),
+    }
+    train_factors = (
+        (0.124, 17.0, 0.11),
+        (0.136, 21.0, 0.15),
+        (0.148, 23.0, 0.17),
+    )
+    lineages = []
+    for corner_index, (corner, center) in enumerate(corner_centers.items()):
+        for factor_index, (radius, epsilon_r, loss_tangent) in enumerate(train_factors):
+            inward = 0.008 * factor_index
+            x_sign = -1 if center[0] > DOMAIN / 2 else 1
+            y_sign = -1 if center[1] > DOMAIN / 2 else 1
+            shifted = (center[0] + x_sign * inward, center[1] + y_sign * inward)
+            lineages.append(
+                ("train", corner, radius, shifted, epsilon_r, loss_tangent, corner_index)
+            )
+    for split, radius, epsilon_r, loss_tangent, inward in (
+        ("validation", 0.131, 18.0, 0.12, 0.014),
+        ("test", 0.142, 22.0, 0.16, 0.026),
+    ):
+        for corner_index, (corner, center) in enumerate(corner_centers.items()):
+            x_sign = -1 if center[0] > DOMAIN / 2 else 1
+            y_sign = -1 if center[1] > DOMAIN / 2 else 1
+            shifted = (center[0] + x_sign * inward, center[1] + y_sign * inward)
+            lineages.append(
+                (split, corner, radius, shifted, epsilon_r, loss_tangent, corner_index)
+            )
+
+    variants = ((0.98, (-0.006, 0.004)), (1.02, (0.005, -0.006)))
+    pool = []
+    for lineage_index, (
+        split,
+        corner,
+        base_radius,
+        base_center,
+        epsilon_r,
+        loss_tangent,
+        corner_index,
+    ) in enumerate(lineages):
+        lineage = {
+            "family": "simple_corner_remediation",
+            "shape": "circle",
+            "split": split,
+            "corner": corner,
+            "base_radius_m": base_radius,
+            "base_center_m": base_center,
+            "epsilon_r": epsilon_r,
+            "loss_tangent_at_1ghz": loss_tangent,
+        }
+        lineage_id = f"circle_corner_remediation_lineage_{_identifier(lineage)}"
+        orientation = 0.39 * lineage_index + 0.17 * corner_index
+        cosine, sine = np.cos(orientation), np.sin(orientation)
+        for variant_index, (scale, raw_offset) in enumerate(variants):
+            dx = cosine * raw_offset[0] - sine * raw_offset[1]
+            dy = sine * raw_offset[0] + cosine * raw_offset[1]
+            radius = base_radius * scale
+            center = (base_center[0] + dx, base_center[1] + dy)
+            definition = {
+                "family": "simple_corner_remediation",
+                "shape": "circle",
+                "lineage_id": lineage_id,
+                "variant_index": variant_index,
+                "split": split,
+                "corner": corner,
+                "radius_m": radius,
+                "center_m": center,
+                "epsilon_r": epsilon_r,
+                "loss_tangent_at_1ghz": loss_tangent,
+                "sigma_e_s_per_m": _conductivity_for_loss_tangent(epsilon_r, loss_tangent),
+            }
+            feature_size = 2 * radius
+            pool.append(
+                {
+                    "geometry_id": f"circle_corner_remediation_{_identifier(definition)}",
+                    **definition,
+                    "feature_size_m": feature_size,
+                    "feature_cells_on_256_input": feature_size / (DOMAIN / 256),
+                    "minimum_internal_wavelength_m": C0
+                    / (max(FREQUENCIES) * np.sqrt(epsilon_r)),
+                    "incidence_angles_rad": list(CORNER_REMEDIATION_ANGLES[split]),
                     "frequencies_hz": list(FREQUENCIES),
                     "analytic_reference": "infinite_TM_z_dielectric_cylinder",
                 }

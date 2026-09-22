@@ -5,7 +5,11 @@ from pathlib import Path
 
 import numpy as np
 
-from scattermesh import circle_remediation_pool, simple_candidate_tasks
+from scattermesh import (
+    circle_corner_remediation_pool,
+    circle_remediation_pool,
+    simple_candidate_tasks,
+)
 from scattermesh.curriculum import REMEDIATION_BUDGETS
 from scattermesh.generalization import widest_non_pml_monitor_bounds
 
@@ -114,3 +118,42 @@ def test_every_campaign_grid_has_requested_budget_and_legal_monitor():
         )
         assert np.all(np.isfinite(monitor))
         assert monitor[0] < monitor[1] and monitor[2] < monitor[3]
+
+
+def test_corner_remediation_checked_in_configs_match_and_are_feasible():
+    manifest_path = ROOT / "configs/circle_corner_remediation_pool.json"
+    campaign_path = ROOT / "configs/circle_corner_remediation_candidate.json"
+    manifest = json.loads(manifest_path.read_text())
+    campaign = json.loads(campaign_path.read_text())
+    geometries = circle_corner_remediation_pool()
+    conditions = simple_candidate_tasks(geometries, budgets=REMEDIATION_BUDGETS)
+    assert manifest["geometries"] == json_shape(geometries)
+    assert manifest["conditions"] == json_shape(conditions)
+    assert manifest["geometry_count"] == 40
+    assert manifest["condition_count"] == 256
+    assert campaign["candidate_names"] == [
+        "uniform",
+        "interface_wide",
+        "region_wide",
+        "region_medium",
+        "region_strong",
+        "hybrid_wide",
+    ]
+
+    runner = load_runner()
+    cases = runner.case_definitions(*runner.load_inputs(manifest_path, campaign_path))
+    assert len(cases) == 1536
+    assert len({case["case_id"] for case in cases}) == 1536
+    geometry_by_id = {row["geometry_id"]: row for row in geometries}
+    for case in cases:
+        grid = runner.PILOT.make_grid(case)
+        assert grid.shape == (case["cells"] + 1, case["cells"] + 1)
+        geometry = geometry_by_id[case["geometry_id"]]
+        radius = geometry["radius_m"]
+        cx, cy = geometry["center_m"]
+        monitor = widest_non_pml_monitor_bounds(
+            grid,
+            [(cx - radius, cx + radius, cy - radius, cy + radius)],
+            campaign["pml_thickness_m"],
+        )
+        assert np.all(np.isfinite(monitor))

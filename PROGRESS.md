@@ -344,6 +344,15 @@ original OOD suite. The initial monitor feasibility defect was corrected separat
 with a declared 0.12 m PML and the widest legal per-grid NF2FF contour; all 240 axes
 pass preflight under that policy.
 
+The first disjoint translated/scaled remediation added 192 training conditions and
+the fresh combined fit passed the original 448-case validation/test physics gate.
+The rerun position/scale suite also settled all 120 pairs and improved 99 by at least
+5%, with a 1.622x overall median. One large lossy northeast case at 48x48 remains
+below the frozen worst-case floor: 0.389x versus the required 0.5. The exact frozen
+condition remains excluded. A second disjoint remediation envelope therefore samples
+large lossy circles densely around all four corners and incidence angles bracketing
+the failed regime before the sparse-object curriculum proceeds.
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong
