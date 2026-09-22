@@ -416,6 +416,8 @@ close, 34 moderate, and 24 wide-gap scenes; the smallest gap is 12.49 mm, about
 2.7 cells at the 256-cell fine reference grid. Every exact-budget candidate and
 192/256 reference grid passed grading, NF2FF monitor, and conformal-PEC preflight.
 Its 192-case reference phase has been launched alongside the nine training fits.
+Run `PYTHONPATH=. .venv/bin/python scripts/sparse_grid_status.py` for a compact
+snapshot of all nine epochs and accepted sparse reference counts.
 
 ## Next work
 
