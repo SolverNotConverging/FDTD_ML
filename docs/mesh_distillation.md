@@ -24,8 +24,10 @@ quantities the CNN must infer from a low-resolution mask.
 
 `scripts/build_mesh_distillation_dataset.py` refuses partial campaigns. The source
 report must identify the exact campaign, have decision `accepted`, and show every
-candidate case accepted. The builder checks each saved axis against its requested
-Nx and Ny and independently recomputes the soft-Nt ranking.
+candidate case accepted. It also requires every pre-M5 label-diversity check to
+pass, so an orchestration error cannot train from complete but uninformative labels.
+The builder checks each saved axis against its requested Nx and Ny and independently
+recomputes the soft-Nt ranking.
 
 Each candidate axis becomes probability mass on 128 fixed spatial bins. Every mesh
 cell contributes equal mass, distributed uniformly across its interval. The

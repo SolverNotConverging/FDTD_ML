@@ -98,6 +98,7 @@ MPLCONFIGDIR=/tmp/scattermesh-mpl \
   --training-output runs/simple_factorial_exact_training_6916879 \
   --candidate-output runs/simple_factorial_exact_candidate_full_6916879 \
   --output runs/simple_factorial_exact_physics_6916879
+.venv/bin/python scripts/full_pipeline_status.py
 ```
 
 Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and
@@ -106,6 +107,8 @@ not start a dataset/training worker. It compares 64/128 uniform and nonuniform
 meshes at two incidence angles, followed by four sensitivity checks.
 The candidate status command is read-only and reports verified cache counts,
 solver outcomes, recent throughput, and an ETA for the full campaign.
+The full-pipeline status command gives one concise JSON snapshot spanning label
+generation, dataset/training handoff, and frozen learned-mesh physics evaluation.
 The separate PEC pilot writes `runs/conformal_pec_pilot/` with analytic cylinder
 comparisons, off-grid geometry plots, and very small cut-fraction stability checks.
 The restartable PEC-cylinder matrix writes `runs/pec_cylinder_qualification/` and

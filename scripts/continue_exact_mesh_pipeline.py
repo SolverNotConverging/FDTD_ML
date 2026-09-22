@@ -109,7 +109,12 @@ def main():
         environment,
     )
     report = json.loads((args.campaign_output / "report.json").read_text())
-    if report.get("decision") != "accepted":
+    readiness = report.get("training_readiness", {})
+    if (
+        report.get("decision") != "accepted"
+        or readiness.get("decision") != "ready_for_m5_pilot"
+        or not all(readiness.get("checks", {}).values())
+    ):
         atomic_json(
             workflow_path,
             {"schema_version": 1, "stage": "label_gate_failed", "report": report},

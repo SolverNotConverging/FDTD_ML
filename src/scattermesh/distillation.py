@@ -194,6 +194,11 @@ def build_distillation_dataset(
         raise ValueError("Campaign and manifest dataset IDs differ")
     if report.get("campaign_id") != campaign["campaign_id"] or report.get("decision") != "accepted":
         raise ValueError("Training data require the accepted report for this exact campaign")
+    readiness = report.get("training_readiness", {})
+    if readiness.get("decision") != "ready_for_m5_pilot" or not all(
+        readiness.get("checks", {}).values()
+    ):
+        raise ValueError("Training data require a passing pre-M5 label-diversity gate")
     expected_cases = len(campaign["condition_ids"]) * len(campaign["candidate_names"])
     if report.get("case_count") != expected_cases or report.get("status_counts") != {
         "accepted": expected_cases

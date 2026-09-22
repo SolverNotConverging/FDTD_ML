@@ -121,6 +121,17 @@ def test_dataset_builder_requires_and_preserves_exact_accepted_candidates(tmp_pa
                 "decision": "accepted",
                 "case_count": 2,
                 "status_counts": {"accepted": 2},
+                "training_readiness": {
+                    "decision": "ready_for_m5_pilot",
+                    "checks": {
+                        "campaign_complete": True,
+                        "train_has_multiple_winning_lineages": True,
+                        "train_has_multiple_winning_candidates": True,
+                        "train_has_multiple_winning_budgets": True,
+                        "validation_has_headroom": True,
+                        "test_has_headroom": True,
+                    },
+                },
             }
         )
     )
@@ -161,3 +172,10 @@ def test_dataset_builder_requires_and_preserves_exact_accepted_candidates(tmp_pa
     (run / "report.json").write_text(json.dumps(broken))
     with pytest.raises(ValueError, match="accepted report"):
         build_distillation_dataset(manifest_path, campaign_path, run, tmp_path / "broken")
+
+    broken["decision"] = "accepted"
+    broken["training_readiness"]["checks"]["validation_has_headroom"] = False
+    broken["training_readiness"]["decision"] = "not_ready_for_m5"
+    (run / "report.json").write_text(json.dumps(broken))
+    with pytest.raises(ValueError, match="label-diversity gate"):
+        build_distillation_dataset(manifest_path, campaign_path, run, tmp_path / "not_ready")
