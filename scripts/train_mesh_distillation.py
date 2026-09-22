@@ -2,6 +2,7 @@
 """Train the first budget-conditioned axis-density model."""
 
 import argparse
+import hashlib
 import json
 import os
 import random
@@ -21,6 +22,22 @@ def atomic_json(path, value):
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(json.dumps(value, indent=2, allow_nan=False) + "\n")
     os.replace(temporary, path)
+
+
+def sha256_file(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def source_hashes(dataset, config):
+    root = Path(__file__).resolve().parents[1]
+    hashes = {
+        str(path.relative_to(root)): sha256_file(path)
+        for path in sorted((root / "src/scattermesh").glob("*.py"))
+    }
+    hashes[str(Path(__file__).resolve().relative_to(root))] = sha256_file(__file__)
+    hashes["dataset"] = sha256_file(dataset)
+    hashes["config"] = sha256_file(config)
+    return hashes
 
 
 def evaluate(model, loader, device):
@@ -104,6 +121,7 @@ def main():
     parser.add_argument("--device", default="cuda:0")
     args = parser.parse_args()
     config = json.loads(args.config.read_text())
+    provenance = source_hashes(args.dataset, args.config)
     random.seed(config["seed"])
     np.random.seed(config["seed"])
     torch.manual_seed(config["seed"])
@@ -120,6 +138,7 @@ def main():
             "config_path": str(args.config),
             "config": config,
             "device": str(device),
+            "source_hashes": provenance,
         },
     )
 
@@ -208,6 +227,7 @@ def main():
         "model_state": best_state,
         "dataset": str(args.dataset),
         "config": config,
+        "source_hashes": provenance,
         "best_epoch": best_epoch,
         "best_validation_loss": best_validation,
         "test_loss": test_loss,
@@ -234,6 +254,7 @@ def main():
         "final_train_loss": history[-1]["train_loss"],
         "best_validation_loss": best_validation,
         "test_loss": test_loss,
+        "source_hashes": provenance,
         "uniform_validation_loss": uniform_validation_loss,
         "uniform_test_loss": uniform_test_loss,
         "validation_improvement_over_uniform": uniform_validation_loss / best_validation,
