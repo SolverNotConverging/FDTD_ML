@@ -275,9 +275,11 @@ def main():
         "validation_improvement_over_uniform": uniform_validation_loss / best_validation,
         "test_improvement_over_uniform": uniform_test_loss / test_loss,
     }
+    checkpoint_path = args.output / "checkpoint.pt"
     temporary = args.output / "checkpoint.pt.tmp"
     torch.save(checkpoint, temporary)
-    os.replace(temporary, args.output / "checkpoint.pt")
+    os.replace(temporary, checkpoint_path)
+    checkpoint_sha256 = sha256_file(checkpoint_path)
     atomic_json(args.output / "history.json", {"epochs": history})
     atomic_json(
         args.output / "predicted_meshes.json",
@@ -294,6 +296,7 @@ def main():
         "best_validation_loss": best_validation,
         "test_loss": test_loss,
         "source_hashes": provenance,
+        "checkpoint_sha256": checkpoint_sha256,
         "uniform_validation_loss": uniform_validation_loss,
         "uniform_test_loss": uniform_test_loss,
         "validation_improvement_over_uniform": uniform_validation_loss / best_validation,

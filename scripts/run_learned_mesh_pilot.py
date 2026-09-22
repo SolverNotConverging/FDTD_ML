@@ -213,13 +213,11 @@ def aggregate_rows(rows):
     improvements = [row["improvement_over_uniform"] for row in rows]
     teacher_ratios = [row["score_ratio_to_teacher"] for row in rows]
     complex_improvements = [
-        row["uniform_complex_loss"]
-        / max(row["learned_complex_loss"], np.finfo(np.float64).tiny)
+        row["uniform_complex_loss"] / max(row["learned_complex_loss"], np.finfo(np.float64).tiny)
         for row in rows
     ]
     rcs_improvements = [
-        row["uniform_rcs_loss"]
-        / max(row["learned_rcs_loss"], np.finfo(np.float64).tiny)
+        row["uniform_rcs_loss"] / max(row["learned_rcs_loss"], np.finfo(np.float64).tiny)
         for row in rows
     ]
     meaningful_wins = sum(value >= 1.05 for value in improvements)
@@ -257,7 +255,10 @@ def plot_evaluation(report, output):
     rows = report["cases"]
     split_styles = {"validation": "o", "test": "s"}
     budgets = sorted({row["budget"] for row in rows})
-    colors = {budget: plt.cm.viridis(index / max(len(budgets) - 1, 1)) for index, budget in enumerate(budgets)}
+    colors = {
+        budget: plt.cm.viridis(index / max(len(budgets) - 1, 1))
+        for index, budget in enumerate(budgets)
+    }
     figure, axes = plt.subplots(2, 2, figsize=(11, 8.5), constrained_layout=True)
 
     for row in rows:
@@ -269,16 +270,11 @@ def plot_evaluation(report, output):
         complex_gain = row["uniform_complex_loss"] / max(
             row["learned_complex_loss"], np.finfo(np.float64).tiny
         )
-        rcs_gain = row["uniform_rcs_loss"] / max(
-            row["learned_rcs_loss"], np.finfo(np.float64).tiny
-        )
+        rcs_gain = row["uniform_rcs_loss"] / max(row["learned_rcs_loss"], np.finfo(np.float64).tiny)
         axes[1, 1].scatter(complex_gain, rcs_gain, c=[color], marker=style)
 
     score_values = [
-        value
-        for row in rows
-        for value in (row["uniform_score"], row["learned_score"])
-        if value > 0
+        value for row in rows for value in (row["uniform_score"], row["learned_score"]) if value > 0
     ]
     score_min, score_max = min(score_values), max(score_values)
     axes[0, 0].plot([score_min, score_max], [score_min, score_max], "k--", linewidth=1)
@@ -312,8 +308,7 @@ def plot_evaluation(report, output):
         for value in (
             row["uniform_complex_loss"]
             / max(row["learned_complex_loss"], np.finfo(np.float64).tiny),
-            row["uniform_rcs_loss"]
-            / max(row["learned_rcs_loss"], np.finfo(np.float64).tiny),
+            row["uniform_rcs_loss"] / max(row["learned_rcs_loss"], np.finfo(np.float64).tiny),
         )
     ]
     component_min, component_max = min(component_values), max(component_values)
@@ -356,6 +351,7 @@ def summarize(
     candidate_output,
     exponent,
     success_decision="passes_physics_pilot",
+    source_hashes=None,
 ):
     rows = []
     for case in cases:
@@ -365,7 +361,9 @@ def summarize(
         learned = json.loads(learned_path.read_text())
         example = case["example"]
         uniform = json.loads(
-            (candidate_output / "cases" / f"{case['sample_id']}_uniform" / "record.json").read_text()
+            (
+                candidate_output / "cases" / f"{case['sample_id']}_uniform" / "record.json"
+            ).read_text()
         )
         best = json.loads(
             (
@@ -375,9 +373,9 @@ def summarize(
                 / "record.json"
             ).read_text()
         )
-        learned_score = learned["joint_scattering_loss"] * (
-            learned["Nt"] / uniform["Nt"]
-        ) ** exponent
+        learned_score = (
+            learned["joint_scattering_loss"] * (learned["Nt"] / uniform["Nt"]) ** exponent
+        )
         uniform_score = uniform["joint_scattering_loss"]
         best_score = best["joint_scattering_loss"] * (best["Nt"] / uniform["Nt"]) ** exponent
         rows.append(
@@ -431,8 +429,11 @@ def summarize(
         ),
         "checks": checks,
         "case_count": len(rows),
-        "status_counts": dict(sorted(Counter("accepted" if r["accepted"] else "unsettled" for r in rows).items())),
+        "status_counts": dict(
+            sorted(Counter("accepted" if r["accepted"] else "unsettled" for r in rows).items())
+        ),
         "ranking": {"mode": "fixed_axis_soft_nt", "nt_cost_exponent": exponent},
+        "source_hashes": source_hashes or {},
         "splits": splits,
         "by_budget": grouped_summary(rows, lambda row: row["budget"]),
         "by_contrast_tier": grouped_summary(
@@ -446,9 +447,7 @@ def summarize(
         "by_split_and_contrast_tier": {
             split: grouped_summary(
                 selected,
-                lambda row: (
-                    "epsilon_r_gt_10" if row["epsilon_r"] > 10 else "epsilon_r_le_10"
-                ),
+                lambda row: "epsilon_r_gt_10" if row["epsilon_r"] > 10 else "epsilon_r_le_10",
             )
             for split, selected in sorted(by_split.items())
         },
@@ -480,11 +479,10 @@ def main():
     args = parser.parse_args()
     if args.shards < 1 or not 0 <= args.shard < args.shards:
         raise ValueError("Require 0 <= shard < shards")
-    cases = predicted_cases(
-        args.dataset, args.checkpoint, ("validation", "test"), args.max_ratio
-    )
+    cases = predicted_cases(args.dataset, args.checkpoint, ("validation", "test"), args.max_ratio)
     metadata = json.loads(args.dataset.read_text())
     exponent = float(metadata["ranking"]["nt_cost_exponent"])
+    sources = source_hashes(args.checkpoint, args.dataset)
     if args.summarize:
         summarize(
             cases,
@@ -492,17 +490,15 @@ def main():
             args.candidate_output,
             exponent,
             success_decision=args.success_decision,
+            source_hashes=sources,
         )
         return
-    sources = source_hashes(args.checkpoint, args.dataset)
     if args.shard_mode == "hash":
         selected = [
             case for case in cases if stable_shard(case["case_id"], args.shards) == args.shard
         ]
     else:
-        selected = [
-            case for index, case in enumerate(cases) if index % args.shards == args.shard
-        ]
+        selected = [case for index, case in enumerate(cases) if index % args.shards == args.shard]
     for index, case in enumerate(selected, 1):
         record, cached = run_case(case, args.output, args.device, sources)
         print(

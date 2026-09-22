@@ -16,18 +16,12 @@ def load_script(name):
 def test_hash_shards_are_deterministic_and_cover_every_case_once():
     runner = load_script("run_learned_mesh_pilot.py")
     case_ids = [f"sample_{index}_cnn" for index in range(100)]
-    assignments = {
-        case_id: runner.stable_shard(case_id, 4) for case_id in case_ids
-    }
+    assignments = {case_id: runner.stable_shard(case_id, 4) for case_id in case_ids}
 
-    assert assignments == {
-        case_id: runner.stable_shard(case_id, 4) for case_id in case_ids
-    }
+    assert assignments == {case_id: runner.stable_shard(case_id, 4) for case_id in case_ids}
     assert set(assignments.values()) == {0, 1, 2, 3}
     assert sum(
-        runner.stable_shard(case_id, 4) == shard
-        for shard in range(4)
-        for case_id in case_ids
+        runner.stable_shard(case_id, 4) == shard for shard in range(4) for case_id in case_ids
     ) == len(case_ids)
 
 
@@ -38,15 +32,24 @@ def test_training_snapshot_requires_complete_summary_dataset_and_checkpoint(tmp_
     training.mkdir()
 
     assert pipeline.training_snapshot(dataset, training)["ready"] is False
-    dataset.write_text("{}")
-    (training / "summary.json").write_text(
-        json.dumps({"status": "running", "epochs_completed": 4})
-    )
+    arrays = tmp_path / "targets.npz"
+    arrays.write_bytes(b"targets")
+    dataset.write_text(json.dumps({"arrays": arrays.name}))
+    (training / "summary.json").write_text(json.dumps({"status": "running", "epochs_completed": 4}))
     (training / "checkpoint.pt").write_bytes(b"checkpoint")
     assert pipeline.training_snapshot(dataset, training)["ready"] is False
-    (training / "summary.json").write_text(
-        json.dumps({"status": "complete", "epochs_completed": 10, "best_epoch": 8})
-    )
+    checkpoint = training / "checkpoint.pt"
+    summary = {
+        "status": "complete",
+        "epochs_completed": 10,
+        "best_epoch": 8,
+        "source_hashes": {
+            "dataset": pipeline.sha256_file(dataset),
+            "dataset_arrays": pipeline.sha256_file(arrays),
+        },
+        "checkpoint_sha256": pipeline.sha256_file(checkpoint),
+    }
+    (training / "summary.json").write_text(json.dumps(summary))
 
     snapshot = pipeline.training_snapshot(dataset, training)
 
@@ -54,6 +57,10 @@ def test_training_snapshot_requires_complete_summary_dataset_and_checkpoint(tmp_
     assert snapshot["training_status"] == "complete"
     assert snapshot["epochs_completed"] == 10
     assert snapshot["best_epoch"] == 8
+    assert snapshot["provenance_matches"] is True
+
+    checkpoint.write_bytes(b"changed checkpoint")
+    assert pipeline.training_snapshot(dataset, training)["ready"] is False
 
 
 def test_evaluation_snapshot_counts_only_valid_expected_records(tmp_path):
@@ -161,17 +168,17 @@ def test_summary_can_name_the_frozen_physics_gate(tmp_path):
         candidates,
         exponent=0.1,
         success_decision="passes_frozen_physics_evaluation",
+        source_hashes={"checkpoint": "frozen-checkpoint"},
     )
     report = json.loads((output / "report.json").read_text())
 
     assert report["decision"] == "passes_frozen_physics_evaluation"
+    assert report["source_hashes"] == {"checkpoint": "frozen-checkpoint"}
     assert report["splits"]["validation"]["p10_improvement_over_uniform"] == 2.0
     assert report["splits"]["test"]["p90_score_ratio_to_teacher"] == 1.25
     assert report["by_budget"]["48"]["median_complex_improvement_over_uniform"] == 2.0
-    assert report["by_contrast_tier"]["epsilon_r_gt_10"][
-        "median_rcs_improvement_over_uniform"
-    ] == 2.0
-    assert report["by_split_and_contrast_tier"]["test"]["epsilon_r_le_10"][
-        "case_count"
-    ] == 1
+    assert (
+        report["by_contrast_tier"]["epsilon_r_gt_10"]["median_rcs_improvement_over_uniform"] == 2.0
+    )
+    assert report["by_split_and_contrast_tier"]["test"]["epsilon_r_le_10"]["case_count"] == 1
     assert (output / "evaluation_summary.png").is_file()

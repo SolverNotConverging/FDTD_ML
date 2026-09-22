@@ -42,10 +42,25 @@ def training_snapshot(dataset, training_output):
     snapshot["training_status"] = summary.get("status")
     snapshot["epochs_completed"] = summary.get("epochs_completed")
     snapshot["best_epoch"] = summary.get("best_epoch")
+    provenance_matches = False
+    if dataset_path.exists() and checkpoint_path.exists():
+        try:
+            metadata = json.loads(dataset_path.read_text())
+            arrays_path = dataset_path.parent / metadata["arrays"]
+            sources = summary.get("source_hashes", {})
+            provenance_matches = bool(
+                sources.get("dataset") == sha256_file(dataset_path)
+                and sources.get("dataset_arrays") == sha256_file(arrays_path)
+                and summary.get("checkpoint_sha256") == sha256_file(checkpoint_path)
+            )
+        except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+            provenance_matches = False
+    snapshot["provenance_matches"] = provenance_matches
     snapshot["ready"] = bool(
         dataset_path.exists()
         and checkpoint_path.exists()
         and summary.get("status") == "complete"
+        and provenance_matches
     )
     return snapshot
 
@@ -147,9 +162,7 @@ def run_workers(args, runner, workflow_path, case_ids, environment):
             handles[shard].close()
             if process.returncode:
                 failed.add(shard)
-        exhausted = [
-            shard for shard in failed if attempts[shard] > args.worker_retries
-        ]
+        exhausted = [shard for shard in failed if attempts[shard] > args.worker_retries]
         if exhausted:
             snapshot = evaluation_snapshot(case_ids, args.output)
             atomic_json(
@@ -193,9 +206,7 @@ def main():
     parser.add_argument("--training-output", type=Path, required=True)
     parser.add_argument("--candidate-output", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument(
-        "--devices", nargs="+", default=["cuda:0", "cuda:1", "cuda:2", "cuda:3"]
-    )
+    parser.add_argument("--devices", nargs="+", default=["cuda:0", "cuda:1", "cuda:2", "cuda:3"])
     parser.add_argument("--max-ratio", type=float, default=3.0)
     parser.add_argument("--worker-retries", type=int, default=2)
     parser.add_argument("--poll-seconds", type=float, default=10.0)

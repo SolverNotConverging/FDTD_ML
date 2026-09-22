@@ -147,7 +147,14 @@ def test_generalization_continuation_waits_for_passing_main_gate(tmp_path):
     )
     assert continuation.prerequisite_snapshot(plan, checkpoint, physics)["ready"] is False
     (physics / "report.json").write_text(
-        json.dumps({"decision": "passes_frozen_physics_evaluation"})
+        json.dumps(
+            {
+                "decision": "passes_frozen_physics_evaluation",
+                "source_hashes": {"checkpoint": continuation.sha256_file(checkpoint)},
+            }
+        )
     )
     assert continuation.prerequisite_snapshot(plan, checkpoint, physics)["ready"] is True
+    checkpoint.write_bytes(b"changed checkpoint")
+    assert continuation.prerequisite_snapshot(plan, checkpoint, physics)["ready"] is False
     assert continuation.expected_case_ids(plan) == ["a_uniform", "a_cnn"]

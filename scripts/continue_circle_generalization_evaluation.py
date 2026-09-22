@@ -2,12 +2,17 @@
 """Wait for the main frozen gate, then run the circle OOD evaluation."""
 
 import argparse
+import hashlib
 import json
 import os
 import subprocess
 import sys
 import time
 from pathlib import Path
+
+
+def sha256_file(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
 def atomic_json(path, value):
@@ -33,10 +38,20 @@ def prerequisite_snapshot(plan, checkpoint, main_physics_output):
         snapshot["main_physics_report_malformed"] = True
         return snapshot
     snapshot["main_physics_decision"] = report.get("decision")
+    checkpoint_matches = False
+    if Path(checkpoint).exists():
+        try:
+            checkpoint_matches = report.get("source_hashes", {}).get("checkpoint") == sha256_file(
+                checkpoint
+            )
+        except OSError:
+            checkpoint_matches = False
+    snapshot["main_physics_checkpoint_matches"] = checkpoint_matches
     snapshot["ready"] = bool(
         snapshot["plan_present"]
         and snapshot["checkpoint_present"]
         and report.get("decision") == "passes_frozen_physics_evaluation"
+        and checkpoint_matches
     )
     return snapshot
 
@@ -165,9 +180,7 @@ def main():
         type=Path,
         default=Path("runs/circle_position_scale_generalization_6916879"),
     )
-    parser.add_argument(
-        "--devices", nargs="+", default=["cuda:0", "cuda:1", "cuda:2", "cuda:3"]
-    )
+    parser.add_argument("--devices", nargs="+", default=["cuda:0", "cuda:1", "cuda:2", "cuda:3"])
     parser.add_argument("--worker-retries", type=int, default=2)
     parser.add_argument("--poll-seconds", type=float, default=10.0)
     parser.add_argument("--no-wait", action="store_true")
