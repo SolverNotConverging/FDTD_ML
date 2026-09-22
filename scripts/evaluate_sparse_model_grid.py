@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Frozen sparse-pair physics evaluation for trained model-grid checkpoints."""
+"""Held-out sparse-pair and multi-object physics evaluation for model grids."""
 
 import argparse
 import hashlib
@@ -62,7 +62,20 @@ def _score_one(example, model, resolution, pilot, device, output, checkpoint_has
     config, pilot_dir, scene = pilot
     cells = int(example["cells_x"])
     if cells != example["cells_y"]:
-        raise ValueError("Pair physics evaluation currently uses square budgets")
+        raise ValueError("Sparse physics evaluation currently uses square budgets")
+    case_tags = {
+        "split": example["split"],
+        "family": example["family"],
+        "scene_family_id": example.get("scene_family_id") or scene.get("family_id", "unspecified"),
+        "pec_circle_count": example.get("pec_circle_count", sum(
+            obj["shape"] == "circle" and obj["material"]["kind"] == "pec"
+            for obj in scene["objects"]
+        )),
+        "shape_topology": example["shape_topology"],
+        "material_topology": example["material_topology"],
+        "gap_stratum": example["gap_stratum"],
+        "cells": cells,
+    }
     sample_id = example["sample_id"]
     record_path = output / "cases" / sample_id / "record.json"
     arrays_path = record_path.parent / "spectra.npz"
@@ -71,6 +84,7 @@ def _score_one(example, model, resolution, pilot, device, output, checkpoint_has
     baseline = json.loads(baseline_path.read_text())
     if not baseline["accepted"]:
         raise ValueError(f"No accepted uniform baseline: {baseline_case}")
+    case_tags["uniform_Nt"] = baseline["Nt"]
     fine_case = f"reference_{scene['scene_id']}_n{max(config['reference_budgets'])}"
     fine_dir = pilot_dir / "references" / fine_case
     fine_record = json.loads((fine_dir / "record.json").read_text())
@@ -124,11 +138,7 @@ def _score_one(example, model, resolution, pilot, device, output, checkpoint_has
             "fingerprint": fingerprint,
             "status": "mesh_infeasible",
             "reason": str(error),
-            "split": example["split"],
-            "shape_topology": example["shape_topology"],
-            "material_topology": example["material_topology"],
-            "gap_stratum": example["gap_stratum"],
-            "cells": cells,
+            **case_tags,
             "uniform_score": baseline["joint_scattering_loss"],
         }
         _atomic_npz(arrays_path, x=x, y=y, complex_far_field=np.zeros((len(config["frequencies_hz"]), config["far_field_angle_count"]), dtype=np.complex128))
@@ -176,11 +186,7 @@ def _score_one(example, model, resolution, pilot, device, output, checkpoint_has
                         else "mesh_infeasible"
                     ),
                     "reason": str(error),
-                    "split": example["split"],
-                    "shape_topology": example["shape_topology"],
-                    "material_topology": example["material_topology"],
-                    "gap_stratum": example["gap_stratum"],
-                    "cells": cells,
+                    **case_tags,
                     "uniform_score": baseline["joint_scattering_loss"],
                 }
                 _atomic_npz(arrays_path, x=x, y=y, complex_far_field=np.zeros_like(reference))
@@ -203,15 +209,12 @@ def _score_one(example, model, resolution, pilot, device, output, checkpoint_has
         "sample_id": sample_id,
         "fingerprint": fingerprint,
         "status": "accepted" if accepted else "hard_limit_unsettled",
-        "split": example["split"],
-        "shape_topology": example["shape_topology"],
-        "material_topology": example["material_topology"],
-        "gap_stratum": example["gap_stratum"],
-        "cells": cells,
+        **case_tags,
         "x_uniform_repair_fraction": x_repair,
         "y_uniform_repair_fraction": y_repair,
         "uniform_score": baseline["joint_scattering_loss"],
         "soft_nt_score": soft_score,
+        "Nt_ratio": result.diagnostics["Nt"] / baseline["Nt"],
         "improvement_over_uniform": (
             baseline["joint_scattering_loss"] / soft_score if accepted else None
         ),
@@ -240,21 +243,31 @@ def _summarize(output, examples):
             raise ValueError(f"Missing case: {example['sample_id']}")
         records.append(json.loads(path.read_text()))
     split_reports = {}
+    def median_key(rows, key):
+        values = [row[key] for row in rows if row["status"] == "accepted" and key in row]
+        return float(np.median(values)) if values else None
+
     for split in ("validation", "test"):
         selected = [row for row in records if row["split"] == split]
         accepted = [row for row in selected if row["status"] == "accepted"]
         improvements = [row["improvement_over_uniform"] for row in accepted]
         strata = {}
-        for field in ("shape_topology", "material_topology", "gap_stratum", "cells"):
+        for field in (
+            "family", "scene_family_id", "pec_circle_count", "shape_topology",
+            "material_topology", "gap_stratum", "cells",
+        ):
             strata[field] = {}
-            for name in sorted({str(row[field]) for row in selected}):
-                subset = [row for row in selected if str(row[field]) == name]
+            for name in sorted({str(row.get(field, "unspecified")) for row in selected}):
+                subset = [row for row in selected if str(row.get(field, "unspecified")) == name]
                 values = [row["improvement_over_uniform"] for row in subset if row["status"] == "accepted"]
                 strata[field][name] = {
                     "case_count": len(subset),
                     "accepted_count": len(values),
                     "median_improvement": float(np.median(values)) if values else None,
                     "meaningful_win_fraction": sum(value >= 1.05 for value in values) / len(subset),
+                    "median_complex_mse_loss": median_key(subset, "complex_mse_loss"),
+                    "median_rcs_log_loss": median_key(subset, "rcs_log_loss"),
+                    "median_Nt_ratio": median_key(subset, "Nt_ratio"),
                 }
         split_reports[split] = {
             "case_count": len(selected),
@@ -263,11 +276,22 @@ def _summarize(output, examples):
             "meaningful_win_fraction": sum(value >= 1.05 for value in improvements) / len(selected),
             "median_improvement": float(np.median(improvements)) if improvements else None,
             "minimum_improvement": min(improvements) if improvements else None,
+            "median_complex_mse_loss": median_key(selected, "complex_mse_loss"),
+            "median_rcs_log_loss": median_key(selected, "rcs_log_loss"),
+            "median_Nt_ratio": median_key(selected, "Nt_ratio"),
             "strata": strata,
         }
     report = {"schema_version": 1, "split_reports": split_reports, "cases": records}
     _atomic_json(output / "report.json", report)
     return report
+
+
+def _held_out_examples(metadata):
+    return [
+        item for item in metadata["examples"]
+        if item["family"] in {"sparse_pair", "sparse_cluster"}
+        and item["split"] in {"validation", "test"}
+    ]
 
 
 def main():
@@ -282,10 +306,7 @@ def main():
     parser.add_argument("--summarize", action="store_true")
     args = parser.parse_args()
     metadata = json.loads(args.dataset.read_text())
-    examples = [
-        item for item in metadata["examples"]
-        if item["family"] == "sparse_pair" and item["split"] in {"validation", "test"}
-    ]
+    examples = _held_out_examples(metadata)
     if args.summarize:
         print(json.dumps(_summarize(args.output, examples)["split_reports"], indent=2))
         return
