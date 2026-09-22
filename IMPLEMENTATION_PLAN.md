@@ -233,11 +233,18 @@ Start in controlled stages rather than immediately mixing every geometry family:
 4. Rectangles/corners and thin screens once their solver treatment is qualified.
 5. Broader shapes and complex assemblies as generalization/stress tests.
 
-Propose a first pool of only 32–64 base PEC-cylinder geometries for candidate-mesh
-experiments, before any large data campaign. Final counts depend on acceptance,
-timing, and evidence of mesh headroom. Follow [the staged curriculum](docs/curriculum.md).
+Start with the implemented 32-geometry dielectric-cylinder pool for candidate-mesh
+experiments, before any large data campaign. PEC cylinders remain analytic controls
+after their negative headroom result. Final counts depend on acceptance, timing, and
+evidence from the label pilot. Follow [the staged curriculum](docs/curriculum.md).
 Analytic references still need series-order checks and consistent phase conventions;
 an over-refined FDTD result is not the default truth for single cylinders.
+
+The first implemented M4 manifest is `simple_dk_3ea40e8117434e5c`: 32 dielectric
+circle geometries grouped into eight lineages and 352 illumination/budget conditions.
+Its 24/4/4 geometry split holds every translated/scaled lineage together and uses
+disjoint validation/test size and angle regimes. The manifest precedes candidate
+physics generation; it must not be treated as completed labels or training data.
 
 As stages expand, keep three separately tagged families and report their results separately:
 

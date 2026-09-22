@@ -31,6 +31,14 @@ Do not start a large campaign or CNN fit until low-budget candidate searches sho
 useful accuracy-versus-cost differences. The existing fixed-focus examples are
 solver checks; their performance does not establish an optimal meshing policy.
 
+That gate now passes for moderate-contrast dielectric cylinders. The first generated
+pool, `simple_dk_3ea40e8117434e5c`, contains 32 geometries in eight four-variant
+lineages. Lineages are assigned wholly to train/validation/test (24/4/4 geometries),
+and held-out splits use disjoint incidence angles and size regimes. Expansion over
+their declared illuminations and 32/48/64/96 budgets creates 352 conditions before
+mesh candidates. See `configs/simple_dielectric_pool.json`. Candidate physics runs
+and label selection remain the next stage; this manifest alone is not training data.
+
 ## Targets and loss
 
 Save F(theta,f)=A/Eincident as complex128 or paired real/imaginary arrays. Save the

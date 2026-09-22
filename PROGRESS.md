@@ -222,6 +222,13 @@ improve, and the best candidate uses only 1.058 grading. See the
 [dielectric headroom qualification](docs/validation/dielectric_mesh_headroom.md).
 M3 now has enough evidence to begin the larger simple-scene candidate-label pool.
 
+The first M4 pool manifest is now deterministic and tracked as
+`simple_dk_3ea40e8117434e5c`: 32 geometries, eight grouped lineages, a 24/4/4
+train/validation/test geometry split, disjoint held-out angle sets, and 352 expanded
+illumination/budget conditions. Records include physical feature size, its 256²
+input-grid span, minimum internal wavelength, material, and analytic-reference type.
+The next executable stage is the restartable candidate-label runner for this manifest.
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong

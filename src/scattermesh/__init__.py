@@ -1,5 +1,6 @@
 """Scattered-field TMz solver; explicit NumPy reference backend for qualification."""
 
+from .curriculum import simple_candidate_tasks, simple_dielectric_pool
 from .geometry import PEC, Circle, Material, Rectangle
 from .grid import Grid, focused_axis
 from .meshing import circular_interface_axes, density_axis
@@ -16,6 +17,8 @@ __all__ = [
     "focused_axis",
     "density_axis",
     "circular_interface_axes",
+    "simple_dielectric_pool",
+    "simple_candidate_tasks",
     "PlaneWave",
     "SimulationResult",
     "simulate",
