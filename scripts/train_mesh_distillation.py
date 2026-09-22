@@ -2,6 +2,7 @@
 """Train the first budget-conditioned axis-density model."""
 
 import argparse
+import fcntl
 import hashlib
 import json
 import os
@@ -38,6 +39,34 @@ def source_hashes(dataset, config):
     hashes["dataset"] = sha256_file(dataset)
     hashes["config"] = sha256_file(config)
     return hashes
+
+
+def acquire_training_lock(output):
+    """Serialize trainers sharing one output directory."""
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=True)
+    handle = (output / ".training.lock").open("a+")
+    print(f"waiting for training lock: {output}", flush=True)
+    fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+    return handle
+
+
+def completed_run_matches(output, provenance):
+    """Return true only for a complete run produced from identical inputs."""
+    output = Path(output)
+    required = (
+        output / "checkpoint.pt",
+        output / "history.json",
+        output / "predicted_meshes.json",
+        output / "summary.json",
+    )
+    if not all(path.is_file() for path in required):
+        return False
+    try:
+        summary = json.loads((output / "summary.json").read_text())
+    except (OSError, json.JSONDecodeError):
+        return False
+    return summary.get("status") == "complete" and summary.get("source_hashes") == provenance
 
 
 def evaluate(model, loader, device):
@@ -87,15 +116,13 @@ def projected_examples(model, dataset, device, max_ratio):
     with torch.no_grad():
         for index, example in enumerate(dataset.examples):
             batch = dataset[index]
-            prediction = model(
-                batch["raster"][None].to(device), batch["conditioning"][None].to(device)
-            )[0].cpu().numpy()
-            x, x_repair = probability_axis(
-                prediction[0], example["cells_x"], max_ratio=max_ratio
+            prediction = (
+                model(batch["raster"][None].to(device), batch["conditioning"][None].to(device))[0]
+                .cpu()
+                .numpy()
             )
-            y, y_repair = probability_axis(
-                prediction[1], example["cells_y"], max_ratio=max_ratio
-            )
+            x, x_repair = probability_axis(prediction[0], example["cells_x"], max_ratio=max_ratio)
+            y, y_repair = probability_axis(prediction[1], example["cells_y"], max_ratio=max_ratio)
             repairs.extend((x_repair, y_repair))
             rows.append(
                 {
@@ -124,13 +151,16 @@ def main():
     args = parser.parse_args()
     config = json.loads(args.config.read_text())
     provenance = source_hashes(args.dataset, args.config)
+    _training_lock = acquire_training_lock(args.output)
+    if completed_run_matches(args.output, provenance):
+        print(f"matching completed training run already exists: {args.output}", flush=True)
+        return
     random.seed(config["seed"])
     np.random.seed(config["seed"])
     torch.manual_seed(config["seed"])
     device = torch.device(args.device)
     if device.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA training requested but CUDA is unavailable")
-    args.output.mkdir(parents=True, exist_ok=True)
     atomic_json(
         args.output / "launch.json",
         {
@@ -195,7 +225,9 @@ def main():
             best_validation = validation_loss
             best_epoch = epoch
             stale_epochs = 0
-            best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
+            best_state = {
+                key: value.detach().cpu().clone() for key, value in model.state_dict().items()
+            }
         else:
             stale_epochs += 1
         atomic_json(
