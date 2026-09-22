@@ -37,23 +37,14 @@ def print_campaign_progress(label, config_path, output):
         print(f"  decision={report['decision']}")
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--grid", type=Path, default=Path("runs/sparse_nine_model_grid"))
-    parser.add_argument("--references", type=Path, default=Path("runs/sparse_pair_campaign_96"))
-    parser.add_argument("--campaign-config", type=Path, default=Path("configs/sparse_pair_campaign_96.json"))
-    parser.add_argument("--clusters", type=Path, default=Path("runs/sparse_cluster_pilot_32"))
-    parser.add_argument("--cluster-config", type=Path, default=Path("configs/sparse_cluster_pilot_32.json"))
-    parser.add_argument("--pec-circles", type=Path, default=Path("runs/pec_circle_gap_pilot"))
-    parser.add_argument("--pec-circle-config", type=Path, default=Path("configs/pec_circle_gap_pilot.json"))
-    parser.add_argument("--physics", type=Path, default=Path("runs/sparse_nine_model_physics"))
-    args = parser.parse_args()
-    launch_path = args.grid / "launch.json"
+def print_training_progress(label, grid):
+    print(label)
+    launch_path = grid / "launch.json"
     if not launch_path.is_file():
-        raise SystemExit(f"Training launch is missing: {launch_path}")
-    launch = json.loads(launch_path.read_text())
-    print("Nine-model training")
-    for entry in launch["entries"]:
+        print("  waiting for training launch")
+        return []
+    entries = json.loads(launch_path.read_text())["entries"]
+    for entry in entries:
         output = Path(entry["output"])
         progress_path = output / "progress.json"
         if progress_path.is_file():
@@ -71,20 +62,20 @@ def main():
             if lines and ("Traceback" in lines[-1] or "Error" in lines[-1]):
                 status = "error; inspect log"
         print(f"  {entry['name']:9s} {status:10s} epoch={epoch!s:>3s} best={best!s:>3s} loss={loss}")
-    completion_path = args.grid / "completion.json"
+    completion_path = grid / "completion.json"
     if completion_path.is_file():
-        exits = json.loads(completion_path.read_text())["exit_codes"]
-        print("  exit codes:", exits)
+        print("  exit codes:", json.loads(completion_path.read_text())["exit_codes"])
+    return entries
 
-    print_campaign_progress("Sparse pair campaign", args.campaign_config, args.references)
-    print_campaign_progress("Sparse cluster pilot", args.cluster_config, args.clusters)
-    if args.pec_circle_config.is_file():
-        print_campaign_progress("Circular PEC gap pilot", args.pec_circle_config, args.pec_circles)
 
-    print("Nine-model held-out physics")
-    for entry in launch["entries"]:
-        case_records = list((args.physics / entry["name"] / "cases").glob("*/record.json"))
-        report_path = args.physics / entry["name"] / "report.json"
+def print_physics_progress(label, entries, physics):
+    print(label)
+    if not entries:
+        print("  waiting for training launch")
+        return
+    for entry in entries:
+        case_records = list((physics / entry["name"] / "cases").glob("*/record.json"))
+        report_path = physics / entry["name"] / "report.json"
         if report_path.is_file():
             report = json.loads(report_path.read_text())
             validation = report["split_reports"]["validation"]
@@ -97,6 +88,35 @@ def main():
             print(f"  {entry['name']:9s} running {len(case_records)} cases")
         else:
             print(f"  {entry['name']:9s} waiting")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--grid", type=Path, default=Path("runs/sparse_nine_model_grid"))
+    parser.add_argument("--references", type=Path, default=Path("runs/sparse_pair_campaign_96"))
+    parser.add_argument("--campaign-config", type=Path, default=Path("configs/sparse_pair_campaign_96.json"))
+    parser.add_argument("--clusters", type=Path, default=Path("runs/sparse_cluster_pilot_32"))
+    parser.add_argument("--cluster-config", type=Path, default=Path("configs/sparse_cluster_pilot_32.json"))
+    parser.add_argument("--pec-circles", type=Path, default=Path("runs/pec_circle_gap_pilot"))
+    parser.add_argument("--pec-circle-config", type=Path, default=Path("configs/pec_circle_gap_pilot.json"))
+    parser.add_argument("--physics", type=Path, default=Path("runs/sparse_nine_model_physics"))
+    parser.add_argument("--finetune-grid", type=Path, default=Path("runs/sparse_nine_model_finetune_96"))
+    parser.add_argument("--finetune-physics", type=Path, default=Path("runs/sparse_nine_model_finetune_physics_96"))
+    parser.add_argument("--cluster-grid", type=Path, default=Path("runs/sparse_nine_model_clusters"))
+    parser.add_argument("--cluster-physics", type=Path, default=Path("runs/sparse_nine_model_clusters_physics"))
+    args = parser.parse_args()
+    initial_entries = print_training_progress("Nine-model training", args.grid)
+
+    print_campaign_progress("Sparse pair campaign", args.campaign_config, args.references)
+    print_campaign_progress("Sparse cluster pilot", args.cluster_config, args.clusters)
+    if args.pec_circle_config.is_file():
+        print_campaign_progress("Circular PEC gap pilot", args.pec_circle_config, args.pec_circles)
+
+    print_physics_progress("Nine-model held-out physics", initial_entries, args.physics)
+    pair_entries = print_training_progress("Pair-data fine-tune", args.finetune_grid)
+    print_physics_progress("Pair-data held-out physics", pair_entries, args.finetune_physics)
+    cluster_entries = print_training_progress("Multi-object fine-tune", args.cluster_grid)
+    print_physics_progress("Multi-object held-out physics", cluster_entries, args.cluster_physics)
 
 
 if __name__ == "__main__":
