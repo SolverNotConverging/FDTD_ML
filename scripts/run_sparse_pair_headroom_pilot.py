@@ -2,6 +2,7 @@
 """Restartable exact-budget headroom pilot for localized dielectric-circle pairs."""
 
 import argparse
+import fcntl
 import hashlib
 import json
 import os
@@ -36,6 +37,8 @@ def parse_args():
     parser.add_argument("--shards", type=int, default=1)
     parser.add_argument("--reference-sources", type=Path)
     parser.add_argument("--candidate-sources", type=Path)
+    parser.add_argument("--only-ready-references", action="store_true")
+    parser.add_argument("--stop-when-references-complete", action="store_true")
     return parser.parse_args()
 
 
@@ -491,6 +494,10 @@ def main():
     args = parse_args()
     if args.shards < 1 or not 0 <= args.shard < args.shards:
         raise ValueError("Require 0 <= shard < shards")
+    if args.only_ready_references and args.phase != "candidates":
+        raise ValueError("Ready-reference filtering applies only to candidates")
+    if args.stop_when_references_complete and not args.only_ready_references:
+        raise ValueError("Reference-completion stopping requires ready-reference filtering")
     config_path = args.config.resolve()
     config = load_config(config_path)
     sources = source_hashes(config_path)
@@ -516,8 +523,23 @@ def main():
         return
     cases = definitions(config, args.phase)
     selected = [row for index, row in enumerate(cases) if index % args.shards == args.shard]
+    expected_references = len(config["scenes"]) * len(config["reference_budgets"])
     for index, definition in enumerate(selected, 1):
-        record, cached = run_case(config, definition, args.output, args.device, sources)
+        if args.stop_when_references_complete and len(list(
+            args.output.glob("references/*/record.json")
+        )) >= expected_references:
+            print("All references are present; leaving remaining candidates to full campaign", flush=True)
+            break
+        if args.only_ready_references and args.phase == "candidates":
+            try:
+                _reference_fingerprint(args.output, config, definition["scene"])
+            except ValueError:
+                continue
+        record_path, _ = _case_paths(args.output, definition)
+        record_path.parent.mkdir(parents=True, exist_ok=True)
+        with (record_path.parent / ".solve.lock").open("a+") as lock:
+            fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+            record, cached = run_case(config, definition, args.output, args.device, sources)
         print(
             f"[{index}/{len(selected)}] {definition['case_id']} {record['status']} "
             f"Nt={record['Nt']} wall={record['wall_seconds']:.2f}s "
