@@ -250,6 +250,106 @@ def grouped_summary(rows, key):
     return {name: aggregate_rows(selected) for name, selected in sorted(groups.items())}
 
 
+def plot_evaluation(report, output):
+    """Write a four-panel frozen-physics diagnostic from saved scalar metrics."""
+    import matplotlib.pyplot as plt
+
+    rows = report["cases"]
+    split_styles = {"validation": "o", "test": "s"}
+    budgets = sorted({row["budget"] for row in rows})
+    colors = {budget: plt.cm.viridis(index / max(len(budgets) - 1, 1)) for index, budget in enumerate(budgets)}
+    figure, axes = plt.subplots(2, 2, figsize=(11, 8.5), constrained_layout=True)
+
+    for row in rows:
+        style = split_styles.get(row["split"], "^")
+        color = colors[row["budget"]]
+        axes[0, 0].scatter(row["uniform_score"], row["learned_score"], c=[color], marker=style)
+        axes[0, 1].scatter(row["budget"], row["improvement_over_uniform"], c=[color], marker=style)
+        axes[1, 0].scatter(row["budget"], row["score_ratio_to_teacher"], c=[color], marker=style)
+        complex_gain = row["uniform_complex_loss"] / max(
+            row["learned_complex_loss"], np.finfo(np.float64).tiny
+        )
+        rcs_gain = row["uniform_rcs_loss"] / max(
+            row["learned_rcs_loss"], np.finfo(np.float64).tiny
+        )
+        axes[1, 1].scatter(complex_gain, rcs_gain, c=[color], marker=style)
+
+    score_values = [
+        value
+        for row in rows
+        for value in (row["uniform_score"], row["learned_score"])
+        if value > 0
+    ]
+    score_min, score_max = min(score_values), max(score_values)
+    axes[0, 0].plot([score_min, score_max], [score_min, score_max], "k--", linewidth=1)
+    axes[0, 0].set(
+        xscale="log",
+        yscale="log",
+        xlabel="Uniform soft-Nt score",
+        ylabel="Learned soft-Nt score",
+        title="Learned mesh versus uniform",
+    )
+    axes[0, 1].axhline(1.0, color="k", linestyle="--", linewidth=1)
+    axes[0, 1].axhline(1.05, color="0.5", linestyle=":", linewidth=1)
+    axes[0, 1].set(
+        yscale="log",
+        xlabel="Exact cells per axis",
+        ylabel="Uniform / learned score",
+        title="Improvement by budget",
+        xticks=budgets,
+    )
+    axes[1, 0].axhline(1.0, color="k", linestyle="--", linewidth=1)
+    axes[1, 0].axhline(1.5, color="0.5", linestyle=":", linewidth=1)
+    axes[1, 0].set(
+        xlabel="Exact cells per axis",
+        ylabel="Learned / best-teacher score",
+        title="Gap to searched teacher",
+        xticks=budgets,
+    )
+    component_values = [
+        value
+        for row in rows
+        for value in (
+            row["uniform_complex_loss"]
+            / max(row["learned_complex_loss"], np.finfo(np.float64).tiny),
+            row["uniform_rcs_loss"]
+            / max(row["learned_rcs_loss"], np.finfo(np.float64).tiny),
+        )
+    ]
+    component_min, component_max = min(component_values), max(component_values)
+    axes[1, 1].plot(
+        [component_min, component_max],
+        [component_min, component_max],
+        "k--",
+        linewidth=1,
+    )
+    axes[1, 1].axvline(1.0, color="0.5", linestyle=":", linewidth=1)
+    axes[1, 1].axhline(1.0, color="0.5", linestyle=":", linewidth=1)
+    axes[1, 1].set(
+        xscale="log",
+        yscale="log",
+        xlabel="Complex-field improvement",
+        ylabel="Log-RCS improvement",
+        title="Physics components",
+    )
+    handles = [
+        plt.Line2D([], [], color="black", marker=marker, linestyle="", label=split.title())
+        for split, marker in split_styles.items()
+    ]
+    handles.extend(
+        plt.Line2D([], [], color=colors[budget], marker="o", linestyle="", label=f"N={budget}")
+        for budget in budgets
+    )
+    figure.legend(handles=handles, loc="outside lower center", ncols=len(handles))
+    figure.suptitle("Frozen learned-mesh scattering evaluation")
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=True)
+    temporary = output / "evaluation_summary.tmp.png"
+    figure.savefig(temporary, dpi=180)
+    plt.close(figure)
+    os.replace(temporary, output / "evaluation_summary.png")
+
+
 def summarize(
     cases,
     output,
@@ -352,9 +452,11 @@ def summarize(
             )
             for split, selected in sorted(by_split.items())
         },
+        "plot_path": str(output / "evaluation_summary.png"),
         "cases": rows,
     }
     atomic_json(output / "report.json", report)
+    plot_evaluation(report, output)
     print(json.dumps(report, indent=2))
 
 

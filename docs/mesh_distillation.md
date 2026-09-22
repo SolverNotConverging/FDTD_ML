@@ -67,4 +67,6 @@ to GPUs by a stable hash of the case ID, so dataset ordering cannot concentrate 
 budget or material tier on a worker. Failed worker processes have a fixed retry
 limit and reuse fingerprint-validated cached attempts. The final report compares
 the learned mesh with both exact-budget uniform and the best searched teacher and
-records split-level tail statistics before declaring the frozen physics gate.
+records split-level tail statistics before declaring the frozen physics gate. Its
+`evaluation_summary.png` plots learned versus uniform scores, improvement and
+teacher gap by exact budget, and complex-field versus log-RCS improvement.

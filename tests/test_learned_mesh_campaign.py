@@ -174,3 +174,4 @@ def test_summary_can_name_the_frozen_physics_gate(tmp_path):
     assert report["by_split_and_contrast_tier"]["test"]["epsilon_r_le_10"][
         "case_count"
     ] == 1
+    assert (output / "evaluation_summary.png").is_file()
