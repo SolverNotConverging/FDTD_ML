@@ -20,6 +20,33 @@ band limits, feature size, maximum material permittivity and conductivity, and t
 selected grading limit. Feature size and budget are explicit inputs rather than
 quantities the CNN must infer from a low-resolution mask.
 
+## Sparse-scene input and capacity study
+
+The sparse-scene `sparse_v2` input has seven spatial maps: dielectric fill,
+normalized log permittivity, normalized electric conductivity, PEC fill, signed
+distance to the nearest object boundary, boundary proximity, and pair proximity.
+The last map responds to nearby object pairs; it is **not yet a full local
+clearance/feature-size field**. The 15 global conditioning values include incidence,
+exact x/y budget, frequency band, feature size, maximum material contrast,
+grading limit, object count, PEC fraction, occupied area, and projected support.
+
+The channel count of an internal convolution is model capacity, not a requirement
+for additional physical input fields. For example, the `r256_c32` variant reads
+seven 256x256 physical maps and its first learned convolution produces 32 feature
+maps. The nine-variant study crosses raster sizes 128/256/384 with base widths
+16/24/32. Every variant receives the same seven maps and 15 conditioning values.
+
+The initial joint dataset combines the single-circle campaign with qualified
+dielectric-pair and mixed dielectric/PEC pilots. Sparse scenes receive 70% of
+training samples. Its sparse pool is still small, so this study compares capacity
+and input resolution; it does not establish sparse-scene generalization. The
+follow-up 96-geometry pair campaign contains separate train, validation, and test
+scenes across dielectric circles, mixed dielectric shapes, dielectric/PEC pairs,
+and PEC rectangle pairs. It first requires all 192 fine references to settle and
+pass a 192/256 complex-field convergence check, then searches 2,016 exact-budget
+candidate meshes. All nine trained variants are evaluated by held-out FDTD
+scattering before a capacity choice is made.
+
 ## Set-valued targets
 
 `scripts/build_mesh_distillation_dataset.py` refuses partial campaigns. The source
