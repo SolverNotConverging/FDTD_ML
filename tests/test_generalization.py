@@ -36,9 +36,7 @@ def test_circle_generalization_plan_is_factorial_frozen_and_outside_pml():
         name: 24 for name in GENERALIZATION_CENTERS
     }
     assert {row["cells_x"] for row in examples} == set(GENERALIZATION_BUDGETS)
-    assert {row["incidence_angle_rad"] for row in examples} == set(
-        GENERALIZATION_ANGLES
-    )
+    assert {row["incidence_angle_rad"] for row in examples} == set(GENERALIZATION_ANGLES)
     for row in examples:
         x, y = row["center_m"]
         radius = row["radius_m"]
@@ -67,8 +65,7 @@ def load_runner():
 
 def load_continuation():
     path = (
-        Path(__file__).resolve().parents[1]
-        / "scripts/continue_circle_generalization_evaluation.py"
+        Path(__file__).resolve().parents[1] / "scripts/continue_circle_generalization_evaluation.py"
     )
     spec = importlib.util.spec_from_file_location("circle_generalization_continuation", path)
     module = importlib.util.module_from_spec(spec)
@@ -121,6 +118,7 @@ def test_generalization_runner_projects_exact_paired_meshes_and_summarizes(tmp_p
     assert report["decision"] == "passes_circle_position_scale_generalization"
     assert all(report["checks"].values())
     assert report["overall"]["median_improvement_over_uniform"] == pytest.approx(2.0)
+    assert (output / "evaluation_summary.png").is_file()
 
 
 def test_generalization_continuation_waits_for_passing_main_gate(tmp_path):

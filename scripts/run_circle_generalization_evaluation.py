@@ -175,8 +175,7 @@ def run_attempt(case, duration, output, device, sources, evaluation_id):
         ]
     )
     accepted = bool(
-        np.isfinite(field).all()
-        and result.diagnostics["tail_peak_over_global_peak"] < 1e-5
+        np.isfinite(field).all() and result.diagnostics["tail_peak_over_global_peak"] < 1e-5
     )
     record = {
         "schema_version": 1,
@@ -226,8 +225,7 @@ def aggregate(rows):
         "case_count": len(rows),
         "settled_pair_count": sum(row["settled_pair"] for row in rows),
         "meaningful_win_count": sum(value >= 1.05 for value in improvements),
-        "meaningful_win_fraction": sum(value >= 1.05 for value in improvements)
-        / len(rows),
+        "meaningful_win_fraction": sum(value >= 1.05 for value in improvements) / len(rows),
         "minimum_improvement_over_uniform": min(improvements),
         "median_improvement_over_uniform": float(np.median(improvements)),
         "median_complex_improvement_over_uniform": float(np.median(complex_improvements)),
@@ -241,6 +239,156 @@ def grouped(rows, key):
     for row in rows:
         groups[str(key(row))].append(row)
     return {name: aggregate(selected) for name, selected in sorted(groups.items())}
+
+
+def plot_evaluation(report, output):
+    """Write a compact diagnostic for the frozen position/scale gate."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    rows = report["cases"]
+    size_names = list(report["by_size_regime"])
+    size_colors = {
+        name: plt.cm.viridis(index / max(len(size_names) - 1, 1))
+        for index, name in enumerate(size_names)
+    }
+    budget_markers = {32: "o", 48: "s"}
+    figure, axes = plt.subplots(2, 2, figsize=(11, 8.5), constrained_layout=True)
+
+    for row in rows:
+        color = size_colors[row["size_regime"]]
+        marker = budget_markers.get(row["budget"], "^")
+        axes[0, 0].scatter(
+            row["uniform_score"],
+            row["learned_score"],
+            color=color,
+            marker=marker,
+            alpha=0.65,
+            s=24,
+        )
+        axes[1, 1].scatter(
+            row["complex_improvement_over_uniform"],
+            row["rcs_improvement_over_uniform"],
+            color=color,
+            marker=marker,
+            alpha=0.65,
+            s=24,
+        )
+
+    score_values = [
+        value for row in rows for value in (row["uniform_score"], row["learned_score"]) if value > 0
+    ]
+    score_min, score_max = min(score_values), max(score_values)
+    axes[0, 0].plot([score_min, score_max], [score_min, score_max], "k--", linewidth=1)
+    axes[0, 0].set(
+        xscale="log",
+        yscale="log",
+        xlabel="Uniform soft-Nt score",
+        ylabel="CNN soft-Nt score",
+        title="CNN mesh versus exact uniform",
+    )
+
+    for index, size_name in enumerate(size_names):
+        values = [
+            row["improvement_over_uniform"] for row in rows if row["size_regime"] == size_name
+        ]
+        offsets = np.linspace(-0.20, 0.20, len(values))
+        axes[0, 1].scatter(
+            index + offsets,
+            values,
+            color=size_colors[size_name],
+            alpha=0.55,
+            s=20,
+        )
+        axes[0, 1].plot(
+            [index - 0.28, index + 0.28],
+            [np.median(values), np.median(values)],
+            color="black",
+            linewidth=2,
+        )
+    axes[0, 1].axhline(1.0, color="black", linestyle="--", linewidth=1)
+    axes[0, 1].axhline(1.05, color="0.5", linestyle=":", linewidth=1)
+    axes[0, 1].set(
+        yscale="log",
+        xticks=range(len(size_names)),
+        xticklabels=[name.replace("_", "\n") for name in size_names],
+        ylabel="Uniform / CNN score",
+        title="Improvement by radius regime",
+    )
+
+    position_rows = defaultdict(list)
+    position_centers = {}
+    for row in rows:
+        position_rows[row["position_id"]].append(row["improvement_over_uniform"])
+        position_centers[row["position_id"]] = row["center_m"]
+    position_medians = {name: float(np.median(values)) for name, values in position_rows.items()}
+    spatial = axes[1, 0].scatter(
+        [position_centers[name][0] for name in position_medians],
+        [position_centers[name][1] for name in position_medians],
+        c=[np.log10(max(value, np.finfo(np.float64).tiny)) for value in position_medians.values()],
+        cmap="coolwarm",
+        s=260,
+        edgecolor="black",
+    )
+    for name, value in position_medians.items():
+        x, y = position_centers[name]
+        axes[1, 0].annotate(f"{name}\n{value:.2f}x", (x, y), ha="center", va="center", fontsize=8)
+    axes[1, 0].set(
+        xlim=(0.15, 1.05),
+        ylim=(0.15, 1.05),
+        aspect="equal",
+        xlabel="Circle center x (m)",
+        ylabel="Circle center y (m)",
+        title="Median improvement by location",
+    )
+    figure.colorbar(spatial, ax=axes[1, 0], label="log10 improvement")
+
+    component_values = [
+        value
+        for row in rows
+        for value in (
+            row["complex_improvement_over_uniform"],
+            row["rcs_improvement_over_uniform"],
+        )
+        if value > 0
+    ]
+    component_min, component_max = min(component_values), max(component_values)
+    axes[1, 1].plot(
+        [component_min, component_max],
+        [component_min, component_max],
+        "k--",
+        linewidth=1,
+    )
+    axes[1, 1].axvline(1.0, color="0.5", linestyle=":", linewidth=1)
+    axes[1, 1].axhline(1.0, color="0.5", linestyle=":", linewidth=1)
+    axes[1, 1].set(
+        xscale="log",
+        yscale="log",
+        xlabel="Complex far-field improvement",
+        ylabel="Log-RCS improvement",
+        title="Physics components",
+    )
+
+    handles = [
+        plt.Line2D([], [], color=size_colors[name], marker="o", linestyle="", label=name)
+        for name in size_names
+    ]
+    handles.extend(
+        plt.Line2D([], [], color="black", marker=marker, linestyle="", label=f"N={budget}")
+        for budget, marker in sorted(budget_markers.items())
+    )
+    figure.legend(handles=handles, loc="outside lower center", ncols=len(handles))
+    figure.suptitle(
+        "Frozen circle position/scale generalization — " + report["decision"].replace("_", " ")
+    )
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=True)
+    temporary = output / "evaluation_summary.tmp.png"
+    figure.savefig(temporary, dpi=180)
+    plt.close(figure)
+    os.replace(temporary, output / "evaluation_summary.png")
 
 
 def summarize(plan, cases, output):
@@ -258,9 +406,9 @@ def summarize(plan, cases, output):
         uniform, learned = records["uniform"], records["cnn"]
         example = examples[sample_id]
         uniform_score = uniform["joint_scattering_loss"]
-        learned_score = learned["joint_scattering_loss"] * (
-            learned["Nt"] / uniform["Nt"]
-        ) ** exponent
+        learned_score = (
+            learned["joint_scattering_loss"] * (learned["Nt"] / uniform["Nt"]) ** exponent
+        )
         rows.append(
             {
                 "sample_id": sample_id,
@@ -281,12 +429,8 @@ def summarize(plan, cases, output):
                 "rcs_improvement_over_uniform": uniform["rcs_log_loss"]
                 / max(learned["rcs_log_loss"], np.finfo(np.float64).tiny),
                 "nt_ratio_to_uniform": learned["Nt"] / uniform["Nt"],
-                "x_uniform_repair_fraction": learned["config"][
-                    "x_uniform_repair_fraction"
-                ],
-                "y_uniform_repair_fraction": learned["config"][
-                    "y_uniform_repair_fraction"
-                ],
+                "x_uniform_repair_fraction": learned["config"]["x_uniform_repair_fraction"],
+                "y_uniform_repair_fraction": learned["config"]["y_uniform_repair_fraction"],
             }
         )
     overall = aggregate(rows)
@@ -301,8 +445,7 @@ def summarize(plan, cases, output):
         "overall_meaningful_win_fraction": overall["meaningful_win_fraction"]
         >= gate["minimum_meaningful_win_fraction"],
         "each_size_regime_win_fraction": all(
-            value["meaningful_win_fraction"]
-            >= gate["minimum_each_size_regime_win_fraction"]
+            value["meaningful_win_fraction"] >= gate["minimum_each_size_regime_win_fraction"]
             for value in by_size.values()
         ),
         "each_position_median_improvement": all(
@@ -334,6 +477,7 @@ def summarize(plan, cases, output):
         "cases": rows,
     }
     atomic_json(output / "report.json", report)
+    plot_evaluation(report, output)
     print(json.dumps(report, indent=2))
     return report
 
