@@ -110,6 +110,18 @@ def main():
     device = torch.device(args.device)
     if device.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA training requested but CUDA is unavailable")
+    args.output.mkdir(parents=True, exist_ok=True)
+    atomic_json(
+        args.output / "launch.json",
+        {
+            "schema_version": 1,
+            "status": "running",
+            "dataset": str(args.dataset),
+            "config_path": str(args.config),
+            "config": config,
+            "device": str(device),
+        },
+    )
 
     train = MeshDistillationDataset(args.dataset, "train")
     validation = MeshDistillationDataset(args.dataset, "validation")
@@ -164,6 +176,20 @@ def main():
             best_state = {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
         else:
             stale_epochs += 1
+        atomic_json(
+            args.output / "progress.json",
+            {
+                "schema_version": 1,
+                "status": "running",
+                "epoch": epoch,
+                "planned_epochs": config["epochs"],
+                "best_epoch": best_epoch,
+                "best_validation_loss": best_validation,
+                "stale_epochs": stale_epochs,
+                "latest": row,
+                "wall_seconds": time.time() - started,
+            },
+        )
         if epoch == 1 or epoch % config["report_every"] == 0:
             print(json.dumps(row), flush=True)
         if stale_epochs >= config["patience"]:
@@ -190,7 +216,6 @@ def main():
         "validation_improvement_over_uniform": uniform_validation_loss / best_validation,
         "test_improvement_over_uniform": uniform_test_loss / test_loss,
     }
-    args.output.mkdir(parents=True, exist_ok=True)
     temporary = args.output / "checkpoint.pt.tmp"
     torch.save(checkpoint, temporary)
     os.replace(temporary, args.output / "checkpoint.pt")
@@ -218,6 +243,7 @@ def main():
         "test_projection": test_repair,
     }
     atomic_json(args.output / "summary.json", summary)
+    atomic_json(args.output / "progress.json", summary)
     print(json.dumps(summary, indent=2), flush=True)
 
 
