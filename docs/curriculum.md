@@ -122,6 +122,13 @@ campaign and will supply the next distinct sparse-cluster family if qualified.
 After its report and dataset are verified, warm-start the same nine architectures
 from the completed pair fine-tune grid. Evaluate held-out three- and four-object
 scenes, including both circular-PEC families, alongside the earlier sparse pairs.
+Rank each nine-model physics grid with `scripts/rank_sparse_model_grid.py` on
+validation cases at exact 32/48 budgets: maximize accepted-case coverage, then
+the equal-family geometric mean improvement over uniform, breaking ties by smaller
+parameter count. The ranker verifies that every declared held-out sparse case is
+present and leaves selection empty if no model accepts all low-budget validation
+cases. It records test results only as a separate audit after validation ranking;
+inspect circular-PEC and other family results before any promotion decision.
 
 ## Targets and loss
 
