@@ -90,6 +90,30 @@ def print_physics_progress(label, entries, physics):
             print(f"  {entry['name']:9s} waiting")
 
 
+def print_selection_progress(label, physics):
+    print(label)
+    selection_path = physics / "selection.json"
+    if selection_path.is_file():
+        selection = json.loads(selection_path.read_text())
+        chosen = selection["selected_model"]
+        if chosen is None:
+            print("  no fully accepted validation model")
+        else:
+            validation = selection["models"][chosen]["validation"]
+            print(
+                f"  selected={chosen} validation={validation['accepted_count']}/"
+                f"{validation['case_count']} family_geomean="
+                f"{validation['family_balanced_geometric_mean_improvement']:.3f}"
+            )
+    else:
+        comparison_path = physics / "comparison.json"
+        if comparison_path.is_file():
+            count = len(json.loads(comparison_path.read_text()).get("models", {}))
+            print(f"  waiting for ranking; model reports={count}/9")
+        else:
+            print("  waiting for physics comparison")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--grid", type=Path, default=Path("runs/sparse_nine_model_grid"))
@@ -113,10 +137,13 @@ def main():
         print_campaign_progress("Circular PEC gap pilot", args.pec_circle_config, args.pec_circles)
 
     print_physics_progress("Nine-model held-out physics", initial_entries, args.physics)
+    print_selection_progress("Initial model ranking", args.physics)
     pair_entries = print_training_progress("Pair-data fine-tune", args.finetune_grid)
     print_physics_progress("Pair-data held-out physics", pair_entries, args.finetune_physics)
+    print_selection_progress("Pair-data model ranking", args.finetune_physics)
     cluster_entries = print_training_progress("Multi-object fine-tune", args.cluster_grid)
     print_physics_progress("Multi-object held-out physics", cluster_entries, args.cluster_physics)
+    print_selection_progress("Multi-object model ranking", args.cluster_physics)
 
 
 if __name__ == "__main__":
