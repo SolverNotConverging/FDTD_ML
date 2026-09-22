@@ -66,7 +66,10 @@ def _score_one(example, model, resolution, pilot, device, output, checkpoint_has
     case_tags = {
         "split": example["split"],
         "family": example["family"],
-        "scene_family_id": example.get("scene_family_id") or scene.get("family_id", "unspecified"),
+        "scene_family_id": (
+            example.get("scene_family_id") or scene.get("family_id")
+            or ("legacy_pair" if example["family"] == "sparse_pair" else "legacy_cluster")
+        ),
         "pec_circle_count": example.get("pec_circle_count", sum(
             obj["shape"] == "circle" and obj["material"]["kind"] == "pec"
             for obj in scene["objects"]

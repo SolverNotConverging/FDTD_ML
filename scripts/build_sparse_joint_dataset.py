@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from collections import Counter
 from pathlib import Path
 
@@ -45,6 +46,24 @@ def _split(scene_id):
         "pec_rectangle_rectangle_wide",
     }
     return "validation" if scene_id in validation else "test" if scene_id in test else "train"
+
+
+def _enrich_sparse_metadata(item):
+    updated = dict(item)
+    if not updated["family"].startswith("sparse"):
+        return updated
+    if not updated.get("scene_family_id"):
+        match = re.fullmatch(r"sparse_(.+)_\d{3}_[0-9a-f]{8}", updated["geometry_id"])
+        updated["scene_family_id"] = (
+            match.group(1) if match else "legacy_pair" if updated["family"] == "sparse_pair"
+            else "legacy_cluster"
+        )
+    if "pec_circle_count" not in updated:
+        updated["pec_circle_count"] = sum(
+            obj["shape"] == "circle" and obj["material"]["kind"] == "pec"
+            for obj in updated["objects"]
+        )
+    return updated
 
 
 def build(base_path, pilots, output):
@@ -91,7 +110,7 @@ def build(base_path, pilots, output):
         mask[:old, target_index] = base_mask[:, source_index]
     examples = []
     for item in base["examples"]:
-        updated = dict(item)
+        updated = _enrich_sparse_metadata(item)
         updated["best_candidate_index"] = names.index(item["best_candidate"])
         examples.append(updated)
 

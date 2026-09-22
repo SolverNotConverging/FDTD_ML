@@ -138,6 +138,8 @@ The multi-object fine-tune samples 20% simple controls, 35% sparse pairs, and 45
 sparse clusters. This increases exposure to three/four-object and circular-PEC
 geometry while retaining pair and analytic-control coverage. The preceding pair
 fine-tune keeps its 70% sparse / 30% simple setting.
+The multi-object dataset merge backfills scene-family and PEC-circle counts on
+earlier sparse examples; historical pair controls are grouped as `legacy_pair`.
 Rank each nine-model physics grid with `scripts/rank_sparse_model_grid.py` on
 validation cases at exact 32/48 budgets: maximize accepted-case coverage, then
 the equal-family geometric mean improvement over uniform, breaking ties by smaller
