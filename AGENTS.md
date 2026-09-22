@@ -1,8 +1,9 @@
 # Agent guidance
 
 Delegate bounded, repetitive work that does not require scientific or architectural
-judgment to `gpt-5.6-luna`. Use a Luna sub-agent when the task is independently
-checkable and substantial enough that delegation saves primary-agent attention.
+judgment to `gpt-6-luna` with `reasoning_effort="high"`. Use a Luna sub-agent when
+the task is independently checkable and substantial enough that delegation saves
+primary-agent attention.
 Good examples include mechanical file inspection, formatting, routine test
 execution, collecting metrics from already-defined outputs, verifying manifests,
 and applying a well-specified repetitive edit. Trivial one-command checks may stay
