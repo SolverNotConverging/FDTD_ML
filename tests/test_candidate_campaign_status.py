@@ -34,3 +34,66 @@ def test_snapshot_counts_expected_records_and_recent_rate(tmp_path):
     assert result["recent_completions"] == 1
     assert result["recent_completion_rate_per_hour"] == 30.0
     assert result["estimated_remaining_seconds"] == 360.0
+
+
+def test_snapshot_reports_lineage_progress(tmp_path):
+    status = load_status()
+    campaign = tmp_path / "campaign.json"
+    campaign.write_text(
+        json.dumps(
+            {
+                "dataset_id": "dataset",
+                "condition_ids": ["a", "b"],
+                "candidate_names": ["u", "v"],
+            }
+        )
+    )
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "dataset_id": "dataset",
+                "geometries": [
+                    {"geometry_id": "ga", "epsilon_r": 2.0},
+                    {"geometry_id": "gb", "epsilon_r": 4.5},
+                ],
+                "conditions": [
+                    {
+                        "task_id": "a",
+                        "geometry_id": "ga",
+                        "lineage_id": "low",
+                        "split": "train",
+                    },
+                    {
+                        "task_id": "b",
+                        "geometry_id": "gb",
+                        "lineage_id": "high",
+                        "split": "validation",
+                    },
+                ],
+            }
+        )
+    )
+    record = tmp_path / "out/cases/a_u/record.json"
+    record.parent.mkdir(parents=True)
+    record.write_text(json.dumps({"status": "accepted"}))
+
+    result = status.snapshot(campaign, tmp_path / "out", manifest=manifest)
+    assert result["lineage_progress"] == {
+        "high": {
+            "split": "validation",
+            "epsilon_r": [4.5],
+            "planned": 2,
+            "completed": 0,
+            "remaining": 2,
+            "simulation_status_counts": {},
+        },
+        "low": {
+            "split": "train",
+            "epsilon_r": [2.0],
+            "planned": 2,
+            "completed": 1,
+            "remaining": 1,
+            "simulation_status_counts": {"accepted": 1},
+        },
+    }
