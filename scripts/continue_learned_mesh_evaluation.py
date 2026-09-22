@@ -26,10 +26,12 @@ def training_snapshot(dataset, training_output):
     dataset_path = Path(dataset)
     summary_path = Path(training_output) / "summary.json"
     checkpoint_path = Path(training_output) / "checkpoint.pt"
+    predicted_meshes_path = Path(training_output) / "predicted_meshes.json"
     snapshot = {
         "dataset_present": dataset_path.exists(),
         "summary_present": summary_path.exists(),
         "checkpoint_present": checkpoint_path.exists(),
+        "predicted_meshes_present": predicted_meshes_path.exists(),
         "ready": False,
     }
     if not summary_path.exists():
@@ -43,7 +45,7 @@ def training_snapshot(dataset, training_output):
     snapshot["epochs_completed"] = summary.get("epochs_completed")
     snapshot["best_epoch"] = summary.get("best_epoch")
     provenance_matches = False
-    if dataset_path.exists() and checkpoint_path.exists():
+    if dataset_path.exists() and checkpoint_path.exists() and predicted_meshes_path.exists():
         try:
             metadata = json.loads(dataset_path.read_text())
             arrays_path = dataset_path.parent / metadata["arrays"]
@@ -52,6 +54,8 @@ def training_snapshot(dataset, training_output):
                 sources.get("dataset") == sha256_file(dataset_path)
                 and sources.get("dataset_arrays") == sha256_file(arrays_path)
                 and summary.get("checkpoint_sha256") == sha256_file(checkpoint_path)
+                and summary.get("predicted_meshes_sha256")
+                == sha256_file(predicted_meshes_path)
             )
         except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
             provenance_matches = False
@@ -59,6 +63,7 @@ def training_snapshot(dataset, training_output):
     snapshot["ready"] = bool(
         dataset_path.exists()
         and checkpoint_path.exists()
+        and predicted_meshes_path.exists()
         and summary.get("status") == "complete"
         and provenance_matches
     )
@@ -106,6 +111,8 @@ def worker_command(args, runner, shard, device):
         args.dataset,
         "--checkpoint",
         args.training_output / "checkpoint.pt",
+        "--predicted-meshes",
+        args.training_output / "predicted_meshes.json",
         "--candidate-output",
         args.candidate_output,
         "--output",
@@ -187,6 +194,8 @@ def run_summary(args, runner, environment):
         args.dataset,
         "--checkpoint",
         args.training_output / "checkpoint.pt",
+        "--predicted-meshes",
+        args.training_output / "predicted_meshes.json",
         "--candidate-output",
         args.candidate_output,
         "--output",

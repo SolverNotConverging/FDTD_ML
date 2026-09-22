@@ -39,6 +39,8 @@ def test_training_snapshot_requires_complete_summary_dataset_and_checkpoint(tmp_
     (training / "checkpoint.pt").write_bytes(b"checkpoint")
     assert pipeline.training_snapshot(dataset, training)["ready"] is False
     checkpoint = training / "checkpoint.pt"
+    predicted_meshes = training / "predicted_meshes.json"
+    predicted_meshes.write_text("{}")
     summary = {
         "status": "complete",
         "epochs_completed": 10,
@@ -48,6 +50,7 @@ def test_training_snapshot_requires_complete_summary_dataset_and_checkpoint(tmp_
             "dataset_arrays": pipeline.sha256_file(arrays),
         },
         "checkpoint_sha256": pipeline.sha256_file(checkpoint),
+        "predicted_meshes_sha256": pipeline.sha256_file(predicted_meshes),
     }
     (training / "summary.json").write_text(json.dumps(summary))
 
@@ -61,6 +64,50 @@ def test_training_snapshot_requires_complete_summary_dataset_and_checkpoint(tmp_
 
     checkpoint.write_bytes(b"changed checkpoint")
     assert pipeline.training_snapshot(dataset, training)["ready"] is False
+
+
+def test_saved_predictions_are_validated_and_preserve_dataset_order(tmp_path):
+    runner = load_script("run_learned_mesh_pilot.py")
+    dataset = tmp_path / "dataset.json"
+    examples = [
+        {
+            "sample_id": sample_id,
+            "split": "validation",
+            "cells_x": 4,
+            "cells_y": 4,
+        }
+        for sample_id in ("second", "first")
+    ]
+    dataset.write_text(json.dumps({"examples": examples}))
+    predictions = tmp_path / "predicted.json"
+    rows = [
+        {
+            "sample_id": sample_id,
+            "split": "validation",
+            "cells_x": 4,
+            "cells_y": 4,
+            "x": [0.0, 0.3, 0.6, 0.9, 1.2],
+            "y": [0.0, 0.3, 0.6, 0.9, 1.2],
+            "x_uniform_repair_fraction": 0.0,
+            "y_uniform_repair_fraction": 0.0,
+        }
+        for sample_id in ("first", "second")
+    ]
+    predictions.write_text(json.dumps({"validation": rows}))
+
+    cases = runner.saved_predicted_cases(dataset, predictions, ("validation",), 3.0)
+
+    assert [case["sample_id"] for case in cases] == ["second", "first"]
+    assert all(len(case["x"]) == 5 and len(case["y"]) == 5 for case in cases)
+
+    rows[0]["cells_x"] = 5
+    predictions.write_text(json.dumps({"validation": rows}))
+    try:
+        runner.saved_predicted_cases(dataset, predictions, ("validation",), 3.0)
+    except ValueError as error:
+        assert "budget mismatch" in str(error)
+    else:
+        raise AssertionError("Expected a budget mismatch")
 
 
 def test_evaluation_snapshot_counts_only_valid_expected_records(tmp_path):

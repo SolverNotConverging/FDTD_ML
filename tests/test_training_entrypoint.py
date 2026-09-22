@@ -22,6 +22,7 @@ def test_completed_run_requires_all_outputs_and_matching_provenance(tmp_path):
         "status": "complete",
         "source_hashes": provenance,
         "checkpoint_sha256": trainer.sha256_file(tmp_path / "checkpoint.pt"),
+        "predicted_meshes_sha256": trainer.sha256_file(tmp_path / "predicted_meshes.json"),
     }
     (tmp_path / "summary.json").write_text(json.dumps(summary))
     assert trainer.completed_run_matches(tmp_path, provenance) is True

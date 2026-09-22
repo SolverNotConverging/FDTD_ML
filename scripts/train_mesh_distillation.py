@@ -74,6 +74,8 @@ def completed_run_matches(output, provenance):
         summary.get("status") == "complete"
         and summary.get("source_hashes") == provenance
         and summary.get("checkpoint_sha256") == sha256_file(output / "checkpoint.pt")
+        and summary.get("predicted_meshes_sha256")
+        == sha256_file(output / "predicted_meshes.json")
     )
 
 
@@ -285,10 +287,8 @@ def main():
     os.replace(temporary, checkpoint_path)
     checkpoint_sha256 = sha256_file(checkpoint_path)
     atomic_json(args.output / "history.json", {"epochs": history})
-    atomic_json(
-        args.output / "predicted_meshes.json",
-        {"validation": meshes, "test": test_meshes},
-    )
+    predicted_meshes_path = args.output / "predicted_meshes.json"
+    atomic_json(predicted_meshes_path, {"validation": meshes, "test": test_meshes})
     summary = {
         "schema_version": 1,
         "status": "complete",
@@ -301,6 +301,7 @@ def main():
         "test_loss": test_loss,
         "source_hashes": provenance,
         "checkpoint_sha256": checkpoint_sha256,
+        "predicted_meshes_sha256": sha256_file(predicted_meshes_path),
         "uniform_validation_loss": uniform_validation_loss,
         "uniform_test_loss": uniform_test_loss,
         "validation_improvement_over_uniform": uniform_validation_loss / best_validation,

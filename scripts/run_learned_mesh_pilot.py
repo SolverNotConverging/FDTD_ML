@@ -45,7 +45,7 @@ def atomic_npz(path, **arrays):
     os.replace(temporary, path)
 
 
-def source_hashes(checkpoint, dataset):
+def source_hashes(checkpoint, dataset, predicted_meshes=None):
     root = Path(__file__).resolve().parents[1]
     result = {
         str(path.relative_to(root)): sha256_file(path)
@@ -53,6 +53,8 @@ def source_hashes(checkpoint, dataset):
     }
     result["checkpoint"] = sha256_file(checkpoint)
     result["dataset"] = sha256_file(dataset)
+    if predicted_meshes is not None:
+        result["predicted_meshes"] = sha256_file(predicted_meshes)
     result[str(Path(__file__).resolve().relative_to(root))] = sha256_file(__file__)
     return result
 
@@ -63,7 +65,71 @@ def stable_shard(case_id, shards):
     return int.from_bytes(digest[:8], "big") % shards
 
 
-def predicted_cases(dataset_path, checkpoint_path, splits, max_ratio):
+def saved_predicted_cases(dataset_path, predicted_meshes_path, splits, max_ratio):
+    """Load and strictly validate axes projected by the frozen checkpoint."""
+    metadata = json.loads(Path(dataset_path).read_text())
+    saved = json.loads(Path(predicted_meshes_path).read_text())
+    requested_splits = set(splits)
+    expected = [example for example in metadata["examples"] if example["split"] in requested_splits]
+    by_key = {}
+    for split in splits:
+        rows = saved.get(split)
+        if not isinstance(rows, list):
+            raise ValueError(f"Predicted meshes lack split: {split}")
+        for row in rows:
+            key = (split, row.get("sample_id"))
+            if key in by_key:
+                raise ValueError(f"Duplicate predicted mesh: {key}")
+            if row.get("split") != split:
+                raise ValueError(f"Predicted mesh split mismatch: {key}")
+            by_key[key] = row
+    expected_keys = {(example["split"], example["sample_id"]) for example in expected}
+    if set(by_key) != expected_keys:
+        missing = sorted(expected_keys - set(by_key))
+        extra = sorted(set(by_key) - expected_keys)
+        raise ValueError(f"Predicted mesh identities mismatch: missing={missing}, extra={extra}")
+
+    cases = []
+    for example in expected:
+        row = by_key[(example["split"], example["sample_id"])]
+        if row.get("cells_x") != example["cells_x"] or row.get("cells_y") != example["cells_y"]:
+            raise ValueError(f"Predicted mesh budget mismatch: {example['sample_id']}")
+        x = np.asarray(row["x"], dtype=np.float64)
+        y = np.asarray(row["y"], dtype=np.float64)
+        if x.shape != (example["cells_x"] + 1,) or y.shape != (example["cells_y"] + 1,):
+            raise ValueError(f"Predicted mesh axis length mismatch: {example['sample_id']}")
+        if not np.isfinite(x).all() or not np.isfinite(y).all():
+            raise ValueError(f"Predicted mesh contains nonfinite axes: {example['sample_id']}")
+        Grid(x, y, max_ratio=max_ratio)
+        repairs = (
+            float(row["x_uniform_repair_fraction"]),
+            float(row["y_uniform_repair_fraction"]),
+        )
+        if not all(np.isfinite(value) and 0 <= value <= 1 for value in repairs):
+            raise ValueError(f"Invalid mesh repair fraction: {example['sample_id']}")
+        axis_hash = hashlib.sha256(x.tobytes() + y.tobytes()).hexdigest()
+        cases.append(
+            {
+                "case_id": f"{example['sample_id']}_cnn",
+                "sample_id": example["sample_id"],
+                "split": example["split"],
+                "example": example,
+                "x": x,
+                "y": y,
+                "axis_hash": axis_hash,
+                "max_grading_ratio": max_ratio,
+                "x_uniform_repair_fraction": repairs[0],
+                "y_uniform_repair_fraction": repairs[1],
+            }
+        )
+    return cases
+
+
+def predicted_cases(
+    dataset_path, checkpoint_path, splits, max_ratio, predicted_meshes_path=None
+):
+    if predicted_meshes_path is not None:
+        return saved_predicted_cases(dataset_path, predicted_meshes_path, splits, max_ratio)
     checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
     model = AxisDensityUNet(**checkpoint["model_kwargs"])
     model.load_state_dict(checkpoint["model_state"])
@@ -463,6 +529,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
+    parser.add_argument("--predicted-meshes", type=Path)
     parser.add_argument("--candidate-output", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cuda:0")
@@ -479,10 +546,16 @@ def main():
     args = parser.parse_args()
     if args.shards < 1 or not 0 <= args.shard < args.shards:
         raise ValueError("Require 0 <= shard < shards")
-    cases = predicted_cases(args.dataset, args.checkpoint, ("validation", "test"), args.max_ratio)
+    cases = predicted_cases(
+        args.dataset,
+        args.checkpoint,
+        ("validation", "test"),
+        args.max_ratio,
+        predicted_meshes_path=args.predicted_meshes,
+    )
     metadata = json.loads(args.dataset.read_text())
     exponent = float(metadata["ranking"]["nt_cost_exponent"])
-    sources = source_hashes(args.checkpoint, args.dataset)
+    sources = source_hashes(args.checkpoint, args.dataset, args.predicted_meshes)
     if args.summarize:
         summarize(
             cases,
