@@ -37,7 +37,11 @@ lineages. Lineages are assigned wholly to train/validation/test (24/4/4 geometri
 and held-out splits use disjoint incidence angles and size regimes. Expansion over
 their declared illuminations and 32/48/64/96 budgets creates 352 conditions before
 mesh candidates. See `configs/simple_dielectric_pool.json`. Candidate physics runs
-and label selection remain the next stage; this manifest alone is not training data.
+and label selection are complete for this first pool, but its frozen training gate
+fails because all validation labels select uniform. It remains a measured search
+dataset, not CNN training data. The next revision independently varies radius,
+permittivity, and conductivity and searches intermediate nonuniform resolutions
+under each uniform compute cap.
 
 ## Targets and loss
 

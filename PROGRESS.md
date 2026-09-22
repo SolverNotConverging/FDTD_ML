@@ -238,11 +238,20 @@ full plan `simple_candidate_full_d535ccac015b3cd8` expands all 32 geometries and
 conditions into 3,168 restartable cases, including the epsilon_r=4.5 train lineage.
 See the [candidate pilot](docs/validation/simple_candidate_pilot.md).
 
-The full campaign is running in four restartable GPU shards. Its report schema now
-contains a frozen pre-M5 label-diversity gate: at least 5% gains must span two
-training lineages, two candidate policies, and two budgets, with at least one
-validation and test gain. The completed 270-case pilot correctly fails this gate
-because its two useful labels occur only in the held-out test lineage at budget 64.
+The full 3,168-case campaign is complete. It produced 3,146 accepted and 22
+unsettled records, no malformed records, complete uniform baselines, and 352 labels
+across 88 illumination groups. Training has ten >=1.05x wins across three lineages,
+two policies, and two budgets; test has eleven wins and reaches 2.003x. Validation
+has no nonuniform win, so the frozen gate correctly returns `not_ready_for_m5`.
+See the [full campaign report](docs/validation/simple_candidate_full.md).
+
+The next candidate-search iteration addresses a resolution-sampling gap exposed by
+the complete result. Focused grids frequently beat uniform at equal axis counts but
+need more time steps, while the existing 32/48/64/96 ladder offers no slightly
+smaller candidate that fits the uniform update cap. Add candidate-specific
+resolution factors, select them using training lineages, and freeze them before
+reevaluating held-out data. The following pool version must also decorrelate radius,
+permittivity, and conductivity before CNN fitting.
 
 ## Next work
 

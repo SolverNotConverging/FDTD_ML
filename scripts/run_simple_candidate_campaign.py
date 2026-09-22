@@ -49,6 +49,22 @@ def load_inputs(manifest_path, campaign_path):
     if not set(campaign["condition_ids"]) <= conditions.keys():
         raise ValueError("Campaign contains an unknown condition")
     candidate_map = {row["candidate"]: row for row in PILOT.CANDIDATES}
+    for variant in campaign.get("candidate_variants", []):
+        name = variant["candidate"]
+        base_name = variant["base_candidate"]
+        factor = variant["cell_factor"]
+        if name in candidate_map:
+            raise ValueError(f"Duplicate mesh candidate: {name}")
+        if base_name not in candidate_map:
+            raise ValueError(f"Unknown base mesh candidate: {base_name}")
+        if not np.isfinite(factor) or not 0 < factor <= 1:
+            raise ValueError("Candidate cell_factor must be in (0, 1]")
+        candidate_map[name] = dict(
+            candidate_map[base_name],
+            candidate=name,
+            base_candidate=base_name,
+            cell_factor=float(factor),
+        )
     if not set(campaign["candidate_names"]) <= candidate_map.keys():
         raise ValueError("Campaign contains an unknown mesh candidate")
     return manifest, campaign, geometries, conditions, candidate_map
@@ -70,10 +86,18 @@ def case_definitions(manifest, campaign, geometries, conditions, candidate_map):
             ),
         )
         for candidate_name in campaign["candidate_names"]:
+            candidate = candidate_map[candidate_name]
+            target_cells = condition["cells_x"]
+            cell_factor = candidate.get("cell_factor")
+            candidate_cells = (
+                max(4, int(np.floor(target_cells * cell_factor)))
+                if cell_factor is not None
+                else target_cells
+            )
             config = PILOT.definitions(
                 [scene],
-                [condition["cells_x"]],
-                [candidate_map[candidate_name]],
+                [candidate_cells],
+                [candidate],
                 duration=campaign["duration_s"],
                 pec_mode=None,
             )[0]
@@ -86,6 +110,12 @@ def case_definitions(manifest, campaign, geometries, conditions, candidate_map):
                 split=condition["split"],
                 family=condition["family"],
             )
+            if cell_factor is not None:
+                config.update(
+                    target_cells_x=condition["cells_x"],
+                    target_cells_y=condition["cells_y"],
+                    candidate_cell_factor=cell_factor,
+                )
             config["case_id"] = f"{condition_id}_{candidate_name}"
             cases.append(config)
     return cases
@@ -193,11 +223,16 @@ def summarize(cases, output, sources, campaign):
     for illumination_id, rows in groups.items():
         accepted = [row for row in rows if row["accepted"]]
         uniform = {
-            row["config"]["cells"]: row
+            row["config"].get("target_cells_x", row["config"]["cells"]): row
             for row in accepted
             if row["config"]["candidate"] == "uniform"
         }
-        expected_budgets = sorted({row["config"]["cells"] for row in rows})
+        expected_budgets = sorted(
+            {
+                row["config"].get("target_cells_x", row["config"]["cells"])
+                for row in rows
+            }
+        )
         if set(uniform) != set(expected_budgets):
             invalid_groups.append(illumination_id)
         budget_labels = {}
@@ -210,6 +245,8 @@ def summarize(cases, output, sources, campaign):
                 uniform_loss=baseline["joint_scattering_loss"],
                 best_case=best["case_id"],
                 best_candidate=best["config"]["candidate"],
+                best_cells=best["config"]["cells"],
+                best_cell_factor=best["config"].get("candidate_cell_factor", 1.0),
                 best_updates=best["cell_updates"],
                 best_loss=best["joint_scattering_loss"],
                 improvement=baseline["joint_scattering_loss"] / best["joint_scattering_loss"],

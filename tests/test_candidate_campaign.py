@@ -46,6 +46,41 @@ def test_full_campaign_covers_the_entire_manifest():
     }
 
 
+def test_candidate_variants_can_use_less_resolution_than_the_target_budget(tmp_path):
+    runner = load_runner()
+    manifest_path = ROOT / "configs/simple_dielectric_pool.json"
+    manifest = json.loads(manifest_path.read_text())
+    condition = manifest["conditions"][0]
+    campaign = {
+        "schema_version": 2,
+        "dataset_id": manifest["dataset_id"],
+        "campaign_id": "scaled_test",
+        "geometry_ids": [condition["geometry_id"]],
+        "condition_ids": [condition["task_id"]],
+        "candidate_names": ["uniform", "region_medium_f87"],
+        "candidate_variants": [
+            {
+                "candidate": "region_medium_f87",
+                "base_candidate": "region_medium",
+                "cell_factor": 0.87,
+            }
+        ],
+        "duration_s": 7e-8,
+    }
+    campaign_path = tmp_path / "scaled.json"
+    campaign_path.write_text(json.dumps(campaign))
+    cases = runner.case_definitions(*runner.load_inputs(manifest_path, campaign_path))
+    by_name = {case["candidate"]: case for case in cases}
+    target = condition["cells_x"]
+    assert by_name["uniform"]["cells"] == target
+    assert "target_cells_x" not in by_name["uniform"]
+    scaled = by_name["region_medium_f87"]
+    assert scaled["cells"] == int(target * 0.87)
+    assert scaled["target_cells_x"] == target
+    assert scaled["candidate_cell_factor"] == 0.87
+    assert scaled["base_candidate"] == "region_medium"
+
+
 def test_label_diversity_and_training_gate_require_split_safe_variation():
     runner = load_runner()
     labels = {

@@ -263,6 +263,19 @@ version-2 campaign report records these checks, per-split candidate/budget count
 and improvement statistics. Failing this gate triggers another candidate-search
 iteration rather than CNN fitting.
 
+The full campaign is complete: 3,146 of 3,168 cases settled, all uniform baselines
+are valid, and the report contains 88 illumination groups. Training passes its
+diversity checks with ten meaningful wins, and test has eleven wins, but validation
+selects uniform for all 32 labels. The frozen gate therefore returns
+`not_ready_for_m5`. The next M4 iteration must search intermediate candidate
+resolutions under each uniform update cap. The four-point 32/48/64/96 candidate
+ladder is too coarse: same-cell focused grids often improve accuracy but cost more
+time steps, while the next lower candidate resolution discards 25% of the axis
+resolution. Select resolution factors on training only, freeze them, and then
+reevaluate validation and test. Before CNN training, replace the correlated
+radius/permittivity/conductivity lineage schedule with an independently varied
+simple-scene pool.
+
 As stages expand, keep three separately tagged families and report their results separately:
 
 | Family | Initial contents | Controlled difficulty |
