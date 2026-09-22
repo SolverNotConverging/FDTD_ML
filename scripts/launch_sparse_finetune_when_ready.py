@@ -54,6 +54,31 @@ def dataset_ready(dataset, base, config, campaign):
     return True, f"{expected} examples verified; arrays sha256={_sha256_file(arrays)}"
 
 
+def initial_grid_ready(grid):
+    launch_path = grid / "launch.json"
+    completion_path = grid / "completion.json"
+    if not launch_path.is_file() or not completion_path.is_file():
+        return False, "waiting for initial nine-model grid"
+    launch = json.loads(launch_path.read_text())
+    exits = json.loads(completion_path.read_text())["exit_codes"]
+    expected = {f"r{resolution}_c{channels}" for resolution in (128, 256, 384)
+                for channels in (16, 24, 32)}
+    entries = launch["entries"]
+    if len(entries) != 9 or {entry["name"] for entry in entries} != expected:
+        raise ValueError("Initial grid does not contain the expected nine models")
+    if set(exits) != expected or any(exits.values()):
+        raise ValueError(f"Initial grid has failed or missing fits: {exits}")
+    for entry in entries:
+        output = Path(entry["output"])
+        summary_path, checkpoint_path = output / "summary.json", output / "checkpoint.pt"
+        if not summary_path.is_file() or not checkpoint_path.is_file():
+            return False, f"waiting for initial checkpoint {entry['name']}"
+        summary = json.loads(summary_path.read_text())
+        if summary.get("status") != "complete" or summary.get("checkpoint_sha256") != _sha256_file(checkpoint_path):
+            raise ValueError(f"Initial checkpoint is incomplete or changed: {entry['name']}")
+    return True, "all nine initial checkpoints verified"
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", type=Path, default=ROOT / "runs/sparse_joint_dataset_96/dataset.json")
@@ -72,6 +97,8 @@ def main():
     config, campaign = args.config.resolve(), args.campaign.resolve()
     while True:
         ready, message = dataset_ready(dataset, base, config, campaign)
+        if ready:
+            ready, message = initial_grid_ready(args.init_grid.resolve())
         print(message, flush=True)
         if ready or args.check_only:
             break

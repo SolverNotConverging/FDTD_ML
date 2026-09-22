@@ -119,6 +119,9 @@ old-plus-new held-out sparse-pair conditions. Select using validation physics an
 inspect PEC and low-budget strata separately; test remains a final check. The
 48-scene multi-object pilot, including circular PEC, is queued behind the pair
 campaign and will supply the next distinct sparse-cluster family if qualified.
+After its report and dataset are verified, warm-start the same nine architectures
+from the completed pair fine-tune grid. Evaluate held-out three- and four-object
+scenes, including both circular-PEC families, alongside the earlier sparse pairs.
 
 ## Targets and loss
 
