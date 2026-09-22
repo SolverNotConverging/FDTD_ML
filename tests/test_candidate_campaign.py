@@ -94,6 +94,29 @@ def test_campaign_source_hashes_are_pinned_across_resumes(tmp_path, monkeypatch)
     assert payload["source_revision"] is None
 
 
+def test_hash_shards_cover_cases_once_and_break_candidate_order_bias():
+    runner = load_runner()
+    cases = [
+        {"case_id": f"condition_{condition}_{candidate}", "candidate": candidate}
+        for condition in range(200)
+        for candidate in (
+            "uniform",
+            "interface_wide",
+            "region_wide",
+            "region_medium",
+            "region_strong",
+            "hybrid_wide",
+        )
+    ]
+    shards = [runner.select_shard(cases, index, 4, "hash") for index in range(4)]
+    assigned = [case["case_id"] for shard in shards for case in shard]
+    assert len(assigned) == len(cases)
+    assert len(set(assigned)) == len(cases)
+    assert max(map(len, shards)) - min(map(len, shards)) < 60
+    for shard in shards:
+        assert len({case["candidate"] for case in shard}) == 6
+
+
 def test_label_diversity_and_training_gate_require_split_safe_variation():
     runner = load_runner()
     labels = {

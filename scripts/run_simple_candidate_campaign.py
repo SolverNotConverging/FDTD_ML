@@ -31,6 +31,7 @@ def parse_args():
     parser.add_argument("--device", default="cuda:0")
     parser.add_argument("--shard", type=int, default=0)
     parser.add_argument("--shards", type=int, default=1)
+    parser.add_argument("--shard-strategy", choices=("index", "hash"), default="index")
     parser.add_argument("--summarize", action="store_true")
     parser.add_argument(
         "--source-revision",
@@ -126,6 +127,23 @@ def campaign_source_hashes(output, source_revision=None):
         },
     )
     return hashes
+
+
+def select_shard(cases, shard, shards, strategy="index"):
+    """Assign complete logical cases deterministically without candidate-order bias."""
+    if shards < 1 or not 0 <= shard < shards:
+        raise ValueError("Require 0 <= shard < shards")
+    if strategy == "index":
+        return [case for index, case in enumerate(cases) if index % shards == shard]
+    if strategy == "hash":
+        return [
+            case
+            for case in cases
+            if int.from_bytes(hashlib.sha256(case["case_id"].encode()).digest()[:8], "big")
+            % shards
+            == shard
+        ]
+    raise ValueError(f"Unsupported shard strategy: {strategy}")
 
 
 def case_definitions(manifest, campaign, geometries, conditions, candidate_map):
@@ -505,7 +523,7 @@ def main():
     if args.summarize:
         summarize(cases, args.output, sources, inputs[1])
         return
-    selected = [case for index, case in enumerate(cases) if index % args.shards == args.shard]
+    selected = select_shard(cases, args.shard, args.shards, args.shard_strategy)
     for index, config in enumerate(selected, 1):
         migrate_legacy_record(config, args.output, sources, inputs[1]["campaign_id"])
         record, cached = run_campaign_case(config, args.output, args.device, sources)
