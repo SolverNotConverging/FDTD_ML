@@ -8,7 +8,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from .constants import C0, EPS0
+from .constants import C0, EPS0, MU0
 from .mesh import MESH_POLICY, AxisCollar, cell_count, density_mesh, projected_density
 from .scene import raster_index
 
@@ -22,6 +22,7 @@ CHANNELS = [
     "y_anchor",
     "mu_r",
     "PML",
+    "sigma_h_over_omega_mu0",
 ]
 CONDITIONING = [
     "log_Lx_over_lambda0",
@@ -40,6 +41,7 @@ NORMALIZATION = {
     "y_anchor": "binary",
     "mu_r": "identity",
     "PML": "binary",
+    "sigma_h_over_omega_mu0": "sigma_h/(2*pi*f_max*mu0)",
 }
 
 
@@ -82,7 +84,7 @@ class ResUNet(nn.Module):
             or min(raster.shape[2:]) < 4
             or condition.shape != (raster.shape[0], 5)
         ):
-            raise ValueError("Expected raster (B,9,H,W), H/W>=4, and conditioning (B,5)")
+            raise ValueError("Expected raster (B,10,H,W), H/W>=4, and conditioning (B,5)")
         a = self.enc1(raster, condition)
         b = self.enc2(F.avg_pool2d(a, 2), condition)
         h = self.bottom(F.avg_pool2d(b, 2), condition)
@@ -121,7 +123,7 @@ def rasterize(scene, shape, f_max):
         raise ValueError("f_max must be finite and positive")
     x = (np.arange(W) + 0.5) * scene.Lx / W
     y = (np.arange(H) + 0.5) * scene.Ly / H
-    eps, mu, sigma, pec = scene.sample(x, y, raster=True)
+    eps, mu, sigma, sigma_h, pec = scene.sample(x, y, raster=True, magnetic_loss=True)
     raster = np.zeros((len(CHANNELS), H, W), dtype=np.float32)
     raster[0], raster[1], raster[2], raster[7] = (
         eps.T,
@@ -129,6 +131,7 @@ def rasterize(scene, shape, f_max):
         pec.T,
         mu.T,
     )
+    raster[9] = sigma_h.T / (2 * np.pi * f_max * MU0)
     if scene.pml is not None:
         x0, x1, y0, y1 = scene.pml.interfaces(scene)
         raster[8] = (x[None, :] < x0) | (x[None, :] > x1) | (y[:, None] < y0) | (y[:, None] > y1)
@@ -178,7 +181,7 @@ def save_model(
     training_metadata=None,
 ):
     metadata = dict(
-        format_version=2,
+        format_version=3,
         mesh_policy=MESH_POLICY,
         architecture={"name": "ResUNet", "width": model.width},
         input_channels=CHANNELS,
@@ -202,7 +205,7 @@ def _validate_metadata(data):
     if not isinstance(data, dict):
         raise ValueError("Mesh checkpoint must contain a metadata dictionary")
     expected = {
-        "format_version": 2,
+        "format_version": 3,
         "mesh_policy": MESH_POLICY,
         "input_channels": CHANNELS,
         "normalization": NORMALIZATION,

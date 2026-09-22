@@ -68,8 +68,21 @@ class FDTD_2D_Ez(Scene2D):
         dt=None,
         t_end=None,
         dtype="float32",
+        material_averaging="point",
+        averaging_samples=8,
+        averaging_max_samples=32,
+        averaging_tolerance=1e-3,
     ):
         super().__init__(x_range, y_range)
+        from .solver.averaging import validate_averaging
+
+        validate_averaging(
+            material_averaging, averaging_samples, averaging_max_samples, averaging_tolerance
+        )
+        self.material_averaging = material_averaging
+        self.averaging_samples = averaging_samples
+        self.averaging_max_samples = averaging_max_samples
+        self.averaging_tolerance = averaging_tolerance
         self.Nx = None if Nx is None else cell_count(Nx)
         self.Ny = None if Ny is None else cell_count(Ny)
         if f_max is None or not np.isfinite(f_max) or f_max <= 0:
@@ -401,6 +414,7 @@ class FDTD_2D_Ez(Scene2D):
             backend="cuda",
             boundary="CFS-CPML" if self.pml else "PEC",
             source_normalizations=[wave.normalization for _, wave in self.sources],
+            material_averaging=c.averaging,
         )
         result = SimulationResult(
             self.mesh,

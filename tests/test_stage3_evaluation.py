@@ -81,7 +81,7 @@ def test_resource_limit_prevents_cuda_call():
 
 @pytest.mark.cuda
 @pytest.mark.skipif(not cuda_available(), reason="CUDA unavailable")
-def test_real_cuda_dataset_reference_and_three_baselines(tmp_path):
+def test_real_cuda_dataset_reference_and_four_baselines(tmp_path):
     scene = make_scene(42, "test_iid", 1)
     scene.budgets = [[64, 64]]
     manifest = tmp_path / "dataset.json"
@@ -92,7 +92,7 @@ def test_real_cuda_dataset_reference_and_three_baselines(tmp_path):
     )
     assert report["scenes"][0]["status"] == "converged"
     assert report["checkpoint"]["untrained"]
-    assert len(report["candidates"]) == 3
+    assert len(report["candidates"]) == 4
     assert all(c["status"] == "ok" for c in report["candidates"])
     assert all(c["diagnostics"]["stepping_transfers"] == 0 for c in report["candidates"])
     with np.load(output / scene.scene_id / "reference_latest.npz", allow_pickle=False) as saved:

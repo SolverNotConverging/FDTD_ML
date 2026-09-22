@@ -18,8 +18,8 @@ def run_reference(c, initial, source_indices, waveforms, receiver_indices):
             psi_hx = hpy[None, :, 1] * psi_hx + hpy[None, :, 2] * dy
             psi_hy = hpx[:, None, 1] * psi_hy + hpx[:, None, 2] * dx
             dy, dx = hpy[None, :, 0] * dy + psi_hx, hpx[:, None, 0] * dx + psi_hy
-        hx -= c.chx * dy
-        hy += c.chy * dx
+        hx = c.ahx * hx - c.chx * dy
+        hy = c.ahy * hy + c.chy * dx
         dex, dey = np.diff(hy, axis=0)[:, 1:-1], np.diff(hx, axis=1)[1:-1, :]
         if c.cpml.size:
             psi_ex[1:-1, 1:-1] = ex[1:-1, None, 1] * psi_ex[1:-1, 1:-1] + ex[1:-1, None, 2] * dex

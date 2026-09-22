@@ -42,11 +42,22 @@ def _sha256(path):
 
 
 def _run_identity(manifest, config, splits, limit, scene_ids, reuse_roots):
+    encoded_config = json.loads(json.dumps(asdict(config), allow_nan=False))
+    # Point treatment is unchanged; preserve identities of references generated
+    # before sampled averaging existed. Quadrature settings have no effect there.
+    if encoded_config["material_averaging"] == "point":
+        for key in (
+            "material_averaging",
+            "averaging_samples",
+            "averaging_max_samples",
+            "averaging_tolerance",
+        ):
+            encoded_config.pop(key)
     return {
         "schema_version": REFERENCE_RUN_SCHEMA,
         "dataset_id": manifest["dataset_id"],
         # Normalize tuples so the in-memory value exactly matches its JSON round trip.
-        "config": json.loads(json.dumps(asdict(config), allow_nan=False)),
+        "config": encoded_config,
         "mesh_policy": MESH_POLICY,
         "selection": {
             "splits": list(splits),
@@ -157,6 +168,7 @@ def generate_references(
     scene_ids=None,
     reuse_roots=(),
     runner=None,
+    record_progress=False,
 ):
     """Generate or resume per-scene references, committing each result atomically."""
     config = config or EvaluationConfig()
@@ -210,10 +222,16 @@ def generate_references(
         if status is None:
             print(f"Reference {spec.scene_id}", flush=True)
             started = perf_counter()
-            if runner is None:
-                status, latest = converge_reference(spec, config)
-            else:
-                status, latest = converge_reference(spec, config, runner=runner)
+            options = {} if runner is None else {"runner": runner}
+            if record_progress:
+
+                def progress(event):
+                    with (directory / "progress.jsonl").open("a", encoding="utf-8") as stream:
+                        stream.write(json.dumps(event, allow_nan=False) + "\n")
+                    _write_json(directory / "active.json", event)
+
+                options["progress"] = progress
+            status, latest = converge_reference(spec, config, **options)
             status = {
                 **status,
                 "scene_id": spec.scene_id,

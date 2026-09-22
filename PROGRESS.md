@@ -1,5 +1,93 @@
 # Current project progress
 
+## 2026-09-21: uniform PML correction and campaign restart
+
+Stopped the original campaign after 26 recorded pairs, including nine PML-related
+failures. The true-uniform baseline now rounds PML thickness to the nearest whole
+cell (half-cell ties thinner), preserving actual uniform spacing and recording the
+interface displacement. Reference and constrained meshes keep their original
+physical PML thickness. All 1,408 campaign pairs passed construction checks;
+nine previously failing uniform cases passed CUDA verification, and an aligned
+case reproduced its saved grid/waveforms. Regression checks: 38 passed, two CUDA
+tests skipped in the sandbox; actual CUDA verification ran separately.
+
+Restarted PID 2289248 in `artifacts/physics_distillation_mixed_v7_pml_v2`, preserving
+the original run. Compatible successful pairs are imported with explicit
+provenance; failed/unfinished pairs are retried. The default status command now
+reads the corrected run: `python3 scripts/start_physics_campaign_v7.py --status`.
+
+## 2026-09-21: mixed-budget physics campaign
+
+Launched PID 2284387 under `artifacts/physics_distillation_mixed_v7`. The pilot
+finished 192 attempts in 407 seconds (191 successful; one heuristic projection
+timeout). The new campaign selects 128 training and 32 validation scenes across
+all eight families, excluding the pilot scenes. Reusing the mixed-budget plan
+gives 1,408 requested targets with nine candidates per pair, distributed over four
+GPUs. Reserved budgets remain validation-only; all budgets stay within 48–128.
+The audit found 1,396 cached teacher pairs; 12 missing-teacher pairs will remain
+explicit skipped outcomes. Physics, training, pilot and campaign checks: 33 passed.
+Search reuses converged references and records failures explicitly. Afterwards,
+fine-tune for up to 20 epochs with 2× sparse weighting and repair loss disabled
+to avoid the old training-time projection timeout. See
+[campaign policy and commands](docs/physics_campaign_mixed_v7.md).
+Live status: `python3 scripts/start_physics_campaign_v7.py --status`.
+
+## 2026-09-21: mixed-budget physics pilot launched
+
+Pretraining completed at epoch 85; the best checkpoint is epoch 70 with validation
+CDF loss 1.62021e-5. Launched the frozen checkpoint physics evaluation as PID
+2256529 in `artifacts/physics_pilot_mixed_v7`, with four GPU workers. Eight
+validation scenes (one per dense/sparse family), six square/rectangular budgets,
+and four strategies yield 192 candidate runs. The first 19 runs saved successfully;
+physical accuracy conclusions await the complete comparison. No distillation
+starts automatically. Two launcher tests passed, covering scene selection,
+reference duration, rectangular runs, failure recording and resume behavior.
+Check live progress with `python3 scripts/start_physics_pilot_v7.py --status`.
+
+## 2026-09-21: mixed-budget pretraining
+
+All 1,000 sparse references and the combined 3,000-scene corpus are complete.
+Implemented eight budget pairs per training scene (four fixed squares, two random
+squares, a rectangle and its transpose), with four globally reserved combinations
+added to validation only. Requested targets: 19,200 train plus 3,600 validation;
+test scenes are excluded. Rectangular cache keys and plan identity are explicit.
+Grouped validation and target coverage distinguish unseen budgets and scene
+families. Sparse training keeps 2× weight. Thirty-four regression tests passed.
+Launched PID 2176339 under `artifacts/training_mixed_v7_3000/`: reference audit,
+then 12-worker teacher preparation and automatic width-16 CNN training on GPU 0.
+See [mixed-budget training](docs/training_mixed_v7.md) for configuration and status.
+
+## 2026-09-20: sparse supplement
+
+The reference campaign's probe/PEC roundoff collision is repaired. Three probe
+coordinates differed from their intended PEC face line by one ULP; built probes
+now reuse an existing face anchor within four ULPs while stored scene hashes and
+PEC geometry remain unchanged. Thirty regression tests passed (one CUDA skip).
+The 411 accepted references were preserved, failed artifacts archived, and PID
+2102406 resumed the campaign. All three failed scenes then converged in 31–59 s;
+the campaign reached 414/1,000 and continued to new cases. The status script now
+suppresses stopped-workflow ETAs and excludes downtime from restart throughput.
+
+Implemented independent v7 streams for single dielectrics, dielectric gap pairs,
+single PEC rectangles and PEC/dielectric pairs. Target: 1,000 additional converged
+references (800/100/100), combined later with the 2,000 accepted v6 scenes into a
+3,000-scene corpus. Size/location/gap coverage, exact anchors, cross-split sparse
+duplicate checks, immutable reference merging and expanded-family training/search
+selection are implemented. See [sparse supplement](docs/sparse_supplement_v7.md).
+PEC, source and receiver anchors are retained. Sparse examples receive 2× sampling
+weight in subsequent CNN pretraining and physics distillation; validation remains
+unweighted and family sampling probabilities are recorded.
+The 1,000-scene reference workflow was launched on all four GPUs, PID 2009121,
+under `artifacts/reference_sparse_v7_1000/`; its next automatic step is publication
+of `artifacts/reference_combined_v7_3000/`, then it stops before training. Dataset,
+campaign and training regression checks passed (36 before weighting, then 31
+sparse/training/physics tests after the weighting change).
+The old v6 physics search completed; its distillation stopped on a mesh projection
+timeout. The sparse workflow prepares references and the combined dataset for later
+training; it does not resume that failed distillation.
+
+## Earlier progress record
+
 Updated 2026-09-19. **Stages 1–4 are implemented**, including mandatory 1.4 grading,
 CUDA CPML, procedural datasets and convergence-gated evaluation. Stage 3 reference
 coverage remains partial. Generator v4 retains the low-dk-dominant material mixture
@@ -18,34 +106,49 @@ This record accompanies the version-0.5.0 imitation-training update. Earlier com
 See [implementation plan](IMPLEMENTATION_PLAN.md), [API and conventions](README.md),
 [stage 2 validation](docs/stage2_validation.md), and [grading plots](docs/anchor_grading.md).
 
-## Current direction: small-CNN proof of concept on richer scenes
+## Current direction: small CNN with anchored rectangular/wire PEC
 
-The next implementation is specified in [section 11 of the implementation
-plan](IMPLEMENTATION_PLAN.md#11-revised-next-milestone--small-cnn-rich-scenes).
-The user reprioritized the original width-16 CNN before any capacity expansion.
-`codex/small-cnn-rich-scenes` branches from `366508e`; the larger-model proposal
-is preserved on `codex/server-scale-cnn`. CNN/solver/generator source is unchanged
-by this planning update. Historical trained weights are not present in the remote
-checkout; restoring the source does not restore checkpoint artifacts.
+The current dataset is generator **v6**, with variable dielectric shapes,
+epsilon_r up to 30, variable sigma_e, mu_r=1 and sigma_h=0. PEC is restricted to
+axis-aligned rectangles (four mandatory face lines) and thin wires (one line on
+the wire plus two endpoint lines). PEC follows dielectrics, preventing curved
+cutouts. Sources and receivers remain anchored. PEC geometry uses a 1/64 lattice
+and probes a 1/128 lattice, so all fine uniform reference levels retain anchors.
+See [the current campaign contract](docs/reference_campaign_v6.md).
 
-Planned generator v5 introduces deliberate contacts, intersections, nesting and
-mixed assemblies; epsilon variation within 1–10 without a mandatory >10 tail;
-variable permeability and conductivity; visible-feature and distribution audits;
-and deterministic splits that survive corpus expansion. Fine references are
-planned through 4096 with longer mu-aware windows, six duration extensions,
-qualified larger resource limits, and unchanged 2% spatial / 1% tail tolerances.
-Targeted 8192 refinement is conditional on numerical and memory qualification.
-These changes are **not implemented or launched** by this documentation revision.
+Sampled dielectric averaging and the original width-16 CNN are retained. The
+controlled averaging, PEC-face alignment and rectangle-only diagnostics are
+recorded in [averaging](docs/sampled_material_averaging.md),
+[PEC anchors](docs/pec_anchor_experiment.md), and
+[rectangle-only PEC](docs/rectangle_only_pec_experiment.md). The last diagnostic
+met reference criteria at 1024, but it was a single-scene study.
 
-The superseded 2,560-scene v4 worker was stopped, preserving **118 completed
-records: 53 converged, 60 nonconverged, 5 failed**. Records and stop metadata remain
-under ignored `artifacts/stage5_server_v4/`, separate from any future v5 corpus.
-The earlier 2048-cap preflight and the main-checkout small run are also preserved.
+A fresh ten-scene v6 manifest passed geometry and anchor preflight. The requested first-four pilot finished: **4/4 converged at 1024×1024**, no
+duration extensions, **57.69 s mean per scene** (precomputed geometry excluded),
+and **69.09 s batch elapsed** on four GPUs. Final waveform/spectrum differences
+were below 0.35%; full validation passed **167 tests**. Results are in
+`artifacts/reference_v6_pilot4/`. The
+superseded mixed-PEC v5 pilot was stopped with its partial records preserved in
+`artifacts/reference_v5_pilot10/`. Historical v4 records (118 completed: 53
+converged, 60 nonconverged, 5 failed) remain under `artifacts/stage5_server_v4/`.
+The full **2,000-converged-reference campaign** was launched on 2026-09-19 in
+`artifacts/reference_v6_2000/`, targeting **1600 train / 200 validation / 200 IID**
+on GPUs 0–3 under the same v6 and sampled-averaging policy. It runs detached,
+replacing exhausted candidates subject to hard limits. On user direction, its
+spatial ceiling was lowered from 4096 to **2048**: a scene still spatially
+nonconverged there is skipped without a duration retry, while unsettled tails
+retain duration extensions. Seventeen 4096-only acceptances were reclassified,
+leaving 530 accepted cases at migration; all prior data and interrupted outputs
+are archived under `policy_migration_max_2048/`. The user will follow up
+on completion; no completion monitor is scheduled.
 
-Remote setup was verified on `neeps`: four 24-GiB TITAN RTX cards, Python 3.12.14,
-locked CUDA PyTorch, and a source-unchanged native build with CUDA toolkit 12.6.
-The preceding environment validation passed all 138 tests with no skips. That
-result validates the existing code; it is not evidence for the planned v5 physics.
+On 2026-09-20 the reference campaign completed: **2,000 accepted** from 2,099
+attempts, with exact 1600/200/200 split quotas and a published accepted manifest.
+The small-CNN workflow is now launched in `artifacts/training_v6_2000/`: resumable
+parallel legal-target preparation, then automatic width-16 pretraining from
+scratch on GPU 0, batch 32, up to 100 epochs with patience 15. Its initial phase
+uses teacher targets; reference-based physics distillation follows separately.
+See [training configuration and validation](docs/training_v6.md).
 
 ## Stage status
 

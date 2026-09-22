@@ -5,13 +5,14 @@ import hashlib
 import json
 import math
 import subprocess
+from collections import Counter
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from time import perf_counter
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 
 from fdtdmesh.data.schema import provenance, read_manifest
 from fdtdmesh.evaluation.metrics import compare_observables, sample_observables
@@ -70,6 +71,29 @@ def square_budgets(budgets):
     return tuple(normalized)
 
 
+def teacher_sample(scene, budget, shape, time_limit=30.0):
+    """One legal target, shared by serial and resumable parallel generation."""
+    simulation = scene.build(budget)
+    density = heuristic_density(simulation, shape)
+    mesh = simulation.mesh_from_density(*density, time_limit=time_limit)
+    sample = {
+        "scene_id": scene.scene_id,
+        "scene_hash": scene.content_hash,
+        "split": scene.split,
+        "budget": list(budget),
+        "teacher_projection": {
+            key: value
+            for key, value in mesh.metadata.items()
+            if key.endswith(("projection_l1", "projection_max", "projection_status"))
+        },
+    }
+    return (
+        sample,
+        projected_density(mesh.x, shape[1], collar=simulation.pml.x),
+        projected_density(mesh.y, shape[0], collar=simulation.pml.y),
+    )
+
+
 def build_teacher_targets(
     manifest_path,
     output_path,
@@ -92,15 +116,15 @@ def build_teacher_targets(
     if output_path.exists() or metadata_path.exists():
         raise ValueError("Teacher output already exists; choose a new path")
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    budget_override = square_budgets(budgets)
+    from .budget_schedule import normalize_budgets
+
+    budget_override = normalize_budgets(budgets)
     samples, target_x, target_y, failures = [], [], [], []
     started = perf_counter()
     for scene in selected:
         for budget in budget_override or scene.budgets:
             try:
-                simulation = scene.build(budget)
-                density = heuristic_density(simulation, shape)
-                mesh = simulation.mesh_from_density(*density, time_limit=time_limit)
+                sample, x, y = teacher_sample(scene, budget, shape, time_limit)
             except (ValueError, RuntimeError) as error:
                 failures.append(
                     {
@@ -113,21 +137,9 @@ def build_teacher_targets(
                     }
                 )
                 continue
-            target_x.append(projected_density(mesh.x, shape[1], collar=simulation.pml.x))
-            target_y.append(projected_density(mesh.y, shape[0], collar=simulation.pml.y))
-            samples.append(
-                {
-                    "scene_id": scene.scene_id,
-                    "scene_hash": scene.content_hash,
-                    "split": scene.split,
-                    "budget": list(budget),
-                    "teacher_projection": {
-                        key: value
-                        for key, value in mesh.metadata.items()
-                        if key.endswith(("projection_l1", "projection_max", "projection_status"))
-                    },
-                }
-            )
+            target_x.append(x)
+            target_y.append(y)
+            samples.append(sample)
     if not samples:
         raise ValueError("No feasible teacher targets were generated")
     np.savez_compressed(
@@ -199,6 +211,7 @@ class TeacherDataset(Dataset):
                 {
                     "scene": scene,
                     "budget": budget,
+                    "budget_group": sample.get("budget_group", "unspecified"),
                     "raster": torch.from_numpy(
                         rasterize(simulation, self.raster_shape, scene.f_max)
                     ),
@@ -224,9 +237,11 @@ class TeacherDataset(Dataset):
 
     def __getitem__(self, index):
         record = self.records[index]
-        return {key: value for key, value in record.items() if key not in ("scene", "budget")} | {
-            "index": index
-        }
+        return {
+            key: value
+            for key, value in record.items()
+            if key not in ("scene", "budget", "budget_group")
+        } | {"index": index}
 
 
 def axis_probability(density, collar_fraction):
@@ -264,8 +279,12 @@ class TrainingConfig:
     seed: int = 2026
     early_stopping_patience: int | None = None
     early_stopping_min_delta: float = 0.0
+    balance_budgets: bool = False
+    sparse_sample_weight: float = 1.0
 
     def __post_init__(self):
+        if not isinstance(self.balance_budgets, bool):
+            raise ValueError("balance_budgets must be boolean")
         integer = ("epochs", "batch_size", "width", "repair_every", "projection_samples", "seed")
         for name in integer:
             value = getattr(self, name)
@@ -275,13 +294,20 @@ class TrainingConfig:
                 or value < (0 if name == "seed" else 1)
             ):
                 raise ValueError(f"Invalid training {name}")
-        values = [self.learning_rate, self.weight_decay, self.alpha, self.repair_weight]
+        values = [
+            self.learning_rate,
+            self.weight_decay,
+            self.alpha,
+            self.repair_weight,
+            self.sparse_sample_weight,
+        ]
         if (
             not np.isfinite(values).all()
             or self.learning_rate <= 0
             or self.weight_decay < 0
             or self.alpha <= 0
             or self.repair_weight < 0
+            or self.sparse_sample_weight <= 0
         ):
             raise ValueError("Invalid training scalar")
         if self.early_stopping_patience is not None and (
@@ -292,6 +318,18 @@ class TrainingConfig:
             raise ValueError("Early-stopping patience must be a positive integer or None")
         if not np.isfinite(self.early_stopping_min_delta) or self.early_stopping_min_delta < 0:
             raise ValueError("Early-stopping minimum delta must be finite and nonnegative")
+
+
+def training_sample_weights(records, config):
+    """Sample weighting applies to training only; validation keeps its natural mix."""
+    from .data.generate_v7 import FAMILIES as SPARSE_FAMILIES
+
+    counts = Counter(tuple(record["budget"]) for record in records)
+    return [
+        (config.sparse_sample_weight if record["scene"].family in SPARSE_FAMILIES else 1.0)
+        / (counts[tuple(record["budget"])] if config.balance_budgets else 1.0)
+        for record in records
+    ]
 
 
 def _project_batch(dataset, indices, rho_x, rho_y, time_limit=30.0):
@@ -313,7 +351,8 @@ def _project_batch(dataset, indices, rho_x, rho_y, time_limit=30.0):
 def evaluate_imitation(model, dataset, config, device, *, project=True):
     loader = DataLoader(dataset, batch_size=config.batch_size, shuffle=False)
     totals = {"loss": 0.0, "loss_x": 0.0, "loss_y": 0.0, "samples": 0}
-    projection, projected = [], 0
+    grouped = {"by_budget_group": {}, "by_family": {}}
+    projection, projected, projection_failures = [], 0, []
     model.eval()
     with torch.no_grad():
         for batch in loader:
@@ -329,11 +368,42 @@ def evaluate_imitation(model, dataset, config, device, *, project=True):
             totals["loss_x"] += lx.item() * n
             totals["loss_y"] += ly.item() * n
             totals["samples"] += n
+            per_sample = (
+                (axis_probability(rho_x, collars[:, 0]).cumsum(1) - target_x.cumsum(1))
+                .square()
+                .mean(1)
+                + (axis_probability(rho_y, collars[:, 1]).cumsum(1) - target_y.cumsum(1))
+                .square()
+                .mean(1)
+            ) / 2
+            for index, value in zip(batch["index"].tolist(), per_sample.cpu().tolist()):
+                record = dataset.records[index]
+                for name, key in (
+                    ("by_budget_group", record.get("budget_group", "unspecified")),
+                    ("by_family", record["scene"].family),
+                ):
+                    group = grouped[name].setdefault(key, dict(loss_sum=0.0, samples=0))
+                    group["loss_sum"] += value
+                    group["samples"] += 1
             if project and projected < config.projection_samples:
                 keep = min(n, config.projection_samples - projected)
-                meshes, _, _ = _project_batch(
-                    dataset, batch["index"][:keep], rho_x[:keep], rho_y[:keep]
-                )
+                meshes = []
+                for i in range(keep):
+                    try:
+                        item, _, _ = _project_batch(
+                            dataset, batch["index"][i : i + 1], rho_x[i : i + 1], rho_y[i : i + 1]
+                        )
+                        meshes.extend(item)
+                    except (ValueError, RuntimeError) as error:
+                        record = dataset.records[batch["index"][i].item()]
+                        projection_failures.append(
+                            dict(
+                                scene_id=record["scene"].scene_id,
+                                budget=record["budget"],
+                                error=str(error),
+                                error_type=type(error).__name__,
+                            )
+                        )
                 for mesh in meshes:
                     projection.append(
                         {
@@ -345,6 +415,17 @@ def evaluate_imitation(model, dataset, config, device, *, project=True):
                 projected += keep
     result = {key: value / totals["samples"] for key, value in totals.items() if key != "samples"}
     result["samples"] = totals["samples"]
+    result["projection_attempts"] = projected
+    result["projection_failures"] = projection_failures
+    result.update(
+        {
+            name: {
+                key: dict(loss=v["loss_sum"] / v["samples"], samples=v["samples"])
+                for key, v in groups.items()
+            }
+            for name, groups in grouped.items()
+        }
+    )
     if projection:
         for key in projection[0]:
             result[key + "_mean"] = float(np.mean([row[key] for row in projection]))
@@ -401,6 +482,8 @@ def train_model(
     if resume is not None:
         state = torch.load(resume, map_location=device, weights_only=True)
         previous_config, current_config = dict(state["config"]), asdict(config)
+        previous_config.setdefault("balance_budgets", False)
+        previous_config.setdefault("sparse_sample_weight", 1.0)
         previous_epochs = previous_config.pop("epochs")
         current_epochs = current_config.pop("epochs")
         if (
@@ -416,10 +499,29 @@ def train_model(
         optimizer.load_state_dict(state["optimizer"])
         history, start_epoch, best = state["history"], state["epoch"], state["best"]
         stale_epochs = state.get("stale_epochs", 0)
+    sample_weights = training_sample_weights(train.records, config)
+    family_mass = Counter()
+    for record, weight in zip(train.records, sample_weights):
+        family_mass[record["scene"].family] += weight
+    sampling = dict(
+        sparse_sample_weight=config.sparse_sample_weight,
+        family_probability={key: value / sum(sample_weights) for key, value in family_mass.items()},
+    )
     started = perf_counter()
     for epoch in range(start_epoch, config.epochs):
         generator = torch.Generator().manual_seed(config.seed + epoch)
-        loader = DataLoader(train, batch_size=config.batch_size, shuffle=True, generator=generator)
+        if config.balance_budgets or np.ptp(sample_weights) > 0:
+            sampler = WeightedRandomSampler(
+                sample_weights,
+                num_samples=len(train),
+                replacement=True,
+                generator=generator,
+            )
+            loader = DataLoader(train, batch_size=config.batch_size, sampler=sampler)
+        else:
+            loader = DataLoader(
+                train, batch_size=config.batch_size, shuffle=True, generator=generator
+            )
         model.train()
         total, imitation_total, repair_total, seen = 0.0, 0.0, 0.0, 0
         for step, batch in enumerate(loader):
@@ -459,6 +561,7 @@ def train_model(
             "version": TRAINING_VERSION,
             "epoch": epoch + 1,
             "config": asdict(config),
+            "sampling": sampling,
             "validation": validation_metrics,
             "training_kind": training_kind,
             "target_version": target_version,
@@ -505,6 +608,7 @@ def train_model(
             "teacher_targets_sha256": _sha256(target_path),
             "training_commit": commit,
             "dirty_at_start": dirty,
+            "sampling": sampling,
             "device": str(device),
             "config": asdict(config),
             "best_validation_loss": best,
@@ -606,6 +710,7 @@ def main():
     train.add_argument("--repair-every", type=int, default=4)
     train.add_argument("--projection-samples", type=int, default=8)
     train.add_argument("--seed", type=int, default=2026)
+    train.add_argument("--sparse-sample-weight", type=float, default=1.0)
     train.add_argument("--patience", type=int)
     train.add_argument("--min-delta", type=float, default=0.0)
     train.add_argument("--device")
@@ -633,6 +738,7 @@ def main():
             repair_every=args.repair_every,
             projection_samples=args.projection_samples,
             seed=args.seed,
+            sparse_sample_weight=args.sparse_sample_weight,
             early_stopping_patience=args.patience,
             early_stopping_min_delta=args.min_delta,
         )

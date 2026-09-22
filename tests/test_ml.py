@@ -75,7 +75,7 @@ def test_checkpoint_records_grading_and_pml_mask(tmp_path):
     path = tmp_path / "stage2.pt"
     save_model(path, ResUNet(4), raster_shape=(24, 32))
     _, metadata = load_model(path)
-    assert metadata["format_version"] == 2 and metadata["mesh_policy"]["max_ratio"] == 1.4
+    assert metadata["format_version"] == 3 and metadata["mesh_policy"]["max_ratio"] == 1.4
     s = FDTD_2D_Ez(0.02, 0.015, 40, 32, 20e9, Nt=2)
     s.add_PML(4, thickness=0.002)
     assert rasterize(s, (24, 32), s.f_max)[8].sum() > 0

@@ -36,6 +36,30 @@ def digest(value):
     return hashlib.sha256(canonical(value).encode()).hexdigest()
 
 
+def _anchored_probe(scene, probe):
+    """Use existing face coordinates for probe coincidences within four ULPs.
+
+    Reflection (L - k*L/64) and probe placement (j*L/128) can express one
+    intended coordinate with adjacent floats. Preserve PEC faces exactly and
+    move only the built probe by roundoff; arbitrary geometry anchors are never
+    merged. Stored scene records and their hashes remain unchanged.
+    """
+    result = dict(probe)
+    for axis in ("x", "y"):
+        coordinates = []
+        for value in np.atleast_1d(probe[axis]):
+            value = float(value)
+            anchors = getattr(scene, f"{axis}_anchors")
+            nearest = min(anchors, key=lambda a: abs(a - value))
+            tolerance = 4 * max(abs(np.spacing(value)), abs(np.spacing(nearest)))
+            if abs(nearest - value) <= tolerance:
+                value = nearest
+            scene.add_anchor(axis, value)
+            coordinates.append(value)
+        result[axis] = coordinates[0] if np.ndim(probe[axis]) == 0 else coordinates
+    return result
+
+
 def provenance():
     root = Path(__file__).resolve().parents[3]
     try:
@@ -92,9 +116,17 @@ class SceneSpec:
     sources: list
     receivers: list
     feature_pixels: float = 4.0
+    anchor_probes: bool = False
+    pec_policy: str = "legacy"
 
     def to_dict(self):
-        return asdict(self)
+        value = asdict(self)
+        # Preserve content hashes of legacy scenes that predate anchored point probes.
+        if not self.anchor_probes:
+            value.pop("anchor_probes")
+        if self.pec_policy == "legacy":
+            value.pop("pec_policy")
+        return value
 
     @classmethod
     def from_dict(cls, value):
@@ -110,6 +142,8 @@ class SceneSpec:
         canonical(self.to_dict())  # Also rejects NaN/Inf and non-JSON data.
         if self.schema_version != SCHEMA_VERSION or self.split not in SPLITS:
             raise ValueError("Unsupported scene schema or split")
+        if not isinstance(self.anchor_probes, bool):
+            raise ValueError("anchor_probes must be boolean")
         if (
             not re.fullmatch(r"[A-Za-z0-9_-]+", self.scene_id)
             or not self.group_id
@@ -141,6 +175,8 @@ class SceneSpec:
         self.check_features()
 
     def build(self, budget, *, reference=False):
+        if self.pec_policy not in ("legacy", "rectangles_and_wires"):
+            raise ValueError("Unknown PEC geometry/anchor policy")
         nx, ny = map(cell_count, budget)
         s = FDTD_2D_Ez(
             *self.domain, nx, ny, self.f_max, f_min=self.f_min, t_end=self.t_end, dtype=self.dtype
@@ -158,16 +194,28 @@ class SceneSpec:
         s.add_PML(**pml)
         for material in self.materials:
             s.add_material(**material)
+        seen_pec = False
         for primitive in self.geometry:
             kind = primitive["kind"]
             arguments = {k: v for k, v in primitive.items() if k != "kind"}
             if kind not in ("rectangle", "circle", "triangle", "polygon", "pec_line"):
                 raise ValueError(f"Unsupported geometry {kind}")
+            if self.pec_policy == "rectangles_and_wires":
+                is_pec = kind == "pec_line" or s._material(arguments["material"]).kind == "PEC"
+                if is_pec and kind not in ("rectangle", "pec_line"):
+                    raise ValueError("PEC policy permits only axis-aligned rectangles and wires")
+                if seen_pec and not is_pec:
+                    raise ValueError(
+                        "PEC must follow dielectrics to prevent nonrectangular cutouts"
+                    )
+                seen_pec |= is_pec
             getattr(s, "add_" + kind)(**arguments)
+        if self.pec_policy == "rectangles_and_wires":
+            s.add_pec_anchors(mode="axis_aligned", include_overrides=False)
         for source in self.sources:
-            s.add_source(**source)
+            s.add_source(**(_anchored_probe(s, source) if self.anchor_probes else source))
         for receiver in self.receivers:
-            s.add_receiver(**receiver)
+            s.add_receiver(**(_anchored_probe(s, receiver) if self.anchor_probes else receiver))
         s.pml.validate_scene(s)
         return s
 
@@ -203,10 +251,24 @@ class SceneSpec:
 def geometry_signature(scene):
     # Normalize lengths via raster sampling; ignore material contrast and physical scale.
     s = scene.build(scene.budgets[0])
-    eps, mu, sigma, pec = s.sample(
-        (np.arange(64) + 0.5) * s.Lx / 64, (np.arange(64) + 0.5) * s.Ly / 64, raster=True
+    eps, mu, sigma, sigma_h, pec = s.sample(
+        (np.arange(64) + 0.5) * s.Lx / 64,
+        (np.arange(64) + 0.5) * s.Ly / 64,
+        raster=True,
+        magnetic_loss=True,
     )
-    return ((eps != 1) | (mu != 1) | (sigma != 0) | pec).ravel()
+    return ((eps != 1) | (mu != 1) | (sigma != 0) | (sigma_h != 0) | pec).ravel()
+
+
+def near_geometry(mask, other_mask):
+    """Require foreground overlap as well as the legacy domain mismatch bound.
+
+    Empty background must not turn two disjoint small objects into duplicates.
+    Identical geometry (including empty geometry) still compares equal.
+    """
+    difference = np.count_nonzero(mask != other_mask)
+    union = np.count_nonzero(mask | other_mask)
+    return difference <= 0.005 * mask.size and difference <= 0.10 * max(union, 1)
 
 
 def validate_splits(scenes):
@@ -221,7 +283,7 @@ def validate_splits(scenes):
         groups[scene.group_id] = scene.split
         mask = geometry_signature(scene)
         for other, other_mask in signatures:
-            if other.split != scene.split and np.mean(mask != other_mask) <= 0.005:
+            if other.split != scene.split and near_geometry(mask, other_mask):
                 raise ValueError("Near-duplicate normalized geometry leaks across splits")
         signatures.append((scene, mask))
 

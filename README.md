@@ -329,11 +329,20 @@ Use `--duration-multiplier`, `--duration-extensions`, `--tail-tolerance` and
 `--max-cell-updates` to control longer runs; `--fixed-window` explicitly disables
 the ring-down gate without disabling mesh-convergence checks. Failed/nonconverged references are recorded and excluded
 from candidate accuracy scoring. References that cannot represent anchors uniformly
-are rejected explicitly. Candidate collars retain fixed counts within their budgets.
+are rejected explicitly. Quasi-uniform, heuristic and CNN collars retain fixed
+counts within their budgets. The actual uniform baseline rounds each PML thickness
+to the nearest whole number of uniform cells (at most half a cell of interface
+shift), recording the adjustment. Reference PML thickness stays exact.
 
-The candidates are a uniform density preference projected onto all hard constraints,
-an explicit material/edge heuristic, and an optional supplied CNN checkpoint.
-`--demo-cnn` uses labelled random weights; omit it to run only the first two, or
+The candidates are an actual **uniform** grid with PEC faces/wires snapped to
+their nearest mesh lines, **quasi-uniform** (`quasi_uniform`: the former uniform
+density preference projected onto all hard constraints), an explicit material/edge
+heuristic, and an optional supplied CNN checkpoint. Sources and receivers retain
+their physical coordinates on the actual uniform grid using bilinear mapping.
+PEC collapse under snapping is reported as a failed candidate. Original scenes
+and converged reference geometries are never modified. See
+[baseline conventions](docs/uniform_baselines.md).
+`--demo-cnn` uses labelled random weights; omit it to run only the first three, or
 supply `--checkpoint path.pt`. This provides no evidence of learned improvement.
 Use a new empty candidate-evaluation output directory to preserve prior results.
 The reference-only command above has its own validated resume contract.
@@ -402,3 +411,10 @@ work. Reference coverage for difficult scenes also needs expansion: the first St
 corpus accepts 52/112 scenes under the strict two-pass gate.
 TEz, dispersion, anisotropy, GPU batching, online DFT/energy monitors and bounded
 recording remain outside the implementation. The previous FDTD library is unchanged.
+
+## Current reference-data policy
+
+The small-CNN proof-of-concept campaign now uses v6 scenes: diverse dielectric
+bodies with sampled material averaging, and only anchored rectangular/thin-wire
+PEC. See [the v6 campaign contract](docs/reference_campaign_v6.md) for geometry,
+anchor counts, convergence gates, and pilot/full-campaign commands.

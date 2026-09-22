@@ -9,9 +9,11 @@ from time import perf_counter
 import numpy as np
 import torch
 
+from fdtdmesh.constants import C0, EPS0, MU0
 from fdtdmesh.data.schema import provenance, read_manifest
 from fdtdmesh.mesh import MESH_POLICY
 from fdtdmesh.ml import ResUNet, load_model, rasterize, save_model
+from fdtdmesh.uniform import BASELINE_POLICY, uniform_scene
 
 from .metrics import compare_observables, sample_observables, spectrum
 
@@ -36,9 +38,32 @@ class EvaluationConfig:
     samples_per_period: int = 16
     max_observation_samples: int = 65537
     max_frequency_samples: int = 8193
+    minimum_reference_level: int = 1
+    refine_unsettled: bool = False
+    extend_nonconverged: bool = False
+    wavelength_cells: float = 0.0
+    attenuation_cells: float = 0.0
+    material_averaging: str = "point"
+    averaging_samples: int = 8
+    averaging_max_samples: int = 32
+    averaging_tolerance: float = 1e-3
 
     def __post_init__(self):
         from fdtdmesh.mesh import cell_count
+        from fdtdmesh.solver.averaging import validate_averaging
+
+        validate_averaging(
+            self.material_averaging,
+            self.averaging_samples,
+            self.averaging_max_samples,
+            self.averaging_tolerance,
+        )
+
+        if (
+            not np.isfinite([self.wavelength_cells, self.attenuation_cells]).all()
+            or min(self.wavelength_cells, self.attenuation_cells) < 0
+        ):
+            raise ValueError("Resolution checks must be finite and nonnegative")
 
         levels = [cell_count(n) for n in self.reference_levels]
         object.__setattr__(self, "reference_levels", tuple(levels))
@@ -54,6 +79,7 @@ class EvaluationConfig:
             "samples_per_period",
             "max_observation_samples",
             "max_frequency_samples",
+            "minimum_reference_level",
         ):
             object.__setattr__(self, name, cell_count(getattr(self, name)))
         if self.samples < 3 or self.frequency_count < 2 or self.consecutive_passes >= len(levels):
@@ -96,7 +122,7 @@ class EvaluationConfig:
 def heuristic_density(scene, raster_shape):
     # An explicit baseline, never an extra handcrafted channel supplied to the CNN.
     raster = rasterize(scene, raster_shape, scene.f_max)
-    weight = np.sqrt(raster[0] * raster[7]) + raster[1] + 3 * raster[2]
+    weight = np.sqrt(raster[0] * raster[7]) + raster[1] + raster[9] + 3 * raster[2]
     edge = np.zeros_like(weight)
     edge[:, 1:] += abs(np.diff(weight, axis=1))
     edge[1:, :] += abs(np.diff(weight, axis=0))
@@ -115,14 +141,27 @@ def run_scene(
     density=None,
     mesh_lines=None,
 ):
-    s = spec.build(budget, reference=reference)
-    field_bytes = (s.Nx + 1) * (s.Ny + 1) * np.dtype(s.dtype).itemsize * 30
+    started = perf_counter()
+    s = (
+        uniform_scene(spec, budget)
+        if strategy == "uniform" and not reference
+        else spec.build(budget, reference=reference)
+    )
+    for name in (
+        "material_averaging",
+        "averaging_samples",
+        "averaging_max_samples",
+        "averaging_tolerance",
+    ):
+        setattr(s, name, getattr(config, name))
+    field_bytes = (s.Nx + 1) * (s.Ny + 1) * np.dtype(s.dtype).itemsize * 32
     if field_bytes > config.max_field_bytes or s.Nx * s.Ny > config.max_cell_updates:
         raise RuntimeError("Reference/candidate resource limit exceeded before meshing")
-    started = perf_counter()
     if reference:
         s.mesh_uniform()  # Never silently turn an unaligned reference into a nonuniform grid.
     elif strategy == "uniform":
+        pass  # uniform_scene already constructed a grid and snapped PEC geometry.
+    elif strategy == "quasi_uniform":
         # Uniform *interior preference*, projected for exact anchors and fixed collars.
         s.mesh_from_density([1], [1], time_limit=config.meshing_time_limit)
     elif strategy == "heuristic":
@@ -162,6 +201,11 @@ def run_scene(
     result.diagnostics["meshing_wall_seconds"] = meshing_seconds
     result.diagnostics["estimated_receiver_history_bytes"] = history_bytes
     result.diagnostics["estimated_field_bytes"] = field_bytes
+    result.diagnostics["baseline_policy"] = BASELINE_POLICY
+    if strategy == "uniform" and not reference:
+        result.diagnostics["pec_snapping"] = s.mesh.metadata["pec_snapping"]
+        result.diagnostics["pml_snapping"] = s.mesh.metadata["pml_snapping"]
+        result.diagnostics["probe_mapping"] = "physical_bilinear"
     return result
 
 
@@ -223,21 +267,61 @@ def tail_diagnostic(spec, observations, config):
     }
 
 
-def _converge_at_duration(spec, config, runner):
+def material_resolution_level(spec, config):
+    """Necessary uniform-grid resolution for phase and attenuation, never acceptance alone."""
+    required = config.minimum_reference_level
+    if config.wavelength_cells == config.attenuation_cells == 0:
+        return required
+    length = max(spec.domain)
+    for material in spec.materials:
+        if material.get("kind") == "PEC":
+            continue
+        for frequency in (max(spec.f_min, spec.f_max * 0.01), spec.f_max):
+            omega = 2 * np.pi * frequency
+            eps = material.get("epsilon_r", 1) - 1j * material.get("sigma_e", 0) / (omega * EPS0)
+            mu = material.get("mu_r", 1) - 1j * material.get("sigma_h", 0) / (omega * MU0)
+            k = omega / C0 * np.sqrt(eps * mu)
+            required = max(
+                required,
+                int(np.ceil(length * abs(k.real) * config.wavelength_cells / (2 * np.pi))),
+                int(np.ceil(length * abs(k.imag) * config.attenuation_cells)),
+            )
+    return required
+
+
+def _converge_at_duration(spec, config, runner, progress=None):
     times, frequencies = grids(spec, config)
     history = []
     previous = None
     consecutive = 0
     latest = None
+    required_level = material_resolution_level(spec, config)
     for level in config.reference_levels:
+        if progress:
+            progress(
+                {
+                    "event": "level_started",
+                    "duration": spec.t_end,
+                    "level": level,
+                    "levels": history,
+                }
+            )
         try:
             result = runner(spec, [level, level], config, reference=True)
             observations = sample_observables(result, times)
             tail = tail_diagnostic(spec, observations, config)
             entry = {"budget": [level, level], "diagnostics": result.diagnostics, "tail": tail}
             latest = (result, observations)
-            if config.tail_relative_tolerance is not None and not tail["settled"]:
+            if (
+                config.tail_relative_tolerance is not None
+                and not tail["settled"]
+                and not config.refine_unsettled
+            ):
                 history.append(entry)
+                if progress:
+                    progress(
+                        {"event": "level_completed", "duration": spec.t_end, "levels": history}
+                    )
                 return {
                     "status": "time_unsettled",
                     "levels": history,
@@ -248,13 +332,17 @@ def _converge_at_duration(spec, config, runner):
                 passed = (
                     comparison["waveform_l2_max"] <= config.relative_tolerance
                     and comparison["spectrum_l2_max"] <= config.relative_tolerance
+                    and (config.tail_relative_tolerance is None or tail["settled"])
                 )
                 entry.update(comparison=comparison, passed=passed)
                 consecutive = consecutive + 1 if passed else 0
             history.append(entry)
+            if progress:
+                progress({"event": "level_completed", "duration": spec.t_end, "levels": history})
             latest = (result, observations)
             previous = observations
-            if consecutive >= config.consecutive_passes:
+            entry["required_resolution_level"] = required_level
+            if consecutive >= config.consecutive_passes and level >= required_level:
                 return {
                     "status": "converged",
                     "levels": history,
@@ -265,22 +353,32 @@ def _converge_at_duration(spec, config, runner):
                 {"budget": [level, level], "error": str(error), "error_type": type(error).__name__}
             )
             return {"status": "failed", "levels": history, "accepted_budget": None}, latest
-    return {"status": "nonconverged", "levels": history, "accepted_budget": None}, latest
+    state = (
+        "time_unsettled"
+        if config.tail_relative_tolerance is not None and not history[-1]["tail"]["settled"]
+        else "nonconverged"
+    )
+    return {"status": state, "levels": history, "accepted_budget": None}, latest
 
 
-def converge_reference(spec, config, *, runner=run_scene):
+def converge_reference(spec, config, *, runner=run_scene, progress=None):
     attempts = []
     effective = replace(spec, t_end=spec.t_end * config.duration_multiplier)
     for extension in range(config.max_duration_extensions + 1):
         try:
-            status, latest = _converge_at_duration(effective, config, runner)
+            status, latest = _converge_at_duration(effective, config, runner, progress)
         except ValueError as error:
             status, latest = (
                 {"status": "failed", "levels": [], "accepted_budget": None, "error": str(error)},
                 None,
             )
         attempts.append({"duration": effective.t_end, **status})
-        if status["status"] != "time_unsettled" or extension == config.max_duration_extensions:
+        if progress:
+            progress({"event": "duration_completed", "duration_history": attempts})
+        retry = status["status"] == "time_unsettled" or (
+            config.extend_nonconverged and status["status"] == "nonconverged"
+        )
+        if not retry or extension == config.max_duration_extensions:
             return {**status, "duration": effective.t_end, "duration_history": attempts}, latest
         # Restart the spatial sequence so every refinement uses the same time window.
         effective = replace(effective, t_end=effective.t_end * 2)
@@ -342,6 +440,7 @@ def evaluate_dataset(
         }
     report = {
         "schema_version": 1,
+        "baseline_policy": BASELINE_POLICY,
         "dataset_id": manifest["dataset_id"],
         "config": asdict(config),
         "mesh_policy": MESH_POLICY,
@@ -387,7 +486,9 @@ def evaluate_dataset(
             _json(output / "report.json", report)
             continue
         reference = latest[1]
-        strategies = ["uniform", "heuristic"] + (["cnn"] if checkpoint is not None else [])
+        strategies = ["uniform", "quasi_uniform", "heuristic"] + (
+            ["cnn"] if checkpoint is not None else []
+        )
         for budget in spec.budgets:
             for strategy in strategies:
                 row = {
@@ -438,7 +539,7 @@ def write_summary(output, report):
             if report["checkpoint"]["untrained"]
             else "supplied checkpoint"
         ),
-        "Uniform means a uniform interior density preference projected to the hard mesh constraints.",
+        "Uniform uses an actual uniform grid and nearest-line PEC snapping; quasi_uniform projects a uniform density preference onto all anchors and mesh constraints.",
         "",
         "| Scene | Budget | Mesh | Waveform L2 | Spectrum L2 | Cell updates | GPU ms |",
         "|---|---|---|---:|---:|---:|---:|",

@@ -12,6 +12,7 @@ import torch
 from scipy.ndimage import gaussian_filter1d
 from torch.utils.data import Dataset
 
+from fdtdmesh.budget_schedule import normalize_budgets
 from fdtdmesh.data.schema import SceneSpec, provenance, read_manifest
 from fdtdmesh.evaluation.metrics import sample_observables, spectrum
 from fdtdmesh.evaluation.pipeline import (
@@ -29,8 +30,10 @@ from fdtdmesh.training import (
     TrainingConfig,
     load_teacher_targets,
     square_budgets,
+    teacher_sample,
     train_model,
 )
+from fdtdmesh.uniform import BASELINE_POLICY, uniform_scene
 
 PHYSICS_TARGET_VERSION = 1
 
@@ -128,15 +131,16 @@ def candidate_densities(
 
     candidates = [
         {"name": "uniform", "density": uniform, "parameters": {}},
+        {"name": "quasi_uniform", "density": uniform, "parameters": {}},
         {"name": "heuristic", "density": heuristic, "parameters": {}},
         {"name": "cnn", "density": cnn, "parameters": {}},
         {
-            "name": "uniform_heuristic_mix",
+            "name": "quasi_uniform_heuristic_mix",
             "density": mix(uniform, heuristic),
             "parameters": {"heuristic_fraction": fraction},
         },
         {
-            "name": "uniform_cnn_mix",
+            "name": "quasi_uniform_cnn_mix",
             "density": mix(uniform, cnn),
             "parameters": {"cnn_fraction": fraction},
         },
@@ -183,7 +187,13 @@ def candidate_densities(
 
 
 def pareto_front(rows):
-    valid = [row for row in rows if row.get("status") == "ok" and row.get("settled", True)]
+    valid = [
+        row
+        for row in rows
+        if row.get("status") == "ok"
+        and row.get("settled", True)
+        and row.get("target_eligible", True)
+    ]
     front = []
     for row in valid:
         dominated = any(
@@ -222,6 +232,17 @@ def _teacher_map(manifest_path, target_path):
         (sample["scene_id"], tuple(sample["budget"])): (target_x[index], target_y[index])
         for index, sample in enumerate(metadata["samples"])
     }
+
+
+def _teacher_prior(teacher, scene, budget, time_limit, *, generate_missing):
+    key = (scene.scene_id, tuple(budget))
+    if key in teacher:
+        return (*teacher[key], "cached")
+    if not generate_missing:
+        return None
+    _, target_x, target_y = teacher_sample(scene, budget, scene.raster_shape, time_limit=time_limit)
+    teacher[key] = (target_x, target_y)
+    return target_x, target_y, "generated_on_demand"
 
 
 def _read_reference(spec, directory, *, arrays_name):
@@ -297,6 +318,29 @@ def _candidate_mesh(spec, budget, density, time_limit):
     return simulation.mesh_from_density(*density, time_limit=time_limit)
 
 
+def _search_budget_entries(scenes, budgets=None, budget_plan=None):
+    if budgets is not None and budget_plan is not None:
+        raise ValueError("Choose budgets or a per-scene budget plan, not both")
+    override = normalize_budgets(budgets)
+    entries = {}
+    for scene in scenes:
+        if budget_plan is None:
+            entries[scene.scene_id] = [
+                dict(budget=list(pair), group="unspecified")
+                for pair in (override or normalize_budgets(scene.budgets))
+            ]
+        else:
+            values = budget_plan["assignments"].get(scene.scene_id)
+            if not values:
+                raise ValueError(f"Missing budget assignments for {scene.scene_id}")
+            pairs = normalize_budgets([value["budget"] for value in values])
+            entries[scene.scene_id] = [
+                dict(budget=list(pair), group=value.get("group", "unspecified"))
+                for pair, value in zip(pairs, values)
+            ]
+    return entries
+
+
 def search_physics_targets(
     manifest_path,
     teacher_targets,
@@ -312,6 +356,8 @@ def search_physics_targets(
     device=None,
     scene_ids=None,
     budgets=None,
+    budget_plan=None,
+    generate_missing_teachers=False,
 ):
     search_config = search_config or SearchConfig()
     evaluation = evaluation_config or EvaluationConfig()
@@ -338,7 +384,8 @@ def search_physics_targets(
             selected_scenes.extend(subset if limit is None else subset[:limit])
     if not selected_scenes:
         raise ValueError("No scenes selected for physics search")
-    budget_override = square_budgets(budgets)
+    budget_override = normalize_budgets(budgets)
+    budget_entries = _search_budget_entries(selected_scenes, budgets, budget_plan)
     teacher = _teacher_map(manifest_path, teacher_targets)
     model, metadata = load_model(checkpoint, device=device)
     baseline_model = baseline_metadata = None
@@ -348,6 +395,7 @@ def search_physics_targets(
     output.mkdir(parents=True, exist_ok=True)
     identity = {
         "physics_target_version": PHYSICS_TARGET_VERSION,
+        "baseline_policy": BASELINE_POLICY,
         "dataset_id": manifest["dataset_id"],
         "teacher_targets_sha256": _sha256(teacher_targets),
         "checkpoint_sha256": _sha256(checkpoint),
@@ -361,10 +409,13 @@ def search_physics_targets(
         "budget_override": (
             None if budget_override is None else [list(value) for value in budget_override]
         ),
+        "generate_missing_teachers": generate_missing_teachers,
         "search_config": asdict(search_config),
         "evaluation_config": asdict(evaluation),
         "mesh_policy": MESH_POLICY,
     }
+    if budget_plan is not None:
+        identity["budget_assignments"] = budget_entries
     identity = json.loads(json.dumps(identity, allow_nan=False))
     identity_path = output / "run.json"
     if identity_path.exists():
@@ -384,15 +435,16 @@ def search_physics_targets(
         if status["status"] != "converged":
             print(f"{spec.scene_id}: {status['status']}; no physics targets", flush=True)
             continue
-        for budget in budget_override or spec.budgets:
-            key = (spec.scene_id, tuple(budget))
-            if key not in teacher:
-                print(f"{spec.scene_id} {budget}: no feasible teacher target", flush=True)
-                continue
+        for entry in budget_entries[spec.scene_id]:
+            budget = entry["budget"]
             sample_dir = scene_dir / f"{budget[0]}_{budget[1]}"
             sample_dir.mkdir(exist_ok=True)
             result_path = sample_dir / "result.json"
             target_path = sample_dir / "target.npz"
+            if result_path.exists():
+                recorded = json.loads(result_path.read_text(encoding="utf-8"))
+                if recorded.get("status") == "failed":
+                    continue
             if result_path.exists() and target_path.exists():
                 row = json.loads(result_path.read_text(encoding="utf-8"))
                 with np.load(target_path) as arrays:
@@ -401,6 +453,27 @@ def search_physics_targets(
                 target_x.append(tx)
                 target_y.append(ty)
                 continue
+            try:
+                prior = _teacher_prior(
+                    teacher,
+                    effective,
+                    budget,
+                    evaluation.meshing_time_limit,
+                    generate_missing=generate_missing_teachers,
+                )
+            except (ValueError, RuntimeError) as error:
+                _json(result_path, dict(status="failed", scene_id=spec.scene_id,
+                      budget=budget, error=str(error), error_type=type(error).__name__,
+                      reason="teacher_generation", candidates=[]))
+                print(f"{spec.scene_id} {budget}: teacher generation failed: {error}", flush=True)
+                continue
+            if prior is None:
+                _json(result_path, dict(status="failed", scene_id=spec.scene_id,
+                      budget=budget, reason="missing_teacher", error="No feasible teacher target",
+                      candidates=[]))
+                print(f"{spec.scene_id} {budget}: no feasible teacher target", flush=True)
+                continue
+            prior_x, prior_y, teacher_prior = prior
             candidates = candidate_densities(
                 effective,
                 budget,
@@ -418,15 +491,24 @@ def search_physics_targets(
                     "name": candidate["name"],
                     "parameters": candidate["parameters"],
                     "status": "ok",
+                    # A snapped-geometry benchmark is not a legal anchored CNN target.
+                    "target_eligible": candidate["name"] != "uniform",
                 }
                 try:
-                    mesh = _candidate_mesh(
-                        effective,
-                        budget,
-                        candidate["density"],
-                        evaluation.meshing_time_limit,
+                    actual_uniform = candidate["name"] == "uniform"
+                    mesh = (
+                        uniform_scene(effective, budget).mesh
+                        if actual_uniform
+                        else _candidate_mesh(
+                            effective,
+                            budget,
+                            candidate["density"],
+                            evaluation.meshing_time_limit,
+                        )
                     )
-                    mesh_hash = hashlib.sha256(mesh.x.tobytes() + mesh.y.tobytes()).hexdigest()
+                    mesh_hash = hashlib.sha256(
+                        bytes([actual_uniform]) + mesh.x.tobytes() + mesh.y.tobytes()
+                    ).hexdigest()
                     if mesh_hash in mesh_hashes:
                         original = next(r for r in rows if r["name"] == mesh_hashes[mesh_hash])
                         row.update(
@@ -441,7 +523,7 @@ def search_physics_targets(
                             effective,
                             budget,
                             evaluation,
-                            strategy="mesh",
+                            strategy="uniform" if actual_uniform else "mesh",
                             mesh_lines=(mesh.x, mesh.y),
                         )
                         observations = sample_observables(result, times)
@@ -491,7 +573,6 @@ def search_physics_targets(
             py = projected_density(
                 selected_mesh.y, spec.raster_shape[0], collar=effective.build(budget).pml.y
             )
-            prior_x, prior_y = teacher[key]
             weight = search_config.physics_weight
             tx, ty = (1 - weight) * prior_x + weight * px, (1 - weight) * prior_y + weight * py
             sample = {
@@ -499,9 +580,11 @@ def search_physics_targets(
                 "scene_hash": spec.content_hash,
                 "split": spec.split,
                 "budget": list(budget),
+                "budget_group": entry["group"],
                 "selected": selected["name"],
                 "pareto_front": front,
                 "physics_weight": weight,
+                "teacher_prior": teacher_prior,
                 "selected_em_error": selected["em_error"],
                 "selected_cost_ratio": selected["cost_ratio"],
                 "selected_objective": selected["objective"],
@@ -740,6 +823,7 @@ def evaluate_physics_checkpoint(
     output.mkdir(parents=True, exist_ok=True)
     identity = {
         "physics_target_version": PHYSICS_TARGET_VERSION,
+        "baseline_policy": BASELINE_POLICY,
         "dataset_id": manifest["dataset_id"],
         "checkpoint_sha256": _sha256(checkpoint),
         "baseline_checkpoint_sha256": (
@@ -773,6 +857,7 @@ def evaluate_physics_checkpoint(
             simulation = effective.build(budget)
             densities = {
                 "uniform": (np.ones(spec.raster_shape[1]), np.ones(spec.raster_shape[0])),
+                "quasi_uniform": (np.ones(spec.raster_shape[1]), np.ones(spec.raster_shape[0])),
                 "heuristic": tuple(
                     _normalize(value) for value in heuristic_density(simulation, spec.raster_shape)
                 ),
@@ -796,7 +881,7 @@ def evaluate_physics_checkpoint(
                         effective,
                         budget,
                         evaluation,
-                        strategy="density",
+                        strategy="uniform" if name == "uniform" else "density",
                         density=density,
                     )
                     observations = sample_observables(result, times)
@@ -902,6 +987,7 @@ class PhysicsDataset(Dataset):
                 {
                     "scene": scene,
                     "budget": budget,
+                    "budget_group": sample.get("budget_group", "unspecified"),
                     "raster": torch.from_numpy(
                         rasterize(simulation, self.raster_shape, scene.f_max)
                     ),
@@ -927,7 +1013,7 @@ class PhysicsDataset(Dataset):
 
     def __getitem__(self, index):
         record = self.records[index]
-        return {key: value for key, value in record.items() if key not in ("scene", "budget")} | {
+        return {key: value for key, value in record.items() if key not in ("scene", "budget", "budget_group")} | {
             "index": index
         }
 
@@ -951,6 +1037,12 @@ def main():
     search.add_argument("--perturbations", type=int, default=2)
     search.add_argument("--levels", type=int, nargs="+", default=[64, 128, 256, 512, 1024])
     search.add_argument("--max-cell-updates", type=int, default=256_000_000_000)
+    search.add_argument("--meshing-time-limit", type=float, default=30.0)
+    search.add_argument("--material-averaging", choices=["point", "sampled"], default="point")
+    search.add_argument("--averaging-samples", type=int, default=8)
+    search.add_argument("--averaging-max-samples", type=int, default=32)
+    search.add_argument("--averaging-tolerance", type=float, default=1e-3)
+    search.add_argument("--generate-missing-teachers", action="store_true")
     search.add_argument("--device")
     distill = sub.add_parser("distill")
     distill.add_argument("--manifest", required=True)
@@ -964,6 +1056,7 @@ def main():
     distill.add_argument("--repair-every", type=int, default=4)
     distill.add_argument("--projection-samples", type=int, default=8)
     distill.add_argument("--seed", type=int, default=2026)
+    distill.add_argument("--sparse-sample-weight", type=float, default=1.0)
     distill.add_argument("--patience", type=int)
     distill.add_argument("--min-delta", type=float, default=0.0)
     distill.add_argument("--device")
@@ -1006,13 +1099,20 @@ def main():
                 perturbations=args.perturbations,
             ),
             evaluation_config=EvaluationConfig(
-                reference_levels=tuple(args.levels), max_cell_updates=args.max_cell_updates
+                reference_levels=tuple(args.levels),
+                max_cell_updates=args.max_cell_updates,
+                meshing_time_limit=args.meshing_time_limit,
+                material_averaging=args.material_averaging,
+                averaging_samples=args.averaging_samples,
+                averaging_max_samples=args.averaging_max_samples,
+                averaging_tolerance=args.averaging_tolerance,
             ),
             baseline_checkpoint=args.baseline_checkpoint,
             references=args.references,
             device=args.device,
             scene_ids=args.scenes,
             budgets=args.budgets,
+            generate_missing_teachers=args.generate_missing_teachers,
         )
     elif args.command == "distill":
         _, initial = load_model(args.initial_checkpoint)
@@ -1021,6 +1121,7 @@ def main():
             batch_size=args.batch_size,
             learning_rate=args.learning_rate,
             width=initial["architecture"]["width"],
+            sparse_sample_weight=args.sparse_sample_weight,
             alpha=initial["pooling"]["alpha"],
             repair_weight=args.repair_weight,
             repair_every=args.repair_every,

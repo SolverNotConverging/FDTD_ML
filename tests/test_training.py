@@ -7,6 +7,7 @@ import torch
 from fdtdmesh.data.generate import GenerationConfig, make_scene
 from fdtdmesh.data.schema import write_manifest
 from fdtdmesh.ml import ResUNet, load_model, save_model
+from fdtdmesh.teacher_campaign import prepare_targets
 from fdtdmesh.training import (
     TeacherDataset,
     TrainingConfig,
@@ -63,7 +64,7 @@ def test_teacher_targets_are_legal_seeded_and_bound_to_manifest(tmp_path):
     _, _, _, x, y = load_teacher_targets(manifest, targets)
     np.testing.assert_allclose(x.sum(1), 1, atol=1e-6)
     np.testing.assert_allclose(y.sum(1), 1, atol=1e-6)
-    assert TeacherDataset(manifest, targets, "train")[0]["raster"].shape == (9, 32, 32)
+    assert TeacherDataset(manifest, targets, "train")[0]["raster"].shape == (10, 32, 32)
     with pytest.raises(ValueError, match="already exists"):
         build_teacher_targets(manifest, targets)
     arrays = np.load(targets)
@@ -79,6 +80,38 @@ def test_teacher_targets_accept_budget_override(tmp_path):
     assert metadata["budget_override"] == [[24, 24], [32, 32]]
     assert {tuple(sample["budget"]) for sample in metadata["samples"]} == {(32, 32)}
     assert {tuple(failure["budget"]) for failure in metadata["failures"]} == {(24, 24)}
+
+
+def test_parallel_teacher_cache_matches_serial_and_binds_identity(tmp_path):
+    manifest, serial = teacher_fixture(tmp_path)
+    output = tmp_path / "parallel"
+    parallel = prepare_targets(manifest, output, workers=2, budgets=(32,))
+    *_, sx, sy = load_teacher_targets(manifest, serial)
+    *_, px, py = load_teacher_targets(manifest, parallel)
+    np.testing.assert_allclose(px, sx)
+    np.testing.assert_allclose(py, sy)
+    timestamp = parallel.stat().st_mtime_ns
+    assert prepare_targets(manifest, output, workers=2, budgets=(32,)) == parallel
+    assert parallel.stat().st_mtime_ns == timestamp
+    with pytest.raises(ValueError, match="identity changed"):
+        prepare_targets(manifest, output, workers=2, budgets=(24, 32))
+
+
+def test_validation_reports_projection_failure_without_losing_loss(tmp_path, monkeypatch):
+    from fdtdmesh.training import evaluate_imitation
+
+    manifest, targets = teacher_fixture(tmp_path)
+    dataset = TeacherDataset(manifest, targets, "validation")
+
+    def fail(*args, **kwargs):
+        raise RuntimeError("Mesh optimization did not finish: time limit")
+
+    monkeypatch.setattr("fdtdmesh.training._project_batch", fail)
+    result = evaluate_imitation(ResUNet(2), dataset, TrainingConfig(width=2), "cpu")
+    assert np.isfinite(result["loss"])
+    assert result["projection_attempts"] == 1
+    assert len(result["projection_failures"]) == 1
+    assert "time limit" in result["projection_failures"][0]["error"]
 
 
 def test_short_training_checkpoint_and_resume_contract(tmp_path):

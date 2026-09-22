@@ -42,6 +42,10 @@ def main():
     evaluate.add_argument("--duration-multiplier", type=float, default=1.0)
     evaluate.add_argument("--duration-extensions", type=int, default=2)
     evaluate.add_argument("--tail-tolerance", type=float, default=0.01)
+    evaluate.add_argument("--material-averaging", choices=["point", "sampled"], default="point")
+    evaluate.add_argument("--averaging-samples", type=int, default=8)
+    evaluate.add_argument("--averaging-max-samples", type=int, default=32)
+    evaluate.add_argument("--averaging-tolerance", type=float, default=1e-3)
     evaluate.add_argument(
         "--fixed-window", action="store_true", help="Disable ring-down acceptance gate explicitly"
     )
@@ -64,6 +68,16 @@ def main():
     references.add_argument("--duration-multiplier", type=float, default=1.0)
     references.add_argument("--duration-extensions", type=int, default=3)
     references.add_argument("--tail-tolerance", type=float, default=0.01)
+    references.add_argument("--max-history-bytes", type=int, default=256_000_000)
+    references.add_argument("--max-observation-samples", type=int, default=65537)
+    references.add_argument("--max-frequency-samples", type=int, default=8193)
+    references.add_argument("--minimum-reference-level", type=int, default=1)
+    references.add_argument("--material-averaging", choices=["point", "sampled"], default="point")
+    references.add_argument("--averaging-samples", type=int, default=8)
+    references.add_argument("--averaging-max-samples", type=int, default=32)
+    references.add_argument("--averaging-tolerance", type=float, default=1e-3)
+    references.add_argument("--refine-unsettled", action="store_true")
+    references.add_argument("--extend-nonconverged", action="store_true")
     references.add_argument(
         "--fixed-window", action="store_true", help="Disable ring-down acceptance gate explicitly"
     )
@@ -115,6 +129,16 @@ def main():
             duration_multiplier=args.duration_multiplier,
             max_duration_extensions=args.duration_extensions,
             tail_relative_tolerance=None if args.fixed_window else args.tail_tolerance,
+            max_history_bytes=getattr(args, "max_history_bytes", 256_000_000),
+            max_observation_samples=getattr(args, "max_observation_samples", 65537),
+            max_frequency_samples=getattr(args, "max_frequency_samples", 8193),
+            minimum_reference_level=getattr(args, "minimum_reference_level", 1),
+            refine_unsettled=getattr(args, "refine_unsettled", False),
+            extend_nonconverged=getattr(args, "extend_nonconverged", False),
+            material_averaging=getattr(args, "material_averaging", "point"),
+            averaging_samples=getattr(args, "averaging_samples", 8),
+            averaging_max_samples=getattr(args, "averaging_max_samples", 32),
+            averaging_tolerance=getattr(args, "averaging_tolerance", 1e-3),
         )
         if args.command == "references":
             generate_references(

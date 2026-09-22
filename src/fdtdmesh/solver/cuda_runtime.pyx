@@ -12,7 +12,7 @@ cdef extern from "fdtd_api.h":
         uint64_t stepping_transfers
     int fdtd_device_count() nogil
     int fdtd_run(int, int, int, int, int, int,
-        const void*, const void*, const void*, const void*, const void*,
+        const void*, const void*, const void*, const void*, const void*, const void*, const void*,
         const unsigned char*, const void*, int, const int*, const void*, const int*,
         void*, void*, void*, void*, RunStats*, char*, int) nogil
 
@@ -33,6 +33,8 @@ def run(c, initial, source_indices, waveforms, receiver_indices):
     cdef cnp.ndarray cby = np.ascontiguousarray(c.cby)
     cdef cnp.ndarray chx = np.ascontiguousarray(c.chx)
     cdef cnp.ndarray chy = np.ascontiguousarray(c.chy)
+    cdef cnp.ndarray ahx = np.ascontiguousarray(c.ahx)
+    cdef cnp.ndarray ahy = np.ascontiguousarray(c.ahy)
     cdef cnp.ndarray pec = np.ascontiguousarray(c.pec, dtype=np.uint8)
     cdef cnp.ndarray profiles = np.ascontiguousarray(c.cpml)
     cdef cnp.ndarray sources = np.ascontiguousarray(source_indices, dtype=np.int32)
@@ -56,7 +58,7 @@ def run(c, initial, source_indices, waveforms, receiver_indices):
         raise ValueError("Invalid CPML coefficient buffer")
     for a, shape in [(hx,(nx+1,ny)),(hy,(nx,ny+1)),(ca,(nx+1,ny+1)),
                      (cbx,(nx+1,ny+1)),(cby,(nx+1,ny+1)),(chx,(nx+1,ny)),
-                     (chy,(nx,ny+1)),(waves,(nt,ns))]:
+                     (chy,(nx,ny+1)),(ahx,(nx+1,ny)),(ahy,(nx,ny+1)),(waves,(nt,ns))]:
         if a.shape != shape or a.dtype != ez.dtype or not np.isfinite(a).all():
             raise ValueError("Invalid runtime shapes, dtypes, or nonfinite data")
     if (<object>pec).shape != (<object>ez).shape or not np.isfinite(ez).all():
@@ -73,7 +75,7 @@ def run(c, initial, source_indices, waveforms, receiver_indices):
     cdef int status
     with nogil:
         status = fdtd_run(precision,nx,ny,nt,ns,nr,
-            ca.data,cbx.data,cby.data,chx.data,chy.data,<unsigned char*>pec.data,profiles.data,has_pml,
+            ca.data,cbx.data,cby.data,chx.data,chy.data,ahx.data,ahy.data,<unsigned char*>pec.data,profiles.data,has_pml,
             <int*>sources.data,waves.data,<int*>receivers.data,
             ez.data,hx.data,hy.data,history.data,&stats,error,1024)
     if status:

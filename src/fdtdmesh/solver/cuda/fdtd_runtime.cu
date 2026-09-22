@@ -52,7 +52,7 @@ struct Resources {
 };
 
 template<class T> __global__ void update_h(const T* e, T* hx, T* hy,
-    const T* chx, const T* chy, const T* profiles, T* psi_hx, T* psi_hy, int nx, int ny) {
+    const T* chx, const T* chy, const T* ahx, const T* ahy, const T* profiles, T* psi_hx, T* psi_hy, int nx, int ny) {
     size_t p = blockIdx.x*size_t(blockDim.x)+threadIdx.x;
     if (p < size_t(nx+1)*ny) {
         size_t i=p/ny, j=p%ny, eidx=i*(ny+1)+j;
@@ -62,7 +62,7 @@ template<class T> __global__ void update_h(const T* e, T* hx, T* hy,
             psi_hx[p]=coeff[1]*psi_hx[p]+coeff[2]*delta;
             delta=coeff[0]*delta+psi_hx[p];
         }
-        hx[p] -= chx[p]*delta;
+        hx[p] = ahx[p]*hx[p] - chx[p]*delta;
     }
     if (p < size_t(nx)*(ny+1)) {
         T delta=e[p+ny+1]-e[p];
@@ -71,7 +71,7 @@ template<class T> __global__ void update_h(const T* e, T* hx, T* hy,
             psi_hy[p]=coeff[1]*psi_hy[p]+coeff[2]*delta;
             delta=coeff[0]*delta+psi_hy[p];
         }
-        hy[p] += chy[p]*delta;
+        hy[p] = ahy[p]*hy[p] + chy[p]*delta;
     }
 }
 template<class T> __global__ void update_e(T* e, const T* hx, const T* hy,
@@ -105,7 +105,7 @@ template<class T> __global__ void sample(const T* e, const int* sites, T* histor
 }
 
 template<class T> void run(int nx,int ny,int nt,int ns,int nr,
-    const void* ca,const void* cbx,const void* cby,const void* chx,const void* chy,
+    const void* ca,const void* cbx,const void* cby,const void* chx,const void* chy,const void* ahx,const void* ahy,
     const unsigned char* pec,const void* profiles,int has_pml,
     const int* sources,const void* waveforms,const int* receivers,
     void* ez,void* hx,void* hy,void* history,RunStats* stats) {
@@ -119,6 +119,8 @@ template<class T> void run(int nx,int ny,int nt,int ns,int nr,
     auto dcy=r.allocate(ne, static_cast<const T*>(cby));
     auto dchx=r.allocate(nhx, static_cast<const T*>(chx));
     auto dchy=r.allocate(nhy, static_cast<const T*>(chy));
+    auto dahx=r.allocate(nhx, static_cast<const T*>(ahx));
+    auto dahy=r.allocate(nhy, static_cast<const T*>(ahy));
     auto dp=r.allocate(ne, pec);
     auto profiles_d=r.allocate(has_pml?size_t(3)*(2*nx+2*ny+2):0,static_cast<const T*>(profiles));
     auto psi_hx=r.zeros<T>(has_pml?nhx:0);
@@ -133,7 +135,7 @@ template<class T> void run(int nx,int ny,int nt,int ns,int nr,
     check(cudaEventRecord(r.start,r.stream));
     r.stepping=true;
     for(int n=0;n<nt;++n) {
-        update_h<<<unsigned((std::max(nhx,nhy)+255)/256),256,0,r.stream>>>(de,dhx,dhy,dchx,dchy,profiles_d,psi_hx,psi_hy,nx,ny);
+        update_h<<<unsigned((std::max(nhx,nhy)+255)/256),256,0,r.stream>>>(de,dhx,dhy,dchx,dchy,dahx,dahy,profiles_d,psi_hx,psi_hy,nx,ny);
         update_e<<<unsigned((ne+255)/256),256,0,r.stream>>>(de,dhx,dhy,dca,dcx,dcy,dp,profiles_d,psi_ex,psi_ey,nx,ny);
         if(ns) inject<<<(ns+255)/256,256,0,r.stream>>>(de,ds,dw,size_t(n)*ns,ns);
         if(nr) sample<<<(nr+255)/256,256,0,r.stream>>>(de,dr,out,size_t(n)*nr,nr);
@@ -156,14 +158,14 @@ int fdtd_device_count() {
     return count;
 }
 int fdtd_run(int precision,int nx,int ny,int nt,int ns,int nr,
-    const void* ca,const void* cbx,const void* cby,const void* chx,const void* chy,
+    const void* ca,const void* cbx,const void* cby,const void* chx,const void* chy,const void* ahx,const void* ahy,
     const unsigned char* pec,const void* profiles,int has_pml,
     const int* sources,const void* waveforms,const int* receivers,
     void* ez,void* hx,void* hy,void* history,RunStats* stats,char* error,int error_size) {
     *stats = RunStats{};
     try {
-        if(precision==32) run<float>(nx,ny,nt,ns,nr,ca,cbx,cby,chx,chy,pec,profiles,has_pml,sources,waveforms,receivers,ez,hx,hy,history,stats);
-        else if(precision==64) run<double>(nx,ny,nt,ns,nr,ca,cbx,cby,chx,chy,pec,profiles,has_pml,sources,waveforms,receivers,ez,hx,hy,history,stats);
+        if(precision==32) run<float>(nx,ny,nt,ns,nr,ca,cbx,cby,chx,chy,ahx,ahy,pec,profiles,has_pml,sources,waveforms,receivers,ez,hx,hy,history,stats);
+        else if(precision==64) run<double>(nx,ny,nt,ns,nr,ca,cbx,cby,chx,chy,ahx,ahy,pec,profiles,has_pml,sources,waveforms,receivers,ez,hx,hy,history,stats);
         else throw std::runtime_error("Unsupported field precision");
         return 0;
     } catch(const std::exception& e) {

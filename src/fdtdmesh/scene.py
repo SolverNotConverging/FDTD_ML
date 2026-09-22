@@ -17,17 +17,19 @@ class Material:
     mu_r: float = 1.0
     sigma_e: float = 0.0
     kind: str = "ordinary"
+    sigma_h: float = 0.0  # Magnetic conductivity in ohm/m: dB/dt = -curl(E) - sigma_h H.
 
     def __post_init__(self):
         if self.kind not in ("ordinary", "PEC"):
             raise ValueError("Only ordinary isotropic materials and PEC are supported")
         if (
-            not np.isfinite([self.epsilon_r, self.mu_r, self.sigma_e]).all()
+            not np.isfinite([self.epsilon_r, self.mu_r, self.sigma_e, self.sigma_h]).all()
             or self.epsilon_r <= 0
             or self.mu_r <= 0
             or self.sigma_e < 0
+            or self.sigma_h < 0
         ):
-            raise ValueError("Materials require epsilon_r, mu_r > 0 and sigma_e >= 0")
+            raise ValueError("Materials require epsilon_r, mu_r > 0 and sigma_e, sigma_h >= 0")
 
 
 @dataclass(frozen=True)
@@ -114,6 +116,12 @@ class Scene2D:
         probe = self.make_probe("line", x, y)
         self.primitives.append(("line", self.materials["PEC"], probe))
 
+    def add_pec_anchors(self, *, mode="axis_aligned", include_overrides=True):
+        """Anchor PEC faces/features after all geometry has been added; then remesh."""
+        from .pec_anchors import add_pec_anchors
+
+        return add_pec_anchors(self, mode=mode, include_overrides=include_overrides)
+
     def make_probe(self, kind, x, y):
         kind = "line" if kind == "line-soft" else kind
         xs, ys = np.ndim(x) == 0, np.ndim(y) == 0
@@ -134,10 +142,11 @@ class Scene2D:
                 self.add_anchor(axis, value)
         return Probe(kind, float(x) if xs else tuple(x), tuple(y) if xs else float(y))
 
-    def sample(self, x, y, *, raster=False):
+    def sample(self, x, y, *, raster=False, magnetic_loss=False):
         """Point sample materials. Last inserted primitive wins, including PEC."""
         X, Y = np.meshgrid(x, y, indexing="ij")
         eps, mu, sigma = np.ones_like(X), np.ones_like(X), np.zeros_like(X)
+        sigma_h = np.zeros_like(X)
         pec = np.zeros(X.shape, dtype=bool)
         tol = 1e-12 * max(self.Lx, self.Ly)
         for kind, mat, data in self.primitives:
@@ -182,8 +191,9 @@ class Scene2D:
                             np.asarray(x) <= data.x[1] + tol
                         )
             eps[mask], mu[mask], sigma[mask] = mat.epsilon_r, mat.mu_r, mat.sigma_e
+            sigma_h[mask] = mat.sigma_h
             pec[mask] = mat.kind == "PEC"
-        return eps, mu, sigma, pec
+        return (eps, mu, sigma, sigma_h, pec) if magnetic_loss else (eps, mu, sigma, pec)
 
 
 def probe_indices(probe, mesh):

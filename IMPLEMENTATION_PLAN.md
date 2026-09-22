@@ -1,6 +1,11 @@
 # Learned FDTD meshing implementation plan
 
-Updated: 2026-09-19.
+Updated: 2026-09-20.
+
+2026-09-21 update: the 3,000-scene combined corpus is complete. The next teacher/CNN
+workflow uses eight budget pairs per training scene, four extra reserved validation
+pairs, 2× sparse sampling and budgets 48–128 on each axis. See
+[mixed-budget training](docs/training_mixed_v7.md) for the launch and evaluation contract.
 
 This document consolidates the referenced **Mesh Training Strategy** into an
 implementation roadmap. It distinguishes the first-stage deliverables from later
@@ -10,9 +15,16 @@ training and physics work. See [PROGRESS.md](PROGRESS.md) for implementation sta
 
 **Current priority:** prove the method with the original width-16 CNN on richer
 geometry/material distributions and better-qualified fine-grid references. Larger
-CNNs are deferred until this proof of concept passes physical validation. Section
-11 specifies the next implementation; its generator-v5 settings and reference
-limits are proposals, not features or results already delivered.
+CNNs are deferred until this proof of concept passes physical validation. The
+v6 corpus now has 2,000 accepted references. The next dataset addition is 1,000
+sparse v7 references, covering one dielectric, close dielectric pairs, one PEC
+rectangle, and PEC/dielectric pairs across scales and locations. See
+[the sparse supplement contract](docs/sparse_supplement_v7.md) for exact quotas,
+feature/gap limits, convergence policy, split protection and combined training.
+Later teacher preparation and physics search must include all eight dense/sparse
+families and report their physical errors separately. Preserve the completed v6
+search targets; its distillation projection timeout needs resolution before a
+subsequent distillation run.
 
 ## 1. Objective
 
@@ -337,10 +349,22 @@ has not been measured.
 
 ## 11. Revised next milestone — small CNN, rich scenes, strict fine references
 
+**Current contract (v6):** PEC is restricted to axis-aligned rectangles and thin
+wires, with four and three mandatory mesh lines respectively. PEC takes
+precedence over dielectrics. Shapes are defined on the 1/64 PEC coordinate
+lattice; probes use 1/128. Material averaging remains enabled. The new ten-scene
+pilot uses a separate v6 manifest and retains all outcomes. See
+[the v6 campaign contract](docs/reference_campaign_v6.md). Earlier v5 descriptions
+and diagnostic subsections below document the development history; this contract
+supersedes their mixed-shape PEC distribution.
+
+
 ### 11.1 Scope and preserved baseline
 
-Use the original `ResUNet(width=16)` (128,418 parameters), existing FiLM blocks,
-nine raw-physics channels, axis-density output and constrained mesher. Start a
+Use `ResUNet(width=16)` (128,578 parameters with ten raw channels), existing FiLM
+blocks, ten raw-physics channels, axis-density output and constrained mesher. The
+tenth channel is `sigma_h/(2*pi*f_max*MU0)` and remains in the model contract,
+but is identically zero in this campaign because magnetic loss is inactive. Start a
 fresh proof-of-concept training run on the new dataset; preserve historical
 checkpoints as comparators. The remote checkout does not contain the old trained
 checkpoint files, so checking out the old source does not restore those weights.
@@ -359,27 +383,28 @@ is a later controlled experiment, not the immediate objective.
 
 ### 11.2 Generator v5: deliberate geometry interactions
 
-The current generator includes one paired, axis-aligned touching-rectangle case,
-but rejects general bounding-box overlaps and fixes all ordinary `mu_r` to one.
-Replace its global separation rule with explicit, measured interaction classes.
-Initial target shares below are design settings to audit after rendering, not
-claims about the current generator:
+The v5 generator and campaign implementation are the source of truth for this
+section: [generate_v5.py](src/fdtdmesh/data/generate_v5.py) and
+[campaign.py](src/fdtdmesh/data/campaign.py). They use four deterministic topology
+strata (separated, contact, overlap and nested), with quotas enforced per split.
+The implemented distribution requests 8–16 primitives, with realized counts
+recorded in the manifest; every returned primitive must retain sufficient visible area; rejected layouts
+are resampled, so larger requested counts can be underrepresented.
 
-| Scene class | Initial share | Required variations |
-|---|---:|---|
-| Separated objects / resolved gaps | 20% | Near/far separation, narrow/wide gaps, sparse controls |
-| Contact | 25% | Shared edges, tangency, corner/point contact, multi-object junctions |
-| Intersection / partial overlap | 25% | Rotated crossings, shallow/deep penetration, mixed shape pairs |
-| Nested / layered | 15% | Inclusions, shells, vacuum cutouts, multiple interface depths |
-| Mixed assemblies | 15% | Several interaction types, connected clusters, cavity-like arrangements |
+| Topology stratum | Campaign treatment |
+|---|---|
+| Separated | Independent quota; near/far separation and resolved gaps |
+| Contact | Independent quota; curated shared-edge rectangle pair |
+| Overlap | Independent quota; curated intersecting rectangle pair plus randomized geometry |
+| Nested | Independent quota; curated nested rectangle pair plus randomized geometry |
 
-Use 1–12 primitives in the ordinary distribution, stratifying sparse and dense
-counts so neither dominates. Reserve 13–20 and unseen assembly combinations for
-compositional challenges after qualification. Vary shape pairings, translation,
-orientation, aspect ratio, size ratios and occupied fraction; keep circle,
-rectangle, triangle, polygon and supported axis-aligned PEC-line families. Add
-simple concave polygons as a tested extension, not arbitrary self-intersecting
-polygons. Vary global domain aspect/electrical size and local feature scales
+Use 8–16 primitives in the ordinary distribution and record the realized count.
+Vary translation, orientation, aspect ratio, size ratios and occupied fraction. This campaign uses
+circles, rectangles, triangles and convex polygons, with random whole-scene
+quarter-turns/reflections and continuously rotated polygons. Tangency, general
+junctions, broader contact families, concave polygons and PEC-line topology strata
+are deferred; only the curated rectangle pair provides contact/overlap/nesting
+structure. Vary global domain aspect/electrical size and local feature scales
 separately; record realized distributions and generation rejections.
 
 Define geometry in continuous coordinates. Exact contact uses shared construction
@@ -398,58 +423,68 @@ material/material and PEC/material ordering on raster and all staggered Yee site
 If physical union semantics are wanted for a scene family, construct and record
 that order explicitly rather than changing global priority.
 
-Keep the PML collar vacuum and keep objects, sources and probes out of it. Place
+Keep the PML collar vacuum and keep objects, sources and probes out of it. Require
+at least one finite PEC body in every scene. Thin axis-aligned PEC lines are
+supported as an optional 0–2 per scene; their endpoints and line positions are
+mandatory anchors. Place
 probes using the final material map instead of rejecting the whole bounding box
 of an overlapping assembly. Maintain explicit source/probe/interface clearance
 for the supported interpolation stencil. Start with vacuum probes and one source;
 embedded-material probes are a later interpolation-validation extension.
 
-Keep 128x128 CNN inputs initially and require finite-width visible features, gaps
-and necks to span at least four input pixels. Test composite features after overlap,
+Keep 128x128 CNN inputs initially. Require every finite primitive's normalized minimum
+span to be at least 0.125, every visible core radius to be at least 3 pixels at
+128, and every visible fraction to be at least 0.25. Reject hidden or tiny
+components and thin necks after composition. Zero-width PEC lines are exempt from
+finite-body area/core checks precisely because they are anchored, but must span at
+least 0.125 of the domain and render as at least 8 pixels at 128. Test composite features after overlap,
 not only the original primitive extents. Exact zero-width contacts and anchored PEC
 lines need explicit topology/anchor tests and their own convergence statistics.
 If useful geometry cannot be represented, test 256x256 inputs with the *same*
-width-16 CNN as a separate ablation; version raster/target metadata and retrain.
+width-16 CNN as a separate deferred ablation; version raster/target metadata and retrain.
 Do not expect finer FDTD labels to recover information absent from CNN inputs.
 
-### 11.3 Material diversity without a compulsory epsilon tail
+### 11.3 Electric parameters and inactive magnetic-loss channel
 
 Use positive, isotropic, nondispersive constitutive parameters within the current
 solver contract. The ranges below define synthetic numerical experiments; they
 are not broadband constitutive models for particular manufactured materials.
 
-| Quantity | Proposed ordinary distribution | Coverage requirement |
+| Quantity | Implemented ordinary distribution | Coverage requirement |
 |---|---|---|
-| `epsilon_r` | 1–10, stratified continuous draws across 1–2, 2–4, 4–7, 7–10; include exact unity controls | Remove the mandatory 15% >10 tail; cover weak/strong *interface contrasts* within the range |
-| `mu_r` | Exact 1 for half of ordinary material draws; remaining draws stratified over 1–4 | Include magnetic-only (`epsilon_r=1`), dielectric-only, and joint variation |
-| `sigma_e` | Explicit zero-loss mass, initially 25%; remaining draws stratified by loss ratio described below | Cover low, moderate and strong loss without conflating finite conductivity with PEC |
-| PEC | Separate categorical material, initially around 20% of primitives | Audit realized PEC occupancy/connectivity as well as requested primitive fraction |
+| `epsilon_r` | Independently stratified log draws over 1–30 | Cover the full ordinary range without a compulsory high-epsilon tail |
+| `mu_r` | Fixed at 1 | Magnetic material variation is deferred |
+| `sigma_e` | Sampled from carrier loss ratio `1e-4–1`; 25% exactly zero | Store physical conductivity in S/m and audit realized loss ratios |
+| `sigma_h` | Fixed at 0 (`magnetic_loss=False`) | Magnetic damping capability remains tested but is inactive in v5 |
+| PEC bodies | Required, with 10% categorical body sampling where applicable | Every scene contains at least one finite PEC body |
+| PEC lines | Optional 0–2 axis-aligned zero-width lines | Endpoints and line positions are mandatory anchors |
 
-For nonzero conductivity, stratify the dimensionless ratio
-`r = sigma_e / (2*pi*f_ref*EPS0*epsilon_r)` over `1e-4–1e1`, using the recorded
+For nonzero electric conductivity, stratify the dimensionless ratio
+`r_e = sigma_e / (2*pi*f_ref*EPS0*epsilon_r)` over `1e-4–1`, using the recorded
 source carrier as `f_ref`, then store the resulting physical `sigma_e` in S/m.
-This gives comparable loss regimes across randomized frequencies and epsilon.
+Magnetic-loss solver capability is retained for separate tests, but `mu_r=1` and
+`sigma_h=0` throughout this campaign. The SI H-conductivity convention is
+documented by the [Meep magnetic-loss reference](https://meep.readthedocs.io/en/latest/Materials/)
+for conceptual context; it is not used to generate v5 campaign materials.
 Record the physical conductivity range and realized ratio distribution. Include
 matched controls with one parameter varied at a time and independently crossed
-epsilon/mu/loss bins; avoid tying all magnetic objects to one loss or geometry class.
+epsilon/loss bins. Magnetic variation is deferred.
 Any calibrated physical conductivity bounds and resampling bias must be recorded.
 
-Audit refractive-index proxy `sqrt(epsilon_r*mu_r)`, impedance proxy
-`sqrt(mu_r/epsilon_r)`, interface contrasts, attenuation lengths and finite-loss
-skin depths over the excitation band. Lossless local wavelength alone is not a
+Audit refractive-index and impedance proxies, interface contrasts and electric-loss
+attenuation over the excitation band. Lossless local wavelength alone is not a
 sufficient resolution estimate for highly conductive objects. Very thin conductive
-layers may need extra refinement or an explicit resource rejection. Do not clip
-them to PEC or silently remove difficult material combinations.
+layers may need extra refinement or an explicit resource rejection.
 
-Do not automatically retain the previous material-OOD range 36–120. Initially
-evaluate unseen joint combinations *within* the new ordinary ranges. Values above
-10 for epsilon, mu below 1 or above 4, and more extreme conductivity are separately
-versioned optional extrapolation studies after the ordinary proof of concept.
+Do not retain the previous material-OOD range 36–120. Initially evaluate unseen
+electric joint combinations within the ordinary epsilon and electric-loss ranges.
+Magnetic-material/loss variation is a separately versioned follow-up.
 
-The current raw channels already contain `mu_r` and normalized conductivity; no
-additional channel is needed for constant isotropic permeability. Keep the original
-normalization for the first comparison and inspect channel scales/optimization.
-If a transform becomes necessary, version it and train a separate checkpoint.
+The v5 raw contract has ten channels, including `mu_r`, normalized electric
+conductivity, and `sigma_h/(2*pi*f_max*MU0)`. Checkpoints use format 3 and reject
+old format-2 checkpoints. Native magnetic damping is implemented and under test,
+but is inactive in this campaign and not production validated. Keep the channel
+order and normalization in the checkpoint metadata.
 
 ### 11.4 Source, scale and distribution coverage
 
@@ -458,6 +493,13 @@ source-to-object and receiver-to-object distances, domain aspect, occupied area,
 electrical size and bandwidth. Retain the existing physical point-current
 normalization. Global amplitude variation alone in this linear solver is not a
 meaningful new meshing task under normalized errors.
+
+With `anchor_probes=true` in `SceneSpec`, every point-source/port and receiver
+`x`/`y` coordinate is a hard anchor. Legacy scenes omit this field and retain the
+default `false` for hash compatibility. v5 source, port, receiver and PEC-line
+positions use the normalized 1/128 or 1/64 lattice, so they remain representable
+through the 128-grid reference doublings. Validate these anchors before meshing
+and retain them in the scene manifest.
 
 The current CNN sees binary source/receiver maps and five conditioning values; it
 does not receive pulse delay/width or independent per-source phases/amplitudes.
@@ -479,20 +521,21 @@ More computation permits stronger evidence; it does not guarantee convergence of
 every discontinuous/contact geometry. Retain direct Yee-location material sampling
 and qualify its staircase error. Do not introduce subpixel averaging in this work.
 
-Proposed reference policy, to qualify on the numerical pilot before production:
+Implemented campaign reference policy:
 
 | Setting | Next policy |
 |---|---|
 | Precision | Float64 reference solver |
-| Uniform levels | 128, 256, 512, 1024, 2048, 4096; targeted 8192 only after profiling |
-| Minimum accepted level | 1024, plus geometry/wavelength/attenuation resolution checks; implement this new acceptance field explicitly |
+| Uniform levels | 128, 256, 512, 1024, 2048, 4096; 4096 is this campaign's hard spatial limit |
+| Minimum accepted level | 1024, plus geometry/wavelength/attenuation resolution checks |
 | Spatial acceptance | Both per-receiver waveform and complex-spectrum relative errors <=2%, for two consecutive refinements |
-| Initial duration | At least 48 band-reference cycles and pulse end + 8 conservative material-transit times; replace the old epsilon-only estimate with one including mu |
+| Initial duration | At least 48 band-reference cycles and pulse end + 8 conservative material-transit times, including both epsilon and mu |
 | Tail acceptance | Pulse ended before the final 20% window; receiver RMS/peak <=1% |
 | Duration extensions | Up to 6 doublings from the new base duration; restart spatial sequence on every extension |
-| Work ceiling | Pilot starting cap of 20,000,000,000,000 cell updates per attempted grid/window; log cumulative work per scene too |
-| Field/history estimates | Pilot starting ceilings 6 GB field estimate and 1 GB receiver-history estimate per job, subject to measured total CPU/GPU memory |
-| Sampling | Maintain at least existing 16 time samples/period and frequency resolution proportional to duration; never silently coarsen on hitting a cap |
+| Work ceiling | 20,000,000,000,000 cell updates per attempted grid/window; log cumulative work per scene |
+| Field/history estimates | 6 GB field estimate and 1 GB receiver-history estimate per job |
+| Resolution / sampling | 16 cells/wavelength and 4 cells/attenuation length; at least 16 time samples/period, cap 262145 timepoints and 32769 frequencies |
+| Hard limits | 6 hours per scene; separately, 20,000 candidate indices per split/lane halt an unfilled campaign |
 
 Initial duration uses a conservative bound based on material propagation, e.g.
 `sqrt(max(epsilon_r)*max(mu_r))*domain_diagonal/C0`, plus the pulse duration.
@@ -501,18 +544,15 @@ contact, PEC cavities and multiple scattering require observed ring-down checks.
 Keep units/frequency conventions explicit in the manifest; avoid applying a second
 unrecorded duration multiplier to the already enlarged base window.
 
-The current field estimate is `240*(N+1)^2` bytes for float64. This is about
-1.008 GB at 2048, 4.028 GB at 4096, and 16.110 GB at 8192. The earlier 1 GB cap
-therefore forbids even 2048. The user's revised compute scope permits raising
-resource ceilings, while convergence tolerances remain unchanged. These estimates
-are not full process-memory bounds: profile coefficient construction, temporary
-arrays, solver copies, histories and postprocessing on both host and GPU. Qualify
-2048 then 4096 on one GPU before scheduling four concurrent jobs. Do not assume an
-8192 job fits safely merely because its estimate is below 24 GiB; schedule such
-jobs separately only after measured headroom and host-memory checks.
+The 6 GB field and 1 GB history limits are explicit campaign bounds, not a claim
+that every reference level fits. Coefficient construction, temporary arrays, solver
+copies, histories and postprocessing also consume memory. Record resource-limited
+outcomes and retain the attempted level/window history.
 
-Expose missing controls in the CLI/run identity: history and observation limits,
-minimum accepted level, total-work/wall-time budgets and per-level diagnostics.
+History/observation and minimum-level controls are exposed in the reference CLI;
+the campaign identity records all additional resolution, quota and wall-time
+settings. Per-level progress is persisted. Cumulative work is available by summing
+recorded level diagnostics; it is not a separate enforced scene-work cap.
 An initial pilot may raise observation caps to 262145 time samples and 32769
 frequencies, but must estimate storage and spectral-computation cost before launch.
 If these are insufficient, retain a resource-limited outcome; never reduce sampling
@@ -546,23 +586,30 @@ name matches. Upgrade/retry records retain the original attempt and full config.
 
 ### 11.6 Staged delivery and small-CNN proof of concept
 
-1. **Generator and material correctness.** Implement v5 configuration/schema/CLI,
+1. **Generator and material correctness.** Use the implemented v5 configuration/schema/CLI,
    contact/overlap construction, visible-feature checks, material distributions,
-   mu-aware duration and stable split streams. Test priority, exact contacts,
+   stable split streams and anchor placement. Test priority, exact contacts,
    deterministic hashes, leakage, probe placement and rendered distribution
    coverage. Produce a gallery and material/topology statistics before a sweep.
 2. **Numerical qualification.** Use a separate roughly 160-scene engineering pilot
-   balanced over the five interaction classes plus independent analytical fixtures.
+   balanced over the four topology strata plus independent analytical fixtures.
    It is a development set, not an untouched test set. Profile 2048/4096 and long
    windows, qualify memory/sampling limits, and inspect convergence curves and
    rejected cases. Freeze the acceptance/configuration contract before production.
-3. **Versioned proof-of-concept corpus.** Start with 1,024 train, 128 validation and
-   256 untouched IID scenes; extend training toward 2,048 only after accepted
-   coverage is measured, preserving holdouts exactly. These are attempted scene
-   counts, not promised converged labels. Keep separate contact/material/composition
-   challenge evaluations and report rejection rates by stratum.
+3. **Versioned proof-of-concept corpus.** Target 1,024 train, 128 validation and
+   128 test scenes (1,280 accepted total); continue replacement attempts until each
+   split/topology quota is met. These are targets, not generated results. Run:
+   `python -m fdtdmesh.data.campaign --output artifacts/reference_v5 --gpus 0 1 2 3 --train 1024 --validation 128 --test 128`.
+   Resume only with the campaign's exact config binding; changing generator,
+   reference, source, native-binary or quota identity requires a new output root.
+   Publish `accepted_manifest.json` and `complete.json` only after all quotas and
+   accepted artifacts pass finalization. Every failed, rejected and raw reference
+   remains retained; unexpected solver errors halt the worker. Logs include level
+   progress. `scripts/qualify_v5.py` creates a development gallery/audit. Extend
+   training toward 2,048 only after accepted coverage is measured, preserving
+   holdouts exactly.
 4. **Width-16 training from scratch.** Generate restart-safe heuristic targets,
-   retaining infeasibilities, for budgets 32/48/64/96. Balance sampling and normalize
+   retaining infeasibilities, for budgets 48/64/96/128. Sample feasible pairs uniformly and normalize
    losses across budgets; split by scene, never by budget pair. Use teacher
    pretraining then real-FDTD candidate search and physics distillation. Compare
    uniform, heuristic and small CNN over identical accepted windows. A 100-epoch
@@ -579,5 +626,84 @@ name matches. Upgrade/retry records retain the original attempt and full config.
    fixed references, splits and search budget. Revisit deeper models only if the
    measured small-model learning curves or physical errors justify them.
 
-This revision is a plan and source-baseline checkout. Generator v5, enlarged
-reference limits, new targets and training are not launched by the planning change.
+This revision implements the generator, retains magnetic-loss solver capability,
+and defines resolution checks and the quota-driven reference campaign. Magnetic
+loss is inactive in v5 scenes. New teacher targets and CNN training remain
+deferred until reference generation finishes. See the campaign run record in
+[PROGRESS.md](PROGRESS.md).
+
+### Sampled material mapping qualification
+
+Implemented Ez dual-cell filling-fraction sampling for epsilon_r and sigma_e,
+with nonuniform physical cells, overlap priority, adaptive 8–32 midpoint samples,
+and conservative exclusion of PEC bodies/boundaries and anchored lines. Magnetic
+parameters remain fixed. New quota campaigns select this method; the running
+ten-scene point-sampled pilot stays a separate baseline. Method and quadrature
+settings are part of the reference identity.
+
+Qualification shows about 30× smaller resonance-frequency error in controlled
+lossless/lossy dielectric cavities at 512. On pilot scene 000000, 512→1024 waveform
+and spectrum differences improve only marginally and remain above 2%. Higher
+sampling density has a much smaller effect than the remaining spatial error.
+Do not assume dielectric averaging fixes PEC staircasing, corners, or campaign
+acceptance. A conformal PEC study is a separate next step, not implemented here.
+See [the method and measured results](docs/sampled_material_averaging.md).
+
+### PEC-face alignment experiment
+
+An opt-in `scene.add_pec_anchors()` helper now anchors axis-aligned PEC faces,
+line endpoints and conservative ordinary cutouts before remeshing. A feature
+mode also supplies polygon vertices/circle extrema without claiming conformal
+curved boundaries. The running pilot and default reference mesh policy remain
+unchanged. A separately identified nonuniform reference policy is needed before
+adopting this in bulk generation.
+
+A controlled flat-wall cavity improved 44× at 512. On pilot scene 000000, adding
+four PEC-face coordinates and using nested graded grids reduced the 512→1024
+waveform/spectrum differences to 2.542%/2.495%, from 3.395%/3.529% with averaged
+materials on uniform grids. Both still exceed 2%; timestep count increased 26.7%.
+The fuller feature-anchor mesh timed out, rather than proving infeasibility.
+See [PEC anchor experiment](docs/pec_anchor_experiment.md) for the measured scope.
+
+### Rectangle-only PEC follow-up
+
+The same-scene diagnostic with only the PEC rectangle retained meets convergence
+criteria at 1024 for both uniform and PEC-face-anchored grids, with dielectric
+averaging enabled. Anchored waveform/spectrum differences are 0.02835%/0.03422%,
+about ten times smaller than uniform-grid differences. The five dielectric
+objects and all probes remain unchanged. This supports testing axis-aligned
+rectangle-only PEC on a broader pilot before changing the bulk generator.
+Keep exposed PEC boundaries orthogonal: later curved dielectric cutouts can
+otherwise reintroduce non-rectangular PEC interfaces. See
+[the full diagnostic](docs/rectangle_only_pec_experiment.md).
+
+### Active reference campaign: 2,000 converged scenes (2026-09-19)
+
+Following the four-scene v6 pilot (4/4 converged at 1024), the authorized campaign
+target is now 1600 training + 200 validation + 200 IID test references. This
+supersedes the earlier 1024/128/128 quantity; geometry, PEC/probe anchors, sampled
+material averaging, strict convergence gates and resource hard limits are
+unchanged. The active spatial sequence is 128/256/512/1024/2048. Failure to
+converge by 2048 is terminal for that candidate and triggers replacement; only
+an unsettled time tail can extend simulation duration. Detached execution uses
+GPUs 0–3 and writes to
+`artifacts/reference_v6_2000/`. Rejected candidates do not count toward quotas.
+Generation completed with all 2,000 accepted references on 2026-09-20.
+The user authorized training; the initial teacher-pretraining workflow is now
+launched. See [v6 training](docs/training_v6.md) for the source-bound target cache,
+balanced budget sampling, width-16 optimizer configuration and subsequent
+physical-validation requirements.
+
+The 2048 ceiling was applied as a recorded policy migration after 552 decisions.
+Seventeen 4096-only accepted cases were reclassified as nonconverged, and four
+interrupted attempts were archived before restart. The migration record and old
+identity are preserved in `policy_migration_max_2048/` beneath the campaign root.
+
+### Baseline naming and PEC discretization (2026-09-20)
+
+Use actual uniform spacing without PEC/probe anchors for the `uniform` candidate,
+snapping PEC rectangle faces and wire coordinates/endpoints to their nearest
+mesh lines. Rename the former anchored constant-density baseline `quasi_uniform`.
+Keep heuristic/CNN meshes anchored, and retain exact reference geometry. The
+true uniform candidate supplies a benchmark and work normalization, not an
+anchored training target. See [baseline conventions](docs/uniform_baselines.md).

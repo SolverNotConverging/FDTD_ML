@@ -16,6 +16,7 @@ from fdtdmesh.physics import (
     SearchConfig,
     _physics_evaluation_report,
     _reference,
+    _teacher_prior,
     candidate_densities,
     load_physics_targets,
     pareto_front,
@@ -50,10 +51,11 @@ def test_candidate_families_are_positive_seeded_and_conditioned(tmp_path):
     b = candidate_densities(scene, [32, 32], model, metadata, config, "cpu")
     assert [row["name"] for row in a] == [
         "uniform",
+        "quasi_uniform",
         "heuristic",
         "cnn",
-        "uniform_heuristic_mix",
-        "uniform_cnn_mix",
+        "quasi_uniform_heuristic_mix",
+        "quasi_uniform_cnn_mix",
         "heuristic_cnn_mix",
         "cnn_perturb_0",
         "cnn_perturb_1",
@@ -104,6 +106,23 @@ def test_invalid_search_config(options):
         SearchConfig(**options)
 
 
+def test_missing_teacher_prior_can_be_generated_for_new_budget(monkeypatch):
+    scene = small_scenes()[0]
+    teacher = {}
+    target_x = np.full(32, 1 / 32)
+    target_y = target_x.copy()
+    monkeypatch.setattr(
+        "fdtdmesh.physics.teacher_sample",
+        lambda *args, **kwargs: ({}, target_x, target_y),
+    )
+    assert _teacher_prior(teacher, scene, (192, 192), 30, generate_missing=False) is None
+    x, y, source = _teacher_prior(teacher, scene, (192, 192), 30, generate_missing=True)
+    np.testing.assert_array_equal(x, target_x)
+    np.testing.assert_array_equal(y, target_y)
+    assert source == "generated_on_demand"
+    assert _teacher_prior(teacher, scene, (192, 192), 30, generate_missing=False)[2] == "cached"
+
+
 def test_physics_target_integrity_and_dataset(tmp_path):
     scenes = small_scenes()
     manifest = tmp_path / "manifest.json"
@@ -135,7 +154,7 @@ def test_physics_target_integrity_and_dataset(tmp_path):
     np.testing.assert_array_equal(tx, x)
     np.testing.assert_array_equal(ty, y)
     dataset = PhysicsDataset(manifest, targets, "validation")
-    assert len(dataset) == 1 and dataset[0]["raster"].shape == (9, 32, 32)
+    assert len(dataset) == 1 and dataset[0]["raster"].shape == (10, 32, 32)
     assert dataset.target_id == metadata["targets_sha256"]
     np.savez_compressed(targets, target_x=2 * x, target_y=y)
     with pytest.raises(ValueError, match="do not match"):

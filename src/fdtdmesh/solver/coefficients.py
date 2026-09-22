@@ -1,9 +1,10 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import numpy as np
 
 from ..constants import C0, EPS0, MU0
 from ..pml import build_cpml
+from .averaging import average_electric
 
 
 @dataclass
@@ -13,11 +14,14 @@ class Coefficients:
     cby: np.ndarray
     chx: np.ndarray
     chy: np.ndarray
+    ahx: np.ndarray
+    ahy: np.ndarray
     pec: np.ndarray
     dt: float
     dt_cfl: float
     cpml: np.ndarray
     current_scale: np.ndarray
+    averaging: dict = field(default_factory=lambda: {"mode": "point"})
 
 
 def build_coefficients(scene, mesh, *, dt=None, safety=0.95, dtype="float32"):
@@ -27,8 +31,20 @@ def build_coefficients(scene, mesh, *, dt=None, safety=0.95, dtype="float32"):
         raise ValueError("CFL safety must lie strictly between zero and one")
     dx, dy = np.diff(mesh.x), np.diff(mesh.y)
     eps, _, sigma, pec = scene.sample(mesh.x, mesh.y)
-    _, muhx, _, _ = scene.sample(mesh.x, (mesh.y[:-1] + mesh.y[1:]) / 2)
-    _, muhy, _, _ = scene.sample((mesh.x[:-1] + mesh.x[1:]) / 2, mesh.y)
+    averaging = {"mode": "point"}
+    if getattr(scene, "material_averaging", "point") == "sampled":
+        eps, sigma, averaging = average_electric(
+            scene,
+            mesh,
+            eps,
+            sigma,
+            pec,
+            samples=scene.averaging_samples,
+            max_samples=scene.averaging_max_samples,
+            tolerance=scene.averaging_tolerance,
+        )
+    _, muhx, _, shx, _ = scene.sample(mesh.x, (mesh.y[:-1] + mesh.y[1:]) / 2, magnetic_loss=True)
+    _, muhy, _, shy, _ = scene.sample((mesh.x[:-1] + mesh.x[1:]) / 2, mesh.y, magnetic_loss=True)
     # Global separate minima also bound heterogeneous epsilon/mu on staggered sites.
     cmax = C0 / np.sqrt(eps.min() * min(muhx.min(), muhy.min()))
     cfl = 1 / (cmax * np.sqrt(dx.min() ** -2 + dy.min() ** -2))
@@ -38,6 +54,8 @@ def build_coefficients(scene, mesh, *, dt=None, safety=0.95, dtype="float32"):
     loss = sigma * timestep / (2 * EPS0 * eps)
     ca = (1 - loss) / (1 + loss)
     cb = timestep / (EPS0 * eps) / (1 + loss)
+    loss_hx = shx * timestep / (2 * MU0 * muhx)
+    loss_hy = shy * timestep / (2 * MU0 * muhy)
     dualx = np.r_[dx[0] / 2, (dx[:-1] + dx[1:]) / 2, dx[-1] / 2]
     dualy = np.r_[dy[0] / 2, (dy[:-1] + dy[1:]) / 2, dy[-1] / 2]
     pec[[0, -1], :] = True
@@ -46,8 +64,10 @@ def build_coefficients(scene, mesh, *, dt=None, safety=0.95, dtype="float32"):
         ca,
         cb / dualx[:, None],
         cb / dualy[None, :],
-        timestep / (MU0 * muhx * dy[None, :]),
-        timestep / (MU0 * muhy * dx[:, None]),
+        timestep / (MU0 * muhx * dy[None, :]) / (1 + loss_hx),
+        timestep / (MU0 * muhy * dx[:, None]) / (1 + loss_hy),
+        (1 - loss_hx) / (1 + loss_hx),
+        (1 - loss_hy) / (1 + loss_hy),
     )
     arrays = [np.ascontiguousarray(a, dtype=dtype) for a in arrays]
     if not all(np.isfinite(a).all() for a in arrays):
@@ -59,4 +79,5 @@ def build_coefficients(scene, mesh, *, dt=None, safety=0.95, dtype="float32"):
         cfl,
         build_cpml(scene, mesh, timestep, dtype),
         np.ascontiguousarray(cb, dtype=dtype),
+        averaging,
     )
