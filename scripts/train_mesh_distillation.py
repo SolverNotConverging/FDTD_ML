@@ -79,6 +79,33 @@ def completed_run_matches(output, provenance):
     )
 
 
+def save_training_state(path, *, provenance, epoch, model, optimizer, generator,
+                        history, best_validation, best_state, best_epoch, stale_epochs,
+                        elapsed_seconds):
+    """Save enough state to resume the next epoch after a worker interruption."""
+    state = {
+        "schema_version": 1,
+        "source_hashes": provenance,
+        "epoch": epoch,
+        "model_state": model.state_dict(),
+        "optimizer_state": optimizer.state_dict(),
+        "sampler_generator_state": generator.get_state(),
+        "python_rng_state": random.getstate(),
+        "numpy_rng_state": np.random.get_state(),
+        "torch_rng_state": torch.get_rng_state(),
+        "cuda_rng_states": torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None,
+        "history": history,
+        "best_validation": best_validation,
+        "best_state": best_state,
+        "best_epoch": best_epoch,
+        "stale_epochs": stale_epochs,
+        "elapsed_seconds": elapsed_seconds,
+    }
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    torch.save(state, temporary)
+    os.replace(temporary, path)
+
+
 def _family(example):
     return "sparse" if example["family"].startswith("sparse") else "simple"
 
@@ -276,7 +303,31 @@ def main():
     best_epoch = None
     stale_epochs = 0
     started = time.time()
-    for epoch in range(1, config["epochs"] + 1):
+    state_path = args.output / "training_state.pt"
+    first_epoch = 1
+    if state_path.is_file():
+        state = torch.load(state_path, map_location="cpu", weights_only=False)
+        if state.get("schema_version") != 1 or state.get("source_hashes") != provenance:
+            raise ValueError(f"Stale or incompatible training state: {state_path}")
+        model.load_state_dict(state["model_state"])
+        optimizer.load_state_dict(state["optimizer_state"])
+        generator.set_state(state["sampler_generator_state"])
+        random.setstate(state["python_rng_state"])
+        np.random.set_state(state["numpy_rng_state"])
+        torch.set_rng_state(state["torch_rng_state"])
+        if state["cuda_rng_states"] is not None:
+            torch.cuda.set_rng_state_all(state["cuda_rng_states"])
+        history = state["history"]
+        best_validation = state["best_validation"]
+        best_state = state["best_state"]
+        best_epoch = state["best_epoch"]
+        stale_epochs = state["stale_epochs"]
+        first_epoch = state["epoch"] + 1
+        if stale_epochs >= config["patience"]:
+            first_epoch = config["epochs"] + 1
+        started -= state["elapsed_seconds"]
+        print(f"resuming training at epoch {first_epoch}: {args.output}", flush=True)
+    for epoch in range(first_epoch, config["epochs"] + 1):
         model.train()
         train_values = []
         optimizer.zero_grad(set_to_none=True)
@@ -315,6 +366,20 @@ def main():
             }
         else:
             stale_epochs += 1
+        save_training_state(
+            state_path,
+            provenance=provenance,
+            epoch=epoch,
+            model=model,
+            optimizer=optimizer,
+            generator=generator,
+            history=history,
+            best_validation=best_validation,
+            best_state=best_state,
+            best_epoch=best_epoch,
+            stale_epochs=stale_epochs,
+            elapsed_seconds=time.time() - started,
+        )
         atomic_json(
             args.output / "progress.json",
             {
