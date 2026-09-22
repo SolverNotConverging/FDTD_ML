@@ -253,6 +253,13 @@ resolution factors, select them using training lineages, and freeze them before
 reevaluating held-out data. The following pool version must also decorrelate radius,
 permittivity, and conductivity before CNN fitting.
 
+The decorrelated successor manifest is now generated as
+`simple_factorial_a88a3d043a935d7a`: 80 geometries in 40 grouped lineages and 832
+conditions. Its training split is a full 4x3x2 material/size/loss product, while
+validation and test use disjoint factor levels and angles. The manifest and its
+split/count invariants are tested. Candidate physics waits for the training-only
+scaled-resolution search to choose a compact frozen policy set.
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong

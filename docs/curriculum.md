@@ -43,6 +43,14 @@ dataset, not CNN training data. The next revision independently varies radius,
 permittivity, and conductivity and searches intermediate nonuniform resolutions
 under each uniform compute cap.
 
+The implemented replacement is `simple_factorial_a88a3d043a935d7a`. It contains
+80 geometries in 40 two-variant lineages. The 48 training geometries cover the full
+Cartesian product of four permittivities, three radii, and two conductivities.
+Validation and test each contain 16 geometries at disjoint factor levels and use
+their own incidence angles. Expanding the pool creates 832 conditions before mesh
+candidates. This pool remains unlabelled until the training-only resolution-factor
+search freezes a compact candidate set.
+
 ## Targets and loss
 
 Save F(theta,f)=A/Eincident as complex128 or paired real/imaginary arrays. Save the

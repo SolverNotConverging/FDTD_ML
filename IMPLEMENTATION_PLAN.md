@@ -276,6 +276,15 @@ reevaluate validation and test. Before CNN training, replace the correlated
 radius/permittivity/conductivity lineage schedule with an independently varied
 simple-scene pool.
 
+That replacement pool is now materialized as
+`simple_factorial_a88a3d043a935d7a`. Its 80 geometries form 40 two-variant grouped
+lineages and 832 illumination/budget conditions. Training is the complete Cartesian
+product epsilon_r={2,4,6,8}, radius={0.05,0.085,0.12} m, and
+sigma_e={0,0.06} S/m. Validation and test use disjoint intermediate and
+extrapolation levels for all three factors and disjoint incidence angles. This
+manifest is the destination for the policies selected by the scaled-resolution
+training search; it is not launched until that search fixes the candidate set.
+
 As stages expand, keep three separately tagged families and report their results separately:
 
 | Family | Initial contents | Controlled difficulty |

@@ -2,8 +2,10 @@
 """Restartable multi-GPU candidate physics and Pareto-label campaign."""
 
 import argparse
+import hashlib
 import importlib.util
 import json
+import subprocess
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -29,6 +31,10 @@ def parse_args():
     parser.add_argument("--shard", type=int, default=0)
     parser.add_argument("--shards", type=int, default=1)
     parser.add_argument("--summarize", action="store_true")
+    parser.add_argument(
+        "--source-revision",
+        help="Git revision used to reconstruct a campaign's launch-time source fingerprint",
+    )
     return parser.parse_args()
 
 
@@ -68,6 +74,43 @@ def load_inputs(manifest_path, campaign_path):
     if not set(campaign["candidate_names"]) <= candidate_map.keys():
         raise ValueError("Campaign contains an unknown mesh candidate")
     return manifest, campaign, geometries, conditions, candidate_map
+
+
+def source_hashes_at_revision(revision):
+    """Reconstruct the broad legacy source fingerprint at a Git revision."""
+    paths = subprocess.check_output(
+        ["git", "ls-tree", "-r", "--name-only", revision, "src/scattermesh"],
+        cwd=ROOT,
+        text=True,
+    ).splitlines()
+    if not paths:
+        raise ValueError(f"No scattermesh sources found at revision {revision}")
+    result = {}
+    for path in sorted(path for path in paths if path.endswith(".py")):
+        content = subprocess.check_output(["git", "show", f"{revision}:{path}"], cwd=ROOT)
+        result[path] = hashlib.sha256(content).hexdigest()
+    result["pilot_mesh_numerical_schema"] = str(PILOT.NUMERICAL_SCHEMA)
+    return result
+
+
+def campaign_source_hashes(output, source_revision=None):
+    """Pin one source fingerprint per output cache and reuse it on every resume."""
+    path = output / "source_hashes.json"
+    if path.exists():
+        payload = json.loads(path.read_text())
+        return payload["hashes"]
+    hashes = (
+        source_hashes_at_revision(source_revision) if source_revision else PILOT.source_hashes()
+    )
+    PILOT.atomic_json(
+        path,
+        {
+            "schema_version": 1,
+            "source_revision": source_revision,
+            "hashes": hashes,
+        },
+    )
+    return hashes
 
 
 def case_definitions(manifest, campaign, geometries, conditions, candidate_map):
@@ -214,6 +257,50 @@ def training_readiness(diversity, campaign_complete):
     )
 
 
+def candidate_scorecard(groups, *, meaningful_improvement=1.05):
+    """Compare each policy family with every affordable uniform update cap."""
+    status_counts = defaultdict(Counter)
+    improvements = defaultdict(list)
+    for rows in groups.values():
+        for row in rows:
+            status_counts[row["config"]["candidate"]][row["status"]] += 1
+        accepted = [row for row in rows if row["accepted"]]
+        uniform = {
+            row["config"].get("target_cells_x", row["config"]["cells"]): row
+            for row in accepted
+            if row["config"]["candidate"] == "uniform"
+        }
+        candidate_names = {
+            row["config"]["candidate"]
+            for row in rows
+            if row["config"]["candidate"] != "uniform"
+        }
+        for baseline in uniform.values():
+            for candidate_name in candidate_names:
+                feasible = [
+                    row
+                    for row in accepted
+                    if row["config"]["candidate"] == candidate_name
+                    and row["cell_updates"] <= baseline["cell_updates"]
+                ]
+                if feasible:
+                    best = min(feasible, key=lambda row: row["joint_scattering_loss"])
+                    improvements[candidate_name].append(
+                        baseline["joint_scattering_loss"] / best["joint_scattering_loss"]
+                    )
+    result = {}
+    for candidate_name in sorted(status_counts):
+        values = improvements[candidate_name]
+        result[candidate_name] = {
+            "status_counts": dict(sorted(status_counts[candidate_name].items())),
+            "affordable_comparisons": len(values),
+            "meaningful_wins": sum(value >= meaningful_improvement for value in values),
+            "median_improvement": float(np.median(values)) if values else None,
+            "maximum_improvement": max(values, default=None),
+        }
+    return result
+
+
 def summarize(cases, output, sources, campaign):
     records = [load_record(config, output, sources, campaign["campaign_id"]) for config in cases]
     groups = defaultdict(list)
@@ -278,6 +365,7 @@ def summarize(cases, output, sources, campaign):
         nonuniform_budget_win_count=sum(value > 1 for value in improvements),
         maximum_improvement=max(improvements, default=1.0),
         label_diversity=diversity,
+        candidate_scorecard=candidate_scorecard(groups),
         training_readiness=training_readiness(diversity, campaign_complete),
         labels_path=str(output / "labels.json"),
     )
@@ -292,7 +380,7 @@ def main():
         raise ValueError("Require 0 <= shard < shards")
     inputs = load_inputs(args.manifest, args.campaign)
     cases = case_definitions(*inputs)
-    sources = PILOT.source_hashes()
+    sources = campaign_source_hashes(args.output, args.source_revision)
     if args.summarize:
         summarize(cases, args.output, sources, inputs[1])
         return

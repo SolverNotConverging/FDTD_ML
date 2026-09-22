@@ -3,6 +3,8 @@ import json
 from collections import Counter
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -81,6 +83,16 @@ def test_candidate_variants_can_use_less_resolution_than_the_target_budget(tmp_p
     assert scaled["base_candidate"] == "region_medium"
 
 
+def test_campaign_source_hashes_are_pinned_across_resumes(tmp_path, monkeypatch):
+    runner = load_runner()
+    monkeypatch.setattr(runner.PILOT, "source_hashes", lambda: {"solver.py": "first"})
+    assert runner.campaign_source_hashes(tmp_path) == {"solver.py": "first"}
+    monkeypatch.setattr(runner.PILOT, "source_hashes", lambda: {"solver.py": "changed"})
+    assert runner.campaign_source_hashes(tmp_path) == {"solver.py": "first"}
+    payload = json.loads((tmp_path / "source_hashes.json").read_text())
+    assert payload["source_revision"] is None
+
+
 def test_label_diversity_and_training_gate_require_split_safe_variation():
     runner = load_runner()
     labels = {
@@ -143,3 +155,37 @@ def test_label_diversity_and_training_gate_require_split_safe_variation():
     readiness = runner.training_readiness(diversity, True)
     assert readiness["decision"] == "not_ready_for_m5"
     assert not readiness["checks"]["train_has_multiple_winning_lineages"]
+
+
+def test_candidate_scorecard_uses_best_affordable_resolution():
+    runner = load_runner()
+
+    def row(candidate, cells, updates, loss, *, accepted=True):
+        return {
+            "accepted": accepted,
+            "status": "accepted" if accepted else "unsettled",
+            "cell_updates": updates,
+            "joint_scattering_loss": loss,
+            "config": {
+                "candidate": candidate,
+                "cells": cells,
+                "target_cells_x": cells,
+            },
+        }
+
+    groups = {
+        "illumination": [
+            row("uniform", 48, 100, 0.20),
+            row("uniform", 64, 200, 0.10),
+            row("region_f90", 48, 90, 0.15),
+            row("region_f90", 64, 180, 0.08),
+            row("region_f80", 48, 80, 0.25),
+            row("region_f80", 64, 160, 0.09),
+            row("region_f80", 32, 50, 0.30, accepted=False),
+        ]
+    }
+    scorecard = runner.candidate_scorecard(groups)
+    assert scorecard["region_f90"]["affordable_comparisons"] == 2
+    assert scorecard["region_f90"]["meaningful_wins"] == 2
+    assert scorecard["region_f90"]["maximum_improvement"] == pytest.approx(4 / 3)
+    assert scorecard["region_f80"]["status_counts"] == {"accepted": 2, "unsettled": 1}
