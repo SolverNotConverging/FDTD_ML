@@ -2,6 +2,7 @@
 """Run the stage-four multi-object pilot after the pair campaign qualifies."""
 
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -13,10 +14,26 @@ from build_sparse_dataset_when_ready import campaign_ready
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def pair_physics_ready(selection_path, dataset_path):
+    if not selection_path.is_file():
+        return False, "waiting for pair-data nine-model physics ranking"
+    if not dataset_path.is_file():
+        return False, "waiting for pair-data training dataset"
+    selection = json.loads(selection_path.read_text())
+    dataset = json.loads(dataset_path.read_text())
+    if (selection.get("selection_split") != "validation"
+            or selection.get("dataset_id") != dataset.get("dataset_id")
+            or len(selection.get("ranked_models", [])) != 9):
+        raise ValueError("Pair physics ranking does not match the verified training dataset")
+    return True, f"pair-data physics ranking complete; selected={selection['selected_model']}"
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pair-config", type=Path, default=ROOT / "configs/sparse_pair_campaign_96.json")
     parser.add_argument("--pair-output", type=Path, default=ROOT / "runs/sparse_pair_campaign_96")
+    parser.add_argument("--pair-dataset", type=Path, default=ROOT / "runs/sparse_joint_dataset_96/dataset.json")
+    parser.add_argument("--pair-selection", type=Path, default=ROOT / "runs/sparse_nine_model_finetune_physics_96/selection.json")
     parser.add_argument("--config", type=Path, default=ROOT / "configs/sparse_cluster_pilot_32.json")
     parser.add_argument("--output", type=Path, default=ROOT / "runs/sparse_cluster_pilot_32")
     parser.add_argument("--devices", nargs="+", default=["cuda:0", "cuda:1", "cuda:2", "cuda:3"])
@@ -33,6 +50,16 @@ def main():
         ready, message = campaign_ready(pair_config, pair_output)
         print(f"Pair campaign: {message}", flush=True)
         if ready or args.check_only:
+            break
+        time.sleep(args.poll_seconds)
+    if args.check_only and not ready:
+        return
+    while True:
+        physics_ready, message = pair_physics_ready(
+            args.pair_selection.resolve(), args.pair_dataset.resolve()
+        )
+        print(message, flush=True)
+        if physics_ready or args.check_only:
             break
         time.sleep(args.poll_seconds)
     if args.check_only:
