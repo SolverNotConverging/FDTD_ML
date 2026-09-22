@@ -114,6 +114,12 @@ This is an executable starting point, not a qualified reference-data service.
 
 ### M1 — broader numerical qualification and PEC
 
+Current evidence: the 31-case PEC-cylinder matrix passes its 128² complex-error,
+phase, tail, analytic-series, and full-time-step checks. Its 1.2 GHz near-to-far
+contour change is 0.521%, narrowly missing the proposed 0.5% gate. This milestone
+therefore remains in progress; see the
+[measured qualification](docs/validation/pec_cylinder_qualification.md).
+
 - Extend the implemented PEC rectangle/cylinder prototype to split-edge thin
   segments and mixed dielectric/PEC scenes; preserve total-field cancellation.
 - Qualify enlargement across location/scale/angle, strong grading, close gaps,

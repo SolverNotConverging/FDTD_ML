@@ -78,6 +78,23 @@ Complex128 far fields and incident spectra are saved in `spectra.npz`;
 copy of the numeric report is in `docs/validation/conformal_pec.json`.
 See [method details and limitations](docs/conformal_pec.md).
 
+### Expanded PEC-cylinder qualification
+
+The restartable 31-case single-cylinder matrix now spans five sizes/positions/
+incidence conditions, 48²–128² enlarged meshes, plain-conformal 64² comparisons,
+and independent duration/PML/contour variations. A second invocation verified and
+reused all per-case caches using source/configuration fingerprints and complex-array
+checks. At 128², worst complex angular L2 was 0.951%, worst phase RMS was 0.509°,
+and all enlarged cases retained the full background time step.
+
+At 64², enlargement needed 2.11–8.22 times fewer updates and produced 2.57–3.33
+times lower joint loss than plain conformal across all five scenes. Duration and PML
+sensitivity are negligible in the tested baseline. Near-to-far contour sensitivity
+at 1.2 GHz is 0.521%, narrowly above the proposed 0.5% gate, so broader M1
+qualification remains open. See the
+[qualification record](docs/validation/pec_cylinder_qualification.md) and local
+`runs/pec_cylinder_qualification/qualification.png`.
+
 ### Dielectric solver foundation
 
 The separate 12-run dielectric check compares uniform/focused meshes at 64²/128²,

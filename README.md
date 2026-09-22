@@ -30,6 +30,8 @@ PYTHONPATH=src OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/scattermesh-mpl \
   .venv/bin/python scripts/qualify_scattering.py
 PYTHONPATH=src OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/scattermesh-mpl \
   .venv/bin/python scripts/pilot_conformal_pec.py
+PYTHONPATH=src OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/scattermesh-mpl \
+  .venv/bin/python scripts/qualify_pec_cylinders.py
 ```
 
 Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and
@@ -38,6 +40,9 @@ not start a dataset/training worker. It compares 64/128 uniform and nonuniform
 meshes at two incidence angles, followed by four sensitivity checks.
 The separate PEC pilot writes `runs/conformal_pec_pilot/` with analytic cylinder
 comparisons, off-grid geometry plots, and very small cut-fraction stability checks.
+The restartable PEC-cylinder matrix writes `runs/pec_cylinder_qualification/` and
+reuses a case only after checking its physics-source/configuration fingerprint and
+saved complex arrays. See the [measured matrix report](docs/validation/pec_cylinder_qualification.md).
 
 For a fresh environment, install this package and the tools:
 
