@@ -281,6 +281,22 @@ uses the same six policies, exact axis budgets, soft Nt exponent 0.1, and adapti
 70/140/560 ns retries. See the
 [exact-budget pilot report](docs/validation/factorial_exact_budget_pilot.md).
 
+M5 implementation has started without waiting for the full campaign to finish.
+The active residual U-Net predicts a 2D importance map and projects it to positive
+x/y density profiles. Inputs explicitly include material channels, signed distance,
+interface proximity, feature size, frequency band, incidence direction, and exact
+Nx/Ny budget. The dataset builder retains all candidate profiles and physics scores,
+rejects partial campaigns, and verifies saved rankings and exact axis counts. The
+deterministic inference projection preserves exact Nx/Ny and repairs grading only
+when needed. See the [mesh distillation contract](docs/mesh_distillation.md).
+
+The 52-label M5 implementation pilot is also complete. Its 532,593-parameter model
+reaches 8.939e-5 validation and 1.036e-4 test profile loss, respectively 20.40x and
+18.11x below a uniform-profile baseline. All held-out axes meet the grading cap
+without repair. These results qualify the checkpoint for the 16-case learned-mesh
+CUDA physics pilot; they do not yet establish scattering improvement. See the
+[distillation pilot report](docs/validation/mesh_distillation_pilot.md).
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong

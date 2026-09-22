@@ -43,13 +43,17 @@ dataset, not CNN training data. The next revision independently varies radius,
 permittivity, and conductivity and searches intermediate nonuniform resolutions
 under each uniform compute cap.
 
-The implemented replacement is `simple_factorial_a88a3d043a935d7a`. It contains
-80 geometries in 40 two-variant lineages. The 48 training geometries cover the full
-Cartesian product of four permittivities, three radii, and two conductivities.
-Validation and test each contain 16 geometries at disjoint factor levels and use
-their own incidence angles. Expanding the pool creates 832 conditions before mesh
-candidates. This pool remains unlabelled until the training-only resolution-factor
-search freezes a compact candidate set.
+The implemented replacement is `simple_factorial_69168792914bfe03`. It contains
+148 geometries in 74 two-variant lineages and expands to 1,552 conditions. The
+low/moderate training tier independently varies four permittivities, three radii,
+and two positive conductivities, with separate epsilon_r={2,4} lossless controls.
+The settling-qualified high-contrast tier reaches epsilon_r=30 with loss tangent
+0.10--0.20. Validation and test use disjoint material levels and incidence angles.
+
+The six exact-axis policies preserve every requested Nx and Ny. They are ranked by
+`joint_scattering_loss * (Nt/Nt_uniform)^0.1`; strict matched-update comparisons
+remain a separate diagnostic. The 312-case pilot passed the label-diversity gate,
+and the full 9,312-case campaign is restartable with 70/140/560 ns duration retries.
 
 ## Targets and loss
 
@@ -80,10 +84,9 @@ sole phase loss. Phase-only diagnostics exclude scattering nulls.
 
 ## Budgets, labels, and splits
 
-- Enforce a computational cap based initially on Nx*Ny*Nt, including PML, alongside
-  requested Nx/Ny. Report wall time and enlargement overhead. Equal cell count
-  alone is not equal compute. Use the same required physical duration for every
-  mesh and reject unsettled or invalid candidates before ranking.
+- Preserve the requested Nx and Ny exactly. Rank with a configurable soft Nt cost,
+  and report raw Nt, cell updates, and wall time separately. Equal cell count alone
+  is not equal compute. Reject unsettled or invalid candidates before ranking.
 - Generate multiple feasible density/mesh candidates per geometry, illumination,
   and budget. Rank using joint accuracy and record the Pareto set. Preserve several
   good meshes rather than declaring one exact coordinate sequence to be truth.
@@ -96,5 +99,3 @@ sole phase loss. Phase-only diagnostics exclude scattering nulls.
 - Compare uniform, wavelength-based, interface-based, solution/error-adaptive, and
   learned meshes with error-versus-update/runtime curves. Report simple, sparse,
   and complex families separately as they become available.
-
-No new training or data-generation campaign is launched by this planning update.

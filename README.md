@@ -10,8 +10,8 @@ near-to-far transformation. Experimental PEC rectangles/circles support cut edge
 and cell enlargement without boundary anchors. Output is 2D scattering width in
 metres. A validated PyTorch CUDA backend now accelerates fine dielectric, PEC-only,
 and separated mixed PEC/dielectric references, including conformal cuts and cell
-enlargement. Contacting mixed interfaces, thin screens, broader reference campaigns,
-and CNN training remain subsequent milestones.
+enlargement. Contacting mixed interfaces, thin screens, broader geometry families,
+and full CNN physics validation remain subsequent milestones.
 
 - [Implementation plan](IMPLEMENTATION_PLAN.md)
 - [Measured progress and limitations](PROGRESS.md)
@@ -19,6 +19,7 @@ and CNN training remain subsequent milestones.
 - [openEMS implementation review](docs/openems_review.md)
 - [Conformal PEC and cell enlargement](docs/conformal_pec.md)
 - [Simple-first training curriculum and joint loss](docs/curriculum.md)
+- [Exact-budget CNN distillation contract](docs/mesh_distillation.md)
 - [High-contrast dielectric reference escalation](docs/validation/dielectric_reference_escalation.md)
 - [CUDA float32 qualification](docs/validation/cuda_precision.md)
 - [Restartable multi-GPU scheduler](docs/validation/multi_gpu_scheduler.md)
@@ -27,6 +28,7 @@ and CNN training remain subsequent milestones.
 - [Low-budget mesh-headroom pilot](docs/validation/mesh_headroom_pilot.md)
 - [Simple dielectric mesh-headroom qualification](docs/validation/dielectric_mesh_headroom.md)
 - [Simple candidate-label pipeline pilot](docs/validation/simple_candidate_pilot.md)
+- [Mesh-distillation pilot](docs/validation/mesh_distillation_pilot.md)
 - [Simple-first curriculum](docs/curriculum.md)
 - [Archived receiver-CNN project](archive/receiver_cnn_2026-09-22/README.md)
 

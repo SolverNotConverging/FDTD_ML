@@ -5,6 +5,13 @@ from .curriculum import (
     simple_candidate_tasks,
     simple_dielectric_pool,
 )
+from .distillation import (
+    axis_probability,
+    build_distillation_dataset,
+    conditioning_features,
+    probability_axis,
+    rasterize_circle,
+)
 from .geometry import PEC, Circle, Material, Rectangle
 from .grid import Grid, focused_axis
 from .meshing import circular_interface_axes, density_axis
@@ -24,6 +31,11 @@ __all__ = [
     "simple_dielectric_pool",
     "factorial_simple_dielectric_pool",
     "simple_candidate_tasks",
+    "axis_probability",
+    "probability_axis",
+    "rasterize_circle",
+    "conditioning_features",
+    "build_distillation_dataset",
     "PlaneWave",
     "SimulationResult",
     "simulate",

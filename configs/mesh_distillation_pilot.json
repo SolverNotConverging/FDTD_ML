@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "seed": 20260922,
+  "epochs": 240,
+  "patience": 48,
+  "report_every": 10,
+  "batch_size": 8,
+  "base_channels": 16,
+  "learning_rate": 0.0003,
+  "weight_decay": 0.0001,
+  "gradient_clip_norm": 1.0,
+  "max_grading_ratio": 3.0
+}
