@@ -48,4 +48,6 @@ soft-Nt score with both uniform and the best searched teacher candidate. Only th
 physics evaluation can promote the model beyond the M5 pilot.
 
 The first profile-learning result is recorded in the
-[mesh-distillation pilot report](validation/mesh_distillation_pilot.md).
+[mesh-distillation pilot report](validation/mesh_distillation_pilot.md), and its
+held-out CUDA result is in the
+[learned-mesh physics pilot](validation/learned_mesh_physics_pilot.md).

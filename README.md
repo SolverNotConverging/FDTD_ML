@@ -29,6 +29,7 @@ and full CNN physics validation remain subsequent milestones.
 - [Simple dielectric mesh-headroom qualification](docs/validation/dielectric_mesh_headroom.md)
 - [Simple candidate-label pipeline pilot](docs/validation/simple_candidate_pilot.md)
 - [Mesh-distillation pilot](docs/validation/mesh_distillation_pilot.md)
+- [Learned-mesh physics pilot](docs/validation/learned_mesh_physics_pilot.md)
 - [Simple-first curriculum](docs/curriculum.md)
 - [Archived receiver-CNN project](archive/receiver_cnn_2026-09-22/README.md)
 

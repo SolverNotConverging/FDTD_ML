@@ -258,14 +258,23 @@ def summarize(cases, output, candidate_output, exponent):
             "median_score_ratio_to_teacher": float(np.median(teacher_ratios)),
             "maximum_score_ratio_to_teacher": max(teacher_ratios),
         }
+    checks = {
+        "all_cases_settled": all(row["accepted"] for row in rows),
+        "each_split_has_75_percent_meaningful_wins": all(
+            value["meaningful_uniform_wins"] >= 0.75 * value["case_count"]
+            for value in splits.values()
+        ),
+        "each_split_median_improvement_exceeds_1_2": all(
+            value["median_improvement_over_uniform"] > 1.2 for value in splits.values()
+        ),
+        "each_split_median_teacher_gap_below_1_5": all(
+            value["median_score_ratio_to_teacher"] < 1.5 for value in splits.values()
+        ),
+    }
     report = {
         "schema_version": 1,
-        "decision": (
-            "passes_physics_pilot"
-            if all(row["accepted"] for row in rows)
-            and all(value["median_improvement_over_uniform"] > 1 for value in splits.values())
-            else "does_not_pass_physics_pilot"
-        ),
+        "decision": "passes_physics_pilot" if all(checks.values()) else "does_not_pass_physics_pilot",
+        "checks": checks,
         "case_count": len(rows),
         "status_counts": dict(sorted(Counter("accepted" if r["accepted"] else "unsettled" for r in rows).items())),
         "ranking": {"mode": "fixed_axis_soft_nt", "nt_cost_exponent": exponent},

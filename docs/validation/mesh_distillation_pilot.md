@@ -24,3 +24,5 @@ within the 3.0 adjacent-cell grading cap. These are distillation metrics, not
 scattering results. The checkpoint is promoted only to the learned-mesh physics
 pilot, which reruns all 16 held-out condition/budget pairs through CUDA FDTD and
 compares their complex far-field plus RCS score with uniform and searched teachers.
+That physics pilot subsequently passed; see the
+[learned-mesh physics report](learned_mesh_physics_pilot.md).

@@ -297,6 +297,14 @@ without repair. These results qualify the checkpoint for the 16-case learned-mes
 CUDA physics pilot; they do not yet establish scattering improvement. See the
 [distillation pilot report](docs/validation/mesh_distillation_pilot.md).
 
+The learned-mesh CUDA physics pilot is now complete. All 16 validation/test meshes
+settled at 70 ns. Validation records 7/8 meaningful wins over uniform with 3.135x
+median improvement, and test records 8/8 with 2.641x median improvement. Median
+soft-Nt score gaps to the searched teacher are 1.356x and 1.259x. One validation
+48x48 case is worse than uniform and remains an explicit full-training regression
+target. The diagnostic physics gate passes. See the
+[learned-mesh physics report](docs/validation/learned_mesh_physics_pilot.md).
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong
@@ -308,7 +316,7 @@ CUDA physics pilot; they do not yet establish scattering improvement. See the
    the new scene schema. Extend mixed coupling to declared contact/overlap priority
    only after deriving its operator. NF2FF is currently a post-step host calculation.
    Float32 is accurate but has no throughput benefit here, so retain float64.
-4. Build the first 32--64-geometry simple dielectric pool with grouped lineage
-   splits, multiple illumination/budget conditions, and multiple retained Pareto
-   candidates. Keep PEC controls and dense uniform baselines. Expand to sparse and
-   complex families only after this label pipeline is verified.
+4. Finish and validate the 9,312-case exact-budget campaign, build its immutable
+   set-valued training artifact, train the full simple-family checkpoint, and rerun
+   frozen validation/test physics. Expand to sparse and complex families only after
+   this full simple-family gate passes.
