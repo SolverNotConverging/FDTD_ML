@@ -29,7 +29,17 @@ def sha256_file(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def source_hashes(dataset, config):
+def load_initial_weights(model, path, *, model_kwargs, input_schema):
+    """Warm-start only a checkpoint with identical physical inputs and architecture."""
+    initial = torch.load(path, map_location="cpu", weights_only=False)
+    if initial.get("model") != "AxisDensityUNet" or initial.get("model_kwargs") != model_kwargs:
+        raise ValueError("Initial checkpoint architecture does not match training config")
+    if initial.get("config", {}).get("input_schema", "circle_v1") != input_schema:
+        raise ValueError("Initial checkpoint input schema does not match training config")
+    model.load_state_dict(initial["model_state"])
+
+
+def source_hashes(dataset, config, initial_checkpoint=None):
     root = Path(__file__).resolve().parents[1]
     dataset = Path(dataset)
     metadata = json.loads(dataset.read_text())
@@ -42,6 +52,8 @@ def source_hashes(dataset, config):
     hashes["dataset"] = sha256_file(dataset)
     hashes["dataset_arrays"] = sha256_file(arrays)
     hashes["config"] = sha256_file(config)
+    if initial_checkpoint is not None:
+        hashes["initial_checkpoint"] = sha256_file(initial_checkpoint)
     return hashes
 
 
@@ -217,9 +229,10 @@ def main():
     parser.add_argument("--config", type=Path, default=Path("configs/mesh_distillation_pilot.json"))
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--device", default="cuda:0")
+    parser.add_argument("--init-checkpoint", type=Path)
     args = parser.parse_args()
     config = json.loads(args.config.read_text())
-    provenance = source_hashes(args.dataset, args.config)
+    provenance = source_hashes(args.dataset, args.config, args.init_checkpoint)
     _training_lock = acquire_training_lock(args.output)
     if completed_run_matches(args.output, provenance):
         print(f"matching completed training run already exists: {args.output}", flush=True)
@@ -239,6 +252,7 @@ def main():
             "config_path": str(args.config),
             "config": config,
             "device": str(device),
+            "initial_checkpoint": str(args.init_checkpoint) if args.init_checkpoint else None,
             "source_hashes": provenance,
         },
     )
@@ -288,10 +302,13 @@ def main():
     test_loader = DataLoader(test, batch_size=micro_batch, num_workers=0)
     uniform_validation_loss = evaluate_uniform(validation_loader, device, family_weights)
     uniform_test_loss = evaluate_uniform(test_loader, device, family_weights)
+    model_kwargs = {
+        "input_channels": 7 if input_schema == "sparse_v2" else 5,
+        "conditioning_size": 15 if input_schema == "sparse_v2" else 10,
+        "base_channels": config["base_channels"],
+    }
     model = AxisDensityUNet(
-        input_channels=7 if input_schema == "sparse_v2" else 5,
-        conditioning_size=15 if input_schema == "sparse_v2" else 10,
-        base_channels=config["base_channels"],
+        **model_kwargs,
     ).to(device)
     optimizer = torch.optim.AdamW(
         model.parameters(), lr=config["learning_rate"], weight_decay=config["weight_decay"]
@@ -327,6 +344,11 @@ def main():
             first_epoch = config["epochs"] + 1
         started -= state["elapsed_seconds"]
         print(f"resuming training at epoch {first_epoch}: {args.output}", flush=True)
+    elif args.init_checkpoint is not None:
+        load_initial_weights(
+            model, args.init_checkpoint, model_kwargs=model_kwargs, input_schema=input_schema
+        )
+        print(f"initialized model from {args.init_checkpoint}", flush=True)
     for epoch in range(first_epoch, config["epochs"] + 1):
         model.train()
         train_values = []
@@ -408,15 +430,12 @@ def main():
     checkpoint = {
         "schema_version": 1,
         "model": "AxisDensityUNet",
-        "model_kwargs": {
-            "input_channels": 7 if input_schema == "sparse_v2" else 5,
-            "conditioning_size": 15 if input_schema == "sparse_v2" else 10,
-            "base_channels": config["base_channels"],
-        },
+        "model_kwargs": model_kwargs,
         "model_state": best_state,
         "dataset": str(args.dataset),
         "config": config,
         "source_hashes": provenance,
+        "initial_checkpoint": str(args.init_checkpoint) if args.init_checkpoint else None,
         "best_epoch": best_epoch,
         "best_validation_loss": best_validation,
         "test_loss": test_loss,
@@ -444,6 +463,7 @@ def main():
         "best_validation_loss": best_validation,
         "test_loss": test_loss,
         "source_hashes": provenance,
+        "initial_checkpoint": str(args.init_checkpoint) if args.init_checkpoint else None,
         "checkpoint_sha256": checkpoint_sha256,
         "predicted_meshes_sha256": sha256_file(predicted_meshes_path),
         "uniform_validation_loss": uniform_validation_loss,
