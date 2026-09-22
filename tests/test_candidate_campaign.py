@@ -44,3 +44,67 @@ def test_full_campaign_covers_the_entire_manifest():
     assert {case["condition_id"] for case in cases} == {
         condition["task_id"] for condition in manifest["conditions"]
     }
+
+
+def test_label_diversity_and_training_gate_require_split_safe_variation():
+    runner = load_runner()
+    labels = {
+        "train_a": {
+            "split": "train",
+            "lineage_id": "lineage_a",
+            "budgets": {
+                "32": {
+                    "uniform_case": "u1",
+                    "best_case": "a1",
+                    "best_candidate": "region_medium",
+                    "improvement": 1.2,
+                }
+            },
+        },
+        "train_b": {
+            "split": "train",
+            "lineage_id": "lineage_b",
+            "budgets": {
+                "48": {
+                    "uniform_case": "u2",
+                    "best_case": "b1",
+                    "best_candidate": "hybrid_wide",
+                    "improvement": 1.1,
+                }
+            },
+        },
+        "validation": {
+            "split": "validation",
+            "lineage_id": "lineage_v",
+            "budgets": {
+                "32": {
+                    "uniform_case": "u3",
+                    "best_case": "v1",
+                    "best_candidate": "region_medium",
+                    "improvement": 1.06,
+                }
+            },
+        },
+        "test": {
+            "split": "test",
+            "lineage_id": "lineage_t",
+            "budgets": {
+                "32": {
+                    "uniform_case": "u4",
+                    "best_case": "t1",
+                    "best_candidate": "region_medium",
+                    "improvement": 1.07,
+                }
+            },
+        },
+    }
+    diversity = runner.label_diversity(labels)
+    assert diversity["train"]["meaningful_nonuniform_wins"] == 2
+    assert diversity["train"]["winning_budgets"] == {"32": 1, "48": 1}
+    assert runner.training_readiness(diversity, True)["decision"] == "ready_for_m5_pilot"
+
+    labels["train_b"]["budgets"]["48"]["improvement"] = 1.01
+    diversity = runner.label_diversity(labels)
+    readiness = runner.training_readiness(diversity, True)
+    assert readiness["decision"] == "not_ready_for_m5"
+    assert not readiness["checks"]["train_has_multiple_winning_lineages"]

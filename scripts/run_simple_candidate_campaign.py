@@ -126,6 +126,64 @@ def load_record(config, output, sources, campaign_id):
     return record
 
 
+def label_diversity(labels, *, meaningful_improvement=1.05):
+    """Summarize whether Pareto labels contain learnable, split-safe variation."""
+    by_split = defaultdict(list)
+    for illumination_id, label in labels.items():
+        by_split[label["split"]].append((illumination_id, label))
+
+    result = {}
+    for split, groups in sorted(by_split.items()):
+        winners = []
+        for illumination_id, label in groups:
+            for budget, row in label["budgets"].items():
+                if (
+                    row["best_case"] != row["uniform_case"]
+                    and row["improvement"] >= meaningful_improvement
+                ):
+                    winners.append(
+                        dict(
+                            illumination_id=illumination_id,
+                            lineage_id=label["lineage_id"],
+                            budget=int(budget),
+                            candidate=row["best_candidate"],
+                            improvement=row["improvement"],
+                        )
+                    )
+        improvements = sorted(row["improvement"] for row in winners)
+        result[split] = dict(
+            illumination_groups=len(groups),
+            budget_labels=sum(len(label["budgets"]) for _, label in groups),
+            meaningful_nonuniform_wins=len(winners),
+            winning_lineages=sorted({row["lineage_id"] for row in winners}),
+            winning_candidates=dict(sorted(Counter(row["candidate"] for row in winners).items())),
+            winning_budgets=dict(sorted(Counter(str(row["budget"]) for row in winners).items())),
+            median_improvement=(float(np.median(improvements)) if improvements else 1.0),
+            maximum_improvement=max(improvements, default=1.0),
+        )
+    return result
+
+
+def training_readiness(diversity, campaign_complete):
+    """Apply the conservative pre-M5 label gate documented in the full report."""
+    train = diversity.get("train", {})
+    validation = diversity.get("validation", {})
+    test = diversity.get("test", {})
+    checks = dict(
+        campaign_complete=campaign_complete,
+        train_has_multiple_winning_lineages=len(train.get("winning_lineages", ())) >= 2,
+        train_has_multiple_winning_candidates=len(train.get("winning_candidates", {})) >= 2,
+        train_has_multiple_winning_budgets=len(train.get("winning_budgets", {})) >= 2,
+        validation_has_headroom=validation.get("meaningful_nonuniform_wins", 0) >= 1,
+        test_has_headroom=test.get("meaningful_nonuniform_wins", 0) >= 1,
+    )
+    return dict(
+        decision="ready_for_m5_pilot" if all(checks.values()) else "not_ready_for_m5",
+        meaningful_improvement_threshold=1.05,
+        checks=checks,
+    )
+
+
 def summarize(cases, output, sources, campaign):
     records = [load_record(config, output, sources, campaign["campaign_id"]) for config in cases]
     groups = defaultdict(list)
@@ -151,6 +209,8 @@ def summarize(cases, output, sources, campaign):
                 uniform_case=baseline["case_id"],
                 uniform_loss=baseline["joint_scattering_loss"],
                 best_case=best["case_id"],
+                best_candidate=best["config"]["candidate"],
+                best_updates=best["cell_updates"],
                 best_loss=best["joint_scattering_loss"],
                 improvement=baseline["joint_scattering_loss"] / best["joint_scattering_loss"],
             )
@@ -167,20 +227,24 @@ def summarize(cases, output, sources, campaign):
     improvements = [
         budget["improvement"] for label in labels.values() for budget in label["budgets"].values()
     ]
+    diversity = label_diversity(labels)
+    campaign_complete = not invalid_groups
     report = dict(
-        schema_version=1,
+        schema_version=2,
         dataset_id=cases[0]["dataset_id"],
         campaign_id=campaign["campaign_id"],
-        decision="accepted" if not invalid_groups else "incomplete_uniform_baselines",
+        decision="accepted" if campaign_complete else "incomplete_uniform_baselines",
         case_count=len(records),
         status_counts=dict(sorted(statuses.items())),
         illumination_group_count=len(groups),
         invalid_uniform_groups=invalid_groups,
         nonuniform_budget_win_count=sum(value > 1 for value in improvements),
         maximum_improvement=max(improvements, default=1.0),
+        label_diversity=diversity,
+        training_readiness=training_readiness(diversity, campaign_complete),
         labels_path=str(output / "labels.json"),
     )
-    PILOT.atomic_json(output / "labels.json", dict(schema_version=1, groups=labels))
+    PILOT.atomic_json(output / "labels.json", dict(schema_version=2, groups=labels))
     PILOT.atomic_json(output / "report.json", report)
     print(json.dumps(report, indent=2))
 
