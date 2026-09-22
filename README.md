@@ -8,8 +8,9 @@ The current implementation is an independent **NumPy CPU reference solver** for
 conductivity, oblique broadband illumination, CPML, streaming surface DFT, and
 near-to-far transformation. Experimental PEC rectangles/circles support cut edges
 and cell enlargement without boundary anchors. Output is 2D scattering width in
-metres. CUDA, mixed PEC/dielectric scenes, thin screens, reference campaigns, and
-CNN training are subsequent milestones.
+metres. A validated PyTorch CUDA backend now accelerates fine dielectric references.
+CUDA PEC, mixed PEC/dielectric scenes, thin screens, reference campaigns, and CNN
+training remain subsequent milestones.
 
 - [Implementation plan](IMPLEMENTATION_PLAN.md)
 - [Measured progress and limitations](PROGRESS.md)
@@ -34,6 +35,8 @@ PYTHONPATH=src OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/scattermesh-mpl \
   .venv/bin/python scripts/qualify_pec_cylinders.py
 PYTHONPATH=src OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/scattermesh-mpl \
   .venv/bin/python scripts/qualify_dielectric_cylinders.py
+PYTHONPATH=src OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/scattermesh-mpl \
+  .venv/bin/python scripts/benchmark_cuda.py
 ```
 
 Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and
@@ -47,11 +50,15 @@ reuses a case only after checking its physics-source/configuration fingerprint a
 saved complex arrays. See the [measured matrix report](docs/validation/pec_cylinder_qualification.md).
 The matching [dielectric qualification](docs/validation/dielectric_cylinder_qualification.md)
 starts with epsilon_r<=4 and records epsilon_r=12/30 as deferred contrast stages.
+The [CUDA foundation](docs/validation/cuda_foundation.md) accelerates fine dielectric
+references and preserves the complex fields/DFTs to float64 roundoff.
 
 For a fresh environment, install this package and the tools:
 
 ```bash
 python -m pip install -e . pytest matplotlib
+# Optional; choose a Torch build compatible with the host NVIDIA driver.
+python -m pip install -e '.[cuda]'
 ```
 
 ## Example

@@ -27,7 +27,7 @@ The independent `scattermesh` package now includes:
 
 ## Verification
 
-`OPENBLAS_NUM_THREADS=1 .venv/bin/python -m pytest -q`: **26 passed**.
+`OPENBLAS_NUM_THREADS=1 .venv/bin/python -m pytest -q`: **28 passed, 1 CUDA-visibility skip**.
 Ruff checks and formatting pass. Tests include an analytic outgoing Hankel field
 for NF2FF phase/normalization; lossless/lossy cylinders; nonempty dielectric ratio-2.8
 grading; PEC scattering; roundoff versus physical cuts; projected mass/stiffness
@@ -130,6 +130,18 @@ cells per shortest internal wavelength. The lossless cases show 30.8% and 63.5%
 complex error with persistent resonant tails. This directly supports keeping feature
 size/material wavelength in the model inputs and using automatic mesh/time escalation.
 See the [dielectric qualification](docs/validation/dielectric_cylinder_qualification.md).
+
+### CUDA dielectric backend
+
+The first M2 backend now runs dielectric nonuniform Yee/CPML updates, analytic
+plane-wave forcing, and stagger-aware streaming complex DFTs on a Torch device.
+Float64 CUDA agrees with NumPy final fields and far fields to below 5e-15 in the
+bounded real-GPU test. At 512² and 2,010 steps, one TITAN RTX completes the benchmark
+in 4.79 s versus 34.65 s for NumPy, a 7.23x speedup. At 128² CUDA startup/launch
+overhead still makes it slower. See the [CUDA validation](docs/validation/cuda_foundation.md).
+
+PEC CUDA updates, float32 qualification, multi-GPU scene scheduling, and production
+reference escalation remain open.
 
 ## Joint loss and initial training curriculum
 

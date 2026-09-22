@@ -152,6 +152,13 @@ not exterior free-space resolution alone.
 
 ### M2 — CUDA solver and observables
 
+Foundation implemented: a PyTorch float64 backend now covers dielectric updates,
+CPML, analytic source evaluation, and streaming complex DFT on one GPU. It matches
+NumPy to roundoff and is 7.23x faster at 512² in the bounded throughput benchmark.
+Small 128² runs remain launch-overhead dominated. See the
+[measured CUDA foundation](docs/validation/cuda_foundation.md). The remaining items
+below are still required before M2 is complete.
+
 - Port validated update equations and coefficient construction without importing
   legacy experiment policy. Keep fields, CPML state, source evaluation, and DFT on GPU.
 - Implement fused/batched surface DFT kernels; use phase recurrence with bounded

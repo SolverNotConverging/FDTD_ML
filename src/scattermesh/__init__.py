@@ -3,6 +3,7 @@
 from .geometry import PEC, Circle, Material, Rectangle
 from .grid import Grid, focused_axis
 from .solver import SimulationResult, simulate
+from .solver_cuda import simulate_cuda
 from .source import PlaneWave
 
 __all__ = [
@@ -15,4 +16,5 @@ __all__ = [
     "PlaneWave",
     "SimulationResult",
     "simulate",
+    "simulate_cuda",
 ]
