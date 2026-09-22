@@ -140,6 +140,15 @@ geometry while retaining pair and analytic-control coverage. The preceding pair
 fine-tune keeps its 70% sparse / 30% simple setting.
 The multi-object dataset merge backfills scene-family and PEC-circle counts on
 earlier sparse examples; historical pair controls are grouped as `legacy_pair`.
+The CPU-only cut-cell preflight in `scripts/preflight_sparse_cutcell_budget.py`
+checked all 1,104 planned multi-object meshes, including both circular-PEC
+families. All meshes and NF2FF monitors construct, and every 70 ns base run and
+140 ns retry fits the solver's 200,000-step cap. Forty-eight potential 560 ns
+retries exceed the cap, including 26 of 32 circular-PEC references. This is a
+time-step feasibility check, not evidence that any scene has settled. Keep the
+reference settling gate unchanged: if a circular-PEC reference needs a capped
+third retry, review that scene before it enters training. The per-case counts
+and source hashes are in `runs/sparse_cluster_pilot_32/cutcell_preflight.json`.
 Rank each nine-model physics grid with `scripts/rank_sparse_model_grid.py` on
 validation cases at exact 32/48 budgets: maximize accepted-case coverage, then
 the equal-family geometric mean improvement over uniform, breaking ties by smaller
