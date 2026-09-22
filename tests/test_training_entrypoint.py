@@ -33,3 +33,20 @@ def test_training_lock_can_be_acquired_and_released(tmp_path):
         assert handle.closed is False
     finally:
         handle.close()
+
+
+def test_training_provenance_hashes_target_arrays(tmp_path):
+    trainer = load_trainer()
+    arrays = tmp_path / "targets.npz"
+    arrays.write_bytes(b"first target tensor")
+    dataset = tmp_path / "dataset.json"
+    dataset.write_text(json.dumps({"arrays": arrays.name}))
+    config = tmp_path / "config.json"
+    config.write_text("{}")
+
+    before = trainer.source_hashes(dataset, config)
+    arrays.write_bytes(b"changed target tensor")
+    after = trainer.source_hashes(dataset, config)
+
+    assert before["dataset"] == after["dataset"]
+    assert before["dataset_arrays"] != after["dataset_arrays"]

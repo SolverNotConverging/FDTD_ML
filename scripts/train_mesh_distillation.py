@@ -31,12 +31,16 @@ def sha256_file(path):
 
 def source_hashes(dataset, config):
     root = Path(__file__).resolve().parents[1]
+    dataset = Path(dataset)
+    metadata = json.loads(dataset.read_text())
+    arrays = dataset.parent / metadata["arrays"]
     hashes = {
         str(path.relative_to(root)): sha256_file(path)
         for path in sorted((root / "src/scattermesh").glob("*.py"))
     }
     hashes[str(Path(__file__).resolve().relative_to(root))] = sha256_file(__file__)
     hashes["dataset"] = sha256_file(dataset)
+    hashes["dataset_arrays"] = sha256_file(arrays)
     hashes["config"] = sha256_file(config)
     return hashes
 
