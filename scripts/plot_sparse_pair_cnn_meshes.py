@@ -120,7 +120,7 @@ def _mesh(example, model, resolution, cells):
     return x, y, x_repair, y_repair
 
 
-def _draw_case(axis, example, x, y, label, budget):
+def _draw_case(axis, example, x, y, budget, view):
     for obj in example["objects"]:
         material = obj["material"]
         if material.get("kind") == "pec":
@@ -155,10 +155,13 @@ def _draw_case(axis, example, x, y, label, budget):
     right = max(bounds[1] for bounds in extent)
     bottom = min(bounds[2] for bounds in extent)
     top = max(bounds[3] for bounds in extent)
-    span = max(right - left, top - bottom)
-    margin = max(0.055, 0.55 * span)
-    xmin, xmax = max(0.0, left - margin), min(1.2, right + margin)
-    ymin, ymax = max(0.0, bottom - margin), min(1.2, top + margin)
+    if view == "full":
+        xmin, xmax, ymin, ymax = 0.0, 1.2, 0.0, 1.2
+    else:
+        span = max(right - left, top - bottom)
+        margin = max(0.055, 0.55 * span)
+        xmin, xmax = max(0.0, left - margin), min(1.2, right + margin)
+        ymin, ymax = max(0.0, bottom - margin), min(1.2, top + margin)
     axis.vlines(x, ymin, ymax, color="#2457a7", linewidth=0.53, alpha=0.68, zorder=3)
     axis.hlines(y, xmin, xmax, color="#b43c35", linewidth=0.53, alpha=0.68, zorder=3)
     axis.set(xlim=(xmin, xmax), ylim=(ymin, ymax), aspect="equal")
@@ -166,7 +169,11 @@ def _draw_case(axis, example, x, y, label, budget):
     axis.set_yticks(np.linspace(ymin, ymax, 3), labels=[f"{v:.2f}" for v in np.linspace(ymin, ymax, 3)])
     axis.tick_params(labelsize=6, length=2)
     axis.grid(color="#cbd5e1", linewidth=0.35, alpha=0.7, zorder=1)
-    axis.set_title(f"{budget} × {budget} cells", fontsize=8, pad=3)
+    minimum_ratio = budget * min(np.diff(x).min(), np.diff(y).min()) / 1.2
+    axis.set_title(
+        f"{budget} × {budget} cells\nmin Δ / uniform Δ = {minimum_ratio:.2f}",
+        fontsize=8, pad=3,
+    )
     for spine in axis.spines.values():
         spine.set_color("#94a3b8")
 
@@ -188,6 +195,7 @@ def main():
         default=ROOT / "runs/sparse_pair_mesh_gallery/cnn_two_object_meshes.png",
     )
     parser.add_argument("--budgets", type=int, nargs="+", default=[32, 48, 64])
+    parser.add_argument("--view", choices=("local", "full"), default="local")
     args = parser.parse_args()
 
     checkpoint = torch.load(args.checkpoint, map_location="cpu", weights_only=False)
@@ -208,7 +216,7 @@ def main():
                 x, y, x_repair, y_repair = _mesh(
                     example, model, checkpoint["config"]["raster_resolution"], budget
                 )
-                _draw_case(axes[row, column], example, x, y, case["label"], budget)
+                _draw_case(axes[row, column], example, x, y, budget, args.view)
                 if column == 0:
                     axes[row, column].set_ylabel("y (m)", fontsize=8)
                 if row == len(args.budgets) - 1:
@@ -230,10 +238,13 @@ def main():
                 0.5, 1.31, case["label"], transform=axes[0, column].transAxes,
                 ha="center", va="bottom", fontsize=9, weight="bold", wrap=True,
             )
+    view_note = (
+        "Complete 1.2 m domain" if args.view == "full" else
+        "Local views; each mesh uses the stated exact full-domain budget"
+    )
     figure.suptitle(
         "Two-object meshes predicted by the pair-fine-tuned CNN\n"
-        "Local views; each mesh uses the stated exact full-domain budget. "
-        "Blue: x lines; red: y lines.",
+        f"{view_note}. Blue: x lines; red: y lines.",
         fontsize=12,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -251,6 +262,7 @@ def main():
         ).get("status"),
         "dataset_id": dataset.get("dataset_id"),
         "budgets": args.budgets,
+        "view": args.view,
         "description": "Pair-CNN two-object mesh examples; circular PEC panel is an unseen-family probe.",
         "cases": rows,
     }
