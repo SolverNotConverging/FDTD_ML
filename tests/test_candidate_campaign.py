@@ -3,6 +3,7 @@ import json
 from collections import Counter
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -226,6 +227,8 @@ def test_factorial_exact_pilot_covers_extremes_and_all_splits():
     assert {case["candidate"] for case in cases} == set(campaign["candidate_names"])
     assert all(case["cells"] in {32, 48, 64, 96} for case in cases)
     assert all("candidate_cell_factor" not in case for case in cases)
+    assert all(case["duration"] == 70e-9 for case in cases)
+    assert all(case["duration_schedule_s"] == [70e-9, 140e-9, 560e-9] for case in cases)
     assert campaign["ranking"] == {
         "mode": "fixed_axis_soft_nt",
         "nt_cost_exponent": 0.1,
@@ -265,3 +268,64 @@ def test_fixed_axis_ranking_uses_soft_nt_penalty():
     )
     assert [row["config"]["candidate"] for row, _ in ranked] == ["uniform", "region_medium"]
     assert ranked[1][1] == pytest.approx(0.1 * 1.6**0.1)
+
+
+def test_duration_attempts_preserve_logical_case_and_increase_time():
+    runner = load_runner()
+    config = {
+        "case_id": "logical_case",
+        "duration": 70e-9,
+        "duration_schedule_s": [70e-9, 140e-9, 560e-9],
+    }
+    attempts = runner.duration_attempt_configs(config)
+    assert [row["duration"] for row in attempts] == [70e-9, 140e-9, 560e-9]
+    assert [row["duration_attempt_index"] for row in attempts] == [0, 1, 2]
+    assert {row["case_id"] for row in attempts} == {"logical_case"}
+
+
+def test_duration_schedule_archives_unsettled_attempt_and_resumes(tmp_path, monkeypatch):
+    runner = load_runner()
+    config = {
+        "case_id": "logical_case",
+        "duration": 70e-9,
+        "duration_schedule_s": [70e-9, 140e-9, 560e-9],
+    }
+    sources = {"solver.py": "hash"}
+    calls = []
+
+    def fake_run_case(attempt, output, device, source_hashes):
+        calls.append(attempt["duration"])
+        accepted = attempt["duration_attempt_index"] == 1
+        record = {
+            "case_id": attempt["case_id"],
+            "fingerprint": runner.PILOT.sha256_json(
+                {"config": attempt, "sources": source_hashes}
+            ),
+            "config": attempt,
+            "backend": "torch_cuda",
+            "accepted": accepted,
+            "status": "accepted" if accepted else "unsettled",
+        }
+        directory = output / "cases" / attempt["case_id"]
+        runner.PILOT.atomic_json(directory / "record.json", record)
+        runner.PILOT.atomic_npz(
+            directory / "spectra.npz",
+            complex_far_field=np.ones((3, 180), dtype=np.complex128),
+            analytic_complex_far_field=np.ones((3, 180), dtype=np.complex128),
+        )
+        return record, False
+
+    monkeypatch.setattr(runner.PILOT, "run_case", fake_run_case)
+    record, cached = runner.run_campaign_case(config, tmp_path, "cuda:0", sources)
+    assert not cached
+    assert record["accepted"]
+    assert record["config"]["duration"] == 140e-9
+    assert calls == [70e-9, 140e-9]
+    archived = tmp_path / "attempts" / "logical_case" / "attempt_00"
+    assert (archived / "record.json").exists()
+    assert (archived / "spectra.npz").exists()
+
+    resumed, cached = runner.run_campaign_case(config, tmp_path, "cuda:0", sources)
+    assert cached
+    assert resumed == record
+    assert calls == [70e-9, 140e-9]

@@ -277,13 +277,15 @@ radius/permittivity/conductivity lineage schedule with an independently varied
 simple-scene pool.
 
 That replacement pool is now materialized as
-`simple_factorial_a88a3d043a935d7a`. Its 80 geometries form 40 two-variant grouped
-lineages and 832 illumination/budget conditions. Training is the complete Cartesian
-product epsilon_r={2,4,6,8}, radius={0.05,0.085,0.12} m, and
-sigma_e={0,0.06} S/m. Validation and test use disjoint intermediate and
-extrapolation levels for all three factors and disjoint incidence angles. This
-manifest is the destination for the policies selected by the scaled-resolution
-training search; it is not launched until that search fixes the candidate set.
+`simple_factorial_69168792914bfe03`. Its 148 geometries form 74 two-variant grouped
+lineages and 1,552 illumination/budget conditions. Low and moderate contrasts use
+an independent Cartesian product over epsilon_r={2,4,6,8}, three radii, and two
+conductivities, plus lossless epsilon_r={2,4} controls. A controlled sweep showed
+that all tested epsilon_r=10,20,30 cases with loss tangent >=0.10 settled within
+70 ns, while 33/36 cases at loss tangent 0.03 did not. The pool therefore extends
+training to epsilon_r={12,20,30} with loss tangent={0.10,0.20}; validation and test
+use disjoint permittivity and loss-tangent levels through epsilon_r=28. See the
+[high-permittivity qualification](docs/validation/high_epsilon_loss_qualification.md).
 
 The scaled-resolution search and its separately frozen held-out evaluation are now
 complete. Their combined 1,472 cases pass every predeclared strict-compute headroom

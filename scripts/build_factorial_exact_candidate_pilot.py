@@ -16,11 +16,11 @@ EXACT_CANDIDATES = (
     "hybrid_wide",
 )
 PILOT_GEOMETRIES = (
-    ("train", 2.0, 0.050, 0.00, 0),
-    ("train", 6.0, 0.085, 0.00, 0),
-    ("train", 8.0, 0.120, 0.06, 1),
-    ("validation", 7.0, 0.1025, 0.08, 0),
-    ("test", 9.0, 0.110, 0.04, 0),
+    ("train", 2.0, 0.050, "sigma_e_s_per_m", 0.00, 0),
+    ("train", 8.0, 0.120, "sigma_e_s_per_m", 0.06, 1),
+    ("train", 30.0, 0.120, "loss_tangent_at_1ghz", 0.10, 1),
+    ("validation", 26.0, 0.1025, "loss_tangent_at_1ghz", 0.14, 0),
+    ("test", 28.0, 0.110, "loss_tangent_at_1ghz", 0.18, 0),
 )
 
 
@@ -46,7 +46,14 @@ def main():
     manifest = json.loads(args.manifest.read_text())
     evidence = json.loads(args.evidence.read_text())
     selected = []
-    for split, epsilon_r, base_radius, sigma_e, variant_index in PILOT_GEOMETRIES:
+    for (
+        split,
+        epsilon_r,
+        base_radius,
+        material_field,
+        material_value,
+        variant_index,
+    ) in PILOT_GEOMETRIES:
         scale = 0.97 if variant_index == 0 else 1.03
         matches = [
             row
@@ -54,7 +61,7 @@ def main():
             if row["split"] == split
             and row["epsilon_r"] == epsilon_r
             and abs(row["radius_m"] - base_radius * scale) < 1e-12
-            and row["sigma_e_s_per_m"] == sigma_e
+            and abs(row[material_field] - material_value) < 1e-12
             and row["variant_index"] == variant_index
         ]
         if len(matches) != 1:
@@ -72,7 +79,7 @@ def main():
         "geometry_ids": selected,
         "condition_ids": conditions,
         "candidate_names": list(EXACT_CANDIDATES),
-        "duration_s": 7e-8,
+        "duration_schedule_s": [7e-8, 1.4e-7, 5.6e-7],
         "ranking": {
             "mode": "fixed_axis_soft_nt",
             "nt_cost_exponent": args.nt_cost_exponent,

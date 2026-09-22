@@ -254,11 +254,15 @@ reevaluating held-out data. The following pool version must also decorrelate rad
 permittivity, and conductivity before CNN fitting.
 
 The decorrelated successor manifest is now generated as
-`simple_factorial_a88a3d043a935d7a`: 80 geometries in 40 grouped lineages and 832
-conditions. Its training split is a full 4x3x2 material/size/loss product, while
-validation and test use disjoint factor levels and angles. The manifest and its
-split/count invariants are tested. Candidate physics waits for the training-only
-scaled-resolution search to choose a compact frozen policy set.
+`simple_factorial_69168792914bfe03`: 148 geometries in 74 grouped lineages and
+1,552 conditions. Its low/moderate training split is a full 4x3x2
+material/size/loss product plus low-contrast lossless controls. A 108-case
+qualification sweep then tested epsilon_r={10,20,30} at loss tangent
+{0.03,0.10,0.20}. Every case at 0.10 and 0.20 settled in 70 ns across two sizes,
+two budgets, and three mesh policies; only 3/36 at 0.03 settled. High-contrast
+training now reaches epsilon_r=30 with loss tangent >=0.10, while validation and
+test use disjoint levels. See the
+[high-permittivity qualification](docs/validation/high_epsilon_loss_qualification.md).
 
 The intermediate-resolution search is complete. Its training-only campaign has
 59/72 meaningful wins, and a separately frozen held-out campaign recovers 19/32

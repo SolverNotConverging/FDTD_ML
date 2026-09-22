@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import shutil
 import subprocess
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -142,6 +143,17 @@ def case_definitions(manifest, campaign, geometries, conditions, candidate_map):
                 sigma_e=geometry["sigma_e_s_per_m"],
             ),
         )
+        duration_schedule = campaign.get("duration_schedule_s")
+        if duration_schedule is not None:
+            if (
+                not duration_schedule
+                or any(not np.isfinite(value) or value <= 0 for value in duration_schedule)
+                or list(duration_schedule) != sorted(set(duration_schedule))
+            ):
+                raise ValueError("duration_schedule_s must be strictly increasing and positive")
+            initial_duration = duration_schedule[0]
+        else:
+            initial_duration = campaign["duration_s"]
         for candidate_name in campaign["candidate_names"]:
             candidate = candidate_map[candidate_name]
             target_cells = condition["cells_x"]
@@ -155,7 +167,7 @@ def case_definitions(manifest, campaign, geometries, conditions, candidate_map):
                 [scene],
                 [candidate_cells],
                 [candidate],
-                duration=campaign["duration_s"],
+                duration=initial_duration,
                 pec_mode=None,
             )[0]
             config.update(
@@ -173,6 +185,8 @@ def case_definitions(manifest, campaign, geometries, conditions, candidate_map):
                     target_cells_y=condition["cells_y"],
                     candidate_cell_factor=cell_factor,
                 )
+            if duration_schedule is not None:
+                config["duration_schedule_s"] = list(duration_schedule)
             config["case_id"] = f"{condition_id}_{candidate_name}"
             cases.append(config)
     return cases
@@ -203,14 +217,67 @@ def migrate_legacy_record(config, output, sources, campaign_id):
         return
 
 
+def duration_attempt_configs(config):
+    """Expand a logical case into deterministic duration attempts."""
+    schedule = config.get("duration_schedule_s")
+    if schedule is None:
+        return [config]
+    return [dict(config, duration=duration, duration_attempt_index=index) for index, duration in enumerate(schedule)]
+
+
+def archive_attempt(output, case_id, attempt_index):
+    """Retain a failed attempt before the logical case is overwritten."""
+    source = output / "cases" / case_id
+    destination = output / "attempts" / case_id / f"attempt_{attempt_index:02d}"
+    destination.mkdir(parents=True, exist_ok=True)
+    for name in ("record.json", "spectra.npz"):
+        path = source / name
+        if path.exists():
+            shutil.copy2(path, destination / name)
+
+
+def run_campaign_case(config, output, device, sources):
+    """Run or resume one logical case through its declared duration schedule."""
+    attempts = duration_attempt_configs(config)
+    if len(attempts) == 1:
+        return PILOT.run_case(config, output, device, sources)
+    directory = output / "cases" / config["case_id"]
+    record_path, arrays_path = directory / "record.json", directory / "spectra.npz"
+    fingerprints = [PILOT.sha256_json(dict(config=row, sources=sources)) for row in attempts]
+    current_index = None
+    try:
+        current = json.loads(record_path.read_text())
+        current_index = fingerprints.index(current.get("fingerprint"))
+        current = PILOT.valid_cache(record_path, arrays_path, fingerprints[current_index])
+        if current is None:
+            current_index = None
+    except (OSError, ValueError, json.JSONDecodeError):
+        current = None
+        current_index = None
+    if current is not None:
+        if current["accepted"] or current_index == len(attempts) - 1:
+            return current, True
+        archive_attempt(output, config["case_id"], current_index)
+    start = 0 if current_index is None else current_index + 1
+    for index in range(start, len(attempts)):
+        record, _ = PILOT.run_case(attempts[index], output, device, sources)
+        if record["accepted"] or index == len(attempts) - 1:
+            return record, False
+        archive_attempt(output, config["case_id"], index)
+    raise RuntimeError("Duration schedule exhausted without a terminal record")
+
+
 def load_record(config, output, sources, campaign_id):
     migrate_legacy_record(config, output, sources, campaign_id)
-    fingerprint = PILOT.sha256_json(dict(config=config, sources=sources))
     directory = output / "cases" / config["case_id"]
-    record = PILOT.valid_cache(directory / "record.json", directory / "spectra.npz", fingerprint)
-    if record is None:
-        raise ValueError(f"Missing or stale campaign case: {config['case_id']}")
-    return record
+    for attempt in duration_attempt_configs(config):
+        fingerprint = PILOT.sha256_json(dict(config=attempt, sources=sources))
+        record = PILOT.valid_cache(
+            directory / "record.json", directory / "spectra.npz", fingerprint
+        )
+        if record is not None:
+            return record
+    raise ValueError(f"Missing or stale campaign case: {config['case_id']}")
 
 
 def label_diversity(labels, *, meaningful_improvement=1.05):
@@ -441,7 +508,7 @@ def main():
     selected = [case for index, case in enumerate(cases) if index % args.shards == args.shard]
     for index, config in enumerate(selected, 1):
         migrate_legacy_record(config, args.output, sources, inputs[1]["campaign_id"])
-        record, cached = PILOT.run_case(config, args.output, args.device, sources)
+        record, cached = run_campaign_case(config, args.output, args.device, sources)
         outcome = (
             f"loss={record['joint_scattering_loss']:.6g} updates={record['cell_updates']}"
             if record["status"] != "mesh_infeasible"

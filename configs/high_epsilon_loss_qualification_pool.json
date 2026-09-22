@@ -1,0 +1,911 @@
+{
+  "schema_version": 1,
+  "purpose": "settling qualification for high-permittivity lossy cylinders",
+  "geometry_count": 18,
+  "condition_count": 36,
+  "geometries": [
+    {
+      "geometry_id": "high_epsilon_loss_79c8ed10a789c78f",
+      "lineage_id": "high_epsilon_loss_lineage_79c8ed10a789c78f",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.05,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 10.0,
+      "sigma_e_s_per_m": 0.016689750831718055,
+      "loss_tangent_at_1ghz": 0.03,
+      "feature_size_m": 0.1,
+      "feature_cells_on_256_input": 21.333333333333336,
+      "minimum_internal_wavelength_m": 0.0790022493850323,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_86df3ae1aa5d3088",
+      "lineage_id": "high_epsilon_loss_lineage_86df3ae1aa5d3088",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.05,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 10.0,
+      "sigma_e_s_per_m": 0.05563250277239352,
+      "loss_tangent_at_1ghz": 0.1,
+      "feature_size_m": 0.1,
+      "feature_cells_on_256_input": 21.333333333333336,
+      "minimum_internal_wavelength_m": 0.0790022493850323,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_ed9827693724002a",
+      "lineage_id": "high_epsilon_loss_lineage_ed9827693724002a",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.05,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 10.0,
+      "sigma_e_s_per_m": 0.11126500554478704,
+      "loss_tangent_at_1ghz": 0.2,
+      "feature_size_m": 0.1,
+      "feature_cells_on_256_input": 21.333333333333336,
+      "minimum_internal_wavelength_m": 0.0790022493850323,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_c58b4b268a3576e9",
+      "lineage_id": "high_epsilon_loss_lineage_c58b4b268a3576e9",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.12,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 10.0,
+      "sigma_e_s_per_m": 0.016689750831718055,
+      "loss_tangent_at_1ghz": 0.03,
+      "feature_size_m": 0.24,
+      "feature_cells_on_256_input": 51.2,
+      "minimum_internal_wavelength_m": 0.0790022493850323,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_bb7fcde20dec13f6",
+      "lineage_id": "high_epsilon_loss_lineage_bb7fcde20dec13f6",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.12,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 10.0,
+      "sigma_e_s_per_m": 0.05563250277239352,
+      "loss_tangent_at_1ghz": 0.1,
+      "feature_size_m": 0.24,
+      "feature_cells_on_256_input": 51.2,
+      "minimum_internal_wavelength_m": 0.0790022493850323,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_07253e945a8cc3be",
+      "lineage_id": "high_epsilon_loss_lineage_07253e945a8cc3be",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.12,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 10.0,
+      "sigma_e_s_per_m": 0.11126500554478704,
+      "loss_tangent_at_1ghz": 0.2,
+      "feature_size_m": 0.24,
+      "feature_cells_on_256_input": 51.2,
+      "minimum_internal_wavelength_m": 0.0790022493850323,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_aea8b1cf068c17fb",
+      "lineage_id": "high_epsilon_loss_lineage_aea8b1cf068c17fb",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.05,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 20.0,
+      "sigma_e_s_per_m": 0.03337950166343611,
+      "loss_tangent_at_1ghz": 0.03,
+      "feature_size_m": 0.1,
+      "feature_cells_on_256_input": 21.333333333333336,
+      "minimum_internal_wavelength_m": 0.0558630262691471,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_5fd940c4624aae05",
+      "lineage_id": "high_epsilon_loss_lineage_5fd940c4624aae05",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.05,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 20.0,
+      "sigma_e_s_per_m": 0.11126500554478704,
+      "loss_tangent_at_1ghz": 0.1,
+      "feature_size_m": 0.1,
+      "feature_cells_on_256_input": 21.333333333333336,
+      "minimum_internal_wavelength_m": 0.0558630262691471,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_977c366eca851822",
+      "lineage_id": "high_epsilon_loss_lineage_977c366eca851822",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.05,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 20.0,
+      "sigma_e_s_per_m": 0.22253001108957407,
+      "loss_tangent_at_1ghz": 0.2,
+      "feature_size_m": 0.1,
+      "feature_cells_on_256_input": 21.333333333333336,
+      "minimum_internal_wavelength_m": 0.0558630262691471,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_f30d4e4ad4b396cb",
+      "lineage_id": "high_epsilon_loss_lineage_f30d4e4ad4b396cb",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.12,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 20.0,
+      "sigma_e_s_per_m": 0.03337950166343611,
+      "loss_tangent_at_1ghz": 0.03,
+      "feature_size_m": 0.24,
+      "feature_cells_on_256_input": 51.2,
+      "minimum_internal_wavelength_m": 0.0558630262691471,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_d0506498979b01bd",
+      "lineage_id": "high_epsilon_loss_lineage_d0506498979b01bd",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.12,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 20.0,
+      "sigma_e_s_per_m": 0.11126500554478704,
+      "loss_tangent_at_1ghz": 0.1,
+      "feature_size_m": 0.24,
+      "feature_cells_on_256_input": 51.2,
+      "minimum_internal_wavelength_m": 0.0558630262691471,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_66c582ad2d7fb45f",
+      "lineage_id": "high_epsilon_loss_lineage_66c582ad2d7fb45f",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.12,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 20.0,
+      "sigma_e_s_per_m": 0.22253001108957407,
+      "loss_tangent_at_1ghz": 0.2,
+      "feature_size_m": 0.24,
+      "feature_cells_on_256_input": 51.2,
+      "minimum_internal_wavelength_m": 0.0558630262691471,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_4d9cb9003f815a95",
+      "lineage_id": "high_epsilon_loss_lineage_4d9cb9003f815a95",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.05,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 30.0,
+      "sigma_e_s_per_m": 0.05006925249515417,
+      "loss_tangent_at_1ghz": 0.03,
+      "feature_size_m": 0.1,
+      "feature_cells_on_256_input": 21.333333333333336,
+      "minimum_internal_wavelength_m": 0.045611969949034346,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_173a8f4fc75d3920",
+      "lineage_id": "high_epsilon_loss_lineage_173a8f4fc75d3920",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.05,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 30.0,
+      "sigma_e_s_per_m": 0.16689750831718056,
+      "loss_tangent_at_1ghz": 0.1,
+      "feature_size_m": 0.1,
+      "feature_cells_on_256_input": 21.333333333333336,
+      "minimum_internal_wavelength_m": 0.045611969949034346,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_c4f2797ad3905582",
+      "lineage_id": "high_epsilon_loss_lineage_c4f2797ad3905582",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.05,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 30.0,
+      "sigma_e_s_per_m": 0.3337950166343611,
+      "loss_tangent_at_1ghz": 0.2,
+      "feature_size_m": 0.1,
+      "feature_cells_on_256_input": 21.333333333333336,
+      "minimum_internal_wavelength_m": 0.045611969949034346,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_a3f1efb7894e4024",
+      "lineage_id": "high_epsilon_loss_lineage_a3f1efb7894e4024",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.12,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 30.0,
+      "sigma_e_s_per_m": 0.05006925249515417,
+      "loss_tangent_at_1ghz": 0.03,
+      "feature_size_m": 0.24,
+      "feature_cells_on_256_input": 51.2,
+      "minimum_internal_wavelength_m": 0.045611969949034346,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_ee061c059e58dba5",
+      "lineage_id": "high_epsilon_loss_lineage_ee061c059e58dba5",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.12,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 30.0,
+      "sigma_e_s_per_m": 0.16689750831718056,
+      "loss_tangent_at_1ghz": 0.1,
+      "feature_size_m": 0.24,
+      "feature_cells_on_256_input": 51.2,
+      "minimum_internal_wavelength_m": 0.045611969949034346,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "high_epsilon_loss_d7d68811f05feed7",
+      "lineage_id": "high_epsilon_loss_lineage_d7d68811f05feed7",
+      "variant_index": 0,
+      "family": "simple",
+      "shape": "circle",
+      "split": "qualification",
+      "radius_m": 0.12,
+      "center_m": [
+        0.617,
+        0.583
+      ],
+      "epsilon_r": 30.0,
+      "sigma_e_s_per_m": 0.3337950166343611,
+      "loss_tangent_at_1ghz": 0.2,
+      "feature_size_m": 0.24,
+      "feature_cells_on_256_input": 51.2,
+      "minimum_internal_wavelength_m": 0.045611969949034346,
+      "incidence_angles_rad": [
+        0.85
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    }
+  ],
+  "conditions": [
+    {
+      "task_id": "condition_dee8c205f6099b92",
+      "geometry_id": "high_epsilon_loss_79c8ed10a789c78f",
+      "lineage_id": "high_epsilon_loss_lineage_79c8ed10a789c78f",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_79c8ed10a789c78f_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_24e010c280bdeed7",
+      "geometry_id": "high_epsilon_loss_79c8ed10a789c78f",
+      "lineage_id": "high_epsilon_loss_lineage_79c8ed10a789c78f",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_79c8ed10a789c78f_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_f1bc9d0c975df68f",
+      "geometry_id": "high_epsilon_loss_86df3ae1aa5d3088",
+      "lineage_id": "high_epsilon_loss_lineage_86df3ae1aa5d3088",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_86df3ae1aa5d3088_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_e591cd4be76d524a",
+      "geometry_id": "high_epsilon_loss_86df3ae1aa5d3088",
+      "lineage_id": "high_epsilon_loss_lineage_86df3ae1aa5d3088",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_86df3ae1aa5d3088_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_42e8c0dc62d07c7e",
+      "geometry_id": "high_epsilon_loss_ed9827693724002a",
+      "lineage_id": "high_epsilon_loss_lineage_ed9827693724002a",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_ed9827693724002a_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_472eecd04275b19d",
+      "geometry_id": "high_epsilon_loss_ed9827693724002a",
+      "lineage_id": "high_epsilon_loss_lineage_ed9827693724002a",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_ed9827693724002a_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_8e01fbbf2e2d7598",
+      "geometry_id": "high_epsilon_loss_c58b4b268a3576e9",
+      "lineage_id": "high_epsilon_loss_lineage_c58b4b268a3576e9",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_c58b4b268a3576e9_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_5ba3649f7525765f",
+      "geometry_id": "high_epsilon_loss_c58b4b268a3576e9",
+      "lineage_id": "high_epsilon_loss_lineage_c58b4b268a3576e9",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_c58b4b268a3576e9_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_65284d8a901fa511",
+      "geometry_id": "high_epsilon_loss_bb7fcde20dec13f6",
+      "lineage_id": "high_epsilon_loss_lineage_bb7fcde20dec13f6",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_bb7fcde20dec13f6_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_6a7b193f5140a432",
+      "geometry_id": "high_epsilon_loss_bb7fcde20dec13f6",
+      "lineage_id": "high_epsilon_loss_lineage_bb7fcde20dec13f6",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_bb7fcde20dec13f6_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_e78c783ffe021d8f",
+      "geometry_id": "high_epsilon_loss_07253e945a8cc3be",
+      "lineage_id": "high_epsilon_loss_lineage_07253e945a8cc3be",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_07253e945a8cc3be_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_7b01a1117c11c19e",
+      "geometry_id": "high_epsilon_loss_07253e945a8cc3be",
+      "lineage_id": "high_epsilon_loss_lineage_07253e945a8cc3be",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_07253e945a8cc3be_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_51635e57c4fa3dfc",
+      "geometry_id": "high_epsilon_loss_aea8b1cf068c17fb",
+      "lineage_id": "high_epsilon_loss_lineage_aea8b1cf068c17fb",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_aea8b1cf068c17fb_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_c03a6e705db452db",
+      "geometry_id": "high_epsilon_loss_aea8b1cf068c17fb",
+      "lineage_id": "high_epsilon_loss_lineage_aea8b1cf068c17fb",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_aea8b1cf068c17fb_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_10e0310c6275c5d1",
+      "geometry_id": "high_epsilon_loss_5fd940c4624aae05",
+      "lineage_id": "high_epsilon_loss_lineage_5fd940c4624aae05",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_5fd940c4624aae05_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_fcf7c51f27afa542",
+      "geometry_id": "high_epsilon_loss_5fd940c4624aae05",
+      "lineage_id": "high_epsilon_loss_lineage_5fd940c4624aae05",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_5fd940c4624aae05_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_4ace995062b6af2c",
+      "geometry_id": "high_epsilon_loss_977c366eca851822",
+      "lineage_id": "high_epsilon_loss_lineage_977c366eca851822",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_977c366eca851822_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_cbf4bee67e3d24c8",
+      "geometry_id": "high_epsilon_loss_977c366eca851822",
+      "lineage_id": "high_epsilon_loss_lineage_977c366eca851822",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_977c366eca851822_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_6b5834b9a1fcd4d8",
+      "geometry_id": "high_epsilon_loss_f30d4e4ad4b396cb",
+      "lineage_id": "high_epsilon_loss_lineage_f30d4e4ad4b396cb",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_f30d4e4ad4b396cb_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_47a8221116435a39",
+      "geometry_id": "high_epsilon_loss_f30d4e4ad4b396cb",
+      "lineage_id": "high_epsilon_loss_lineage_f30d4e4ad4b396cb",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_f30d4e4ad4b396cb_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_7bbfc209744c6703",
+      "geometry_id": "high_epsilon_loss_d0506498979b01bd",
+      "lineage_id": "high_epsilon_loss_lineage_d0506498979b01bd",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_d0506498979b01bd_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_6e9132ca0cd82315",
+      "geometry_id": "high_epsilon_loss_d0506498979b01bd",
+      "lineage_id": "high_epsilon_loss_lineage_d0506498979b01bd",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_d0506498979b01bd_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_009a044d1a490311",
+      "geometry_id": "high_epsilon_loss_66c582ad2d7fb45f",
+      "lineage_id": "high_epsilon_loss_lineage_66c582ad2d7fb45f",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_66c582ad2d7fb45f_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_a6c4e13e6cd04f52",
+      "geometry_id": "high_epsilon_loss_66c582ad2d7fb45f",
+      "lineage_id": "high_epsilon_loss_lineage_66c582ad2d7fb45f",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_66c582ad2d7fb45f_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_67a8022cffef89f7",
+      "geometry_id": "high_epsilon_loss_4d9cb9003f815a95",
+      "lineage_id": "high_epsilon_loss_lineage_4d9cb9003f815a95",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_4d9cb9003f815a95_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_1043e66eb6455248",
+      "geometry_id": "high_epsilon_loss_4d9cb9003f815a95",
+      "lineage_id": "high_epsilon_loss_lineage_4d9cb9003f815a95",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_4d9cb9003f815a95_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_cf900bc81206e450",
+      "geometry_id": "high_epsilon_loss_173a8f4fc75d3920",
+      "lineage_id": "high_epsilon_loss_lineage_173a8f4fc75d3920",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_173a8f4fc75d3920_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_f942d773573523f3",
+      "geometry_id": "high_epsilon_loss_173a8f4fc75d3920",
+      "lineage_id": "high_epsilon_loss_lineage_173a8f4fc75d3920",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_173a8f4fc75d3920_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_5361f4eb8313bcf3",
+      "geometry_id": "high_epsilon_loss_c4f2797ad3905582",
+      "lineage_id": "high_epsilon_loss_lineage_c4f2797ad3905582",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_c4f2797ad3905582_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_831309103522f1e3",
+      "geometry_id": "high_epsilon_loss_c4f2797ad3905582",
+      "lineage_id": "high_epsilon_loss_lineage_c4f2797ad3905582",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_c4f2797ad3905582_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_1c08883e93061a13",
+      "geometry_id": "high_epsilon_loss_a3f1efb7894e4024",
+      "lineage_id": "high_epsilon_loss_lineage_a3f1efb7894e4024",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_a3f1efb7894e4024_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_7f79297cf9faa375",
+      "geometry_id": "high_epsilon_loss_a3f1efb7894e4024",
+      "lineage_id": "high_epsilon_loss_lineage_a3f1efb7894e4024",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_a3f1efb7894e4024_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_0535584c17635706",
+      "geometry_id": "high_epsilon_loss_ee061c059e58dba5",
+      "lineage_id": "high_epsilon_loss_lineage_ee061c059e58dba5",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_ee061c059e58dba5_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_4f4ad7a5e776bc2f",
+      "geometry_id": "high_epsilon_loss_ee061c059e58dba5",
+      "lineage_id": "high_epsilon_loss_lineage_ee061c059e58dba5",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_ee061c059e58dba5_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_b3ad820c8209e8e8",
+      "geometry_id": "high_epsilon_loss_d7d68811f05feed7",
+      "lineage_id": "high_epsilon_loss_lineage_d7d68811f05feed7",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_d7d68811f05feed7_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_9badf3efb49fb3ad",
+      "geometry_id": "high_epsilon_loss_d7d68811f05feed7",
+      "lineage_id": "high_epsilon_loss_lineage_d7d68811f05feed7",
+      "split": "qualification",
+      "family": "simple",
+      "illumination_id": "high_epsilon_loss_d7d68811f05feed7_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    }
+  ],
+  "dataset_id": "high_epsilon_loss_91a11296bb4504fb"
+}

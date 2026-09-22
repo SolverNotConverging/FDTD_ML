@@ -5,7 +5,7 @@ import json
 
 import numpy as np
 
-from .constants import C0
+from .constants import C0, EPS0
 
 DOMAIN = 1.2
 FREQUENCIES = (0.8e9, 1.0e9, 1.2e9)
@@ -13,11 +13,23 @@ PRIMARY_BUDGETS = (32, 48, 64, 96)
 TRAIN_ANGLES = (0.2, 1.3, 3.0)
 VALIDATION_ANGLES = (0.85, 4.2)
 TEST_ANGLES = (2.1, 5.4)
+LOSS_TANGENT_REFERENCE_FREQUENCY_HZ = 1.0e9
 
 
 def _identifier(value):
     encoded = json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(encoded).hexdigest()[:16]
+
+
+def _conductivity_for_loss_tangent(epsilon_r, loss_tangent):
+    return (
+        loss_tangent
+        * 2
+        * np.pi
+        * LOSS_TANGENT_REFERENCE_FREQUENCY_HZ
+        * EPS0
+        * epsilon_r
+    )
 
 
 def simple_dielectric_pool():
@@ -77,29 +89,72 @@ def simple_dielectric_pool():
 
 
 def factorial_simple_dielectric_pool():
-    """Return a decorrelated 80-geometry circle pool for the first CNN stage.
+    """Return a decorrelated, settling-qualified circle pool for the first CNN stage.
 
-    Each split is a Cartesian product of permittivity, radius, and conductivity.
-    This prevents the monotonic material/size correlation in the exploratory pool
-    from becoming a shortcut for the learned mesher. Split-specific factor levels
-    and incidence angles provide interpolation and extrapolation checks.
+    The main training split is a Cartesian product of permittivity, radius, and
+    positive conductivity, plus stable low-contrast lossless controls. Materials
+    above epsilon_r=10 use loss tangent >=0.10 at 1 GHz, which settled through
+    epsilon_r=30 in the 70 ns qualification sweep.
     """
     split_factors = {
-        "train": {
-            "epsilon_r": (2.0, 4.0, 6.0, 8.0),
-            "radius_m": (0.050, 0.085, 0.120),
-            "sigma_e_s_per_m": (0.00, 0.06),
-        },
-        "validation": {
-            "epsilon_r": (3.0, 7.0),
-            "radius_m": (0.0675, 0.1025),
-            "sigma_e_s_per_m": (0.02, 0.08),
-        },
-        "test": {
-            "epsilon_r": (5.0, 9.0),
-            "radius_m": (0.060, 0.110),
-            "sigma_e_s_per_m": (0.01, 0.04),
-        },
+        "train": (
+            *(
+                (epsilon_r, radius, sigma_e)
+                for epsilon_r in (2.0, 4.0, 6.0, 8.0)
+                for radius in (0.050, 0.085, 0.120)
+                for sigma_e in (0.01, 0.06)
+            ),
+            *(
+                (epsilon_r, radius, 0.0)
+                for epsilon_r in (2.0, 4.0)
+                for radius in (0.050, 0.120)
+            ),
+            *(
+                (
+                    epsilon_r,
+                    radius,
+                    _conductivity_for_loss_tangent(epsilon_r, loss_tangent),
+                )
+                for epsilon_r in (12.0, 20.0, 30.0)
+                for radius in (0.050, 0.085, 0.120)
+                for loss_tangent in (0.10, 0.20)
+            ),
+        ),
+        "validation": (
+            *(
+                (epsilon_r, radius, sigma_e)
+                for epsilon_r in (3.0, 7.0)
+                for radius in (0.0675, 0.1025)
+                for sigma_e in (0.02, 0.08)
+            ),
+            *(
+                (
+                    epsilon_r,
+                    radius,
+                    _conductivity_for_loss_tangent(epsilon_r, 0.14),
+                )
+                for epsilon_r in (16.0, 26.0)
+                for radius in (0.0675, 0.1025)
+            ),
+        ),
+        "test": (
+            *(
+                (epsilon_r, radius, sigma_e)
+                for epsilon_r in (5.0, 10.0)
+                for radius in (0.060, 0.110)
+                for sigma_e in (0.01, 0.04)
+            ),
+            *(
+                (
+                    epsilon_r,
+                    radius,
+                    _conductivity_for_loss_tangent(epsilon_r, loss_tangent),
+                )
+                for epsilon_r in (14.0, 28.0)
+                for radius in (0.060, 0.110)
+                for loss_tangent in (0.12, 0.18)
+            ),
+        ),
     }
     split_angles = {
         "train": TRAIN_ANGLES,
@@ -108,53 +163,60 @@ def factorial_simple_dielectric_pool():
     }
     pool = []
     lineage_index = 0
-    for split, factors in split_factors.items():
-        for epsilon_r in factors["epsilon_r"]:
-            for base_radius in factors["radius_m"]:
-                for sigma_e in factors["sigma_e_s_per_m"]:
-                    lineage = {
-                        "family": "simple",
-                        "shape": "circle",
-                        "split": split,
-                        "base_radius_m": base_radius,
-                        "epsilon_r": epsilon_r,
-                        "sigma_e_s_per_m": sigma_e,
+    for split, combinations in split_factors.items():
+        for epsilon_r, base_radius, sigma_e in combinations:
+            lineage = {
+                "family": "simple",
+                "shape": "circle",
+                "split": split,
+                "base_radius_m": base_radius,
+                "epsilon_r": epsilon_r,
+                "sigma_e_s_per_m": sigma_e,
+                "loss_tangent_at_1ghz": sigma_e
+                / (
+                    2
+                    * np.pi
+                    * LOSS_TANGENT_REFERENCE_FREQUENCY_HZ
+                    * EPS0
+                    * epsilon_r
+                ),
+            }
+            lineage_id = f"simple_factorial_lineage_{_identifier(lineage)}"
+            orientation = 0.71 * lineage_index
+            cosine, sine = np.cos(orientation), np.sin(orientation)
+            for variant_index, (scale, raw_offset) in enumerate(
+                ((0.97, (-0.041, 0.029)), (1.03, (0.037, -0.033)))
+            ):
+                dx = cosine * raw_offset[0] - sine * raw_offset[1]
+                dy = sine * raw_offset[0] + cosine * raw_offset[1]
+                radius = base_radius * scale
+                definition = {
+                    "family": "simple",
+                    "shape": "circle",
+                    "lineage_id": lineage_id,
+                    "variant_index": variant_index,
+                    "split": split,
+                    "radius_m": radius,
+                    "center_m": (0.6 + dx, 0.6 + dy),
+                    "epsilon_r": epsilon_r,
+                    "sigma_e_s_per_m": sigma_e,
+                    "loss_tangent_at_1ghz": lineage["loss_tangent_at_1ghz"],
+                }
+                feature_size = 2 * radius
+                pool.append(
+                    {
+                        "geometry_id": f"simple_factorial_{_identifier(definition)}",
+                        **definition,
+                        "feature_size_m": feature_size,
+                        "feature_cells_on_256_input": feature_size / (DOMAIN / 256),
+                        "minimum_internal_wavelength_m": C0
+                        / (max(FREQUENCIES) * np.sqrt(epsilon_r)),
+                        "incidence_angles_rad": list(split_angles[split]),
+                        "frequencies_hz": list(FREQUENCIES),
+                        "analytic_reference": "infinite_TM_z_dielectric_cylinder",
                     }
-                    lineage_id = f"simple_factorial_lineage_{_identifier(lineage)}"
-                    orientation = 0.71 * lineage_index
-                    cosine, sine = np.cos(orientation), np.sin(orientation)
-                    for variant_index, (scale, raw_offset) in enumerate(
-                        ((0.97, (-0.041, 0.029)), (1.03, (0.037, -0.033)))
-                    ):
-                        dx = cosine * raw_offset[0] - sine * raw_offset[1]
-                        dy = sine * raw_offset[0] + cosine * raw_offset[1]
-                        radius = base_radius * scale
-                        definition = {
-                            "family": "simple",
-                            "shape": "circle",
-                            "lineage_id": lineage_id,
-                            "variant_index": variant_index,
-                            "split": split,
-                            "radius_m": radius,
-                            "center_m": (0.6 + dx, 0.6 + dy),
-                            "epsilon_r": epsilon_r,
-                            "sigma_e_s_per_m": sigma_e,
-                        }
-                        feature_size = 2 * radius
-                        pool.append(
-                            {
-                                "geometry_id": f"simple_factorial_{_identifier(definition)}",
-                                **definition,
-                                "feature_size_m": feature_size,
-                                "feature_cells_on_256_input": feature_size / (DOMAIN / 256),
-                                "minimum_internal_wavelength_m": C0
-                                / (max(FREQUENCIES) * np.sqrt(epsilon_r)),
-                                "incidence_angles_rad": list(split_angles[split]),
-                                "frequencies_hz": list(FREQUENCIES),
-                                "analytic_reference": "infinite_TM_z_dielectric_cylinder",
-                            }
-                        )
-                    lineage_index += 1
+                )
+            lineage_index += 1
     return pool
 
 

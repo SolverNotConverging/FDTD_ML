@@ -45,43 +45,74 @@ def test_candidate_tasks_preserve_geometry_lineage_and_hold_out_angles():
 
 def test_factorial_pool_decorrelates_material_size_and_loss():
     pool = factorial_simple_dielectric_pool()
-    assert len(pool) == 80
+    assert len(pool) == 148
     assert Counter(row["split"] for row in pool) == {
-        "train": 48,
-        "validation": 16,
-        "test": 16,
+        "train": 92,
+        "validation": 24,
+        "test": 32,
     }
     lineages = defaultdict(list)
     for row in pool:
         lineages[row["lineage_id"]].append(row)
         assert row["feature_cells_on_256_input"] >= 20
     assert Counter(rows[0]["split"] for rows in lineages.values()) == {
-        "train": 24,
-        "validation": 8,
-        "test": 8,
+        "train": 46,
+        "validation": 12,
+        "test": 16,
     }
     assert all(len(rows) == 2 for rows in lineages.values())
 
-    train_factors = {
+    train_main_factors = {
         (
             row["epsilon_r"],
             round(row["radius_m"] / (0.97 if row["variant_index"] == 0 else 1.03), 6),
             row["sigma_e_s_per_m"],
         )
         for row in pool
-        if row["split"] == "train"
+        if row["split"] == "train" and row["sigma_e_s_per_m"] > 0
     }
-    assert len(train_factors) == 4 * 3 * 2
+    assert len(train_main_factors) == 4 * 3 * 2 + 3 * 3 * 2
+    lossless_controls = {
+        (row["epsilon_r"], round(row["radius_m"], 6))
+        for row in pool
+        if row["split"] == "train" and row["sigma_e_s_per_m"] == 0
+    }
+    assert {epsilon_r for epsilon_r, _ in lossless_controls} == {2.0, 4.0}
+    assert max(row["epsilon_r"] for row in pool) == 30.0
+    high_epsilon_train = [
+        row for row in pool if row["split"] == "train" and row["epsilon_r"] > 10
+    ]
+    assert {round(row["loss_tangent_at_1ghz"], 2) for row in high_epsilon_train} == {
+        0.10,
+        0.20,
+    }
+    high_epsilon_by_split = {
+        split: {
+            row["epsilon_r"]
+            for row in pool
+            if row["split"] == split and row["epsilon_r"] > 10
+        }
+        for split in ("train", "validation", "test")
+    }
+    assert high_epsilon_by_split == {
+        "train": {12.0, 20.0, 30.0},
+        "validation": {16.0, 26.0},
+        "test": {14.0, 28.0},
+    }
+    assert all(
+        high_epsilon_by_split[left].isdisjoint(high_epsilon_by_split[right])
+        for left, right in (("train", "validation"), ("train", "test"), ("validation", "test"))
+    )
 
 
 def test_factorial_pool_expands_to_grouped_conditions():
     pool = factorial_simple_dielectric_pool()
     tasks = simple_candidate_tasks(pool)
-    assert len(tasks) == 832
+    assert len(tasks) == 1552
     assert Counter(task["split"] for task in tasks) == {
-        "train": 576,
-        "validation": 128,
-        "test": 128,
+        "train": 1104,
+        "validation": 192,
+        "test": 256,
     }
     lineage_splits = defaultdict(set)
     geometry = {row["geometry_id"]: row for row in pool}
