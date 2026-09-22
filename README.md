@@ -98,6 +98,8 @@ MPLCONFIGDIR=/tmp/scattermesh-mpl \
   --training-output runs/simple_factorial_exact_training_6916879 \
   --candidate-output runs/simple_factorial_exact_candidate_full_6916879 \
   --output runs/simple_factorial_exact_physics_6916879
+.venv/bin/python scripts/build_circle_generalization_plan.py
+.venv/bin/python scripts/continue_circle_generalization_evaluation.py
 .venv/bin/python scripts/full_pipeline_status.py
 ```
 
@@ -108,7 +110,8 @@ meshes at two incidence angles, followed by four sensitivity checks.
 The candidate status command is read-only and reports verified cache counts,
 solver outcomes, recent throughput, and an ETA for the full campaign.
 The full-pipeline status command gives one concise JSON snapshot spanning label
-generation, dataset/training handoff, and frozen learned-mesh physics evaluation.
+generation, dataset/training handoff, frozen learned-mesh physics evaluation, and
+the subsequent analytic-circle position/scale generalization gate.
 The separate PEC pilot writes `runs/conformal_pec_pilot/` with analytic cylinder
 comparisons, off-grid geometry plots, and very small cut-fraction stability checks.
 The restartable PEC-cylinder matrix writes `runs/pec_cylinder_qualification/` and

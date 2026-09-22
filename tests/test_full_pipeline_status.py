@@ -82,3 +82,34 @@ def test_waiting_physics_watcher_does_not_hide_label_generation(tmp_path):
     result = status(campaign, output, tmp_path / "train", physics)
 
     assert result["active_stage"] == "label_generation"
+
+
+def test_main_physics_hands_off_to_circle_generalization(tmp_path):
+    campaign, output = setup_campaign(tmp_path, True)
+    physics = tmp_path / "physics"
+    generalization = tmp_path / "generalization"
+    write(physics / "report.json", {"decision": "passes_frozen_physics_evaluation"})
+    write(generalization / "workflow.json", {"stage": "circle_generalization_evaluation"})
+
+    running = status(
+        campaign,
+        output,
+        tmp_path / "train",
+        physics,
+        generalization_output=generalization,
+    )
+    assert running["active_stage"] == "circle_generalization"
+    assert running["generalization"]["workflow"] == "circle_generalization_evaluation"
+
+    write(
+        generalization / "report.json",
+        {"decision": "passes_circle_position_scale_generalization"},
+    )
+    complete = status(
+        campaign,
+        output,
+        tmp_path / "train",
+        physics,
+        generalization_output=generalization,
+    )
+    assert complete["active_stage"] == "complete"

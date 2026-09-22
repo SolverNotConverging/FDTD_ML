@@ -63,7 +63,14 @@ def _physics(path):
     return result
 
 
-def status(campaign, campaign_output, training_output, physics_output, window_minutes=10):
+def status(
+    campaign,
+    campaign_output,
+    training_output,
+    physics_output,
+    window_minutes=10,
+    generalization_output=None,
+):
     try:
         snapshot = campaign_snapshot(campaign, campaign_output, window_minutes)
         statuses = snapshot.get("simulation_status_counts", {})
@@ -98,20 +105,46 @@ def status(campaign, campaign_output, training_output, physics_output, window_mi
         }
     training = _training(training_output)
     physics = _physics(physics_output)
+    generalization = (
+        _physics(generalization_output) if generalization_output is not None else None
+    )
     stage = (_json(Path(training_output) / "workflow.json") or {}).get("stage", "")
     physics_stage = (_json(Path(physics_output) / "workflow.json") or {}).get("stage", "")
     report = _json(Path(physics_output) / "report.json") or {}
+    generalization_report = (
+        _json(Path(generalization_output) / "report.json") or {}
+        if generalization_output is not None
+        else {}
+    )
+    main_physics_passed = bool(
+        report.get("decision") == "passes_frozen_physics_evaluation"
+        or physics_stage == "complete"
+    )
     failed = (
         "failed" in stage
         or "failed" in physics_stage
         or str(report.get("decision", "")).startswith("fails_")
+        or (
+            generalization is not None
+            and (
+                "failed" in generalization.get("workflow", "")
+                or str(generalization_report.get("decision", "")).startswith("fails_")
+            )
+        )
     )
     if failed:
         active_stage = "failed"
-    elif report.get("decision") == "passes_frozen_physics_evaluation" or physics_stage == "complete":
+    elif generalization_report.get("decision") == "passes_circle_position_scale_generalization":
+        active_stage = "complete"
+    elif (
+        generalization is None
+        and main_physics_passed
+    ):
         active_stage = "complete"
     elif campaign_info.get("remaining", 0) > 0:
         active_stage = "label_generation"
+    elif main_physics_passed:
+        active_stage = "circle_generalization"
     elif physics_stage in {"physics_evaluation", "summarizing"} or report:
         active_stage = "frozen_physics"
     elif stage == "training" or training.get("status") in {"running", "complete"}:
@@ -120,7 +153,15 @@ def status(campaign, campaign_output, training_output, physics_output, window_mi
         active_stage = "label_generation"
     else:
         active_stage = "label_gate_or_dataset"
-    return {"campaign": campaign_info, "training": training, "physics": physics, "active_stage": active_stage}
+    result = {
+        "campaign": campaign_info,
+        "training": training,
+        "physics": physics,
+        "active_stage": active_stage,
+    }
+    if generalization is not None:
+        result["generalization"] = generalization
+    return result
 
 
 def main():
@@ -145,6 +186,11 @@ def main():
         type=Path,
         default=Path("runs/simple_factorial_exact_physics_6916879"),
     )
+    parser.add_argument(
+        "--generalization-output",
+        type=Path,
+        default=Path("runs/circle_position_scale_generalization_6916879"),
+    )
     parser.add_argument("--window-minutes", type=float, default=10)
     args = parser.parse_args()
     print(
@@ -155,6 +201,7 @@ def main():
                 args.training_output,
                 args.physics_output,
                 args.window_minutes,
+                args.generalization_output,
             ),
             sort_keys=True,
         )

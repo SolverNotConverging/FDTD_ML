@@ -1,0 +1,3265 @@
+{
+  "schema_version": 1,
+  "evaluation_id": "circle_position_scale_a181498ff8b7f500",
+  "purpose": "frozen analytic-circle position and scale generalization",
+  "examples": [
+    {
+      "sample_id": "circle_generalization_20048198692ab6d2",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_1732f8095a966e00",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_5c45183e5139f646",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_f78d8f1039d80e30",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_ca0eae80dea87229",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_776605334aead015",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_f6c45931e0133c85",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_13b5cc51e2591299",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_e12f4463a647bb1a",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_8e80522f118e6cb5",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_4b2b914c9477b6d8",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_b849396c319e6b49",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_26d8bb7de7faeb96",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_8a2cee5b1d1ed9b5",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_08e7491c447edb4d",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_2941a66571764c00",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_76339d4d716a1ccc",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_f0de7cfb8ae0cf0c",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_94cae745437ddd83",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_5230cc62c8dc8159",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_0f9167bcf76bce92",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_116d0ae98baec777",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_36a3da561a5f7307",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_340a4f25b9c0ebe4",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_6a18c6f4e660f089",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_ae619728677b8207",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_f8411105c864c77b",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_51e6c697737d3c6f",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_6f12d314102ebaef",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_bba79fad0e98c283",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_1e2ad1ec1a0db803",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_75b6478a83575d15",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_cafb19ba700b764d",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_361a8b41d7bdb02e",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_59519fd26693e191",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_18d4162eb9f85930",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_fd466c89a9c3ecc8",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_ad2fb4d7979b017d",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_d9b742d87ff8f13b",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_3a26299ff2d0a637",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "below_training_range",
+      "radius_m": 0.04,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.08,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_5c418a6a64455239",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_7a10b0a4adece78c",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_40c9d56a40b14e1f",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_d1b562a8cc25328b",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_c65f2e2f3d47c78a",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_52e0df924f4ba596",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_28d04a68347386cc",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_33b3bc0a49a28e58",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_3e6f5a8e06f1ee4d",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_1527f30c5788d8bf",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_bd309686808b7569",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_d4f45dc377c1ebe6",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_1b809abb11ccde62",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_099e411e112ce5c0",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_d9845049c40ce5f8",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_742aacf6b9857548",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_eb7eed299a28a29b",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_2cc89f33aed76d7a",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_9ef5a080ce6c5a71",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_fdcc9b87177ae7d2",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_30beb3ccb5e76120",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_266f41851a2b9609",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_03c692697d762dcb",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_03c693f4706cfdf3",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_3a18f10cb76b167e",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_386fc69a4811f19e",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_0972b463e416615c",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_40b111f06da4a89a",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_a29479eaf10554e0",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_8508f97a004d5071",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_f4edf13d7ddeccd7",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_1a9c7d00be43c715",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_c89e257d477788cd",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_bd78710c94ea21dc",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_797762ba19fe4839",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_4cc17ad46fffb8c6",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_903ce36c1bc2e59b",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_84095e6d771ee1d8",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_b085020824590a52",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_bfd0bbf00ed07e96",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "interpolation",
+      "radius_m": 0.075,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.15,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_f724af20690ba3b0",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_463b5d16bd835201",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_a775a8aadc602fde",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_10ef25708bc8a514",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_0c4141955be45213",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_8ed4a3c373915407",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_2e7446e6ab83665f",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_02e5cf91b84db693",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "center",
+      "center_m": [
+        0.6,
+        0.6
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_87c5a316558419f0",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_b68f6753a33fab13",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_5bf0dc627ee2abef",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_28e708849810f03f",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_d7179b813dc75ccb",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_9bbb0b461f256fd8",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_f82a43fb614fe564",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_8ace83a6ac48cbda",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southwest",
+      "center_m": [
+        0.31,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_afed21085de3299f",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_71657db419f7f55c",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_690e3f58b77c82ca",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_a8f37ab9d452de3b",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_e84cbeafb0aa04c7",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_b8425be771d54a0a",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_ad5a78d780552c7f",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_7d550f5b59368feb",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "southeast",
+      "center_m": [
+        0.89,
+        0.31
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_cc3c9fdba150abe1",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_64c02348702ed7b6",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_0bd373f50069fba9",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_3e992af04ced9b18",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_fac6a4be1599cf52",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_7d18578154f869e6",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_7956aed397f840c2",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_950b0e76ffda543d",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northwest",
+      "center_m": [
+        0.31,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_51f746269dad6c4b",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_1c4edd8a0d7d6307",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_ce361ff81fa89bb5",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_8467603659d07f63",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "low_lossless",
+      "epsilon_r": 4.0,
+      "loss_tangent_at_1ghz": 0.0,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.0,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_deb28de805c34632",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_37be9be11b9ace44",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 0.35,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 0,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_fbe65b25a37f7767",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 32,
+      "cells_y": 32,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    },
+    {
+      "sample_id": "circle_generalization_19479651e7a3163a",
+      "split": "generalization",
+      "family": "simple_ood",
+      "shape": "circle",
+      "size_regime": "above_training_range",
+      "radius_m": 0.135,
+      "position_id": "northeast",
+      "center_m": [
+        0.89,
+        0.89
+      ],
+      "material_id": "high_lossy",
+      "epsilon_r": 20.0,
+      "loss_tangent_at_1ghz": 0.14,
+      "incidence_angle_rad": 4.9,
+      "cells_x": 48,
+      "cells_y": 48,
+      "angle_index": 1,
+      "feature_size_m": 0.27,
+      "sigma_e_s_per_m": 0.1557710077627019,
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ]
+    }
+  ],
+  "ranking": {
+    "mode": "fixed_axis_soft_nt",
+    "nt_cost_exponent": 0.1
+  },
+  "duration_schedule_s": [
+    7e-08,
+    1.4e-07,
+    5.6e-07
+  ],
+  "max_grading_ratio": 3.0,
+  "gate": {
+    "minimum_meaningful_win_fraction": 0.7,
+    "minimum_each_size_regime_win_fraction": 0.5,
+    "minimum_each_position_median_improvement": 1.0,
+    "minimum_overall_median_improvement": 1.2,
+    "minimum_worst_case_improvement": 0.5,
+    "require_all_cases_settled": true
+  }
+}
