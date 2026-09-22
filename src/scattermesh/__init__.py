@@ -1,6 +1,7 @@
 """Scattered-field TMz solver; explicit NumPy reference backend for qualification."""
 
 from .curriculum import (
+    circle_remediation_pool,
     factorial_simple_dielectric_pool,
     simple_candidate_tasks,
     simple_dielectric_pool,
@@ -9,6 +10,7 @@ from .distillation import (
     axis_probability,
     build_distillation_dataset,
     conditioning_features,
+    merge_distillation_datasets,
     probability_axis,
     rasterize_circle,
 )
@@ -29,6 +31,7 @@ __all__ = [
     "density_axis",
     "circular_interface_axes",
     "simple_dielectric_pool",
+    "circle_remediation_pool",
     "factorial_simple_dielectric_pool",
     "simple_candidate_tasks",
     "axis_probability",
@@ -36,6 +39,7 @@ __all__ = [
     "rasterize_circle",
     "conditioning_features",
     "build_distillation_dataset",
+    "merge_distillation_datasets",
     "PlaneWave",
     "SimulationResult",
     "simulate",

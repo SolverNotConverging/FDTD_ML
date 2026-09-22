@@ -5,22 +5,43 @@ The user asked us to follow the advice in
 The discussion was read on 22 September 2026. Its recommendations are design input;
 solver claims are validated independently in this project.
 
+## Product target
+
+The learned mesher is intended for sparse scattering scenes. Sparse does not mean
+only one object: a scene may have several dielectric or PEC objects and close gaps,
+but the geometry and required fine-mesh regions remain localized within the larger
+domain. Because the output is a tensor-product grid, record sparsity in projected
+x and y as well as occupied area. Objects scattered across the full domain can use
+most axis lines even when their total area is small, eliminating the main advantage
+over a uniform grid. Dense arrangements are held-out stress tests, not the target
+distribution.
+
 ## Sequence
 
-1. **One PEC circular cylinder.** This is the first training family. Use analytic
-   complex far fields. Vary k0*a, location relative to Yee cells, incidence angle,
-   frequency, and budget. Start with a proposed 32–64 base geometries and several
-   candidate meshes per condition; measure diversity and cost before scaling up.
-2. **One dielectric cylinder.** Use analytic references again. Begin with moderate
+1. **Single-object numerical controls.** PEC and dielectric cylinders use analytic
+   complex far fields and vary k0*a, subcell location, incidence, frequency, and
+   budget. The isolated PEC candidate search had no low-budget nonuniform headroom,
+   so PEC remains a solver/control family rather than the first bulk training set.
+2. **One dielectric cylinder.** This is the first learned family. Begin with moderate
    lossless contrast, then include epsilon_r up to 30 and conductivity. Keep mu_r=1
    and sigma_h=0. Add resonant/high-contrast cases after time-settling qualification.
-3. **Two and multiple cylinders.** Introduce gap distance and size contrast gradually.
-   Separated mixed PEC/dielectric coupling is now qualified for initial combinations;
-   keep contacting or overlapping interfaces excluded until their operator is defined.
-4. **Rectangles and corners, then thin screens.** Add only after PEC topology and
-   boundary handling are qualified. Keep family-specific accuracy/failure reports.
-5. **More varied shapes and complex arrangements.** Use them for later expansion
-   and held-out-shape tests, not as the initial bulk training distribution.
+3. **Sparse localized pairs.** Introduce two cylinders with log-spaced gaps, radius
+   ratio, material contrast, cluster scale, translation, and incidence. The pair
+   remains localized; close gaps create local difficulty without filling the domain.
+4. **Sparse 3–4 object and PEC/mixed clusters.** Add separated PEC/dielectric objects,
+   rectangles, corners, and later thin screens only after their operators are
+   qualified. Keep contacting/overlapping interfaces excluded until defined.
+5. **Dense and complex arrangements as stress tests.** Use domain-spanning scenes,
+   intersections, and resonance-heavy assemblies to measure failure modes. They do
+   not dominate training and cannot compensate for a sparse-family gate failure.
+
+Initial sparse-pilot strata target roughly 0.5–12% occupied area and at most 45%
+projected feature support on either axis. Save the measured occupancy, cluster
+envelope, projected support, object count, PEC fraction, and minimum gap. Translate
+the complete cluster throughout the domain while keeping related variants in one
+data split. Combined batches allocate at least 70% sampling weight to sparse
+production scenes, at least 20% to analytic single-object controls, and no more
+than 10% to dense stress scenes.
 
 For single cylinders, analytic series evaluation replaces expensive fine-FDTD
 reference generation. Check series truncation and phase conventions. Candidate
@@ -99,3 +120,7 @@ sole phase loss. Phase-only diagnostics exclude scattering nulls.
 - Compare uniform, wavelength-based, interface-based, solution/error-adaptive, and
   learned meshes with error-versus-update/runtime curves. Report simple, sparse,
   and complex families separately as they become available.
+- Make the primary promotion decision from the sparse strata at low exact budgets.
+  Report results by occupied area, projected support, gap, object count, PEC fraction,
+  and cluster location. Dense stress performance is diagnostic and never masks a
+  sparse-family regression through an aggregate average.

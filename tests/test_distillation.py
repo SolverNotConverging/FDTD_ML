@@ -7,6 +7,7 @@ from scattermesh.distillation import (
     axis_probability,
     build_distillation_dataset,
     conditioning_features,
+    merge_distillation_datasets,
     probability_axis,
     rasterize_circle,
 )
@@ -284,3 +285,77 @@ def test_dataset_builder_masks_terminal_rejected_nonuniform_candidate(tmp_path):
     assert payload["examples"][0]["best_candidate"] == "uniform"
     with np.load(tmp_path / "dataset" / "targets.npz") as arrays:
         assert arrays["candidate_mask"].tolist() == [[True, False]]
+
+
+def _write_distillation_dataset(path, examples, *, campaign_id):
+    path.mkdir()
+    candidates = ["uniform", "region"]
+    count = len(examples)
+    np.savez_compressed(
+        path / "targets.npz",
+        profiles=np.full((count, 2, 2, 16), 1 / 16, dtype=np.float32),
+        scores=np.tile(np.array([[1.0, 0.8]]), (count, 1)),
+        candidate_mask=np.ones((count, 2), dtype=bool),
+    )
+    metadata = {
+        "schema_version": 1,
+        "dataset_id": campaign_id,
+        "campaign_id": campaign_id,
+        "ranking": {"mode": "fixed_axis_soft_nt", "nt_cost_exponent": 0.1},
+        "profile_bins": 16,
+        "candidate_names": candidates,
+        "arrays": "targets.npz",
+        "examples": examples,
+    }
+    (path / "dataset.json").write_text(json.dumps(metadata))
+    return path / "dataset.json"
+
+
+def test_merge_keeps_base_evaluation_splits_and_adds_only_augmentation_train(tmp_path):
+    base_examples = [
+        {"sample_id": "base_train", "split": "train"},
+        {"sample_id": "base_validation", "split": "validation"},
+        {"sample_id": "base_test", "split": "test"},
+    ]
+    augmentation_examples = [
+        {"sample_id": "new_train", "split": "train"},
+        {"sample_id": "new_validation", "split": "validation"},
+        {"sample_id": "new_test", "split": "test"},
+    ]
+    base = _write_distillation_dataset(tmp_path / "base", base_examples, campaign_id="base")
+    augmentation = _write_distillation_dataset(
+        tmp_path / "augmentation", augmentation_examples, campaign_id="augmentation"
+    )
+    output = tmp_path / "merged"
+    payload = merge_distillation_datasets(base, augmentation, output)
+
+    assert payload["split_counts"] == {"test": 1, "train": 2, "validation": 1}
+    assert [row["sample_id"] for row in payload["examples"]] == [
+        "base_train",
+        "base_validation",
+        "base_test",
+        "new_train",
+    ]
+    assert payload["augmentation_splits"] == ["train"]
+    with np.load(output / "targets.npz") as arrays:
+        assert arrays["profiles"].shape == (4, 2, 2, 16)
+        assert arrays["candidate_mask"].all()
+
+
+def test_merge_rejects_duplicate_samples_and_incompatible_targets(tmp_path):
+    base = _write_distillation_dataset(
+        tmp_path / "base", [{"sample_id": "same", "split": "train"}], campaign_id="base"
+    )
+    augmentation = _write_distillation_dataset(
+        tmp_path / "augmentation",
+        [{"sample_id": "same", "split": "train"}],
+        campaign_id="augmentation",
+    )
+    with pytest.raises(ValueError, match="duplicate sample IDs"):
+        merge_distillation_datasets(base, augmentation, tmp_path / "duplicate")
+
+    metadata = json.loads(augmentation.read_text())
+    metadata["candidate_names"] = ["uniform", "hybrid"]
+    augmentation.write_text(json.dumps(metadata))
+    with pytest.raises(ValueError, match="candidate_names"):
+        merge_distillation_datasets(base, augmentation, tmp_path / "incompatible")

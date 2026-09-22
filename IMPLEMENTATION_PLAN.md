@@ -1,8 +1,9 @@
 # Plane-wave scattering and low-budget learned meshing
 
-Status: new project, 22 September 2026. The receiver-waveform CNN project is retired.
-The CPU scattering solver and experimental conformal PEC/cell-enlargement modes
-are implemented; production reference generation and CNN training are not started.
+Status: active project, 22 September 2026. The receiver-waveform CNN project is retired.
+The scattering solver, first single-dielectric reference campaign, distillation fit,
+and frozen validation/test physics gate are complete. The separately frozen circle
+position/scale gate is in remediation before the sparse-scene curriculum begins.
 See [progress](PROGRESS.md) for measured validation.
 
 ## Objective and decision gates
@@ -16,6 +17,15 @@ stored and reported separately.** See the [simple-first curriculum](docs/curricu
 updated from the user's referenced discussion.
 Count PML cells and the time-step penalty from small cells in the computational cost.
 Do not infer success from teacher imitation loss, early stopping, or visual mesh density.
+
+The production target is **sparse scattering geometry**. A scene may contain several
+dielectric or PEC objects and one or more close gaps, but the objects and the local
+refinement regions must occupy a small part of the domain. For a tensor-product grid,
+sparsity is measured both by occupied area and by the union of projected x/y feature
+intervals: a few objects spread across the whole domain can consume nearly every mesh
+line and are not representative of the intended advantage. Translate the localized
+cluster between scenes so location generalization is still required. Dense assemblies
+remain stress tests and cannot compensate for failure on the sparse production strata.
 
 Before another large campaign, demonstrate that optimizing mesh placement actually
 improves scattering accuracy on a small held-out suite at matched cell and update
@@ -229,9 +239,12 @@ Start in controlled stages rather than immediately mixing every geometry family:
    frequency band, and compute budget; analytic complex references.
 2. Single dielectric cylinders: start with moderate lossless contrast, then extend
    epsilon_r to 30 and add conductivity; analytic complex references.
-3. Two/multiple cylinders: introduce controlled gaps and size/material contrasts.
-4. Rectangles/corners and thin screens once their solver treatment is qualified.
-5. Broader shapes and complex assemblies as generalization/stress tests.
+3. Sparse two/multiple cylinders: keep a localized cluster while introducing
+   controlled gaps, size/material contrasts, and translations.
+4. Sparse dielectric/PEC rectangles, corners, and thin screens once their solver
+   treatment is qualified. Preserve low occupied and projected-support fractions.
+5. Dense or domain-filling assemblies only as generalization/stress tests and
+   negative controls, not as the production training distribution.
 
 Start with the implemented 32-geometry dielectric-cylinder pool for candidate-mesh
 experiments, before any large data campaign. PEC cylinders remain analytic controls
@@ -312,9 +325,18 @@ As stages expand, keep three separately tagged families and report their results
 
 | Family | Initial contents | Controlled difficulty |
 |---|---|---|
-| Simple | First PEC circle, then dielectric circle; later other single objects | Scale, location, contrast, loss, incidence |
-| Sparse | Two dielectrics, two PEC objects, PEC + dielectric | Log-spaced gap, size ratio, orientation, incidence |
-| Complex | Several mixed objects with explicit overlap priority | Occlusion, multiple scattering, intersections, resonances |
+| Simple controls | Single dielectric/PEC objects | Scale, location, contrast, loss, incidence |
+| Sparse production | Localized clusters of 1–4 dielectric/PEC objects | Log-spaced gap, size ratio, cluster scale/location, orientation, incidence |
+| Dense stress | Domain-spanning mixed arrangements with explicit overlap policy | Multiple scattering, intersections, resonances, loss of tensor-grid headroom |
+
+For the first sparse pilots, target object occupancy of roughly 0.5–12% of domain
+area and keep each projected x/y feature-support union below roughly 45% of the
+domain. Treat these as pilot strata rather than silent clipping rules: record the
+actual occupied area, cluster envelope, projected support, minimum gap, object count,
+and PEC fraction for every scene. Measure headroom before freezing the final bounds.
+In combined training batches, sparse production scenes receive at least 70% of the
+sampling weight, analytic single-object controls retain at least 20%, and dense
+stress scenes receive at most 10%.
 
 - Mix locations/scales deliberately; do not fill every domain or use subpixel
   decorations. Require features to span multiple finest-reference cells. Resolve
@@ -388,8 +410,10 @@ As stages expand, keep three separately tagged families and report their results
   gates. Compare Pareto curves against uniform, wavelength/interface heuristics,
   and classical solution/error-guided refinement. Do not inherit old loss weights.
 - Report family losses independently before choosing a combined weighted loss.
-  Simple/sparse cases should receive substantial sampling and weight because they
-  represent the intended use; complex stress cases must not overwhelm them.
+  The primary promotion gate is evaluated on sparse production strata, including
+  single objects, localized pairs, close gaps, and sparse PEC/mixed scenes. Dense
+  stress cases are capped at 10% sampling weight and cannot offset a sparse-family
+  regression in an aggregate loss.
 - A forward solver alone does not give training gradients. First implement
   budget-conditioned distillation from physics-evaluated candidate mesh searches;
   then evaluate an adjoint/differentiable path as a distinct validated extension.
@@ -416,6 +440,13 @@ the 32-cell budget, isolating translation generalization from near-PML truncatio
 Its thresholds are fixed in `configs/circle_position_scale_generalization.json`;
 failure triggers a broader translated/scaled simple-family training pool rather
 than progression to sparse scenes.
+
+After that gate passes, the next headroom pilot uses localized two-cylinder clusters,
+then 3–4 object clusters. Each pilot compares exact-budget uniform and nonuniform
+meshes at 32/48/64 cells per axis, stratified by occupied area, projected x/y support,
+minimum gap, object count, material topology, and incidence angle. Advancement
+requires a measurable low-budget advantage within each declared sparse stratum;
+dense-scene performance is reported separately.
 
 The simple-family handoff is now automated. The label-to-training workflow requires
 one terminal record per candidate and an accepted uniform baseline per condition;

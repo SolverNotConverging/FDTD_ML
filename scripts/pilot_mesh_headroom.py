@@ -24,6 +24,7 @@ from scattermesh import (
     simulate_cuda,
 )
 from scattermesh.analytic import cylinder_far_field
+from scattermesh.generalization import widest_non_pml_monitor_bounds
 from scattermesh.metrics import scattering_loss
 
 DOMAIN = 1.2
@@ -272,15 +273,24 @@ def run_case(config, output, device, sources):
     directory.mkdir(parents=True, exist_ok=True)
     grid = make_grid(config)
     scene = config["scene"]
+    scatterer = Circle(scene["center"], scene["radius"], scene_material(scene))
+    monitor_bounds = None
+    if config.get("monitor_policy") is not None:
+        if config["monitor_policy"] != "widest_non_pml_enclosing":
+            raise ValueError(f"Unsupported monitor policy: {config['monitor_policy']}")
+        monitor_bounds = widest_non_pml_monitor_bounds(
+            grid, [scatterer.bounds], config["pml_thickness"]
+        )
     source = PlaneWave(1e9, 1e-9, 9e-9, angle=scene["angle"], origin=(0.6, 0.6))
     try:
         result = simulate_cuda(
             grid,
-            [Circle(scene["center"], scene["radius"], scene_material(scene))],
+            [scatterer],
             source,
             frequencies=FREQUENCIES,
             duration=config["duration"],
             pml_thickness=config["pml_thickness"],
+            monitor_bounds=monitor_bounds,
             pec_mode=config["pec_mode"],
             device=device,
             dtype="float64",

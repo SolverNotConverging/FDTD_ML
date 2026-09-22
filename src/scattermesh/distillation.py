@@ -316,3 +316,109 @@ def build_distillation_dataset(
     }
     _atomic_json(destination / "dataset.json", payload)
     return payload
+
+
+def merge_distillation_datasets(
+    base_dataset_path,
+    augmentation_dataset_path,
+    destination,
+    *,
+    augmentation_splits=("train",),
+):
+    """Merge training augmentation while preserving the base evaluation splits.
+
+    The candidate target space must be identical in both inputs.  By default only
+    training rows are admitted from the augmentation dataset, which keeps the
+    original validation and test sets frozen for an unbiased retraining comparison.
+    """
+    base_path = Path(base_dataset_path)
+    augmentation_path = Path(augmentation_dataset_path)
+    destination = Path(destination)
+    requested_splits = tuple(augmentation_splits)
+    if not requested_splits or any(not isinstance(split, str) for split in requested_splits):
+        raise ValueError("At least one augmentation split name is required")
+    if len(set(requested_splits)) != len(requested_splits):
+        raise ValueError("Augmentation split names must be unique")
+
+    metadata = [json.loads(path.read_text()) for path in (base_path, augmentation_path)]
+    base, augmentation = metadata
+    for field in ("profile_bins", "candidate_names", "ranking"):
+        if base.get(field) != augmentation.get(field):
+            raise ValueError(f"Distillation datasets differ in {field}")
+
+    loaded = []
+    try:
+        for path, item in zip((base_path, augmentation_path), metadata, strict=True):
+            arrays = np.load(path.parent / item["arrays"])
+            values = {
+                "profiles": arrays["profiles"].copy(),
+                "scores": arrays["scores"].copy(),
+                "candidate_mask": (
+                    arrays["candidate_mask"].copy()
+                    if "candidate_mask" in arrays
+                    else np.ones_like(arrays["scores"], dtype=bool)
+                ),
+            }
+            loaded.append(values)
+            arrays.close()
+            count = len(item["examples"])
+            if any(value.shape[0] != count for value in values.values()):
+                raise ValueError(f"Dataset arrays do not match metadata: {path}")
+    except (KeyError, OSError) as error:
+        raise ValueError("Invalid distillation dataset arrays") from error
+
+    augmentation_indices = [
+        index
+        for index, example in enumerate(augmentation["examples"])
+        if example["split"] in requested_splits
+    ]
+    if not augmentation_indices:
+        raise ValueError("No augmentation examples matched the requested splits")
+    examples = list(base["examples"]) + [
+        augmentation["examples"][index] for index in augmentation_indices
+    ]
+    sample_ids = [example["sample_id"] for example in examples]
+    if len(sample_ids) != len(set(sample_ids)):
+        raise ValueError("Merged datasets contain duplicate sample IDs")
+
+    arrays = {
+        name: np.concatenate((loaded[0][name], loaded[1][name][augmentation_indices]), axis=0)
+        for name in ("profiles", "scores", "candidate_mask")
+    }
+    split_counts = Counter(example["split"] for example in examples)
+    source_hashes = {
+        "base_dataset": _sha256_file(base_path),
+        "base_arrays": _sha256_file(base_path.parent / base["arrays"]),
+        "augmentation_dataset": _sha256_file(augmentation_path),
+        "augmentation_arrays": _sha256_file(
+            augmentation_path.parent / augmentation["arrays"]
+        ),
+    }
+    identity = {
+        "source_hashes": source_hashes,
+        "augmentation_splits": list(requested_splits),
+    }
+    dataset_id = "merged_distillation_" + hashlib.sha256(
+        json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()[:16]
+    destination.mkdir(parents=True, exist_ok=True)
+    arrays_path = destination / "targets.npz"
+    _atomic_npz(arrays_path, **arrays)
+    payload = {
+        "schema_version": 2,
+        "dataset_id": dataset_id,
+        "campaign_ids": [base.get("campaign_id"), augmentation.get("campaign_id")],
+        "ranking": base["ranking"],
+        "profile_bins": base["profile_bins"],
+        "candidate_names": base["candidate_names"],
+        "accepted_candidate_count": int(arrays["candidate_mask"].sum()),
+        "rejected_candidate_count": int(arrays["candidate_mask"].size - arrays["candidate_mask"].sum()),
+        "example_count": len(examples),
+        "split_counts": dict(sorted(split_counts.items())),
+        "augmentation_splits": list(requested_splits),
+        "source_hashes": source_hashes,
+        "arrays": arrays_path.name,
+        "examples": examples,
+    }
+    _atomic_json(destination / "dataset.json", payload)
+    return payload

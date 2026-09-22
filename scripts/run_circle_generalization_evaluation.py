@@ -15,6 +15,7 @@ import torch
 from scattermesh import Circle, Grid, Material, PlaneWave, simulate_cuda
 from scattermesh.analytic import cylinder_far_field
 from scattermesh.distillation import conditioning_features, probability_axis, rasterize_circle
+from scattermesh.generalization import widest_non_pml_monitor_bounds
 from scattermesh.metrics import scattering_loss
 from scattermesh.model import AxisDensityUNet
 
@@ -103,39 +104,6 @@ def mesh_cases(plan, checkpoint_path, examples=None):
                     }
                 )
     return cases
-
-
-def widest_non_pml_monitor_bounds(grid, object_bounds, pml_thickness):
-    """Choose the widest legal contour with a full vacuum cell around all objects."""
-    thickness = np.broadcast_to(np.asarray(pml_thickness, dtype=float), (2,))
-    if not np.isfinite(thickness).all() or np.any(thickness <= 0):
-        raise ValueError("Positive finite PML thickness is required")
-    bounds = np.asarray(tuple(object_bounds), dtype=float)
-    if bounds.ndim != 2 or bounds.shape[1] != 4 or not np.isfinite(bounds).all():
-        raise ValueError("Finite object bounds are required")
-
-    indices = []
-    for axis, pml, lower, upper in (
-        (grid.x, thickness[0], bounds[:, 0].min(), bounds[:, 1].max()),
-        (grid.y, thickness[1], bounds[:, 2].min(), bounds[:, 3].max()),
-    ):
-        length = axis[-1]
-        left = [index for index in range(1, len(axis) - 1) if axis[index - 1] > pml]
-        right = [
-            index
-            for index in range(1, len(axis) - 1)
-            if axis[index + 1] < length - pml
-        ]
-        if not left or not right:
-            raise ValueError("PML leaves no legal monitor interpolation stencil")
-        i0, i1 = min(left), max(right)
-        if not (i0 + 1 < i1 - 1 and axis[i0 + 1] < lower < upper < axis[i1 - 1]):
-            raise ValueError(
-                "Grid and PML cannot enclose every scatterer with a full vacuum cell"
-            )
-        indices.append((i0, i1))
-    (i0, i1), (j0, j1) = indices
-    return float(grid.x[i0]), float(grid.x[i1]), float(grid.y[j0]), float(grid.y[j1])
 
 
 def valid_attempt(directory, fingerprint):

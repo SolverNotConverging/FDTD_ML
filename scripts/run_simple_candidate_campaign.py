@@ -205,6 +205,10 @@ def case_definitions(manifest, campaign, geometries, conditions, candidate_map):
                 )
             if duration_schedule is not None:
                 config["duration_schedule_s"] = list(duration_schedule)
+            if "pml_thickness_m" in campaign:
+                config["pml_thickness"] = float(campaign["pml_thickness_m"])
+            if "monitor_policy" in campaign:
+                config["monitor_policy"] = campaign["monitor_policy"]
             config["case_id"] = f"{condition_id}_{candidate_name}"
             cases.append(config)
     return cases

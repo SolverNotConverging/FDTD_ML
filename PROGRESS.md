@@ -180,8 +180,16 @@ The referenced discussion was read and incorporated in
 [the curriculum](docs/curriculum.md) and the implementation plan. Start with single
 PEC cylinders, then dielectric cylinders, using analytic complex references.
 Introduce multiple cylinders and gaps before rectangles/corners and complex scenes.
-The proposed first pool is 32–64 base geometries for candidate-mesh experiments;
-no dataset worker or CNN training has been launched.
+The initial pool proposal was 32–64 base geometries for candidate-mesh experiments;
+the later factorial dielectric pool, candidate campaign, distillation dataset, and
+first full CNN fit are recorded below.
+
+The final production target is now explicitly sparse: localized single- and
+multi-object dielectric/PEC clusters, including close gaps, embedded in a much
+larger domain. Track occupied area and projected x/y feature support because a
+tensor grid loses its budget advantage when objects span the whole domain. Dense
+assemblies remain capped stress tests; sparse scenes receive at least 70% of later
+combined-training sampling weight.
 
 `scattermesh.metrics.scattering_loss` now scores both normalized complex MSE and
 floored log-RCS error. Initial weights are 1 and 0.25 after explicit dB scaling,
@@ -322,6 +330,19 @@ two unseen angles, and exact 32/48 budgets. The quadrant centers preserve at lea
 learned/uniform runner and four-GPU continuation wait for the main frozen physics
 gate before launching 240 solver cases. Passing this gate is now required before
 progression to sparse scenes.
+
+The first full position/scale execution is complete and records a real remediation
+gate rather than promotion. Overall, the CNN wins by at least 5% on 92/120 pairs
+(76.7%) with 1.667x median joint-score improvement, and every size/position median
+gate passes. Two centered, lossless, radius-0.135 m uniform baselines at 32x32 remain
+above the `1e-5` tail limit after 560 ns. The worst settled case is the translated
+northeast, lossy epsilon_r=20, radius-0.135 m circle at 48x48, where CNN/uniform
+improvement is 0.435x against the frozen 0.5 floor. The frozen gate therefore fails
+on settling and worst-case accuracy. Do not weaken it: extend the declared settling
+schedule and add disjoint translated/scaled training lineages before rerunning the
+original OOD suite. The initial monitor feasibility defect was corrected separately
+with a declared 0.12 m PML and the widest legal per-grid NF2FF contour; all 240 axes
+pass preflight under that policy.
 
 ## Next work
 

@@ -13,6 +13,12 @@ PRIMARY_BUDGETS = (32, 48, 64, 96)
 TRAIN_ANGLES = (0.2, 1.3, 3.0)
 VALIDATION_ANGLES = (0.85, 4.2)
 TEST_ANGLES = (2.1, 5.4)
+REMEDIATION_BUDGETS = (32, 48)
+REMEDIATION_ANGLES = {
+    "train": (0.10, 1.80, 3.40, 5.80),
+    "validation": (0.65, 4.45),
+    "test": (2.35, 5.15),
+}
 LOSS_TANGENT_REFERENCE_FREQUENCY_HZ = 1.0e9
 
 
@@ -217,6 +223,85 @@ def factorial_simple_dielectric_pool():
                     }
                 )
             lineage_index += 1
+    return pool
+
+
+def circle_remediation_pool():
+    """Return disjoint translated/scaled circles for the failed frozen OOD gate.
+
+    None of the radii, centers, material tuples, or incidence angles duplicates the
+    frozen position/scale suite.  Two nearby variants remain grouped by lineage.
+    """
+    lineages = (
+        ("train", 0.035, (0.28, 0.31), 4.0, 0.00),
+        ("train", 0.035, (0.89, 0.31), 18.0, 0.12),
+        ("train", 0.035, (0.31, 0.89), 7.0, 0.05),
+        ("train", 0.035, (0.89, 0.88), 24.0, 0.16),
+        ("train", 0.130, (0.40, 0.41), 4.0, 0.00),
+        ("train", 0.130, (0.80, 0.40), 18.0, 0.12),
+        ("train", 0.130, (0.41, 0.80), 7.0, 0.05),
+        ("train", 0.130, (0.79, 0.79), 24.0, 0.16),
+        ("train", 0.145, (0.43, 0.44), 4.0, 0.02),
+        ("train", 0.145, (0.77, 0.43), 18.0, 0.12),
+        ("train", 0.145, (0.44, 0.77), 7.0, 0.05),
+        ("train", 0.145, (0.76, 0.76), 24.0, 0.16),
+        ("validation", 0.045, (0.30, 0.62), 5.0, 0.03),
+        ("validation", 0.115, (0.75, 0.48), 16.0, 0.13),
+        ("validation", 0.140, (0.48, 0.75), 8.0, 0.06),
+        ("validation", 0.140, (0.74, 0.74), 22.0, 0.15),
+        ("test", 0.055, (0.90, 0.58), 6.0, 0.04),
+        ("test", 0.120, (0.45, 0.76), 14.0, 0.11),
+        ("test", 0.142, (0.76, 0.45), 10.0, 0.07),
+        ("test", 0.142, (0.75, 0.75), 26.0, 0.17),
+    )
+    variants = ((0.985, (-0.007, 0.005)), (1.015, (0.006, -0.007)))
+    pool = []
+    for lineage_index, (split, base_radius, base_center, epsilon_r, loss_tangent) in enumerate(
+        lineages
+    ):
+        lineage = {
+            "family": "simple_remediation",
+            "shape": "circle",
+            "split": split,
+            "base_radius_m": base_radius,
+            "base_center_m": base_center,
+            "epsilon_r": epsilon_r,
+            "loss_tangent_at_1ghz": loss_tangent,
+        }
+        lineage_id = f"circle_remediation_lineage_{_identifier(lineage)}"
+        orientation = 0.47 * lineage_index
+        cosine, sine = np.cos(orientation), np.sin(orientation)
+        for variant_index, (scale, raw_offset) in enumerate(variants):
+            dx = cosine * raw_offset[0] - sine * raw_offset[1]
+            dy = sine * raw_offset[0] + cosine * raw_offset[1]
+            radius = base_radius * scale
+            center = (base_center[0] + dx, base_center[1] + dy)
+            definition = {
+                "family": "simple_remediation",
+                "shape": "circle",
+                "lineage_id": lineage_id,
+                "variant_index": variant_index,
+                "split": split,
+                "radius_m": radius,
+                "center_m": center,
+                "epsilon_r": epsilon_r,
+                "loss_tangent_at_1ghz": loss_tangent,
+                "sigma_e_s_per_m": _conductivity_for_loss_tangent(epsilon_r, loss_tangent),
+            }
+            feature_size = 2 * radius
+            pool.append(
+                {
+                    "geometry_id": f"circle_remediation_{_identifier(definition)}",
+                    **definition,
+                    "feature_size_m": feature_size,
+                    "feature_cells_on_256_input": feature_size / (DOMAIN / 256),
+                    "minimum_internal_wavelength_m": C0
+                    / (max(FREQUENCIES) * np.sqrt(epsilon_r)),
+                    "incidence_angles_rad": list(REMEDIATION_ANGLES[split]),
+                    "frequencies_hz": list(FREQUENCIES),
+                    "analytic_reference": "infinite_TM_z_dielectric_cylinder",
+                }
+            )
     return pool
 
 

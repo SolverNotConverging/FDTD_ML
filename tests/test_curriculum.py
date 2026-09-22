@@ -1,10 +1,12 @@
 from collections import Counter, defaultdict
 
 from scattermesh import (
+    circle_remediation_pool,
     factorial_simple_dielectric_pool,
     simple_candidate_tasks,
     simple_dielectric_pool,
 )
+from scattermesh.curriculum import REMEDIATION_ANGLES
 
 
 def test_simple_pool_has_grouped_splits_and_resolved_features():
@@ -120,3 +122,40 @@ def test_factorial_pool_expands_to_grouped_conditions():
         lineage_splits[task["lineage_id"]].add(task["split"])
         assert task["lineage_id"] == geometry[task["geometry_id"]]["lineage_id"]
     assert all(len(splits) == 1 for splits in lineage_splits.values())
+
+
+def test_circle_remediation_pool_is_grouped_and_disjoint_from_frozen_gate():
+    pool = circle_remediation_pool()
+    assert len(pool) == 40
+    assert Counter(row["split"] for row in pool) == {
+        "train": 24,
+        "validation": 8,
+        "test": 8,
+    }
+    lineages = defaultdict(list)
+    for row in pool:
+        lineages[row["lineage_id"]].append(row)
+        assert row["radius_m"] not in {0.040, 0.075, 0.135}
+        assert tuple(row["center_m"]) not in {
+            (0.60, 0.60),
+            (0.38, 0.38),
+            (0.82, 0.38),
+            (0.38, 0.82),
+            (0.82, 0.82),
+        }
+        assert set(row["incidence_angles_rad"]).isdisjoint({0.35, 4.9})
+    assert len(lineages) == 20
+    assert all(len(rows) == 2 for rows in lineages.values())
+    assert all(len({row["split"] for row in rows}) == 1 for rows in lineages.values())
+    assert all(
+        set(REMEDIATION_ANGLES[left]).isdisjoint(REMEDIATION_ANGLES[right])
+        for left, right in (("train", "validation"), ("train", "test"), ("validation", "test"))
+    )
+
+    tasks = simple_candidate_tasks(pool, budgets=(32, 48))
+    assert len(tasks) == 256
+    assert Counter(row["split"] for row in tasks) == {
+        "train": 192,
+        "validation": 32,
+        "test": 32,
+    }

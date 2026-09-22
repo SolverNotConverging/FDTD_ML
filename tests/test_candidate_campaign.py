@@ -84,6 +84,30 @@ def test_candidate_variants_can_use_less_resolution_than_the_target_budget(tmp_p
     assert scaled["base_candidate"] == "region_medium"
 
 
+def test_campaign_can_declare_dynamic_monitor_policy(tmp_path):
+    runner = load_runner()
+    manifest_path = ROOT / "configs/simple_dielectric_pool.json"
+    manifest = json.loads(manifest_path.read_text())
+    condition = manifest["conditions"][0]
+    campaign = {
+        "schema_version": 3,
+        "dataset_id": manifest["dataset_id"],
+        "campaign_id": "dynamic_monitor_test",
+        "geometry_ids": [condition["geometry_id"]],
+        "condition_ids": [condition["task_id"]],
+        "candidate_names": ["uniform"],
+        "duration_schedule_s": [70e-9],
+        "ranking": {"mode": "fixed_axis_soft_nt", "nt_cost_exponent": 0.1},
+        "pml_thickness_m": 0.12,
+        "monitor_policy": "widest_non_pml_enclosing",
+    }
+    campaign_path = tmp_path / "dynamic_monitor.json"
+    campaign_path.write_text(json.dumps(campaign))
+    case = runner.case_definitions(*runner.load_inputs(manifest_path, campaign_path))[0]
+    assert case["pml_thickness"] == 0.12
+    assert case["monitor_policy"] == "widest_non_pml_enclosing"
+
+
 def test_campaign_source_hashes_are_pinned_across_resumes(tmp_path, monkeypatch):
     runner = load_runner()
     monkeypatch.setattr(runner.PILOT, "source_hashes", lambda: {"solver.py": "first"})
