@@ -238,6 +238,12 @@ full plan `simple_candidate_full_d535ccac015b3cd8` expands all 32 geometries and
 conditions into 3,168 restartable cases, including the epsilon_r=4.5 train lineage.
 See the [candidate pilot](docs/validation/simple_candidate_pilot.md).
 
+The full campaign is running in four restartable GPU shards. Its report schema now
+contains a frozen pre-M5 label-diversity gate: at least 5% gains must span two
+training lineages, two candidate policies, and two budgets, with at least one
+validation and test gain. The completed 270-case pilot correctly fails this gate
+because its two useful labels occur only in the held-out test lineage at budget 64.
+
 ## Next work
 
 1. Broaden PEC enlargement validation to close gaps, cavities, resonances, strong

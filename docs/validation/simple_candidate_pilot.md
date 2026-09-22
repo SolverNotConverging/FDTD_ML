@@ -31,6 +31,13 @@ campaign must include all training lineages, especially epsilon_r=4.5, before mo
 training. `simple_candidate_full_d535ccac015b3cd8` covers all 32 geometries, 352
 conditions, and 3,168 cases while preserving the frozen grouped splits.
 
+Report schema 2 makes the training gate explicit. It treats a nonuniform win as
+meaningful at 1.05x or better improvement and requires training wins from at least
+two lineages, two policies, and two budgets, plus held-out validation and test
+headroom. This pilot returns `not_ready_for_m5`, as expected: both meaningful wins
+are `region_strong` labels at budget 64 in the single test lineage. The thresholds
+were frozen before summarizing the full campaign.
+
 Run or resume the pilot, then summarize labels, with:
 
 ```bash

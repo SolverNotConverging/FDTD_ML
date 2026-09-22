@@ -81,6 +81,7 @@ MPLCONFIGDIR=/tmp/scattermesh-mpl \
 .venv/bin/python scripts/build_simple_candidate_pilot.py --full
 .venv/bin/python scripts/run_simple_candidate_campaign.py \
   --device cuda:0 --shard 0 --shards 4
+.venv/bin/python scripts/candidate_campaign_status.py
 .venv/bin/python scripts/run_simple_candidate_campaign.py --summarize
 ```
 
@@ -88,6 +89,8 @@ Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and
 `scattering_validation.png`. This bounded CPU check completes and exits; it does
 not start a dataset/training worker. It compares 64/128 uniform and nonuniform
 meshes at two incidence angles, followed by four sensitivity checks.
+The candidate status command is read-only and reports verified cache counts,
+solver outcomes, recent throughput, and an ETA for the full campaign.
 The separate PEC pilot writes `runs/conformal_pec_pilot/` with analytic cylinder
 comparisons, off-grid geometry plots, and very small cut-fraction stability checks.
 The restartable PEC-cylinder matrix writes `runs/pec_cylinder_qualification/` and

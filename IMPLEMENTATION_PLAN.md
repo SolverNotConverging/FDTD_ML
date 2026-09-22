@@ -254,6 +254,15 @@ the epsilon_r=5 test geometry has two; do not train on that imbalance. Execute t
 generated 3,168-case full plan `simple_candidate_full_d535ccac015b3cd8`, then audit
 train/validation label diversity before starting M5.
 
+The pre-M5 audit is fixed before reading the full result. A meaningful candidate
+win is at least 5% lower joint scattering loss than the affordable uniform
+baseline. The full campaign must have complete uniform baselines, and training
+wins must span at least two lineages, two nonuniform candidate policies, and two
+budgets. Validation and test must each contain at least one meaningful win. The
+version-2 campaign report records these checks, per-split candidate/budget counts,
+and improvement statistics. Failing this gate triggers another candidate-search
+iteration rather than CNN fitting.
+
 As stages expand, keep three separately tagged families and report their results separately:
 
 | Family | Initial contents | Controlled difficulty |
