@@ -121,6 +121,14 @@ proposed 0.5% observation gate after escalation. This milestone remains in progr
 for the other geometries, topologies, and external comparisons below; see the
 [measured qualification](docs/validation/pec_cylinder_qualification.md).
 
+The first dielectric substage is also measured. Three epsilon_r<=4 cases pass the
+initial analytic-reference gates at 192². Epsilon_r=12 and 30 remain deferred:
+their 128² grids have fewer than eight and five cells per shortest internal
+wavelength and show large resonant error/tails. See the
+[dielectric qualification](docs/validation/dielectric_cylinder_qualification.md).
+Reference escalation must therefore use material wavelength and settling evidence,
+not exterior free-space resolution alone.
+
 - Extend the implemented PEC rectangle/cylinder prototype to split-edge thin
   segments and mixed dielectric/PEC scenes; preserve total-field cancellation.
 - Qualify enlargement across location/scale/angle, strong grading, close gaps,

@@ -32,6 +32,8 @@ PYTHONPATH=src OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/scattermesh-mpl \
   .venv/bin/python scripts/pilot_conformal_pec.py
 PYTHONPATH=src OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/scattermesh-mpl \
   .venv/bin/python scripts/qualify_pec_cylinders.py
+PYTHONPATH=src OPENBLAS_NUM_THREADS=1 MPLCONFIGDIR=/tmp/scattermesh-mpl \
+  .venv/bin/python scripts/qualify_dielectric_cylinders.py
 ```
 
 Outputs are `runs/scattering_bootstrap/report.json`, `spectra.npz`, and
@@ -43,6 +45,8 @@ comparisons, off-grid geometry plots, and very small cut-fraction stability chec
 The restartable PEC-cylinder matrix writes `runs/pec_cylinder_qualification/` and
 reuses a case only after checking its physics-source/configuration fingerprint and
 saved complex arrays. See the [measured matrix report](docs/validation/pec_cylinder_qualification.md).
+The matching [dielectric qualification](docs/validation/dielectric_cylinder_qualification.md)
+starts with epsilon_r<=4 and records epsilon_r=12/30 as deferred contrast stages.
 
 For a fresh environment, install this package and the tools:
 

@@ -119,6 +119,18 @@ reference acceptance is deliberately not implemented yet. Results are under
 `runs/scattering_bootstrap/`; a tracked report is in
 `docs/validation/dielectric_bootstrap.json`.
 
+The next restartable 25-case dielectric matrix separates the curriculum by measured
+difficulty. At 192², the initial epsilon_r<=4 family passes: worst complex error
+1.403%, phase RMS 0.671°, tail 2.67e-8, and worst duration/PML/contour/quadrature
+variation 0.232%. These cases have at least 19.99 cells per shortest internal
+wavelength.
+
+Epsilon_r=12 and 30 are not accepted yet. At 128² they have only 7.69 and 4.87
+cells per shortest internal wavelength. The lossless cases show 30.8% and 63.5%
+complex error with persistent resonant tails. This directly supports keeping feature
+size/material wavelength in the model inputs and using automatic mesh/time escalation.
+See the [dielectric qualification](docs/validation/dielectric_cylinder_qualification.md).
+
 ## Joint loss and initial training curriculum
 
 The referenced discussion was read and incorporated in
