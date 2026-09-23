@@ -84,7 +84,9 @@ memory probe admitted microbatches 1, 2, 4, and 8, with batch 8 peaking at
 Only nine rows had a complete compatible projection: eight dielectric and one
 PEC. Seven PEC rows had at least one reference or candidate grid rejected by
 the current conformal representation or exceeded a bounded profiling step
-cap. Several dielectric rows were unsettled at the 70 ns probe duration.
+cap. At 192 cells, four of eight dielectric exemplars remained unsettled at
+70 ns, and five of eight PEC exemplars exceeded the 50,000-step profiling cap.
+Seven PEC exemplars had an incompatible tested grid at some budget or policy.
 For the compatible rows alone, the projected data-phase elapsed time is
 **18.16 hours for 128 lineages** or **36.31 hours for 256 lineages**
 with all four GPUs. The projection assumes 140 ns candidate runs and four

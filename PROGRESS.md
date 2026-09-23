@@ -12,6 +12,9 @@
   **partial projection of 18.16 elapsed hours** for 128 lineages and 36.31
   hours for 256 lineages, using all four GPUs. The 14-hour data-phase gate
   therefore stopped bulk execution before training or frozen testing.
+  At 192 cells, four dielectric examples were unsettled at 70 ns; five PEC
+  examples exceeded the profiling step cap, and seven PEC examples had at
+  least one incompatible tested grid.
 - A complete dielectric-circle reference smoke escalated to 512 cells per axis
   and passed duration, quadrature, contour, and PML probes; its maximum
   measured reference variation was 0.1853%. New star dielectric and
