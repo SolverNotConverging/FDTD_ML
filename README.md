@@ -1,4 +1,40 @@
-# ScatterMesh
+# ScatterMesh: CNN mesh prediction v2
+
+The sole working project is `/home/s2307298/projects/FDTD_ML` on branch
+`codex/mesh-cnn-v2`. The previous scattering/CNN implementation and paused runs
+are preserved in [`archive/scattermesh_2026-09-23`](archive/scattermesh_2026-09-23/README.md);
+the receiver-CNN archive remains alongside it. All new outputs use `runs_v2/`.
+The `runs/` compatibility link resolves within this project. The former Codex
+worktree is absent and is not needed for imports, datasets, or execution.
+
+The C0–C2 pilot adds eight continuous shape families, 75% dielectric and 25% PEC
+scene generation, explicit reference qualification, 12 exact-budget teacher mesh
+policies, weak time-step scoring (exponent 0.05), and a 26.85-million-parameter
+residual U-Net with a width-16 comparison model. The original TMz solver and
+public simulation interfaces remain available.
+
+**Campaign status:** The required 16-scene sizing profile stopped bulk launch.
+Compatible measured rows alone project to 18.16 elapsed hours on four
+TITAN RTX GPUs for 128 lineages, above the 14-hour data allocation. Seven PEC
+rows also have an incompatible or unresolved projected policy/reference; some
+dielectric fields did not settle in the 70 ns profiling run. No new test results
+or CNN accuracy claims have been made. See the [v2 pilot contract and measured
+gate](docs/v2_pilot.md).
+
+Run the reproducible sizing gate and inspect the status with:
+
+```bash
+.venv/bin/python scripts/run_mesh_cnn_v2.py launch --output runs_v2/c0_c2_pilot
+cat runs_v2/c0_c2_pilot/campaign_status.json
+```
+
+The existing `.venv` is relocated to this project and contains an editable local
+installation. Archive dependency versions and relocation details are under
+`archive/scattermesh_2026-09-23/metadata/`.
+Check the local archive with `.venv/bin/python scripts/verify_local_archive.py`
+or add `--full` to hash all inventoried files.
+
+## Historical scattering project documentation
 
 Nonuniform-grid plane-wave scattering for low-budget learned meshing.
 This is a fresh project. The receiver-driven CNN experiments have been archived.

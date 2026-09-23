@@ -1,3 +1,27 @@
+# Mesh-CNN v2 implementation plan — 23 September 2026
+
+The active plan is the [C0–C2 pilot contract](docs/v2_pilot.md). The prior
+scattering/CNN plan below is historical and has an exact frozen copy under
+`archive/scattermesh_2026-09-23/source/IMPLEMENTATION_PLAN.md`.
+
+The implementation sequence is: preserve and verify both archives; qualify
+continuous geometry and reference convergence; measure 16 shape/material rows;
+freeze 256 or 128 grouped lineages only if the measured 14-hour data allocation
+admits a complete balanced campaign; then generate physics-scored teacher meshes,
+train the large and small CNNs, select with validation FDTD, and evaluate one
+frozen test set. Accuracy at fixed spatial budget and minimum tested cells at
+specified error are the principal outcomes. The time-step exponent of 0.05 is
+weak regularization; all model selection and the scientific gate use raw field
+and width accuracy.
+
+The 16-scene profile currently gives an 18.16-hour **partial projection** for
+128 lineages across four GPUs; several PEC rows are incompatible and no full
+estimate is available. The `launch` command enforces the requested pre-bulk
+stop. A revised numerical policy, scene design, or time allocation must be
+profiled and frozen before a bulk run. No 24-hour campaign is underway.
+
+---
+
 # Plane-wave scattering and low-budget learned meshing
 
 Status: active project, 22 September 2026. The receiver-waveform CNN project is retired.

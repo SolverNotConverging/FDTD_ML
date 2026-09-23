@@ -1,3 +1,31 @@
+# Mesh-CNN v2 progress — 23 September 2026
+
+- Archived previous scattering/CNN source and 59,178 historical run files with
+  SHA-256 inventory; retained a local `runs/` compatibility link. Preserved the
+  receiver-CNN archive and repaired/verified all 404 relocated symlinks. The
+  active environment and editable install resolve in this project.
+- Added continuous ellipse, polygon and smooth-lobed geometry; C0–C2 lineage
+  generation; candidate, scoring, reference, dataset, large/small model,
+  training, evaluation and deadline-aware campaign components.
+- The 16-scene sizing gate ran on four TITAN RTX GPUs in 109 seconds. Only 9/16
+  rows had all projected components usable. The compatible rows alone imply a
+  **partial projection of 18.16 elapsed hours** for 128 lineages and 36.31
+  hours for 256 lineages, using all four GPUs. The 14-hour data-phase gate
+  therefore stopped bulk execution before training or frozen testing.
+- A complete dielectric-circle reference smoke escalated to 512 cells per axis
+  and passed duration, quadrature, contour, and PML probes; its maximum
+  measured reference variation was 0.1853%. New star dielectric and
+  smooth-lobed PEC CPU/CUDA complex fields agreed within 5e-16 relative L2.
+- Imported 1,104 accepted historical training examples into a portable local
+  dataset, preserving source checksums and rescoring at exponent 0.05. No
+  historical validation or test examples entered the import.
+- Details and remediation conditions are in [the v2 pilot record](docs/v2_pilot.md).
+
+The remainder of this file records the archived scattering project as it stood
+on 22 September 2026. The exact original is in the scattering source archive.
+
+---
+
 # Scattering project progress — 22 September 2026
 
 ## Archive and new project

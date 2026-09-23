@@ -12,6 +12,7 @@ from scipy.sparse import coo_matrix
 
 from .constants import C0
 from .geometry import Circle, Rectangle
+from .geometry_v2 import Ellipse, Polygon, SmoothLobed
 
 
 def _intervals(objects, coordinate, axis, tolerance):
@@ -32,8 +33,10 @@ def _intervals(objects, coordinate, axis, tolerance):
                 <= bounds[2 * (1 - axis) + 1] + tolerance
             ):
                 intervals.append((bounds[2 * axis], bounds[2 * axis + 1]))
+        elif isinstance(obj, (Ellipse, Polygon, SmoothLobed)):
+            intervals.extend(obj.line_intervals(coordinate, axis, tolerance))
         else:
-            raise ValueError("Conformal PEC currently supports circles and rectangles")
+            raise ValueError("Unsupported conformal PEC geometry")
     merged = []
     for a, b in sorted(intervals):
         if merged and a <= merged[-1][1]:
@@ -65,8 +68,10 @@ class CutCellPEC:
                 mask = (grid.x[:, None] - obj.center[0]) ** 2 + (
                     grid.y[None, :] - obj.center[1]
                 ) ** 2 <= (obj.radius + tolerance) ** 2
+            elif isinstance(obj, (Ellipse, Polygon, SmoothLobed)):
+                mask = obj.contains(grid.x[:, None], grid.y[None, :])
             else:
-                raise ValueError("Conformal PEC currently supports circles and rectangles")
+                raise ValueError("Unsupported conformal PEC geometry")
             if not mask.any():
                 raise ValueError(
                     "PEC has no represented Ez nodes; refine mesh or use a split-edge model"

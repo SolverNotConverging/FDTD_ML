@@ -1,0 +1,2437 @@
+{
+  "archive": "receiver_cnn_2026-09-22",
+  "old_root": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML",
+  "new_root": "/home/s2307298/projects/FDTD_ML",
+  "counts": {
+    "symlinks_found": 404,
+    "symlinks_repaired": 404,
+    "mapped_targets_existing_before_replacement": 404,
+    "repaired_links_resolving_after_replacement": 404
+  },
+  "links": [
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000000",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000000/references/train-v6-000000",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000000/references/train-v6-000000",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000001",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000001/references/train-v6-000001",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000001/references/train-v6-000001",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000002",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000002/references/train-v6-000002",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000002/references/train-v6-000002",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000003",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000003/references/train-v6-000003",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000003/references/train-v6-000003",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000004",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000004/references/train-v6-000004",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000004/references/train-v6-000004",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000005",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000005/references/train-v6-000005",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000005/references/train-v6-000005",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000006",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000006/references/train-v6-000006",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000006/references/train-v6-000006",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000007",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000007/references/train-v6-000007",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000007/references/train-v6-000007",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000008",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000008/references/train-v6-000008",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000008/references/train-v6-000008",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000009",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000009/references/train-v6-000009",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000009/references/train-v6-000009",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000010",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000010/references/train-v6-000010",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000010/references/train-v6-000010",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000011",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000011/references/train-v6-000011",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000011/references/train-v6-000011",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000012",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000012/references/train-v6-000012",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000012/references/train-v6-000012",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000013",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000013/references/train-v6-000013",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000013/references/train-v6-000013",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000014",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000014/references/train-v6-000014",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000014/references/train-v6-000014",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000015",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000015/references/train-v6-000015",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000015/references/train-v6-000015",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000016",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000016/references/train-v6-000016",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000016/references/train-v6-000016",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000017",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000017/references/train-v6-000017",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000017/references/train-v6-000017",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000018",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000018/references/train-v6-000018",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000018/references/train-v6-000018",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000019",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000019/references/train-v6-000019",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000019/references/train-v6-000019",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000020",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000020/references/train-v6-000020",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000020/references/train-v6-000020",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000021",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000021/references/train-v6-000021",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000021/references/train-v6-000021",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000022",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000022/references/train-v6-000022",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000022/references/train-v6-000022",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000023",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000023/references/train-v6-000023",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000023/references/train-v6-000023",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000025",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000025/references/train-v6-000025",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000025/references/train-v6-000025",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000026",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000026/references/train-v6-000026",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000026/references/train-v6-000026",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000027",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000027/references/train-v6-000027",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000027/references/train-v6-000027",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000028",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000028/references/train-v6-000028",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000028/references/train-v6-000028",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000029",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000029/references/train-v6-000029",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000029/references/train-v6-000029",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000030",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000030/references/train-v6-000030",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000030/references/train-v6-000030",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000031",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000031/references/train-v6-000031",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000031/references/train-v6-000031",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000032",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000032/references/train-v6-000032",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000032/references/train-v6-000032",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000033",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000033/references/train-v6-000033",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000033/references/train-v6-000033",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000034",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000034/references/train-v6-000034",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000034/references/train-v6-000034",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000035",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000035/references/train-v6-000035",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000035/references/train-v6-000035",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000036",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000036/references/train-v6-000036",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000036/references/train-v6-000036",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000037",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000037/references/train-v6-000037",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000037/references/train-v6-000037",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000038",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000038/references/train-v6-000038",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000038/references/train-v6-000038",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000039",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000039/references/train-v6-000039",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000039/references/train-v6-000039",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000040",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000040/references/train-v6-000040",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000040/references/train-v6-000040",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000041",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000041/references/train-v6-000041",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000041/references/train-v6-000041",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000042",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000042/references/train-v6-000042",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000042/references/train-v6-000042",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000043",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000043/references/train-v6-000043",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000043/references/train-v6-000043",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000044",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000044/references/train-v6-000044",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000044/references/train-v6-000044",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000045",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000045/references/train-v6-000045",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000045/references/train-v6-000045",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000046",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000046/references/train-v6-000046",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000046/references/train-v6-000046",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000048",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000048/references/train-v6-000048",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000048/references/train-v6-000048",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000049",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000049/references/train-v6-000049",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000049/references/train-v6-000049",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000050",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000050/references/train-v6-000050",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000050/references/train-v6-000050",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000051",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000051/references/train-v6-000051",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000051/references/train-v6-000051",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000052",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000052/references/train-v6-000052",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000052/references/train-v6-000052",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000053",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000053/references/train-v6-000053",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000053/references/train-v6-000053",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000054",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000054/references/train-v6-000054",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000054/references/train-v6-000054",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000055",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000055/references/train-v6-000055",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000055/references/train-v6-000055",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000056",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000056/references/train-v6-000056",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000056/references/train-v6-000056",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000057",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000057/references/train-v6-000057",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000057/references/train-v6-000057",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000058",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000058/references/train-v6-000058",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000058/references/train-v6-000058",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000059",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000059/references/train-v6-000059",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000059/references/train-v6-000059",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000060",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000060/references/train-v6-000060",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000060/references/train-v6-000060",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000061",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000061/references/train-v6-000061",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000061/references/train-v6-000061",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000062",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000062/references/train-v6-000062",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000062/references/train-v6-000062",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000063",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000063/references/train-v6-000063",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000063/references/train-v6-000063",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000064",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000064/references/train-v6-000064",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000064/references/train-v6-000064",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v6-000067",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000067/references/train-v6-000067",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000067/references/train-v6-000067",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000000",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000000/references/train-v7-000000",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000000/references/train-v7-000000",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000001",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000001/references/train-v7-000001",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000001/references/train-v7-000001",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000002",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000002/references/train-v7-000002",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000002/references/train-v7-000002",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000003",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000003/references/train-v7-000003",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000003/references/train-v7-000003",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000004",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000004/references/train-v7-000004",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000004/references/train-v7-000004",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000005",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000005/references/train-v7-000005",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000005/references/train-v7-000005",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000006",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000006/references/train-v7-000006",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000006/references/train-v7-000006",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000007",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000007/references/train-v7-000007",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000007/references/train-v7-000007",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000008",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000008/references/train-v7-000008",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000008/references/train-v7-000008",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000009",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000009/references/train-v7-000009",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000009/references/train-v7-000009",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000010",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000010/references/train-v7-000010",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000010/references/train-v7-000010",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000011",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000011/references/train-v7-000011",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000011/references/train-v7-000011",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000012",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000012/references/train-v7-000012",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000012/references/train-v7-000012",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000013",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000013/references/train-v7-000013",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000013/references/train-v7-000013",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000014",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000014/references/train-v7-000014",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000014/references/train-v7-000014",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000015",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000015/references/train-v7-000015",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000015/references/train-v7-000015",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000016",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000016/references/train-v7-000016",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000016/references/train-v7-000016",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000017",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000017/references/train-v7-000017",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000017/references/train-v7-000017",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000018",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000018/references/train-v7-000018",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000018/references/train-v7-000018",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000019",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000019/references/train-v7-000019",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000019/references/train-v7-000019",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000020",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000020/references/train-v7-000020",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000020/references/train-v7-000020",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000021",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000021/references/train-v7-000021",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000021/references/train-v7-000021",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000022",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000022/references/train-v7-000022",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000022/references/train-v7-000022",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000023",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000023/references/train-v7-000023",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000023/references/train-v7-000023",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000024",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000024/references/train-v7-000024",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000024/references/train-v7-000024",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000025",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000025/references/train-v7-000025",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000025/references/train-v7-000025",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000026",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000026/references/train-v7-000026",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000026/references/train-v7-000026",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000027",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000027/references/train-v7-000027",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000027/references/train-v7-000027",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000028",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000028/references/train-v7-000028",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000028/references/train-v7-000028",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000029",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000029/references/train-v7-000029",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000029/references/train-v7-000029",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000030",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000030/references/train-v7-000030",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000030/references/train-v7-000030",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000031",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000031/references/train-v7-000031",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000031/references/train-v7-000031",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000032",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000032/references/train-v7-000032",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000032/references/train-v7-000032",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000033",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000033/references/train-v7-000033",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000033/references/train-v7-000033",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000034",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000034/references/train-v7-000034",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000034/references/train-v7-000034",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000035",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000035/references/train-v7-000035",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000035/references/train-v7-000035",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000036",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000036/references/train-v7-000036",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000036/references/train-v7-000036",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000037",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000037/references/train-v7-000037",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000037/references/train-v7-000037",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000038",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000038/references/train-v7-000038",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000038/references/train-v7-000038",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000039",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000039/references/train-v7-000039",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000039/references/train-v7-000039",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000040",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000040/references/train-v7-000040",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000040/references/train-v7-000040",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000041",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000041/references/train-v7-000041",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000041/references/train-v7-000041",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000042",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000042/references/train-v7-000042",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000042/references/train-v7-000042",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000043",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000043/references/train-v7-000043",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000043/references/train-v7-000043",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000044",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000044/references/train-v7-000044",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000044/references/train-v7-000044",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000045",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000045/references/train-v7-000045",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000045/references/train-v7-000045",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000046",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000046/references/train-v7-000046",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000046/references/train-v7-000046",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000047",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000047/references/train-v7-000047",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000047/references/train-v7-000047",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000048",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000048/references/train-v7-000048",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000048/references/train-v7-000048",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000049",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000049/references/train-v7-000049",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000049/references/train-v7-000049",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000050",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000050/references/train-v7-000050",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000050/references/train-v7-000050",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000051",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000051/references/train-v7-000051",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000051/references/train-v7-000051",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000052",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000052/references/train-v7-000052",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000052/references/train-v7-000052",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000053",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000053/references/train-v7-000053",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000053/references/train-v7-000053",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000054",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000054/references/train-v7-000054",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000054/references/train-v7-000054",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000055",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000055/references/train-v7-000055",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000055/references/train-v7-000055",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000056",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000056/references/train-v7-000056",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000056/references/train-v7-000056",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000057",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000057/references/train-v7-000057",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000057/references/train-v7-000057",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000058",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000058/references/train-v7-000058",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000058/references/train-v7-000058",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000059",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000059/references/train-v7-000059",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000059/references/train-v7-000059",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000060",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000060/references/train-v7-000060",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000060/references/train-v7-000060",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000061",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000061/references/train-v7-000061",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000061/references/train-v7-000061",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000062",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000062/references/train-v7-000062",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000062/references/train-v7-000062",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/train-v7-000063",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000063/references/train-v7-000063",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000063/references/train-v7-000063",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000004",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000004/references/validation-v6-000004",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000004/references/validation-v6-000004",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000005",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000005/references/validation-v6-000005",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000005/references/validation-v6-000005",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000006",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000006/references/validation-v6-000006",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000006/references/validation-v6-000006",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000007",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000007/references/validation-v6-000007",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000007/references/validation-v6-000007",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000008",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000008/references/validation-v6-000008",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000008/references/validation-v6-000008",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000009",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000009/references/validation-v6-000009",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000009/references/validation-v6-000009",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000010",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000010/references/validation-v6-000010",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000010/references/validation-v6-000010",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000011",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000011/references/validation-v6-000011",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000011/references/validation-v6-000011",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000013",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000013/references/validation-v6-000013",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000013/references/validation-v6-000013",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000014",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000014/references/validation-v6-000014",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000014/references/validation-v6-000014",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000015",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000015/references/validation-v6-000015",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000015/references/validation-v6-000015",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000016",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000016/references/validation-v6-000016",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000016/references/validation-v6-000016",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000017",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000017/references/validation-v6-000017",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000017/references/validation-v6-000017",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000018",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000018/references/validation-v6-000018",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000018/references/validation-v6-000018",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000019",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000019/references/validation-v6-000019",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000019/references/validation-v6-000019",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v6-000020",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000020/references/validation-v6-000020",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000020/references/validation-v6-000020",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000004",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000004/references/validation-v7-000004",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000004/references/validation-v7-000004",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000005",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000005/references/validation-v7-000005",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000005/references/validation-v7-000005",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000006",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000006/references/validation-v7-000006",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000006/references/validation-v7-000006",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000007",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000007/references/validation-v7-000007",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000007/references/validation-v7-000007",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000008",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000008/references/validation-v7-000008",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000008/references/validation-v7-000008",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000009",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000009/references/validation-v7-000009",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000009/references/validation-v7-000009",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000010",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000010/references/validation-v7-000010",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000010/references/validation-v7-000010",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000011",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000011/references/validation-v7-000011",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000011/references/validation-v7-000011",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000012",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000012/references/validation-v7-000012",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000012/references/validation-v7-000012",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000013",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000013/references/validation-v7-000013",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000013/references/validation-v7-000013",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000014",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000014/references/validation-v7-000014",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000014/references/validation-v7-000014",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000015",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000015/references/validation-v7-000015",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000015/references/validation-v7-000015",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000016",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000016/references/validation-v7-000016",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000016/references/validation-v7-000016",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000017",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000017/references/validation-v7-000017",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000017/references/validation-v7-000017",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000018",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000018/references/validation-v7-000018",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000018/references/validation-v7-000018",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7/references/validation-v7-000019",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000019/references/validation-v7-000019",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000019/references/validation-v7-000019",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000000",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000000/references/train-v6-000000",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000000/references/train-v6-000000",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000001",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000001/references/train-v6-000001",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000001/references/train-v6-000001",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000002",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000002/references/train-v6-000002",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000002/references/train-v6-000002",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000003",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000003/references/train-v6-000003",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000003/references/train-v6-000003",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000004",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000004/references/train-v6-000004",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000004/references/train-v6-000004",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000005",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000005/references/train-v6-000005",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000005/references/train-v6-000005",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000006",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000006/references/train-v6-000006",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000006/references/train-v6-000006",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000007",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000007/references/train-v6-000007",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000007/references/train-v6-000007",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000008",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000008/references/train-v6-000008",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000008/references/train-v6-000008",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000009",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000009/references/train-v6-000009",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000009/references/train-v6-000009",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000010",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000010/references/train-v6-000010",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000010/references/train-v6-000010",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000011",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000011/references/train-v6-000011",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000011/references/train-v6-000011",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000012",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000012/references/train-v6-000012",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000012/references/train-v6-000012",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000013",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000013/references/train-v6-000013",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000013/references/train-v6-000013",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000014",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000014/references/train-v6-000014",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000014/references/train-v6-000014",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000015",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000015/references/train-v6-000015",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000015/references/train-v6-000015",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000016",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000016/references/train-v6-000016",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000016/references/train-v6-000016",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000017",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000017/references/train-v6-000017",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000017/references/train-v6-000017",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000018",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000018/references/train-v6-000018",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000018/references/train-v6-000018",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000019",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000019/references/train-v6-000019",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000019/references/train-v6-000019",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000020",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000020/references/train-v6-000020",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000020/references/train-v6-000020",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000021",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000021/references/train-v6-000021",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000021/references/train-v6-000021",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000022",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000022/references/train-v6-000022",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000022/references/train-v6-000022",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000023",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000023/references/train-v6-000023",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000023/references/train-v6-000023",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000025",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000025/references/train-v6-000025",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000025/references/train-v6-000025",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000026",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000026/references/train-v6-000026",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000026/references/train-v6-000026",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000027",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000027/references/train-v6-000027",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000027/references/train-v6-000027",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000028",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000028/references/train-v6-000028",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000028/references/train-v6-000028",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000029",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000029/references/train-v6-000029",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000029/references/train-v6-000029",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000030",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000030/references/train-v6-000030",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000030/references/train-v6-000030",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000031",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000031/references/train-v6-000031",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000031/references/train-v6-000031",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000032",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000032/references/train-v6-000032",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000032/references/train-v6-000032",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000033",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000033/references/train-v6-000033",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000033/references/train-v6-000033",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000034",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000034/references/train-v6-000034",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000034/references/train-v6-000034",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000035",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000035/references/train-v6-000035",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000035/references/train-v6-000035",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000036",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000036/references/train-v6-000036",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000036/references/train-v6-000036",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000037",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000037/references/train-v6-000037",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000037/references/train-v6-000037",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000038",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000038/references/train-v6-000038",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000038/references/train-v6-000038",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000039",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000039/references/train-v6-000039",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000039/references/train-v6-000039",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000040",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000040/references/train-v6-000040",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000040/references/train-v6-000040",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000041",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000041/references/train-v6-000041",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000041/references/train-v6-000041",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000042",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000042/references/train-v6-000042",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000042/references/train-v6-000042",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000043",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000043/references/train-v6-000043",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000043/references/train-v6-000043",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000044",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000044/references/train-v6-000044",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000044/references/train-v6-000044",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000045",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000045/references/train-v6-000045",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000045/references/train-v6-000045",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000046",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000046/references/train-v6-000046",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000046/references/train-v6-000046",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000048",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000048/references/train-v6-000048",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000048/references/train-v6-000048",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000049",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000049/references/train-v6-000049",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000049/references/train-v6-000049",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000050",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000050/references/train-v6-000050",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000050/references/train-v6-000050",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000051",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000051/references/train-v6-000051",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000051/references/train-v6-000051",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000052",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000052/references/train-v6-000052",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000052/references/train-v6-000052",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000053",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000053/references/train-v6-000053",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000053/references/train-v6-000053",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000054",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000054/references/train-v6-000054",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000054/references/train-v6-000054",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000055",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000055/references/train-v6-000055",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000055/references/train-v6-000055",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000056",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000056/references/train-v6-000056",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000056/references/train-v6-000056",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000057",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000057/references/train-v6-000057",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000057/references/train-v6-000057",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000058",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000058/references/train-v6-000058",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000058/references/train-v6-000058",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000059",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000059/references/train-v6-000059",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000059/references/train-v6-000059",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000060",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000060/references/train-v6-000060",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000060/references/train-v6-000060",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000061",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000061/references/train-v6-000061",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000061/references/train-v6-000061",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000062",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000062/references/train-v6-000062",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000062/references/train-v6-000062",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000063",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000063/references/train-v6-000063",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000063/references/train-v6-000063",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000064",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000064/references/train-v6-000064",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000064/references/train-v6-000064",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v6-000067",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000067/references/train-v6-000067",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000067/references/train-v6-000067",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000000",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000000/references/train-v7-000000",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000000/references/train-v7-000000",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000001",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000001/references/train-v7-000001",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000001/references/train-v7-000001",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000002",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000002/references/train-v7-000002",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000002/references/train-v7-000002",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000003",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000003/references/train-v7-000003",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000003/references/train-v7-000003",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000004",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000004/references/train-v7-000004",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000004/references/train-v7-000004",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000005",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000005/references/train-v7-000005",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000005/references/train-v7-000005",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000006",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000006/references/train-v7-000006",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000006/references/train-v7-000006",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000007",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000007/references/train-v7-000007",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000007/references/train-v7-000007",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000008",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000008/references/train-v7-000008",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000008/references/train-v7-000008",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000009",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000009/references/train-v7-000009",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000009/references/train-v7-000009",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000010",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000010/references/train-v7-000010",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000010/references/train-v7-000010",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000011",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000011/references/train-v7-000011",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000011/references/train-v7-000011",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000012",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000012/references/train-v7-000012",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000012/references/train-v7-000012",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000013",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000013/references/train-v7-000013",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000013/references/train-v7-000013",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000014",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000014/references/train-v7-000014",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000014/references/train-v7-000014",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000015",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000015/references/train-v7-000015",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000015/references/train-v7-000015",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000016",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000016/references/train-v7-000016",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000016/references/train-v7-000016",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000017",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000017/references/train-v7-000017",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000017/references/train-v7-000017",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000018",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000018/references/train-v7-000018",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000018/references/train-v7-000018",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000019",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000019/references/train-v7-000019",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000019/references/train-v7-000019",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000020",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000020/references/train-v7-000020",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000020/references/train-v7-000020",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000021",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000021/references/train-v7-000021",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000021/references/train-v7-000021",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000022",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000022/references/train-v7-000022",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000022/references/train-v7-000022",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000023",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000023/references/train-v7-000023",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000023/references/train-v7-000023",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000024",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000024/references/train-v7-000024",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000024/references/train-v7-000024",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000025",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000025/references/train-v7-000025",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000025/references/train-v7-000025",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000026",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000026/references/train-v7-000026",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000026/references/train-v7-000026",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000027",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000027/references/train-v7-000027",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000027/references/train-v7-000027",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000028",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000028/references/train-v7-000028",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000028/references/train-v7-000028",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000029",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000029/references/train-v7-000029",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000029/references/train-v7-000029",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000030",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000030/references/train-v7-000030",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000030/references/train-v7-000030",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000031",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000031/references/train-v7-000031",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000031/references/train-v7-000031",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000032",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000032/references/train-v7-000032",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000032/references/train-v7-000032",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000033",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000033/references/train-v7-000033",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000033/references/train-v7-000033",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000034",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000034/references/train-v7-000034",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000034/references/train-v7-000034",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000035",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000035/references/train-v7-000035",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000035/references/train-v7-000035",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000036",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000036/references/train-v7-000036",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000036/references/train-v7-000036",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000037",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000037/references/train-v7-000037",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000037/references/train-v7-000037",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000038",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000038/references/train-v7-000038",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000038/references/train-v7-000038",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000039",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000039/references/train-v7-000039",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000039/references/train-v7-000039",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000040",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000040/references/train-v7-000040",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000040/references/train-v7-000040",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000041",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000041/references/train-v7-000041",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000041/references/train-v7-000041",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000042",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000042/references/train-v7-000042",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000042/references/train-v7-000042",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000043",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000043/references/train-v7-000043",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000043/references/train-v7-000043",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000044",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000044/references/train-v7-000044",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000044/references/train-v7-000044",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000045",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000045/references/train-v7-000045",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000045/references/train-v7-000045",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000046",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000046/references/train-v7-000046",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000046/references/train-v7-000046",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000047",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000047/references/train-v7-000047",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000047/references/train-v7-000047",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000048",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000048/references/train-v7-000048",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000048/references/train-v7-000048",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000049",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000049/references/train-v7-000049",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000049/references/train-v7-000049",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000050",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000050/references/train-v7-000050",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000050/references/train-v7-000050",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000051",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000051/references/train-v7-000051",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000051/references/train-v7-000051",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000052",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000052/references/train-v7-000052",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000052/references/train-v7-000052",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000053",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000053/references/train-v7-000053",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000053/references/train-v7-000053",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000054",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000054/references/train-v7-000054",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000054/references/train-v7-000054",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000055",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000055/references/train-v7-000055",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000055/references/train-v7-000055",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000056",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000056/references/train-v7-000056",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000056/references/train-v7-000056",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000057",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000057/references/train-v7-000057",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000057/references/train-v7-000057",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000058",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000058/references/train-v7-000058",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000058/references/train-v7-000058",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000059",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000059/references/train-v7-000059",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000059/references/train-v7-000059",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000060",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000060/references/train-v7-000060",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000060/references/train-v7-000060",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000061",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000061/references/train-v7-000061",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000061/references/train-v7-000061",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000062",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000062/references/train-v7-000062",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000062/references/train-v7-000062",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/train-v7-000063",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000063/references/train-v7-000063",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/train-v7-000063/references/train-v7-000063",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000004",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000004/references/validation-v6-000004",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000004/references/validation-v6-000004",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000005",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000005/references/validation-v6-000005",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000005/references/validation-v6-000005",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000006",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000006/references/validation-v6-000006",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000006/references/validation-v6-000006",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000007",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000007/references/validation-v6-000007",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000007/references/validation-v6-000007",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000008",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000008/references/validation-v6-000008",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000008/references/validation-v6-000008",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000009",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000009/references/validation-v6-000009",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000009/references/validation-v6-000009",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000010",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000010/references/validation-v6-000010",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000010/references/validation-v6-000010",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000011",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000011/references/validation-v6-000011",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000011/references/validation-v6-000011",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000013",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000013/references/validation-v6-000013",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000013/references/validation-v6-000013",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000014",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000014/references/validation-v6-000014",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000014/references/validation-v6-000014",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000015",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000015/references/validation-v6-000015",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000015/references/validation-v6-000015",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000016",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000016/references/validation-v6-000016",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000016/references/validation-v6-000016",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000017",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000017/references/validation-v6-000017",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000017/references/validation-v6-000017",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000018",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000018/references/validation-v6-000018",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000018/references/validation-v6-000018",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000019",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000019/references/validation-v6-000019",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000019/references/validation-v6-000019",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v6-000020",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000020/references/validation-v6-000020",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000020/references/validation-v6-000020",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000004",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000004/references/validation-v7-000004",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000004/references/validation-v7-000004",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000005",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000005/references/validation-v7-000005",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000005/references/validation-v7-000005",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000006",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000006/references/validation-v7-000006",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000006/references/validation-v7-000006",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000007",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000007/references/validation-v7-000007",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000007/references/validation-v7-000007",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000008",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000008/references/validation-v7-000008",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000008/references/validation-v7-000008",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000009",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000009/references/validation-v7-000009",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000009/references/validation-v7-000009",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000010",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000010/references/validation-v7-000010",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000010/references/validation-v7-000010",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000011",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000011/references/validation-v7-000011",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000011/references/validation-v7-000011",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000012",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000012/references/validation-v7-000012",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000012/references/validation-v7-000012",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000013",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000013/references/validation-v7-000013",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000013/references/validation-v7-000013",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000014",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000014/references/validation-v7-000014",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000014/references/validation-v7-000014",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000015",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000015/references/validation-v7-000015",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000015/references/validation-v7-000015",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000016",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000016/references/validation-v7-000016",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000016/references/validation-v7-000016",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000017",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000017/references/validation-v7-000017",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000017/references/validation-v7-000017",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000018",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000018/references/validation-v7-000018",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000018/references/validation-v7-000018",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_mixed_v7_pml_v2/references/validation-v7-000019",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000019/references/validation-v7-000019",
+      "new_relative_target": "../../../../../artifacts/reference_sparse_v7_1000/lane0/attempts/validation-v7-000019/references/validation-v7-000019",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000001",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000001/references/train-v6-000001",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000001/references/train-v6-000001",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000002",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000002/references/train-v6-000002",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000002/references/train-v6-000002",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000003",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000003/references/train-v6-000003",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000003/references/train-v6-000003",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000004",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000004/references/train-v6-000004",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000004/references/train-v6-000004",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000005",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000005/references/train-v6-000005",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000005/references/train-v6-000005",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000006",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000006/references/train-v6-000006",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000006/references/train-v6-000006",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000007",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000007/references/train-v6-000007",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000007/references/train-v6-000007",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000008",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000008/references/train-v6-000008",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000008/references/train-v6-000008",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000009",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000009/references/train-v6-000009",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000009/references/train-v6-000009",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000010",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000010/references/train-v6-000010",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000010/references/train-v6-000010",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000011",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000011/references/train-v6-000011",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000011/references/train-v6-000011",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000012",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000012/references/train-v6-000012",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000012/references/train-v6-000012",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000014",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000014/references/train-v6-000014",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000014/references/train-v6-000014",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000015",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000015/references/train-v6-000015",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000015/references/train-v6-000015",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000016",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000016/references/train-v6-000016",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000016/references/train-v6-000016",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000017",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000017/references/train-v6-000017",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000017/references/train-v6-000017",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000018",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000018/references/train-v6-000018",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000018/references/train-v6-000018",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000019",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000019/references/train-v6-000019",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000019/references/train-v6-000019",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000020",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000020/references/train-v6-000020",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000020/references/train-v6-000020",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000021",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000021/references/train-v6-000021",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000021/references/train-v6-000021",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000022",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000022/references/train-v6-000022",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000022/references/train-v6-000022",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000023",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000023/references/train-v6-000023",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000023/references/train-v6-000023",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000025",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000025/references/train-v6-000025",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000025/references/train-v6-000025",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000026",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000026/references/train-v6-000026",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000026/references/train-v6-000026",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000027",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000027/references/train-v6-000027",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000027/references/train-v6-000027",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000028",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000028/references/train-v6-000028",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000028/references/train-v6-000028",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000029",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000029/references/train-v6-000029",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000029/references/train-v6-000029",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000030",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000030/references/train-v6-000030",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000030/references/train-v6-000030",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000031",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000031/references/train-v6-000031",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000031/references/train-v6-000031",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000033",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000033/references/train-v6-000033",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000033/references/train-v6-000033",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000034",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000034/references/train-v6-000034",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000034/references/train-v6-000034",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000035",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000035/references/train-v6-000035",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000035/references/train-v6-000035",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000036",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000036/references/train-v6-000036",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000036/references/train-v6-000036",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000037",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000037/references/train-v6-000037",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000037/references/train-v6-000037",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000038",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000038/references/train-v6-000038",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000038/references/train-v6-000038",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000039",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000039/references/train-v6-000039",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000039/references/train-v6-000039",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000040",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000040/references/train-v6-000040",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000040/references/train-v6-000040",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000041",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000041/references/train-v6-000041",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000041/references/train-v6-000041",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000042",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000042/references/train-v6-000042",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000042/references/train-v6-000042",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000044",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000044/references/train-v6-000044",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000044/references/train-v6-000044",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000045",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000045/references/train-v6-000045",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000045/references/train-v6-000045",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000046",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000046/references/train-v6-000046",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000046/references/train-v6-000046",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000048",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000048/references/train-v6-000048",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000048/references/train-v6-000048",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000049",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000049/references/train-v6-000049",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000049/references/train-v6-000049",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000050",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000050/references/train-v6-000050",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000050/references/train-v6-000050",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000051",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000051/references/train-v6-000051",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000051/references/train-v6-000051",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000052",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000052/references/train-v6-000052",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000052/references/train-v6-000052",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000053",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000053/references/train-v6-000053",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000053/references/train-v6-000053",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000054",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000054/references/train-v6-000054",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000054/references/train-v6-000054",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000055",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000055/references/train-v6-000055",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000055/references/train-v6-000055",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000056",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000056/references/train-v6-000056",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000056/references/train-v6-000056",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000057",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000057/references/train-v6-000057",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000057/references/train-v6-000057",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000058",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000058/references/train-v6-000058",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000058/references/train-v6-000058",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000059",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000059/references/train-v6-000059",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000059/references/train-v6-000059",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000060",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000060/references/train-v6-000060",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000060/references/train-v6-000060",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000061",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000061/references/train-v6-000061",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000061/references/train-v6-000061",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000063",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000063/references/train-v6-000063",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000063/references/train-v6-000063",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000064",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000064/references/train-v6-000064",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000064/references/train-v6-000064",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000065",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000065/references/train-v6-000065",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000065/references/train-v6-000065",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000066",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000066/references/train-v6-000066",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000066/references/train-v6-000066",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000068",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000068/references/train-v6-000068",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000068/references/train-v6-000068",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000072",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000072/references/train-v6-000072",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000072/references/train-v6-000072",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000075",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000075/references/train-v6-000075",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000075/references/train-v6-000075",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/train-v6-000079",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/train-v6-000079/references/train-v6-000079",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/train-v6-000079/references/train-v6-000079",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000004",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000004/references/validation-v6-000004",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000004/references/validation-v6-000004",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000006",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000006/references/validation-v6-000006",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000006/references/validation-v6-000006",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000008",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000008/references/validation-v6-000008",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000008/references/validation-v6-000008",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000009",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000009/references/validation-v6-000009",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000009/references/validation-v6-000009",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000010",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000010/references/validation-v6-000010",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000010/references/validation-v6-000010",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000011",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000011/references/validation-v6-000011",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000011/references/validation-v6-000011",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000013",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000013/references/validation-v6-000013",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000013/references/validation-v6-000013",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000014",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000014/references/validation-v6-000014",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000014/references/validation-v6-000014",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000017",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000017/references/validation-v6-000017",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000017/references/validation-v6-000017",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000018",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000018/references/validation-v6-000018",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000018/references/validation-v6-000018",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000019",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000019/references/validation-v6-000019",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000019/references/validation-v6-000019",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000021",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000021/references/validation-v6-000021",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000021/references/validation-v6-000021",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000023",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000023/references/validation-v6-000023",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000023/references/validation-v6-000023",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000024",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000024/references/validation-v6-000024",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000024/references/validation-v6-000024",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000027",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000027/references/validation-v6-000027",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000027/references/validation-v6-000027",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_distillation_v6/references/validation-v6-000028",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000028/references/validation-v6-000028",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000028/references/validation-v6-000028",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_pilot_v6/references/validation-v6-000000",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000000/references/validation-v6-000000",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000000/references/validation-v6-000000",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_pilot_v6/references/validation-v6-000002",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000002/references/validation-v6-000002",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000002/references/validation-v6-000002",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_pilot_v6/references/validation-v6-000005",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000005/references/validation-v6-000005",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000005/references/validation-v6-000005",
+      "mapped_target_exists": true
+    },
+    {
+      "path": "artifacts/physics_pilot_v6/references/validation-v6-000007",
+      "old_target": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML/artifacts/reference_v6_2000/lane0/attempts/validation-v6-000007/references/validation-v6-000007",
+      "new_relative_target": "../../../../../artifacts/reference_v6_2000/lane0/attempts/validation-v6-000007/references/validation-v6-000007",
+      "mapped_target_exists": true
+    }
+  ]
+}

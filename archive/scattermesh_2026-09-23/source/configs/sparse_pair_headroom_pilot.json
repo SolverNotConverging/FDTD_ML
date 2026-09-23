@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "purpose": "localized two-dielectric-cylinder exact-budget headroom pilot",
+  "domain_m": 1.2,
+  "frequencies_hz": [800000000.0, 1000000000.0, 1200000000.0],
+  "far_field_angle_count": 180,
+  "budgets": [32, 48, 64],
+  "reference_budgets": [192, 256],
+  "duration_schedule_s": [7e-8, 1.4e-7, 5.6e-7],
+  "pml_thickness_m": 0.12,
+  "tail_limit": 1e-5,
+  "material_samples_per_axis": 8,
+  "ranking": {"mode": "fixed_axis_soft_nt", "nt_cost_exponent": 0.1},
+  "gate": {
+    "maximum_reference_convergence_loss": 0.05,
+    "minimum_meaningful_improvement": 1.05,
+    "minimum_low_budget_meaningful_fraction": 0.5,
+    "minimum_low_budget_median_improvement": 1.1,
+    "minimum_each_gap_stratum_meaningful_fraction": 0.4,
+    "require_all_references_settled": true,
+    "require_all_uniform_baselines_settled": true
+  },
+  "policies": [
+    {"name": "uniform", "kind": "uniform", "max_ratio": 1.0},
+    {"name": "interface_wide", "kind": "interface", "interface_width_factor": 0.75, "interface_weight": 0.75, "max_ratio": 2.0},
+    {"name": "interface_medium", "kind": "interface", "interface_width_factor": 0.45, "interface_weight": 1.5, "max_ratio": 3.0},
+    {"name": "interface_strong", "kind": "interface", "interface_width_factor": 0.25, "interface_weight": 1.4, "max_ratio": 3.0},
+    {"name": "cluster", "kind": "cluster", "cluster_width_factor": 0.75, "cluster_weight": 1.2, "max_ratio": 2.0},
+    {"name": "gap", "kind": "gap", "gap_width_factor": 1.0, "gap_min_width_m": 0.008, "gap_weight": 2.5, "max_ratio": 3.0},
+    {"name": "hybrid", "kind": "hybrid", "interface_width_factor": 0.45, "interface_weight": 1.0, "cluster_width_factor": 0.8, "cluster_weight": 0.45, "gap_width_factor": 1.0, "gap_min_width_m": 0.008, "gap_weight": 1.75, "max_ratio": 3.0}
+  ],
+  "scenes": [
+    {
+      "scene_id": "close_equal_southwest",
+      "gap_stratum": "close",
+      "incidence_angle_rad": 0.31,
+      "objects": [
+        {"shape": "circle", "center_m": [0.376, 0.42], "radius_m": 0.04, "material": {"kind": "dielectric", "epsilon_r": 4.0, "sigma_e_s_per_m": 0.02}},
+        {"shape": "circle", "center_m": [0.464, 0.42], "radius_m": 0.04, "material": {"kind": "dielectric", "epsilon_r": 4.0, "sigma_e_s_per_m": 0.02}}
+      ]
+    },
+    {
+      "scene_id": "moderate_unequal_southeast",
+      "gap_stratum": "moderate",
+      "incidence_angle_rad": 1.08,
+      "objects": [
+        {"shape": "circle", "center_m": [0.744078621, 0.404812685], "radius_m": 0.03, "material": {"kind": "dielectric", "epsilon_r": 2.0, "sigma_e_s_per_m": 0.0}},
+        {"shape": "circle", "center_m": [0.848158514, 0.448816957], "radius_m": 0.065, "material": {"kind": "dielectric", "epsilon_r": 8.0, "sigma_e_s_per_m": 0.08}}
+      ]
+    },
+    {
+      "scene_id": "wide_vertical_northwest",
+      "gap_stratum": "wide",
+      "incidence_angle_rad": 2.17,
+      "objects": [
+        {"shape": "circle", "center_m": [0.40, 0.705], "radius_m": 0.055, "material": {"kind": "dielectric", "epsilon_r": 6.0, "sigma_e_s_per_m": 0.04}},
+        {"shape": "circle", "center_m": [0.40, 0.845], "radius_m": 0.045, "material": {"kind": "dielectric", "epsilon_r": 3.0, "sigma_e_s_per_m": 0.01}}
+      ]
+    },
+    {
+      "scene_id": "wide_large_northeast",
+      "gap_stratum": "wide",
+      "incidence_angle_rad": 4.43,
+      "objects": [
+        {"shape": "circle", "center_m": [0.701343447, 0.706723833], "radius_m": 0.07, "material": {"kind": "dielectric", "epsilon_r": 4.0, "sigma_e_s_per_m": 0.0}},
+        {"shape": "circle", "center_m": [0.833047443, 0.829418810], "radius_m": 0.035, "material": {"kind": "dielectric", "epsilon_r": 12.0, "sigma_e_s_per_m": 0.12}}
+      ]
+    },
+    {
+      "scene_id": "close_high_contrast_center",
+      "gap_stratum": "close",
+      "incidence_angle_rad": 5.62,
+      "objects": [
+        {"shape": "circle", "center_m": [0.598243535, 0.524936611], "radius_m": 0.025, "material": {"kind": "dielectric", "epsilon_r": 2.0, "sigma_e_s_per_m": 0.0}},
+        {"shape": "circle", "center_m": [0.547043937, 0.595275799], "radius_m": 0.05, "material": {"kind": "dielectric", "epsilon_r": 20.0, "sigma_e_s_per_m": 0.14}}
+      ]
+    },
+    {
+      "scene_id": "moderate_equal_upper_center",
+      "gap_stratum": "moderate",
+      "incidence_angle_rad": 3.31,
+      "objects": [
+        {"shape": "circle", "center_m": [0.599363442, 0.611542704], "radius_m": 0.06, "material": {"kind": "dielectric", "epsilon_r": 8.0, "sigma_e_s_per_m": 0.06}},
+        {"shape": "circle", "center_m": [0.660636558, 0.748457296], "radius_m": 0.06, "material": {"kind": "dielectric", "epsilon_r": 8.0, "sigma_e_s_per_m": 0.06}}
+      ]
+    },
+    {
+      "scene_id": "wide_low_loss_west",
+      "gap_stratum": "wide",
+      "incidence_angle_rad": 0.83,
+      "objects": [
+        {"shape": "circle", "center_m": [0.298745839, 0.587583167], "radius_m": 0.035, "material": {"kind": "dielectric", "epsilon_r": 4.0, "sigma_e_s_per_m": 0.0}},
+        {"shape": "circle", "center_m": [0.421254161, 0.612416833], "radius_m": 0.035, "material": {"kind": "dielectric", "epsilon_r": 4.0, "sigma_e_s_per_m": 0.0}}
+      ]
+    },
+    {
+      "scene_id": "close_size_contrast_east",
+      "gap_stratum": "close",
+      "incidence_angle_rad": 2.74,
+      "objects": [
+        {"shape": "circle", "center_m": [0.870517627, 0.566664369], "radius_m": 0.075, "material": {"kind": "dielectric", "epsilon_r": 3.0, "sigma_e_s_per_m": 0.015}},
+        {"shape": "circle", "center_m": [0.774685980, 0.611966637], "radius_m": 0.025, "material": {"kind": "dielectric", "epsilon_r": 10.0, "sigma_e_s_per_m": 0.09}}
+      ]
+    }
+  ]
+}

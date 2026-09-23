@@ -1,3 +1,8 @@
+# Historical curriculum
+
+This document describes the first scattering/CNN curriculum. The active C0–C2
+curriculum and its measured sizing gate are in [v2 pilot](v2_pilot.md).
+
 # Simple-first scattering curriculum and joint loss
 
 The user asked us to follow the advice in

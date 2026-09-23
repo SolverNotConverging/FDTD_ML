@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "path": "source/artifacts",
+  "original_target": "archive/receiver_cnn_2026-09-22/artifacts",
+  "relocated_target": "../../receiver_cnn_2026-09-22/artifacts",
+  "resolved_target": "../receiver_cnn_2026-09-22/artifacts",
+  "original_inventory": "archive/receiver_cnn_2026-09-22/INVENTORY.json",
+  "original_inventory_sha256": "2108d4836fa77761ecd9b04907cbc6569f3a135f2afb0a1e3c25d6b10d3b6ae6"
+}

@@ -19,6 +19,7 @@ from .distillation import (
     resample_axis_profiles,
 )
 from .geometry import PEC, Circle, Material, Rectangle
+from .geometry_v2 import Ellipse, Polygon, SmoothLobed, oriented_rectangle
 from .grid import Grid, focused_axis
 from .meshing import circular_interface_axes, density_axis
 from .solver import SimulationResult, simulate
@@ -37,6 +38,10 @@ __all__ = [
     "Circle",
     "Material",
     "Rectangle",
+    "Ellipse",
+    "Polygon",
+    "SmoothLobed",
+    "oriented_rectangle",
     "Grid",
     "focused_axis",
     "density_axis",

@@ -1,0 +1,69 @@
+{
+  "status": "complete",
+  "active_environment": ".venv",
+  "bootstrap_environment": ".venv-bootstrap",
+  "old_worktree_prefix": "/home/s2307298/.codex/worktrees/e2d3/FDTD_ML",
+  "current_project_root": "/home/s2307298/projects/FDTD_ML",
+  "changes": {
+    "existing_archived_distributions_preserved": 49,
+    "archived_distribution_missing_count": 0,
+    "archived_distribution_version_mismatch_count": 0,
+    "new_editable_distribution": "scattermesh==0.1.0",
+    "new_editable_source": "/home/s2307298/projects/FDTD_ML",
+    "reference_rewrite_file_count": 32,
+    "reference_rewrite_files": [
+      ".venv/bin/activate",
+      ".venv/bin/activate.bat",
+      ".venv/bin/activate.csh",
+      ".venv/bin/activate.fish",
+      ".venv/bin/activate.nu",
+      ".venv/bin/wheel",
+      ".venv/bin/cythonize",
+      ".venv/bin/cygdb",
+      ".venv/bin/cython",
+      ".venv/bin/numpy-config",
+      ".venv/bin/f2py",
+      ".venv/bin/pytest",
+      ".venv/bin/py.test",
+      ".venv/bin/pygmentize",
+      ".venv/bin/pyftsubset",
+      ".venv/bin/ttx",
+      ".venv/bin/fonttools",
+      ".venv/bin/pyftmerge",
+      ".venv/bin/isympy",
+      ".venv/bin/proton-viewer",
+      ".venv/bin/proton",
+      ".venv/bin/torchrun",
+      ".venv/bin/torchfrtrace",
+      ".venv/lib/python3.12/site-packages/__editable__.fdtdmesh-0.5.0.pth",
+      ".venv/lib/python3.12/site-packages/fdtdmesh-0.5.0.dist-info/direct_url.json",
+      ".venv-bootstrap/pyvenv.cfg",
+      ".venv-bootstrap/bin/activate",
+      ".venv-bootstrap/bin/activate.csh",
+      ".venv-bootstrap/bin/activate.fish",
+      ".venv-bootstrap/bin/pip",
+      ".venv-bootstrap/bin/pip3",
+      ".venv-bootstrap/bin/pip3.13"
+    ],
+    "new_editable_metadata_files": [
+      ".venv/lib/python3.12/site-packages/__editable__.scattermesh-0.1.0.pth",
+      ".venv/lib/python3.12/site-packages/scattermesh-0.1.0.dist-info/direct_url.json"
+    ],
+    "temporary_uv_cache": "used .venv-bootstrap/uv-cache, then removed"
+  },
+  "validation": {
+    "scattermesh_import_path": "/home/s2307298/projects/FDTD_ML/src/scattermesh/__init__.py",
+    "pytest_version": "9.1.1",
+    "active_activation_virtual_env": "/home/s2307298/projects/FDTD_ML/.venv",
+    "bootstrap_activation_virtual_env": "/home/s2307298/projects/FDTD_ML/.venv-bootstrap",
+    "old_worktree_prefix_text_file_matches_in_venv_and_bootstrap": 0,
+    "archived_package_versions_preserved": true
+  },
+  "failures_and_recovery": [
+    {
+      "attempt": "uv install using default cache location",
+      "failure": "The default /home/s2307298/.cache/uv path was read-only.",
+      "recovery": "Retried with UV_CACHE_DIR inside .venv-bootstrap; editable install succeeded. The temporary cache was removed."
+    }
+  ]
+}

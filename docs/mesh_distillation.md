@@ -1,3 +1,8 @@
+# Historical mesh distillation
+
+This document describes the first distillation dataset. The active v2 teachers,
+weak time-step score, and portable legacy import are in [v2 pilot](v2_pilot.md).
+
 # Exact-budget mesh distillation
 
 The first learned mesher is a 532,593-parameter residual U-Net. It predicts one

@@ -1,0 +1,4803 @@
+{
+  "schema_version": 1,
+  "purpose": "simple dielectric candidate-label pool before CNN training",
+  "geometry_count": 32,
+  "condition_count": 352,
+  "geometries": [
+    {
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_00",
+      "variant_index": 0,
+      "split": "train",
+      "radius_m": 0.0423,
+      "center_m": [
+        0.564,
+        0.623
+      ],
+      "epsilon_r": 2.0,
+      "sigma_e_s_per_m": 0.0,
+      "feature_size_m": 0.0846,
+      "feature_cells_on_256_input": 18.048,
+      "minimum_internal_wavelength_m": 0.17665440000032318,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_00",
+      "variant_index": 1,
+      "split": "train",
+      "radius_m": 0.0441,
+      "center_m": [
+        0.631,
+        0.573
+      ],
+      "epsilon_r": 2.0,
+      "sigma_e_s_per_m": 0.0,
+      "feature_size_m": 0.0882,
+      "feature_cells_on_256_input": 18.816000000000003,
+      "minimum_internal_wavelength_m": 0.17665440000032318,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_00",
+      "variant_index": 2,
+      "split": "train",
+      "radius_m": 0.045899999999999996,
+      "center_m": [
+        0.581,
+        0.566
+      ],
+      "epsilon_r": 2.0,
+      "sigma_e_s_per_m": 0.0,
+      "feature_size_m": 0.09179999999999999,
+      "feature_cells_on_256_input": 19.584,
+      "minimum_internal_wavelength_m": 0.17665440000032318,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_00",
+      "variant_index": 3,
+      "split": "train",
+      "radius_m": 0.0477,
+      "center_m": [
+        0.627,
+        0.632
+      ],
+      "epsilon_r": 2.0,
+      "sigma_e_s_per_m": 0.0,
+      "feature_size_m": 0.0954,
+      "feature_cells_on_256_input": 20.352,
+      "minimum_internal_wavelength_m": 0.17665440000032318,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_01",
+      "variant_index": 0,
+      "split": "train",
+      "radius_m": 0.051699999999999996,
+      "center_m": [
+        0.564,
+        0.623
+      ],
+      "epsilon_r": 2.5,
+      "sigma_e_s_per_m": 0.0,
+      "feature_size_m": 0.10339999999999999,
+      "feature_cells_on_256_input": 22.058666666666667,
+      "minimum_internal_wavelength_m": 0.1580044987700646,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_01",
+      "variant_index": 1,
+      "split": "train",
+      "radius_m": 0.053899999999999997,
+      "center_m": [
+        0.631,
+        0.573
+      ],
+      "epsilon_r": 2.5,
+      "sigma_e_s_per_m": 0.0,
+      "feature_size_m": 0.10779999999999999,
+      "feature_cells_on_256_input": 22.997333333333334,
+      "minimum_internal_wavelength_m": 0.1580044987700646,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_01",
+      "variant_index": 2,
+      "split": "train",
+      "radius_m": 0.056100000000000004,
+      "center_m": [
+        0.581,
+        0.566
+      ],
+      "epsilon_r": 2.5,
+      "sigma_e_s_per_m": 0.0,
+      "feature_size_m": 0.11220000000000001,
+      "feature_cells_on_256_input": 23.936000000000003,
+      "minimum_internal_wavelength_m": 0.1580044987700646,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_01",
+      "variant_index": 3,
+      "split": "train",
+      "radius_m": 0.058300000000000005,
+      "center_m": [
+        0.627,
+        0.632
+      ],
+      "epsilon_r": 2.5,
+      "sigma_e_s_per_m": 0.0,
+      "feature_size_m": 0.11660000000000001,
+      "feature_cells_on_256_input": 24.87466666666667,
+      "minimum_internal_wavelength_m": 0.1580044987700646,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_02",
+      "variant_index": 0,
+      "split": "train",
+      "radius_m": 0.0611,
+      "center_m": [
+        0.564,
+        0.623
+      ],
+      "epsilon_r": 3.0,
+      "sigma_e_s_per_m": 0.01,
+      "feature_size_m": 0.1222,
+      "feature_cells_on_256_input": 26.069333333333336,
+      "minimum_internal_wavelength_m": 0.1442377136061028,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_02",
+      "variant_index": 1,
+      "split": "train",
+      "radius_m": 0.0637,
+      "center_m": [
+        0.631,
+        0.573
+      ],
+      "epsilon_r": 3.0,
+      "sigma_e_s_per_m": 0.01,
+      "feature_size_m": 0.1274,
+      "feature_cells_on_256_input": 27.178666666666672,
+      "minimum_internal_wavelength_m": 0.1442377136061028,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_02",
+      "variant_index": 2,
+      "split": "train",
+      "radius_m": 0.0663,
+      "center_m": [
+        0.581,
+        0.566
+      ],
+      "epsilon_r": 3.0,
+      "sigma_e_s_per_m": 0.01,
+      "feature_size_m": 0.1326,
+      "feature_cells_on_256_input": 28.288,
+      "minimum_internal_wavelength_m": 0.1442377136061028,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_02",
+      "variant_index": 3,
+      "split": "train",
+      "radius_m": 0.0689,
+      "center_m": [
+        0.627,
+        0.632
+      ],
+      "epsilon_r": 3.0,
+      "sigma_e_s_per_m": 0.01,
+      "feature_size_m": 0.1378,
+      "feature_cells_on_256_input": 29.397333333333336,
+      "minimum_internal_wavelength_m": 0.1442377136061028,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_03",
+      "variant_index": 0,
+      "split": "train",
+      "radius_m": 0.0705,
+      "center_m": [
+        0.564,
+        0.623
+      ],
+      "epsilon_r": 3.5,
+      "sigma_e_s_per_m": 0.0,
+      "feature_size_m": 0.141,
+      "feature_cells_on_256_input": 30.08,
+      "minimum_internal_wavelength_m": 0.13353817440176677,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_03",
+      "variant_index": 1,
+      "split": "train",
+      "radius_m": 0.0735,
+      "center_m": [
+        0.631,
+        0.573
+      ],
+      "epsilon_r": 3.5,
+      "sigma_e_s_per_m": 0.0,
+      "feature_size_m": 0.147,
+      "feature_cells_on_256_input": 31.36,
+      "minimum_internal_wavelength_m": 0.13353817440176677,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_03",
+      "variant_index": 2,
+      "split": "train",
+      "radius_m": 0.0765,
+      "center_m": [
+        0.581,
+        0.566
+      ],
+      "epsilon_r": 3.5,
+      "sigma_e_s_per_m": 0.0,
+      "feature_size_m": 0.153,
+      "feature_cells_on_256_input": 32.64,
+      "minimum_internal_wavelength_m": 0.13353817440176677,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_03",
+      "variant_index": 3,
+      "split": "train",
+      "radius_m": 0.0795,
+      "center_m": [
+        0.627,
+        0.632
+      ],
+      "epsilon_r": 3.5,
+      "sigma_e_s_per_m": 0.0,
+      "feature_size_m": 0.159,
+      "feature_cells_on_256_input": 33.92,
+      "minimum_internal_wavelength_m": 0.13353817440176677,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_04",
+      "variant_index": 0,
+      "split": "train",
+      "radius_m": 0.0799,
+      "center_m": [
+        0.564,
+        0.623
+      ],
+      "epsilon_r": 4.0,
+      "sigma_e_s_per_m": 0.03,
+      "feature_size_m": 0.1598,
+      "feature_cells_on_256_input": 34.09066666666667,
+      "minimum_internal_wavelength_m": 0.12491352416666937,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_04",
+      "variant_index": 1,
+      "split": "train",
+      "radius_m": 0.0833,
+      "center_m": [
+        0.631,
+        0.573
+      ],
+      "epsilon_r": 4.0,
+      "sigma_e_s_per_m": 0.03,
+      "feature_size_m": 0.1666,
+      "feature_cells_on_256_input": 35.541333333333334,
+      "minimum_internal_wavelength_m": 0.12491352416666937,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_04",
+      "variant_index": 2,
+      "split": "train",
+      "radius_m": 0.08670000000000001,
+      "center_m": [
+        0.581,
+        0.566
+      ],
+      "epsilon_r": 4.0,
+      "sigma_e_s_per_m": 0.03,
+      "feature_size_m": 0.17340000000000003,
+      "feature_cells_on_256_input": 36.992000000000004,
+      "minimum_internal_wavelength_m": 0.12491352416666937,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_04",
+      "variant_index": 3,
+      "split": "train",
+      "radius_m": 0.09010000000000001,
+      "center_m": [
+        0.627,
+        0.632
+      ],
+      "epsilon_r": 4.0,
+      "sigma_e_s_per_m": 0.03,
+      "feature_size_m": 0.18020000000000003,
+      "feature_cells_on_256_input": 38.442666666666675,
+      "minimum_internal_wavelength_m": 0.12491352416666937,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_05",
+      "variant_index": 0,
+      "split": "train",
+      "radius_m": 0.08929999999999999,
+      "center_m": [
+        0.564,
+        0.623
+      ],
+      "epsilon_r": 4.5,
+      "sigma_e_s_per_m": 0.05,
+      "feature_size_m": 0.17859999999999998,
+      "feature_cells_on_256_input": 38.10133333333333,
+      "minimum_internal_wavelength_m": 0.11776960000021548,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_05",
+      "variant_index": 1,
+      "split": "train",
+      "radius_m": 0.0931,
+      "center_m": [
+        0.631,
+        0.573
+      ],
+      "epsilon_r": 4.5,
+      "sigma_e_s_per_m": 0.05,
+      "feature_size_m": 0.1862,
+      "feature_cells_on_256_input": 39.72266666666667,
+      "minimum_internal_wavelength_m": 0.11776960000021548,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_05",
+      "variant_index": 2,
+      "split": "train",
+      "radius_m": 0.0969,
+      "center_m": [
+        0.581,
+        0.566
+      ],
+      "epsilon_r": 4.5,
+      "sigma_e_s_per_m": 0.05,
+      "feature_size_m": 0.1938,
+      "feature_cells_on_256_input": 41.344,
+      "minimum_internal_wavelength_m": 0.11776960000021548,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_05",
+      "variant_index": 3,
+      "split": "train",
+      "radius_m": 0.10070000000000001,
+      "center_m": [
+        0.627,
+        0.632
+      ],
+      "epsilon_r": 4.5,
+      "sigma_e_s_per_m": 0.05,
+      "feature_size_m": 0.20140000000000002,
+      "feature_cells_on_256_input": 42.96533333333334,
+      "minimum_internal_wavelength_m": 0.11776960000021548,
+      "incidence_angles_rad": [
+        0.2,
+        1.3,
+        3.0
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_7bbb73e8f8acbfb2",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_06",
+      "variant_index": 0,
+      "split": "validation",
+      "radius_m": 0.10339999999999999,
+      "center_m": [
+        0.564,
+        0.623
+      ],
+      "epsilon_r": 3.25,
+      "sigma_e_s_per_m": 0.02,
+      "feature_size_m": 0.20679999999999998,
+      "feature_cells_on_256_input": 44.117333333333335,
+      "minimum_internal_wavelength_m": 0.13857911273287282,
+      "incidence_angles_rad": [
+        0.85,
+        4.2
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_aea69fc09e97e3c5",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_06",
+      "variant_index": 1,
+      "split": "validation",
+      "radius_m": 0.10779999999999999,
+      "center_m": [
+        0.631,
+        0.573
+      ],
+      "epsilon_r": 3.25,
+      "sigma_e_s_per_m": 0.02,
+      "feature_size_m": 0.21559999999999999,
+      "feature_cells_on_256_input": 45.99466666666667,
+      "minimum_internal_wavelength_m": 0.13857911273287282,
+      "incidence_angles_rad": [
+        0.85,
+        4.2
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_474852cd385b2b35",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_06",
+      "variant_index": 2,
+      "split": "validation",
+      "radius_m": 0.11220000000000001,
+      "center_m": [
+        0.581,
+        0.566
+      ],
+      "epsilon_r": 3.25,
+      "sigma_e_s_per_m": 0.02,
+      "feature_size_m": 0.22440000000000002,
+      "feature_cells_on_256_input": 47.87200000000001,
+      "minimum_internal_wavelength_m": 0.13857911273287282,
+      "incidence_angles_rad": [
+        0.85,
+        4.2
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_7a6f6fd52eb5e910",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_06",
+      "variant_index": 3,
+      "split": "validation",
+      "radius_m": 0.11660000000000001,
+      "center_m": [
+        0.627,
+        0.632
+      ],
+      "epsilon_r": 3.25,
+      "sigma_e_s_per_m": 0.02,
+      "feature_size_m": 0.23320000000000002,
+      "feature_cells_on_256_input": 49.74933333333334,
+      "minimum_internal_wavelength_m": 0.13857911273287282,
+      "incidence_angles_rad": [
+        0.85,
+        4.2
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_bd33e612011c8445",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_07",
+      "variant_index": 0,
+      "split": "test",
+      "radius_m": 0.1175,
+      "center_m": [
+        0.564,
+        0.623
+      ],
+      "epsilon_r": 5.0,
+      "sigma_e_s_per_m": 0.04,
+      "feature_size_m": 0.235,
+      "feature_cells_on_256_input": 50.13333333333333,
+      "minimum_internal_wavelength_m": 0.1117260525382942,
+      "incidence_angles_rad": [
+        2.1,
+        5.4
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_174ed502170015b3",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_07",
+      "variant_index": 1,
+      "split": "test",
+      "radius_m": 0.1225,
+      "center_m": [
+        0.631,
+        0.573
+      ],
+      "epsilon_r": 5.0,
+      "sigma_e_s_per_m": 0.04,
+      "feature_size_m": 0.245,
+      "feature_cells_on_256_input": 52.266666666666666,
+      "minimum_internal_wavelength_m": 0.1117260525382942,
+      "incidence_angles_rad": [
+        2.1,
+        5.4
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_aad4daf1f0ac77d0",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_07",
+      "variant_index": 2,
+      "split": "test",
+      "radius_m": 0.1275,
+      "center_m": [
+        0.581,
+        0.566
+      ],
+      "epsilon_r": 5.0,
+      "sigma_e_s_per_m": 0.04,
+      "feature_size_m": 0.255,
+      "feature_cells_on_256_input": 54.400000000000006,
+      "minimum_internal_wavelength_m": 0.1117260525382942,
+      "incidence_angles_rad": [
+        2.1,
+        5.4
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "simple_dk_3918817f450d88b2",
+      "family": "simple",
+      "shape": "circle",
+      "lineage_id": "simple_dk_lineage_07",
+      "variant_index": 3,
+      "split": "test",
+      "radius_m": 0.1325,
+      "center_m": [
+        0.627,
+        0.632
+      ],
+      "epsilon_r": 5.0,
+      "sigma_e_s_per_m": 0.04,
+      "feature_size_m": 0.265,
+      "feature_cells_on_256_input": 56.53333333333334,
+      "minimum_internal_wavelength_m": 0.1117260525382942,
+      "incidence_angles_rad": [
+        2.1,
+        5.4
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    }
+  ],
+  "conditions": [
+    {
+      "task_id": "condition_4616b6130c6a6dd6",
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_5996e90e4e9e48b0_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_0353b9182676a2ac",
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_5996e90e4e9e48b0_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_31ecacccd577842e",
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_5996e90e4e9e48b0_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_9b65d2cce10f8609",
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_5996e90e4e9e48b0_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_beca8ea3e6ce42d0",
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_5996e90e4e9e48b0_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_e34feab6ee957db1",
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_5996e90e4e9e48b0_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f38fa88c82b5a4b8",
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_5996e90e4e9e48b0_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_d6fd1459a2d5d7eb",
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_5996e90e4e9e48b0_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_2cb99c1dca910d19",
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_5996e90e4e9e48b0_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_ed995c2732f7ee15",
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_5996e90e4e9e48b0_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_077dbe53bf66abb6",
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_5996e90e4e9e48b0_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_c012b9d624ee6914",
+      "geometry_id": "simple_dk_5996e90e4e9e48b0",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_5996e90e4e9e48b0_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_14fe95f1f436fe2e",
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_54c716dbcfcd66ab_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_b962b906b4f84d3e",
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_54c716dbcfcd66ab_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_b0e26e32d2a3ac80",
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_54c716dbcfcd66ab_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_1e61c22fa1c86da6",
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_54c716dbcfcd66ab_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_97a6e8eb336d549f",
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_54c716dbcfcd66ab_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_ce5ef7fef7d26e40",
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_54c716dbcfcd66ab_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_a5bbb1249e7befd9",
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_54c716dbcfcd66ab_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_b1362c4f152ac38f",
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_54c716dbcfcd66ab_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_917c37fc560b3e4a",
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_54c716dbcfcd66ab_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_1d7432d62f765720",
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_54c716dbcfcd66ab_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_05ebb48893c4825f",
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_54c716dbcfcd66ab_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_e9b63aa9ab2f0adb",
+      "geometry_id": "simple_dk_54c716dbcfcd66ab",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_54c716dbcfcd66ab_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_91f61d047c9d39ff",
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_fa3ce5262a50b1ce_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_fea02de44bba6bd4",
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_fa3ce5262a50b1ce_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_b147d12f9bd5889b",
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_fa3ce5262a50b1ce_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_3f8bf95625ad2bba",
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_fa3ce5262a50b1ce_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_97ab4e532be5726d",
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_fa3ce5262a50b1ce_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_71412562b835f140",
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_fa3ce5262a50b1ce_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_cf241f1a91007f03",
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_fa3ce5262a50b1ce_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_8d5252b5ca9cb75f",
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_fa3ce5262a50b1ce_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_93d0ae07e2af6155",
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_fa3ce5262a50b1ce_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_85665d99cafb6d4b",
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_fa3ce5262a50b1ce_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_c238ae7d5d847842",
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_fa3ce5262a50b1ce_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_a89c2c829307e78d",
+      "geometry_id": "simple_dk_fa3ce5262a50b1ce",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_fa3ce5262a50b1ce_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_2beb6793586c34d0",
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_2f96b719965af5bc_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_bf39643015a53eca",
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_2f96b719965af5bc_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_5fcca87c5398c838",
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_2f96b719965af5bc_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_b093d75d389468bf",
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_2f96b719965af5bc_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_411dd76da4ceee28",
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_2f96b719965af5bc_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_1b93a6bbb9cb0a2f",
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_2f96b719965af5bc_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_3bfbc08fd6ad78b3",
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_2f96b719965af5bc_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_a11a010d8eff2c7f",
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_2f96b719965af5bc_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_a9ef9b9c4a5e3df9",
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_2f96b719965af5bc_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_11fd8cf267c7cca7",
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_2f96b719965af5bc_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_75d31d18c1cc2959",
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_2f96b719965af5bc_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_fbfbc25f8cfd5846",
+      "geometry_id": "simple_dk_2f96b719965af5bc",
+      "lineage_id": "simple_dk_lineage_00",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_2f96b719965af5bc_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_f4234d4b64cfca84",
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_b8ec8d242ae4cea3_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_61eb977614bc8435",
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_b8ec8d242ae4cea3_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_65c4cf610113e496",
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_b8ec8d242ae4cea3_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_b170673306ec068a",
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_b8ec8d242ae4cea3_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_73cfdf3f07db24a7",
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_b8ec8d242ae4cea3_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_d812f6adf68cd161",
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_b8ec8d242ae4cea3_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_9504d008e5fcb839",
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_b8ec8d242ae4cea3_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_55bc60a5c47248b9",
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_b8ec8d242ae4cea3_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_63e62d567b38f62a",
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_b8ec8d242ae4cea3_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_157218087c520a64",
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_b8ec8d242ae4cea3_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_ad920833741760c8",
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_b8ec8d242ae4cea3_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_acd637854d54a474",
+      "geometry_id": "simple_dk_b8ec8d242ae4cea3",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_b8ec8d242ae4cea3_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_5873be581cd894e2",
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_1eb1c256f72b6cf5_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_b990bc14251d2b59",
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_1eb1c256f72b6cf5_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_0063bf354b118dad",
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_1eb1c256f72b6cf5_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_c1588eda042b841f",
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_1eb1c256f72b6cf5_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_30fc817d68f72d03",
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_1eb1c256f72b6cf5_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_4ff5d883525dfc85",
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_1eb1c256f72b6cf5_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_13d95c8ab3b36fdd",
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_1eb1c256f72b6cf5_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_c3467d1ebe6901fe",
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_1eb1c256f72b6cf5_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_2721ca2f812f3954",
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_1eb1c256f72b6cf5_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_85709febd537db64",
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_1eb1c256f72b6cf5_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_d429c35ba48732d2",
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_1eb1c256f72b6cf5_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_ba7c652d542b66df",
+      "geometry_id": "simple_dk_1eb1c256f72b6cf5",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_1eb1c256f72b6cf5_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_fbf97940ae57430a",
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_65e7eb94f636c291_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_daba5d97b0098340",
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_65e7eb94f636c291_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_6deeab5298f52557",
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_65e7eb94f636c291_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_7b427ab2cdf83eb0",
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_65e7eb94f636c291_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_52a9663b4298b712",
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_65e7eb94f636c291_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_68c8a17b46f4b4ba",
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_65e7eb94f636c291_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_38ba6d461bfd9b3d",
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_65e7eb94f636c291_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_7c8992120f858dee",
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_65e7eb94f636c291_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_7d7c86e214ed5220",
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_65e7eb94f636c291_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_a13e50e264d5625b",
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_65e7eb94f636c291_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_a27cbda7a7d76309",
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_65e7eb94f636c291_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_04351c4a9c8b7b29",
+      "geometry_id": "simple_dk_65e7eb94f636c291",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_65e7eb94f636c291_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_f0c55b9b7bd9a54c",
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_d49b513498889e24_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_0ba27d04fa9ac803",
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_d49b513498889e24_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_2613b6d878121b05",
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_d49b513498889e24_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_cfe03247758e941e",
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_d49b513498889e24_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_147b08e8704bfb88",
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_d49b513498889e24_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_e51770821718c2bf",
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_d49b513498889e24_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f7a027433d6b9a50",
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_d49b513498889e24_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_aafc9c7856509946",
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_d49b513498889e24_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_2e3555ca28d8649a",
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_d49b513498889e24_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_712af119f8743c66",
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_d49b513498889e24_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_9b947d1357ec4455",
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_d49b513498889e24_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_dae7ce165332e461",
+      "geometry_id": "simple_dk_d49b513498889e24",
+      "lineage_id": "simple_dk_lineage_01",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_d49b513498889e24_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_e4511bb39057a8c9",
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_6b7135537bde1a41_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_30f0a69a248304aa",
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_6b7135537bde1a41_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_59783289a76208df",
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_6b7135537bde1a41_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_5bab1360afa35386",
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_6b7135537bde1a41_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_9a3261df09d03941",
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_6b7135537bde1a41_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_1b09fb9751bfe088",
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_6b7135537bde1a41_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_2796c83ab3e7334a",
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_6b7135537bde1a41_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_400e051258bb341b",
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_6b7135537bde1a41_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_8ef0a6f2726994f6",
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_6b7135537bde1a41_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_4c1d89df3854155d",
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_6b7135537bde1a41_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f3f5b4e0d4ead0a1",
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_6b7135537bde1a41_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_5ca273b38c40c6f7",
+      "geometry_id": "simple_dk_6b7135537bde1a41",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_6b7135537bde1a41_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_dff1a6b4047e17fd",
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_a63fbd454204a114_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_c64dce1b823eed38",
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_a63fbd454204a114_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_173393a34d53480b",
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_a63fbd454204a114_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_d22689bac4422c33",
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_a63fbd454204a114_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_3bc762b7a3c2c59d",
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_a63fbd454204a114_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_006f9bbce2509fef",
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_a63fbd454204a114_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_1db902079107023c",
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_a63fbd454204a114_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_eceec693ac7aee5e",
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_a63fbd454204a114_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_210901a7a845955c",
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_a63fbd454204a114_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_71587537314f9c9f",
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_a63fbd454204a114_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_b061d7dbd91edfa5",
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_a63fbd454204a114_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_414d3222458ac653",
+      "geometry_id": "simple_dk_a63fbd454204a114",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_a63fbd454204a114_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_21986c9e9c7cc6cd",
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b70f841521c6163_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_99042db87eb5cfb0",
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b70f841521c6163_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_541751681c18280c",
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b70f841521c6163_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_20d79967ee45adfb",
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b70f841521c6163_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_a4098ddc24b78a9f",
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b70f841521c6163_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_94c582cf3bd3997b",
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b70f841521c6163_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f84471f5a2eb43b0",
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b70f841521c6163_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_54caa57858e757bf",
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b70f841521c6163_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_a5eb87edc1f9eff3",
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b70f841521c6163_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_19d13bb4aeac56dd",
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b70f841521c6163_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_47d25eba808a15ca",
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b70f841521c6163_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_7ffcd63ff951a6af",
+      "geometry_id": "simple_dk_9b70f841521c6163",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b70f841521c6163_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_7fce45bc2c5d6099",
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ae08f2afe1eafb79_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_20fa78485bf5c17d",
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ae08f2afe1eafb79_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_a5d85c1aa8e5ceb5",
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ae08f2afe1eafb79_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_362f07358e27ebc8",
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ae08f2afe1eafb79_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_2462584dbd094510",
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ae08f2afe1eafb79_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_8083a767db52015f",
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ae08f2afe1eafb79_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_046166a11f787422",
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ae08f2afe1eafb79_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_c4099ec6594a226f",
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ae08f2afe1eafb79_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_6dd2899674eb408b",
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ae08f2afe1eafb79_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_318af4744ad48bf4",
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ae08f2afe1eafb79_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_06ffe3a50f2413b8",
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ae08f2afe1eafb79_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_f84c3a67d61a1913",
+      "geometry_id": "simple_dk_ae08f2afe1eafb79",
+      "lineage_id": "simple_dk_lineage_02",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ae08f2afe1eafb79_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_73e5171e0a2c7046",
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_000662e1f1eed643_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_7eab27dd65ffa3d3",
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_000662e1f1eed643_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_700f8d779deb96ea",
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_000662e1f1eed643_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_86bbaf2b15b0e7c9",
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_000662e1f1eed643_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_704993757d79cde9",
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_000662e1f1eed643_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_9943e5a6549dbfc6",
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_000662e1f1eed643_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_c721f5383e6f653a",
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_000662e1f1eed643_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_04225a1916ec8f88",
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_000662e1f1eed643_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_3f52c2dff0e770bd",
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_000662e1f1eed643_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_e0df2a92c21dd316",
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_000662e1f1eed643_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_2b442009bc5ba300",
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_000662e1f1eed643_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_70293a661fe275fc",
+      "geometry_id": "simple_dk_000662e1f1eed643",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_000662e1f1eed643_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_b001f7b9d3e259c2",
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_c71cc063cb2f1981_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_5c194b48305d7004",
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_c71cc063cb2f1981_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_049a2414b049d492",
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_c71cc063cb2f1981_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_c557e61b001fb60f",
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_c71cc063cb2f1981_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_cc30671d77418887",
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_c71cc063cb2f1981_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_439052a5975077a4",
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_c71cc063cb2f1981_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_4a81d62ca1ea2974",
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_c71cc063cb2f1981_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_3048d34e347185ab",
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_c71cc063cb2f1981_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_9ecceac1d7607e2c",
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_c71cc063cb2f1981_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_36de5baf3bc87026",
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_c71cc063cb2f1981_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_ae7eace3f8cd07db",
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_c71cc063cb2f1981_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_df36c534813bc03a",
+      "geometry_id": "simple_dk_c71cc063cb2f1981",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_c71cc063cb2f1981_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_0d96f0837c12a057",
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9a8c70fb4a731945_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_55d62302d32c7190",
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9a8c70fb4a731945_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_c6ed4d5e1baea8f7",
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9a8c70fb4a731945_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_28e12645b2c639de",
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9a8c70fb4a731945_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_7eb8b9672a456bc2",
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9a8c70fb4a731945_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_3da11f1c1000214b",
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9a8c70fb4a731945_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_6ee3e959ef01de2d",
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9a8c70fb4a731945_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_1f3dd47559e5d251",
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9a8c70fb4a731945_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_d60b153d2cbd7b02",
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9a8c70fb4a731945_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_1d20dc5018b6e45d",
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9a8c70fb4a731945_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_6153bbbf0dd73df9",
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9a8c70fb4a731945_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_8c9595898424e3e5",
+      "geometry_id": "simple_dk_9a8c70fb4a731945",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9a8c70fb4a731945_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_df4b55eb04f5dabc",
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_7590166ba90004c9_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_eafb6a42ca66b2c7",
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_7590166ba90004c9_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_9667957c43c3b2b2",
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_7590166ba90004c9_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_99515e227d8109b3",
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_7590166ba90004c9_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_4855626aa531a622",
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_7590166ba90004c9_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_f349dd7f421c9d83",
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_7590166ba90004c9_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_0cb47bf660109a1d",
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_7590166ba90004c9_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_a6ed9caec91f6e73",
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_7590166ba90004c9_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_8480f556d88adaa1",
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_7590166ba90004c9_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_a98995d77c58f494",
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_7590166ba90004c9_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_ebc6ebbdd4234df3",
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_7590166ba90004c9_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_4b41a5fe1f51a43e",
+      "geometry_id": "simple_dk_7590166ba90004c9",
+      "lineage_id": "simple_dk_lineage_03",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_7590166ba90004c9_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_408f4f0458c4ac45",
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ba92e5cf429d6837_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_dbdb5c605778568e",
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ba92e5cf429d6837_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_e5e51855012c26cc",
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ba92e5cf429d6837_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_af6c6c81c1829e10",
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ba92e5cf429d6837_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_419b9e0bf2449156",
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ba92e5cf429d6837_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_417bb4f0b29b61b9",
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ba92e5cf429d6837_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_403283c937a966b2",
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ba92e5cf429d6837_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_f812f73f613d255e",
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ba92e5cf429d6837_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_a985f53ddec72143",
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ba92e5cf429d6837_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_fe3f0feb70a00ea2",
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ba92e5cf429d6837_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f0011f7809f6c560",
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ba92e5cf429d6837_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_cedb57dace8ddefa",
+      "geometry_id": "simple_dk_ba92e5cf429d6837",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_ba92e5cf429d6837_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_a45f21aef4976c20",
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_4d84e61763eecb01_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_60efef6eb457511d",
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_4d84e61763eecb01_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_845f26455daf839a",
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_4d84e61763eecb01_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_0687b96c5894d01d",
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_4d84e61763eecb01_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_8889171bb8e41846",
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_4d84e61763eecb01_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_c246600637f06913",
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_4d84e61763eecb01_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_1d971c8deb81768f",
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_4d84e61763eecb01_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_f13e5256f83927f2",
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_4d84e61763eecb01_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_cc5ec9f68ea96996",
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_4d84e61763eecb01_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_4dbe8d17fc6ab5d8",
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_4d84e61763eecb01_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_ba01725d45267af9",
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_4d84e61763eecb01_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_60759ebacb22a78b",
+      "geometry_id": "simple_dk_4d84e61763eecb01",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_4d84e61763eecb01_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_1854b5b5bdcb9cf3",
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_064e91b8cac385d6_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_0417c91715084312",
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_064e91b8cac385d6_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_9aa19e2528081b64",
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_064e91b8cac385d6_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_c13572f39656e04d",
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_064e91b8cac385d6_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_2c5b6e2380c07ee0",
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_064e91b8cac385d6_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_5df3e916ec53d112",
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_064e91b8cac385d6_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_c280c52ad0a2ac51",
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_064e91b8cac385d6_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_e7c524cd8a0708ae",
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_064e91b8cac385d6_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_b2f7bbf89c869107",
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_064e91b8cac385d6_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_be8aaa9b97793109",
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_064e91b8cac385d6_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_adc14590c98d0c09",
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_064e91b8cac385d6_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_c8c6d256dc378239",
+      "geometry_id": "simple_dk_064e91b8cac385d6",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_064e91b8cac385d6_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_bdadb805b4385948",
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_37383d3bfe79145b_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_592cba843ccdac9d",
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_37383d3bfe79145b_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_6f687f85341c8eb7",
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_37383d3bfe79145b_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_a11d76f8e0afdec0",
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_37383d3bfe79145b_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_fbbdc950621039f9",
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_37383d3bfe79145b_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_34271ee1e4b310fc",
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_37383d3bfe79145b_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_5541ac1dd453f610",
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_37383d3bfe79145b_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_ea6d53ad3a276414",
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_37383d3bfe79145b_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_f5c41e8b799502de",
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_37383d3bfe79145b_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_fd923a87a6ce7715",
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_37383d3bfe79145b_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_b4468d310e61f107",
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_37383d3bfe79145b_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_0813515de862ff23",
+      "geometry_id": "simple_dk_37383d3bfe79145b",
+      "lineage_id": "simple_dk_lineage_04",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_37383d3bfe79145b_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_7d5312a724bb4d63",
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_187b32851c60a9a0_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_f5b7520c7eeb4f95",
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_187b32851c60a9a0_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_61e1d90c2c3a20a0",
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_187b32851c60a9a0_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_e97d85e8f454a65b",
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_187b32851c60a9a0_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_cc3a27d758e9b0e5",
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_187b32851c60a9a0_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_ad07e7802efe6429",
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_187b32851c60a9a0_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_3dd36e2c9a75b2c2",
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_187b32851c60a9a0_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_71e3a0c328f84368",
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_187b32851c60a9a0_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_36266d4d2a660227",
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_187b32851c60a9a0_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_ec4db71543a53fb9",
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_187b32851c60a9a0_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_907f64fc7cdab7e2",
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_187b32851c60a9a0_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_a8be8f1811887cf3",
+      "geometry_id": "simple_dk_187b32851c60a9a0",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_187b32851c60a9a0_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_501dd7e7d64fc417",
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_0c6b307a9cd2ab0c_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_e9c6a8b496ab7e23",
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_0c6b307a9cd2ab0c_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_b3a131a60569433b",
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_0c6b307a9cd2ab0c_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_4ac0fb33d07b6696",
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_0c6b307a9cd2ab0c_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_62f254e0477e1177",
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_0c6b307a9cd2ab0c_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_4b2059e257d290d7",
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_0c6b307a9cd2ab0c_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_ebb009414018a7af",
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_0c6b307a9cd2ab0c_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_ab0a950f1c5bd057",
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_0c6b307a9cd2ab0c_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_a158d0f52f69bb3a",
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_0c6b307a9cd2ab0c_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_cc1974486bc5b0eb",
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_0c6b307a9cd2ab0c_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_adb25a2dac9ea649",
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_0c6b307a9cd2ab0c_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_d76bd7e86a8c71ee",
+      "geometry_id": "simple_dk_0c6b307a9cd2ab0c",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_0c6b307a9cd2ab0c_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_a7b96b3f757da7a3",
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b7b8ba0f63c8ebf_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_4e48fbb837c173b0",
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b7b8ba0f63c8ebf_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_04531dca3767fcf1",
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b7b8ba0f63c8ebf_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_e9a83efa0cbebcf4",
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b7b8ba0f63c8ebf_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_a0b5006eb3a0515d",
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b7b8ba0f63c8ebf_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_ade32d8f5f6065b2",
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b7b8ba0f63c8ebf_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_a9e37b9bf18d7a0b",
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b7b8ba0f63c8ebf_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_ef2518fdb6c25fbd",
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b7b8ba0f63c8ebf_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_6f9844a5d3550db9",
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b7b8ba0f63c8ebf_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_de826195e44f6976",
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b7b8ba0f63c8ebf_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_e2d307f7f0f8c72f",
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b7b8ba0f63c8ebf_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_0e1990aec7bd5d5f",
+      "geometry_id": "simple_dk_9b7b8ba0f63c8ebf",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_9b7b8ba0f63c8ebf_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_9562149ab536bca4",
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_be2efb7ccb5dc154_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_f427031f1e19754b",
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_be2efb7ccb5dc154_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_17b9f6a4d92d85dc",
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_be2efb7ccb5dc154_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_db70127aae9706fb",
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_be2efb7ccb5dc154_a0",
+      "incidence_angle_rad": 0.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_122e7d4ca5410657",
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_be2efb7ccb5dc154_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_315c3d6ba5ba51a0",
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_be2efb7ccb5dc154_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_0d7abb2f3f99963f",
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_be2efb7ccb5dc154_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_3755b200dc4ca71a",
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_be2efb7ccb5dc154_a1",
+      "incidence_angle_rad": 1.3,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_703a4934cf939ead",
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_be2efb7ccb5dc154_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_7a56033baec30eec",
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_be2efb7ccb5dc154_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_9f81d58092cd4866",
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_be2efb7ccb5dc154_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_a419c1e905683572",
+      "geometry_id": "simple_dk_be2efb7ccb5dc154",
+      "lineage_id": "simple_dk_lineage_05",
+      "split": "train",
+      "family": "simple",
+      "illumination_id": "simple_dk_be2efb7ccb5dc154_a2",
+      "incidence_angle_rad": 3.0,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_1d12d689331d9412",
+      "geometry_id": "simple_dk_7bbb73e8f8acbfb2",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7bbb73e8f8acbfb2_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_1d9420ca4e9c40f1",
+      "geometry_id": "simple_dk_7bbb73e8f8acbfb2",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7bbb73e8f8acbfb2_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_d73605fdf897a9ab",
+      "geometry_id": "simple_dk_7bbb73e8f8acbfb2",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7bbb73e8f8acbfb2_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_979921ec049b3dad",
+      "geometry_id": "simple_dk_7bbb73e8f8acbfb2",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7bbb73e8f8acbfb2_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_da9b35f2e583c2f3",
+      "geometry_id": "simple_dk_7bbb73e8f8acbfb2",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7bbb73e8f8acbfb2_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_bfc25b4c39e48377",
+      "geometry_id": "simple_dk_7bbb73e8f8acbfb2",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7bbb73e8f8acbfb2_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_923df884f36dc4f5",
+      "geometry_id": "simple_dk_7bbb73e8f8acbfb2",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7bbb73e8f8acbfb2_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_ee3448fef40b1a73",
+      "geometry_id": "simple_dk_7bbb73e8f8acbfb2",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7bbb73e8f8acbfb2_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_d672b56aed173d23",
+      "geometry_id": "simple_dk_aea69fc09e97e3c5",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_aea69fc09e97e3c5_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_7d5b5cc061f6557d",
+      "geometry_id": "simple_dk_aea69fc09e97e3c5",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_aea69fc09e97e3c5_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_b2577025550b6806",
+      "geometry_id": "simple_dk_aea69fc09e97e3c5",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_aea69fc09e97e3c5_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_10e9fd957e0e15f9",
+      "geometry_id": "simple_dk_aea69fc09e97e3c5",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_aea69fc09e97e3c5_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_2f6687a73a94f936",
+      "geometry_id": "simple_dk_aea69fc09e97e3c5",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_aea69fc09e97e3c5_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_b8ea81b83db05c48",
+      "geometry_id": "simple_dk_aea69fc09e97e3c5",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_aea69fc09e97e3c5_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_676d9a7c3512ec61",
+      "geometry_id": "simple_dk_aea69fc09e97e3c5",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_aea69fc09e97e3c5_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_7d7425f341e66696",
+      "geometry_id": "simple_dk_aea69fc09e97e3c5",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_aea69fc09e97e3c5_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_aff34abf829247fe",
+      "geometry_id": "simple_dk_474852cd385b2b35",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_474852cd385b2b35_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_7250bbde995bcb99",
+      "geometry_id": "simple_dk_474852cd385b2b35",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_474852cd385b2b35_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f4625cd00a259597",
+      "geometry_id": "simple_dk_474852cd385b2b35",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_474852cd385b2b35_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_d150657901b43c79",
+      "geometry_id": "simple_dk_474852cd385b2b35",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_474852cd385b2b35_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_a73121acffd65b63",
+      "geometry_id": "simple_dk_474852cd385b2b35",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_474852cd385b2b35_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_6c1342927bf07515",
+      "geometry_id": "simple_dk_474852cd385b2b35",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_474852cd385b2b35_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_cf27e6a772cfee85",
+      "geometry_id": "simple_dk_474852cd385b2b35",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_474852cd385b2b35_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_67b7ebe66d89f1dd",
+      "geometry_id": "simple_dk_474852cd385b2b35",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_474852cd385b2b35_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_1f4a317bd2e4eef2",
+      "geometry_id": "simple_dk_7a6f6fd52eb5e910",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7a6f6fd52eb5e910_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_ac4eb40fe80b091f",
+      "geometry_id": "simple_dk_7a6f6fd52eb5e910",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7a6f6fd52eb5e910_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_3bf0bf6f088afe6c",
+      "geometry_id": "simple_dk_7a6f6fd52eb5e910",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7a6f6fd52eb5e910_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_6b05999051993d76",
+      "geometry_id": "simple_dk_7a6f6fd52eb5e910",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7a6f6fd52eb5e910_a0",
+      "incidence_angle_rad": 0.85,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_8f5d1b5f029be1cf",
+      "geometry_id": "simple_dk_7a6f6fd52eb5e910",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7a6f6fd52eb5e910_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_069456e6e64969b6",
+      "geometry_id": "simple_dk_7a6f6fd52eb5e910",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7a6f6fd52eb5e910_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_419a82bf0b755ab8",
+      "geometry_id": "simple_dk_7a6f6fd52eb5e910",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7a6f6fd52eb5e910_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_c883e22450c76dde",
+      "geometry_id": "simple_dk_7a6f6fd52eb5e910",
+      "lineage_id": "simple_dk_lineage_06",
+      "split": "validation",
+      "family": "simple",
+      "illumination_id": "simple_dk_7a6f6fd52eb5e910_a1",
+      "incidence_angle_rad": 4.2,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_6409224827963d1e",
+      "geometry_id": "simple_dk_bd33e612011c8445",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_bd33e612011c8445_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_6abb64768f87fcd1",
+      "geometry_id": "simple_dk_bd33e612011c8445",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_bd33e612011c8445_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_93dad62dbb3bff34",
+      "geometry_id": "simple_dk_bd33e612011c8445",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_bd33e612011c8445_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_c5d5d41ad1688470",
+      "geometry_id": "simple_dk_bd33e612011c8445",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_bd33e612011c8445_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_c9f65fed694406b1",
+      "geometry_id": "simple_dk_bd33e612011c8445",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_bd33e612011c8445_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_8a642b450993dde7",
+      "geometry_id": "simple_dk_bd33e612011c8445",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_bd33e612011c8445_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f45d7853f6fad3d4",
+      "geometry_id": "simple_dk_bd33e612011c8445",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_bd33e612011c8445_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_5876670c59a6669f",
+      "geometry_id": "simple_dk_bd33e612011c8445",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_bd33e612011c8445_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_c6c82b9775a81518",
+      "geometry_id": "simple_dk_174ed502170015b3",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_174ed502170015b3_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_10ce36be5b882aa3",
+      "geometry_id": "simple_dk_174ed502170015b3",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_174ed502170015b3_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_39a570ea2ff9153a",
+      "geometry_id": "simple_dk_174ed502170015b3",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_174ed502170015b3_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_3a0690488d580e82",
+      "geometry_id": "simple_dk_174ed502170015b3",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_174ed502170015b3_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_6821f5ff5fa3a3bd",
+      "geometry_id": "simple_dk_174ed502170015b3",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_174ed502170015b3_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_e62c00148aeb8231",
+      "geometry_id": "simple_dk_174ed502170015b3",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_174ed502170015b3_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_48757cd28bbd185f",
+      "geometry_id": "simple_dk_174ed502170015b3",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_174ed502170015b3_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_a92b200f0fd18af0",
+      "geometry_id": "simple_dk_174ed502170015b3",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_174ed502170015b3_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_8cb2b87b68f63b70",
+      "geometry_id": "simple_dk_aad4daf1f0ac77d0",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_aad4daf1f0ac77d0_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_bc633ff585272de9",
+      "geometry_id": "simple_dk_aad4daf1f0ac77d0",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_aad4daf1f0ac77d0_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_bcfbb1f66992ac54",
+      "geometry_id": "simple_dk_aad4daf1f0ac77d0",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_aad4daf1f0ac77d0_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_3692042ed09c9546",
+      "geometry_id": "simple_dk_aad4daf1f0ac77d0",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_aad4daf1f0ac77d0_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_a69d17d7d648fdaf",
+      "geometry_id": "simple_dk_aad4daf1f0ac77d0",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_aad4daf1f0ac77d0_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_6824c7955215fe5a",
+      "geometry_id": "simple_dk_aad4daf1f0ac77d0",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_aad4daf1f0ac77d0_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_0bc8643ee7530fc1",
+      "geometry_id": "simple_dk_aad4daf1f0ac77d0",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_aad4daf1f0ac77d0_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_d053b509d2b60082",
+      "geometry_id": "simple_dk_aad4daf1f0ac77d0",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_aad4daf1f0ac77d0_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_fa72ad4ad002d2c4",
+      "geometry_id": "simple_dk_3918817f450d88b2",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_3918817f450d88b2_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_c4c054d351b3fe46",
+      "geometry_id": "simple_dk_3918817f450d88b2",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_3918817f450d88b2_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_24b5d6c5dae85848",
+      "geometry_id": "simple_dk_3918817f450d88b2",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_3918817f450d88b2_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_4f6a908ecd0a8898",
+      "geometry_id": "simple_dk_3918817f450d88b2",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_3918817f450d88b2_a0",
+      "incidence_angle_rad": 2.1,
+      "cells_x": 96,
+      "cells_y": 96
+    },
+    {
+      "task_id": "condition_f92662532943e522",
+      "geometry_id": "simple_dk_3918817f450d88b2",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_3918817f450d88b2_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_abadf0d755af8628",
+      "geometry_id": "simple_dk_3918817f450d88b2",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_3918817f450d88b2_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_9f6b0d0083bcfe5c",
+      "geometry_id": "simple_dk_3918817f450d88b2",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_3918817f450d88b2_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 64,
+      "cells_y": 64
+    },
+    {
+      "task_id": "condition_b392e3e7d80b4cd2",
+      "geometry_id": "simple_dk_3918817f450d88b2",
+      "lineage_id": "simple_dk_lineage_07",
+      "split": "test",
+      "family": "simple",
+      "illumination_id": "simple_dk_3918817f450d88b2_a1",
+      "incidence_angle_rad": 5.4,
+      "cells_x": 96,
+      "cells_y": 96
+    }
+  ],
+  "dataset_id": "simple_dk_3ea40e8117434e5c"
+}

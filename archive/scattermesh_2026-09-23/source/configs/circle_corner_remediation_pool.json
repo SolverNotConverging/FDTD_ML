@@ -1,0 +1,4075 @@
+{
+  "schema_version": 1,
+  "purpose": "large lossy corner-circle remediation without frozen-suite leakage",
+  "geometry_count": 40,
+  "condition_count": 256,
+  "geometries": [
+    {
+      "geometry_id": "circle_corner_remediation_3b69931b42e8c872",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "variant_index": 0,
+      "split": "train",
+      "corner": "northeast",
+      "radius_m": 0.12152,
+      "center_m": [
+        0.784,
+        0.794
+      ],
+      "epsilon_r": 17.0,
+      "loss_tangent_at_1ghz": 0.11,
+      "sigma_e_s_per_m": 0.1040327801843759,
+      "feature_size_m": 0.24304,
+      "feature_cells_on_256_input": 51.848533333333336,
+      "minimum_internal_wavelength_m": 0.06059195931850848,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_7c2409acfebd8ab7",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "variant_index": 1,
+      "split": "train",
+      "corner": "northeast",
+      "radius_m": 0.12648,
+      "center_m": [
+        0.795,
+        0.784
+      ],
+      "epsilon_r": 17.0,
+      "loss_tangent_at_1ghz": 0.11,
+      "sigma_e_s_per_m": 0.1040327801843759,
+      "feature_size_m": 0.25296,
+      "feature_cells_on_256_input": 53.964800000000004,
+      "minimum_internal_wavelength_m": 0.06059195931850848,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_8f849cd0218b2251",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "variant_index": 0,
+      "split": "train",
+      "corner": "northeast",
+      "radius_m": 0.13328,
+      "center_m": [
+        0.7749297919803635,
+        0.7834185057486903
+      ],
+      "epsilon_r": 21.0,
+      "loss_tangent_at_1ghz": 0.15,
+      "sigma_e_s_per_m": 0.17524238373303958,
+      "feature_size_m": 0.26656,
+      "feature_cells_on_256_input": 56.86613333333334,
+      "minimum_internal_wavelength_m": 0.05451673141118648,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_0cfdbcc8bc5d501c",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "variant_index": 1,
+      "split": "train",
+      "corner": "northeast",
+      "radius_m": 0.13872,
+      "center_m": [
+        0.7889056757900256,
+        0.778351487716472
+      ],
+      "epsilon_r": 21.0,
+      "loss_tangent_at_1ghz": 0.15,
+      "sigma_e_s_per_m": 0.17524238373303958,
+      "feature_size_m": 0.27744,
+      "feature_cells_on_256_input": 59.187200000000004,
+      "minimum_internal_wavelength_m": 0.05451673141118648,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_698e18ed05119932",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "variant_index": 0,
+      "split": "train",
+      "corner": "northeast",
+      "radius_m": 0.14504,
+      "center_m": [
+        0.7669214010951247,
+        0.7726239776368466
+      ],
+      "epsilon_r": 23.0,
+      "loss_tangent_at_1ghz": 0.17,
+      "sigma_e_s_per_m": 0.2175230858400587,
+      "feature_size_m": 0.29008,
+      "feature_cells_on_256_input": 61.88373333333334,
+      "minimum_internal_wavelength_m": 0.052092540598834634,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_7125089215cf2272",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "variant_index": 1,
+      "split": "train",
+      "corner": "northeast",
+      "radius_m": 0.15095999999999998,
+      "center_m": [
+        0.7817742442052639,
+        0.7732509158679284
+      ],
+      "epsilon_r": 23.0,
+      "loss_tangent_at_1ghz": 0.17,
+      "sigma_e_s_per_m": 0.2175230858400587,
+      "feature_size_m": 0.30191999999999997,
+      "feature_cells_on_256_input": 64.4096,
+      "minimum_internal_wavelength_m": 0.052092540598834634,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_a6ad27166de13f99",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "variant_index": 0,
+      "split": "train",
+      "corner": "northwest",
+      "radius_m": 0.12152,
+      "center_m": [
+        0.40473354498636793,
+        0.7850741039810619
+      ],
+      "epsilon_r": 17.0,
+      "loss_tangent_at_1ghz": 0.11,
+      "sigma_e_s_per_m": 0.1040327801843759,
+      "feature_size_m": 0.24304,
+      "feature_cells_on_256_input": 51.848533333333336,
+      "minimum_internal_wavelength_m": 0.06059195931850848,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_183fee1131be65c4",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "variant_index": 1,
+      "split": "train",
+      "corner": "northwest",
+      "radius_m": 0.12648,
+      "center_m": [
+        0.4169846712892142,
+        0.7934949058616259
+      ],
+      "epsilon_r": 17.0,
+      "loss_tangent_at_1ghz": 0.11,
+      "sigma_e_s_per_m": 0.1040327801843759,
+      "feature_size_m": 0.25296,
+      "feature_cells_on_256_input": 53.964800000000004,
+      "minimum_internal_wavelength_m": 0.06059195931850848,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_dd482afbf323a09d",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "variant_index": 0,
+      "split": "train",
+      "corner": "northwest",
+      "radius_m": 0.13328,
+      "center_m": [
+        0.4150017766450623,
+        0.7754417489592189
+      ],
+      "epsilon_r": 21.0,
+      "loss_tangent_at_1ghz": 0.15,
+      "sigma_e_s_per_m": 0.17524238373303958,
+      "feature_size_m": 0.26656,
+      "feature_cells_on_256_input": 56.86613333333334,
+      "minimum_internal_wavelength_m": 0.05451673141118648,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_0ee28d8d2ff82dfa",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "variant_index": 1,
+      "split": "train",
+      "corner": "northwest",
+      "radius_m": 0.13872,
+      "center_m": [
+        0.4231314630349833,
+        0.7878879612023688
+      ],
+      "epsilon_r": 21.0,
+      "loss_tangent_at_1ghz": 0.15,
+      "sigma_e_s_per_m": 0.17524238373303958,
+      "feature_size_m": 0.27744,
+      "feature_cells_on_256_input": 59.187200000000004,
+      "minimum_internal_wavelength_m": 0.05451673141118648,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_f7a76c9aa6a4b2af",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "variant_index": 0,
+      "split": "train",
+      "corner": "northwest",
+      "radius_m": 0.14504,
+      "center_m": [
+        0.4257202871247167,
+        0.7667943244100639
+      ],
+      "epsilon_r": 23.0,
+      "loss_tangent_at_1ghz": 0.17,
+      "sigma_e_s_per_m": 0.2175230858400587,
+      "feature_size_m": 0.29008,
+      "feature_cells_on_256_input": 61.88373333333334,
+      "minimum_internal_wavelength_m": 0.052092540598834634,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_166d8d066942b327",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "variant_index": 1,
+      "split": "train",
+      "corner": "northwest",
+      "radius_m": 0.15095999999999998,
+      "center_m": [
+        0.4285076020135437,
+        0.7813967514586927
+      ],
+      "epsilon_r": 23.0,
+      "loss_tangent_at_1ghz": 0.17,
+      "sigma_e_s_per_m": 0.2175230858400587,
+      "feature_size_m": 0.30191999999999997,
+      "feature_cells_on_256_input": 64.4096,
+      "minimum_internal_wavelength_m": 0.052092540598834634,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_6c1773617a5e8e6d",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "variant_index": 0,
+      "split": "train",
+      "corner": "southeast",
+      "radius_m": 0.12152,
+      "center_m": [
+        0.7935905672568695,
+        0.4037463749093908
+      ],
+      "epsilon_r": 17.0,
+      "loss_tangent_at_1ghz": 0.11,
+      "sigma_e_s_per_m": 0.1040327801843759,
+      "feature_size_m": 0.24304,
+      "feature_cells_on_256_input": 51.848533333333336,
+      "minimum_internal_wavelength_m": 0.06059195931850848,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_ab14849ec4322f31",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "variant_index": 1,
+      "split": "train",
+      "corner": "southeast",
+      "radius_m": 0.12648,
+      "center_m": [
+        0.7881955263380538,
+        0.4175989390577463
+      ],
+      "epsilon_r": 17.0,
+      "loss_tangent_at_1ghz": 0.11,
+      "sigma_e_s_per_m": 0.1040327801843759,
+      "feature_size_m": 0.25296,
+      "feature_cells_on_256_input": 53.964800000000004,
+      "minimum_internal_wavelength_m": 0.06059195931850848,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_a0a7b4ab9f68cfd2",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "variant_index": 0,
+      "split": "train",
+      "corner": "southeast",
+      "radius_m": 0.13328,
+      "center_m": [
+        0.7876985039978788,
+        0.41358105757152686
+      ],
+      "epsilon_r": 21.0,
+      "loss_tangent_at_1ghz": 0.15,
+      "sigma_e_s_per_m": 0.17524238373303958,
+      "feature_size_m": 0.26656,
+      "feature_cells_on_256_input": 56.86613333333334,
+      "minimum_internal_wavelength_m": 0.05451673141118648,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_2b89925844701dca",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "variant_index": 1,
+      "split": "train",
+      "corner": "southeast",
+      "radius_m": 0.13872,
+      "center_m": [
+        0.77744199736481,
+        0.4243422875981463
+      ],
+      "epsilon_r": 21.0,
+      "loss_tangent_at_1ghz": 0.15,
+      "sigma_e_s_per_m": 0.17524238373303958,
+      "feature_size_m": 0.27744,
+      "feature_cells_on_256_input": 59.187200000000004,
+      "minimum_internal_wavelength_m": 0.05451673141118648,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_f98c9a07af6afff3",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "variant_index": 0,
+      "split": "train",
+      "corner": "southeast",
+      "radius_m": 0.14504,
+      "center_m": [
+        0.7809506286936729,
+        0.42407938531644385
+      ],
+      "epsilon_r": 23.0,
+      "loss_tangent_at_1ghz": 0.17,
+      "sigma_e_s_per_m": 0.2175230858400587,
+      "feature_size_m": 0.29008,
+      "feature_cells_on_256_input": 61.88373333333334,
+      "minimum_internal_wavelength_m": 0.052092540598834634,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_dff1d7e9b7059a9e",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "variant_index": 1,
+      "split": "train",
+      "corner": "southeast",
+      "radius_m": 0.15095999999999998,
+      "center_m": [
+        0.7673729977976648,
+        0.43013313946174614
+      ],
+      "epsilon_r": 23.0,
+      "loss_tangent_at_1ghz": 0.17,
+      "sigma_e_s_per_m": 0.2175230858400587,
+      "feature_size_m": 0.30191999999999997,
+      "feature_cells_on_256_input": 64.4096,
+      "minimum_internal_wavelength_m": 0.052092540598834634,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_7c06781c26d599f3",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "variant_index": 0,
+      "split": "train",
+      "corner": "southwest",
+      "radius_m": 0.12152,
+      "center_m": [
+        0.4169091596969,
+        0.4120648274220215
+      ],
+      "epsilon_r": 17.0,
+      "loss_tangent_at_1ghz": 0.11,
+      "sigma_e_s_per_m": 0.1040327801843759,
+      "feature_size_m": 0.24304,
+      "feature_cells_on_256_input": 51.848533333333336,
+      "minimum_internal_wavelength_m": 0.06059195931850848,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_ea92433c136b72c7",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "variant_index": 1,
+      "split": "train",
+      "corner": "southwest",
+      "radius_m": 0.12648,
+      "center_m": [
+        0.40218977187721255,
+        0.4099816514300238
+      ],
+      "epsilon_r": 17.0,
+      "loss_tangent_at_1ghz": 0.11,
+      "sigma_e_s_per_m": 0.1040327801843759,
+      "feature_size_m": 0.25296,
+      "feature_cells_on_256_input": 53.964800000000004,
+      "minimum_internal_wavelength_m": 0.06059195931850848,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_4ae7439fd9c3bd41",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "variant_index": 0,
+      "split": "train",
+      "corner": "southwest",
+      "radius_m": 0.13328,
+      "center_m": [
+        0.42360532093458264,
+        0.4225365600646668
+      ],
+      "epsilon_r": 21.0,
+      "loss_tangent_at_1ghz": 0.15,
+      "sigma_e_s_per_m": 0.17524238373303958,
+      "feature_size_m": 0.26656,
+      "feature_cells_on_256_input": 56.86613333333334,
+      "minimum_internal_wavelength_m": 0.05451673141118648,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_fa46dd21020b7da4",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "variant_index": 1,
+      "split": "train",
+      "corner": "southwest",
+      "radius_m": 0.13872,
+      "center_m": [
+        0.41078322516342053,
+        0.4150136709896407
+      ],
+      "epsilon_r": 21.0,
+      "loss_tangent_at_1ghz": 0.15,
+      "sigma_e_s_per_m": 0.17524238373303958,
+      "feature_size_m": 0.27744,
+      "feature_cells_on_256_input": 59.187200000000004,
+      "minimum_internal_wavelength_m": 0.05451673141118648,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_aa8dd5dfbf076c2a",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "variant_index": 0,
+      "split": "train",
+      "corner": "southwest",
+      "radius_m": 0.14504,
+      "center_m": [
+        0.4294596645347067,
+        0.4323269835867728
+      ],
+      "epsilon_r": 23.0,
+      "loss_tangent_at_1ghz": 0.17,
+      "sigma_e_s_per_m": 0.2175230858400587,
+      "feature_size_m": 0.29008,
+      "feature_cells_on_256_input": 61.88373333333334,
+      "minimum_internal_wavelength_m": 0.052092540598834634,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_f6384dcaf1920b64",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "variant_index": 1,
+      "split": "train",
+      "corner": "southwest",
+      "radius_m": 0.15095999999999998,
+      "center_m": [
+        0.42046050726418216,
+        0.4204941830551841
+      ],
+      "epsilon_r": 23.0,
+      "loss_tangent_at_1ghz": 0.17,
+      "sigma_e_s_per_m": 0.2175230858400587,
+      "feature_size_m": 0.30191999999999997,
+      "feature_cells_on_256_input": 64.4096,
+      "minimum_internal_wavelength_m": 0.052092540598834634,
+      "incidence_angles_rad": [
+        4.15,
+        4.55,
+        5.25,
+        5.65
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_0c4179009c0d574e",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_da4464b55e9dd085",
+      "variant_index": 0,
+      "split": "validation",
+      "corner": "northeast",
+      "radius_m": 0.12838,
+      "center_m": [
+        0.7801922019978675,
+        0.7818673198659248
+      ],
+      "epsilon_r": 18.0,
+      "loss_tangent_at_1ghz": 0.12,
+      "sigma_e_s_per_m": 0.12016620598837001,
+      "feature_size_m": 0.25676,
+      "feature_cells_on_256_input": 54.77546666666667,
+      "minimum_internal_wavelength_m": 0.05888480000010774,
+      "incidence_angles_rad": [
+        4.35,
+        5.45
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_43d0a0551abf9d8b",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_da4464b55e9dd085",
+      "variant_index": 1,
+      "split": "validation",
+      "corner": "northeast",
+      "radius_m": 0.13362000000000002,
+      "center_m": [
+        0.7698412302742377,
+        0.771196922292422
+      ],
+      "epsilon_r": 18.0,
+      "loss_tangent_at_1ghz": 0.12,
+      "sigma_e_s_per_m": 0.12016620598837001,
+      "feature_size_m": 0.26724000000000003,
+      "feature_cells_on_256_input": 57.01120000000001,
+      "minimum_internal_wavelength_m": 0.05888480000010774,
+      "incidence_angles_rad": [
+        4.35,
+        5.45
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_fb81cae34c24bd01",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_3e5f12d04e1a4fe4",
+      "variant_index": 0,
+      "split": "validation",
+      "corner": "northwest",
+      "radius_m": 0.12838,
+      "center_m": [
+        0.4244352252375276,
+        0.783197956584519
+      ],
+      "epsilon_r": 18.0,
+      "loss_tangent_at_1ghz": 0.12,
+      "sigma_e_s_per_m": 0.12016620598837001,
+      "feature_size_m": 0.25676,
+      "feature_cells_on_256_input": 54.77546666666667,
+      "minimum_internal_wavelength_m": 0.05888480000010774,
+      "incidence_angles_rad": [
+        4.35,
+        5.45
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_62abf3c8263378d1",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_3e5f12d04e1a4fe4",
+      "variant_index": 1,
+      "split": "validation",
+      "corner": "northwest",
+      "radius_m": 0.13362000000000002,
+      "center_m": [
+        0.4213332794581001,
+        0.768659114389162
+      ],
+      "epsilon_r": 18.0,
+      "loss_tangent_at_1ghz": 0.12,
+      "sigma_e_s_per_m": 0.12016620598837001,
+      "feature_size_m": 0.26724000000000003,
+      "feature_cells_on_256_input": 57.01120000000001,
+      "minimum_internal_wavelength_m": 0.05888480000010774,
+      "incidence_angles_rad": [
+        4.35,
+        5.45
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_3a4d894bafbf7f40",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_883cb4234bc135d8",
+      "variant_index": 0,
+      "split": "validation",
+      "corner": "southeast",
+      "radius_m": 0.12838,
+      "center_m": [
+        0.7725452916160072,
+        0.4303296911442478
+      ],
+      "epsilon_r": 18.0,
+      "loss_tangent_at_1ghz": 0.12,
+      "sigma_e_s_per_m": 0.12016620598837001,
+      "feature_size_m": 0.25676,
+      "feature_cells_on_256_input": 54.77546666666667,
+      "minimum_internal_wavelength_m": 0.05888480000010774,
+      "incidence_angles_rad": [
+        4.35,
+        5.45
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_3837e05b1b10f122",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_883cb4234bc135d8",
+      "variant_index": 1,
+      "split": "validation",
+      "corner": "southeast",
+      "radius_m": 0.13362000000000002,
+      "center_m": [
+        0.777639984508224,
+        0.4163638720012833
+      ],
+      "epsilon_r": 18.0,
+      "loss_tangent_at_1ghz": 0.12,
+      "sigma_e_s_per_m": 0.12016620598837001,
+      "feature_size_m": 0.26724000000000003,
+      "feature_cells_on_256_input": 57.01120000000001,
+      "minimum_internal_wavelength_m": 0.05888480000010774,
+      "incidence_angles_rad": [
+        4.35,
+        5.45
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_e02ac733e40be79e",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_aa2ecc99da89425f",
+      "variant_index": 0,
+      "split": "validation",
+      "corner": "southwest",
+      "radius_m": 0.12838,
+      "center_m": [
+        0.41771073609167464,
+        0.4275277697616817
+      ],
+      "epsilon_r": 18.0,
+      "loss_tangent_at_1ghz": 0.12,
+      "sigma_e_s_per_m": 0.12016620598837001,
+      "feature_size_m": 0.25676,
+      "feature_cells_on_256_input": 54.77546666666667,
+      "minimum_internal_wavelength_m": 0.05888480000010774,
+      "incidence_angles_rad": [
+        4.35,
+        5.45
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_33e22868c0fcb0d3",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_aa2ecc99da89425f",
+      "variant_index": 1,
+      "split": "validation",
+      "corner": "southwest",
+      "radius_m": 0.13362000000000002,
+      "center_m": [
+        0.42944569105505115,
+        0.4184013886603073
+      ],
+      "epsilon_r": 18.0,
+      "loss_tangent_at_1ghz": 0.12,
+      "sigma_e_s_per_m": 0.12016620598837001,
+      "feature_size_m": 0.26724000000000003,
+      "feature_cells_on_256_input": 57.01120000000001,
+      "minimum_internal_wavelength_m": 0.05888480000010774,
+      "incidence_angles_rad": [
+        4.35,
+        5.45
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_e80d3a9bf97df6c6",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_e384300e84d60c70",
+      "variant_index": 0,
+      "split": "test",
+      "corner": "northeast",
+      "radius_m": 0.13915999999999998,
+      "center_m": [
+        0.7581782815836285,
+        0.76825530194939
+      ],
+      "epsilon_r": 22.0,
+      "loss_tangent_at_1ghz": 0.16,
+      "sigma_e_s_per_m": 0.1958264097588252,
+      "feature_size_m": 0.27831999999999996,
+      "feature_cells_on_256_input": 59.374933333333324,
+      "minimum_internal_wavelength_m": 0.053263305669675534,
+      "incidence_angles_rad": [
+        4.7,
+        5.1
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_37a135253cf5028e",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_e384300e84d60c70",
+      "variant_index": 1,
+      "split": "test",
+      "corner": "northeast",
+      "radius_m": 0.14484,
+      "center_m": [
+        0.7687363069864196,
+        0.75778973461675
+      ],
+      "epsilon_r": 22.0,
+      "loss_tangent_at_1ghz": 0.16,
+      "sigma_e_s_per_m": 0.1958264097588252,
+      "feature_size_m": 0.28968,
+      "feature_cells_on_256_input": 61.7984,
+      "minimum_internal_wavelength_m": 0.053263305669675534,
+      "incidence_angles_rad": [
+        4.7,
+        5.1
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_1de03bfde9309a4c",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_2f046505860b8229",
+      "variant_index": 0,
+      "split": "test",
+      "corner": "northwest",
+      "radius_m": 0.13915999999999998,
+      "center_m": [
+        0.4288071616533466,
+        0.7645129098545677
+      ],
+      "epsilon_r": 22.0,
+      "loss_tangent_at_1ghz": 0.16,
+      "sigma_e_s_per_m": 0.1958264097588252,
+      "feature_size_m": 0.27831999999999996,
+      "feature_cells_on_256_input": 59.374933333333324,
+      "minimum_internal_wavelength_m": 0.053263305669675534,
+      "incidence_angles_rad": [
+        4.7,
+        5.1
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_a31219c994728aea",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_2f046505860b8229",
+      "variant_index": 1,
+      "split": "test",
+      "corner": "northwest",
+      "radius_m": 0.14484,
+      "center_m": [
+        0.44331166755858076,
+        0.761254181813594
+      ],
+      "epsilon_r": 22.0,
+      "loss_tangent_at_1ghz": 0.16,
+      "sigma_e_s_per_m": 0.1958264097588252,
+      "feature_size_m": 0.28968,
+      "feature_cells_on_256_input": 61.7984,
+      "minimum_internal_wavelength_m": 0.053263305669675534,
+      "incidence_angles_rad": [
+        4.7,
+        5.1
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_0814ce1d0dfaa614",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_8c6070c011d169da",
+      "variant_index": 0,
+      "split": "test",
+      "corner": "southeast",
+      "radius_m": 0.13915999999999998,
+      "center_m": [
+        0.7576333803125807,
+        0.43261382904215323
+      ],
+      "epsilon_r": 22.0,
+      "loss_tangent_at_1ghz": 0.16,
+      "sigma_e_s_per_m": 0.1958264097588252,
+      "feature_size_m": 0.27831999999999996,
+      "feature_cells_on_256_input": 59.374933333333324,
+      "minimum_internal_wavelength_m": 0.053263305669675534,
+      "incidence_angles_rad": [
+        4.7,
+        5.1
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_5aa8ede491c23998",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_8c6070c011d169da",
+      "variant_index": 1,
+      "split": "test",
+      "corner": "southeast",
+      "radius_m": 0.14484,
+      "center_m": [
+        0.7716533884316575,
+        0.437557448398558
+      ],
+      "epsilon_r": 22.0,
+      "loss_tangent_at_1ghz": 0.16,
+      "sigma_e_s_per_m": 0.1958264097588252,
+      "feature_size_m": 0.28968,
+      "feature_cells_on_256_input": 61.7984,
+      "minimum_internal_wavelength_m": 0.053263305669675534,
+      "incidence_angles_rad": [
+        4.7,
+        5.1
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_17a425c777a64266",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_da539dd0b0e081e6",
+      "variant_index": 0,
+      "split": "test",
+      "corner": "southwest",
+      "radius_m": 0.13915999999999998,
+      "center_m": [
+        0.4324045362065641,
+        0.4297491888438306
+      ],
+      "epsilon_r": 22.0,
+      "loss_tangent_at_1ghz": 0.16,
+      "sigma_e_s_per_m": 0.1958264097588252,
+      "feature_size_m": 0.27831999999999996,
+      "feature_cells_on_256_input": 59.374933333333324,
+      "minimum_internal_wavelength_m": 0.053263305669675534,
+      "incidence_angles_rad": [
+        4.7,
+        5.1
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    },
+    {
+      "geometry_id": "circle_corner_remediation_2c5cd687ad3d83c2",
+      "family": "simple_corner_remediation",
+      "shape": "circle",
+      "lineage_id": "circle_corner_remediation_lineage_da539dd0b0e081e6",
+      "variant_index": 1,
+      "split": "test",
+      "corner": "southwest",
+      "radius_m": 0.14484,
+      "center_m": [
+        0.44165707737200477,
+        0.4413849304180418
+      ],
+      "epsilon_r": 22.0,
+      "loss_tangent_at_1ghz": 0.16,
+      "sigma_e_s_per_m": 0.1958264097588252,
+      "feature_size_m": 0.28968,
+      "feature_cells_on_256_input": 61.7984,
+      "minimum_internal_wavelength_m": 0.053263305669675534,
+      "incidence_angles_rad": [
+        4.7,
+        5.1
+      ],
+      "frequencies_hz": [
+        800000000.0,
+        1000000000.0,
+        1200000000.0
+      ],
+      "analytic_reference": "infinite_TM_z_dielectric_cylinder"
+    }
+  ],
+  "conditions": [
+    {
+      "task_id": "condition_aafeefd16eac55d7",
+      "geometry_id": "circle_corner_remediation_3b69931b42e8c872",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3b69931b42e8c872_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_1e9a62d318743f2f",
+      "geometry_id": "circle_corner_remediation_3b69931b42e8c872",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3b69931b42e8c872_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_416ff3fed66593e5",
+      "geometry_id": "circle_corner_remediation_3b69931b42e8c872",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3b69931b42e8c872_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_4f80dffca64d6b14",
+      "geometry_id": "circle_corner_remediation_3b69931b42e8c872",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3b69931b42e8c872_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_e39a1c3f535bee6b",
+      "geometry_id": "circle_corner_remediation_3b69931b42e8c872",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3b69931b42e8c872_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_f27d08fb18bb90c3",
+      "geometry_id": "circle_corner_remediation_3b69931b42e8c872",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3b69931b42e8c872_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_ce831ad627600f33",
+      "geometry_id": "circle_corner_remediation_3b69931b42e8c872",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3b69931b42e8c872_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_d38949f3ff8dd965",
+      "geometry_id": "circle_corner_remediation_3b69931b42e8c872",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3b69931b42e8c872_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_786b05f261263a39",
+      "geometry_id": "circle_corner_remediation_7c2409acfebd8ab7",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c2409acfebd8ab7_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_db010b3e35a5612e",
+      "geometry_id": "circle_corner_remediation_7c2409acfebd8ab7",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c2409acfebd8ab7_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_d97eb843578a70e1",
+      "geometry_id": "circle_corner_remediation_7c2409acfebd8ab7",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c2409acfebd8ab7_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_29c9e8b7536dc0af",
+      "geometry_id": "circle_corner_remediation_7c2409acfebd8ab7",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c2409acfebd8ab7_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_e999d9ecca977c75",
+      "geometry_id": "circle_corner_remediation_7c2409acfebd8ab7",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c2409acfebd8ab7_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_30f92fa4421b87f3",
+      "geometry_id": "circle_corner_remediation_7c2409acfebd8ab7",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c2409acfebd8ab7_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_0b874ae337289ccd",
+      "geometry_id": "circle_corner_remediation_7c2409acfebd8ab7",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c2409acfebd8ab7_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_ef51f5afee820136",
+      "geometry_id": "circle_corner_remediation_7c2409acfebd8ab7",
+      "lineage_id": "circle_corner_remediation_lineage_a2e825ac16df9318",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c2409acfebd8ab7_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_4106bfc39979be5d",
+      "geometry_id": "circle_corner_remediation_8f849cd0218b2251",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_8f849cd0218b2251_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_97243520440efc2c",
+      "geometry_id": "circle_corner_remediation_8f849cd0218b2251",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_8f849cd0218b2251_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f64976f189b39df6",
+      "geometry_id": "circle_corner_remediation_8f849cd0218b2251",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_8f849cd0218b2251_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_7b8906a8f6ce5912",
+      "geometry_id": "circle_corner_remediation_8f849cd0218b2251",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_8f849cd0218b2251_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_7a0f68422473ce65",
+      "geometry_id": "circle_corner_remediation_8f849cd0218b2251",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_8f849cd0218b2251_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_885cfc9e41077927",
+      "geometry_id": "circle_corner_remediation_8f849cd0218b2251",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_8f849cd0218b2251_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_fee813a61ae5d6bd",
+      "geometry_id": "circle_corner_remediation_8f849cd0218b2251",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_8f849cd0218b2251_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_9f5010c533be3373",
+      "geometry_id": "circle_corner_remediation_8f849cd0218b2251",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_8f849cd0218b2251_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_09fa5c8ba358fdb4",
+      "geometry_id": "circle_corner_remediation_0cfdbcc8bc5d501c",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0cfdbcc8bc5d501c_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_18fcf488cfb6c0d2",
+      "geometry_id": "circle_corner_remediation_0cfdbcc8bc5d501c",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0cfdbcc8bc5d501c_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_a1ee5833a687e295",
+      "geometry_id": "circle_corner_remediation_0cfdbcc8bc5d501c",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0cfdbcc8bc5d501c_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_be03f1ae61cea537",
+      "geometry_id": "circle_corner_remediation_0cfdbcc8bc5d501c",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0cfdbcc8bc5d501c_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_cfcb400c3c96c2c6",
+      "geometry_id": "circle_corner_remediation_0cfdbcc8bc5d501c",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0cfdbcc8bc5d501c_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_17c3206c419734bc",
+      "geometry_id": "circle_corner_remediation_0cfdbcc8bc5d501c",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0cfdbcc8bc5d501c_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_bc8d657d51c15ec9",
+      "geometry_id": "circle_corner_remediation_0cfdbcc8bc5d501c",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0cfdbcc8bc5d501c_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_7b6d2fb576e76451",
+      "geometry_id": "circle_corner_remediation_0cfdbcc8bc5d501c",
+      "lineage_id": "circle_corner_remediation_lineage_cf2e65c9dc083a96",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0cfdbcc8bc5d501c_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_1e57690f77274df7",
+      "geometry_id": "circle_corner_remediation_698e18ed05119932",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_698e18ed05119932_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_597a7b02f91b10c2",
+      "geometry_id": "circle_corner_remediation_698e18ed05119932",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_698e18ed05119932_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_79428912464c4b30",
+      "geometry_id": "circle_corner_remediation_698e18ed05119932",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_698e18ed05119932_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_c20a07216ad2dc15",
+      "geometry_id": "circle_corner_remediation_698e18ed05119932",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_698e18ed05119932_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_ea60b59d1bcc615c",
+      "geometry_id": "circle_corner_remediation_698e18ed05119932",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_698e18ed05119932_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_0290b1cd0789770e",
+      "geometry_id": "circle_corner_remediation_698e18ed05119932",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_698e18ed05119932_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_623fdea8d1961ef5",
+      "geometry_id": "circle_corner_remediation_698e18ed05119932",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_698e18ed05119932_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_00f4e1543be364df",
+      "geometry_id": "circle_corner_remediation_698e18ed05119932",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_698e18ed05119932_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_c3b85f6c0b316e88",
+      "geometry_id": "circle_corner_remediation_7125089215cf2272",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7125089215cf2272_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_dfe16aa92718162b",
+      "geometry_id": "circle_corner_remediation_7125089215cf2272",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7125089215cf2272_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_e27a97111fe32001",
+      "geometry_id": "circle_corner_remediation_7125089215cf2272",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7125089215cf2272_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_d55c7830282fa0b6",
+      "geometry_id": "circle_corner_remediation_7125089215cf2272",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7125089215cf2272_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_0e4f5a46c51e5601",
+      "geometry_id": "circle_corner_remediation_7125089215cf2272",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7125089215cf2272_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_b2f5fae765b1014f",
+      "geometry_id": "circle_corner_remediation_7125089215cf2272",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7125089215cf2272_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f5edd5a9e9426222",
+      "geometry_id": "circle_corner_remediation_7125089215cf2272",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7125089215cf2272_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_a5e3151c34516ab8",
+      "geometry_id": "circle_corner_remediation_7125089215cf2272",
+      "lineage_id": "circle_corner_remediation_lineage_998bfbea4b511b82",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7125089215cf2272_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_38fc09357bda5bc8",
+      "geometry_id": "circle_corner_remediation_a6ad27166de13f99",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a6ad27166de13f99_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_edf9458bc6fb67e4",
+      "geometry_id": "circle_corner_remediation_a6ad27166de13f99",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a6ad27166de13f99_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_064811d52b5c08d7",
+      "geometry_id": "circle_corner_remediation_a6ad27166de13f99",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a6ad27166de13f99_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_5c6ffd794b343eba",
+      "geometry_id": "circle_corner_remediation_a6ad27166de13f99",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a6ad27166de13f99_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_ad0eb4c37c49599a",
+      "geometry_id": "circle_corner_remediation_a6ad27166de13f99",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a6ad27166de13f99_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_81cdb8ca5bb881ba",
+      "geometry_id": "circle_corner_remediation_a6ad27166de13f99",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a6ad27166de13f99_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f6e57077644900bf",
+      "geometry_id": "circle_corner_remediation_a6ad27166de13f99",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a6ad27166de13f99_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_39c92dc32141cfdc",
+      "geometry_id": "circle_corner_remediation_a6ad27166de13f99",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a6ad27166de13f99_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_61eb6bee2296e0a7",
+      "geometry_id": "circle_corner_remediation_183fee1131be65c4",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_183fee1131be65c4_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_f9647d15110ca699",
+      "geometry_id": "circle_corner_remediation_183fee1131be65c4",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_183fee1131be65c4_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_32ff85f253039850",
+      "geometry_id": "circle_corner_remediation_183fee1131be65c4",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_183fee1131be65c4_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_19cd9a8ec4ff4733",
+      "geometry_id": "circle_corner_remediation_183fee1131be65c4",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_183fee1131be65c4_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_683ffa4649eb5466",
+      "geometry_id": "circle_corner_remediation_183fee1131be65c4",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_183fee1131be65c4_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_15e6661b1982ae29",
+      "geometry_id": "circle_corner_remediation_183fee1131be65c4",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_183fee1131be65c4_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_4990e61bd604fb3d",
+      "geometry_id": "circle_corner_remediation_183fee1131be65c4",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_183fee1131be65c4_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_80bf353d6d3fa11e",
+      "geometry_id": "circle_corner_remediation_183fee1131be65c4",
+      "lineage_id": "circle_corner_remediation_lineage_36a2f282a03f6782",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_183fee1131be65c4_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_a11bf9097bb011ca",
+      "geometry_id": "circle_corner_remediation_dd482afbf323a09d",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dd482afbf323a09d_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_faa1fe3b0d44beb3",
+      "geometry_id": "circle_corner_remediation_dd482afbf323a09d",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dd482afbf323a09d_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_4717151574b47b92",
+      "geometry_id": "circle_corner_remediation_dd482afbf323a09d",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dd482afbf323a09d_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_94147a3d71902410",
+      "geometry_id": "circle_corner_remediation_dd482afbf323a09d",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dd482afbf323a09d_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_987a9f4963484256",
+      "geometry_id": "circle_corner_remediation_dd482afbf323a09d",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dd482afbf323a09d_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_a41c03b8c6b50fb9",
+      "geometry_id": "circle_corner_remediation_dd482afbf323a09d",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dd482afbf323a09d_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_986ef87145513c62",
+      "geometry_id": "circle_corner_remediation_dd482afbf323a09d",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dd482afbf323a09d_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_1a70e74e6b9a600c",
+      "geometry_id": "circle_corner_remediation_dd482afbf323a09d",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dd482afbf323a09d_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_4b1a08dd5801a44d",
+      "geometry_id": "circle_corner_remediation_0ee28d8d2ff82dfa",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0ee28d8d2ff82dfa_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_4e82f5e0897974ee",
+      "geometry_id": "circle_corner_remediation_0ee28d8d2ff82dfa",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0ee28d8d2ff82dfa_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_7fe6c63132dad0de",
+      "geometry_id": "circle_corner_remediation_0ee28d8d2ff82dfa",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0ee28d8d2ff82dfa_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_2fe40773aab024ce",
+      "geometry_id": "circle_corner_remediation_0ee28d8d2ff82dfa",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0ee28d8d2ff82dfa_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_fa9e46fb4530befa",
+      "geometry_id": "circle_corner_remediation_0ee28d8d2ff82dfa",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0ee28d8d2ff82dfa_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_0ebe357c306dd2c3",
+      "geometry_id": "circle_corner_remediation_0ee28d8d2ff82dfa",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0ee28d8d2ff82dfa_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_0c4c667e6a0a4e92",
+      "geometry_id": "circle_corner_remediation_0ee28d8d2ff82dfa",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0ee28d8d2ff82dfa_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_82368674824a8b36",
+      "geometry_id": "circle_corner_remediation_0ee28d8d2ff82dfa",
+      "lineage_id": "circle_corner_remediation_lineage_88f9a36787857a11",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0ee28d8d2ff82dfa_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_93972d91c0f1e032",
+      "geometry_id": "circle_corner_remediation_f7a76c9aa6a4b2af",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f7a76c9aa6a4b2af_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_16b5923d19185757",
+      "geometry_id": "circle_corner_remediation_f7a76c9aa6a4b2af",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f7a76c9aa6a4b2af_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_62bb387491af81a9",
+      "geometry_id": "circle_corner_remediation_f7a76c9aa6a4b2af",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f7a76c9aa6a4b2af_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_74d9a1dc384e2a81",
+      "geometry_id": "circle_corner_remediation_f7a76c9aa6a4b2af",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f7a76c9aa6a4b2af_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_62006399d7afd2ae",
+      "geometry_id": "circle_corner_remediation_f7a76c9aa6a4b2af",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f7a76c9aa6a4b2af_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_3bf3664f90610566",
+      "geometry_id": "circle_corner_remediation_f7a76c9aa6a4b2af",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f7a76c9aa6a4b2af_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_3518e5aa1bed7b97",
+      "geometry_id": "circle_corner_remediation_f7a76c9aa6a4b2af",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f7a76c9aa6a4b2af_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_fe679421f6832bbd",
+      "geometry_id": "circle_corner_remediation_f7a76c9aa6a4b2af",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f7a76c9aa6a4b2af_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_b905d9f92f926dc6",
+      "geometry_id": "circle_corner_remediation_166d8d066942b327",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_166d8d066942b327_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_88a65749cfda5ee9",
+      "geometry_id": "circle_corner_remediation_166d8d066942b327",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_166d8d066942b327_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_7dbca2c0b2d68744",
+      "geometry_id": "circle_corner_remediation_166d8d066942b327",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_166d8d066942b327_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_e4f85c53dbeac97d",
+      "geometry_id": "circle_corner_remediation_166d8d066942b327",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_166d8d066942b327_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_51626d489be35fdb",
+      "geometry_id": "circle_corner_remediation_166d8d066942b327",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_166d8d066942b327_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_c4017b676ae55a81",
+      "geometry_id": "circle_corner_remediation_166d8d066942b327",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_166d8d066942b327_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_1224b88b6468e548",
+      "geometry_id": "circle_corner_remediation_166d8d066942b327",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_166d8d066942b327_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_20a0a1e1307a2b18",
+      "geometry_id": "circle_corner_remediation_166d8d066942b327",
+      "lineage_id": "circle_corner_remediation_lineage_6d6047ce879b717c",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_166d8d066942b327_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_df105f6bfe1f2299",
+      "geometry_id": "circle_corner_remediation_6c1773617a5e8e6d",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_6c1773617a5e8e6d_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_2f3dcc1fc0477940",
+      "geometry_id": "circle_corner_remediation_6c1773617a5e8e6d",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_6c1773617a5e8e6d_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_554dbeb8fd218834",
+      "geometry_id": "circle_corner_remediation_6c1773617a5e8e6d",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_6c1773617a5e8e6d_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_ff1423c74d67c02b",
+      "geometry_id": "circle_corner_remediation_6c1773617a5e8e6d",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_6c1773617a5e8e6d_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_55af1669b2bbeaca",
+      "geometry_id": "circle_corner_remediation_6c1773617a5e8e6d",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_6c1773617a5e8e6d_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_92285b71ac2be611",
+      "geometry_id": "circle_corner_remediation_6c1773617a5e8e6d",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_6c1773617a5e8e6d_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_951bbbc49a39c584",
+      "geometry_id": "circle_corner_remediation_6c1773617a5e8e6d",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_6c1773617a5e8e6d_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_2f65fbe0a40c6545",
+      "geometry_id": "circle_corner_remediation_6c1773617a5e8e6d",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_6c1773617a5e8e6d_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_487f60e19e19cbf0",
+      "geometry_id": "circle_corner_remediation_ab14849ec4322f31",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ab14849ec4322f31_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_34b973c11170f5ff",
+      "geometry_id": "circle_corner_remediation_ab14849ec4322f31",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ab14849ec4322f31_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_c85a72471cfa71e4",
+      "geometry_id": "circle_corner_remediation_ab14849ec4322f31",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ab14849ec4322f31_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_a454b7545b8603c1",
+      "geometry_id": "circle_corner_remediation_ab14849ec4322f31",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ab14849ec4322f31_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_0004c63f49b43245",
+      "geometry_id": "circle_corner_remediation_ab14849ec4322f31",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ab14849ec4322f31_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_611618950f1e3e84",
+      "geometry_id": "circle_corner_remediation_ab14849ec4322f31",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ab14849ec4322f31_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_0297359a81d1c849",
+      "geometry_id": "circle_corner_remediation_ab14849ec4322f31",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ab14849ec4322f31_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_31f35aa406155153",
+      "geometry_id": "circle_corner_remediation_ab14849ec4322f31",
+      "lineage_id": "circle_corner_remediation_lineage_cfc9e8a9011750e6",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ab14849ec4322f31_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f63c53818586ba2c",
+      "geometry_id": "circle_corner_remediation_a0a7b4ab9f68cfd2",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a0a7b4ab9f68cfd2_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_e0cf7e269bda7650",
+      "geometry_id": "circle_corner_remediation_a0a7b4ab9f68cfd2",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a0a7b4ab9f68cfd2_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_586a86c882077afa",
+      "geometry_id": "circle_corner_remediation_a0a7b4ab9f68cfd2",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a0a7b4ab9f68cfd2_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_05d9dcc5e59f6d62",
+      "geometry_id": "circle_corner_remediation_a0a7b4ab9f68cfd2",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a0a7b4ab9f68cfd2_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_96bcc36ad8b6645a",
+      "geometry_id": "circle_corner_remediation_a0a7b4ab9f68cfd2",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a0a7b4ab9f68cfd2_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_04f2e1a3cd077d6d",
+      "geometry_id": "circle_corner_remediation_a0a7b4ab9f68cfd2",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a0a7b4ab9f68cfd2_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_bc772535f44dee1d",
+      "geometry_id": "circle_corner_remediation_a0a7b4ab9f68cfd2",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a0a7b4ab9f68cfd2_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_050323b7d5d3ca6d",
+      "geometry_id": "circle_corner_remediation_a0a7b4ab9f68cfd2",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a0a7b4ab9f68cfd2_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_76dfda8adae9b685",
+      "geometry_id": "circle_corner_remediation_2b89925844701dca",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_2b89925844701dca_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_e5a8be3557d09a4d",
+      "geometry_id": "circle_corner_remediation_2b89925844701dca",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_2b89925844701dca_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_56841ca10d2af999",
+      "geometry_id": "circle_corner_remediation_2b89925844701dca",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_2b89925844701dca_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_bb84635917f6e382",
+      "geometry_id": "circle_corner_remediation_2b89925844701dca",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_2b89925844701dca_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_d779ec75cd49ffff",
+      "geometry_id": "circle_corner_remediation_2b89925844701dca",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_2b89925844701dca_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_dbc7ac9edaa209d5",
+      "geometry_id": "circle_corner_remediation_2b89925844701dca",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_2b89925844701dca_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_d03df146da70a8b5",
+      "geometry_id": "circle_corner_remediation_2b89925844701dca",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_2b89925844701dca_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_62ce352e19094ab1",
+      "geometry_id": "circle_corner_remediation_2b89925844701dca",
+      "lineage_id": "circle_corner_remediation_lineage_902c92234719403d",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_2b89925844701dca_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_40c814b76915f1ab",
+      "geometry_id": "circle_corner_remediation_f98c9a07af6afff3",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f98c9a07af6afff3_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_96d529516a7dec05",
+      "geometry_id": "circle_corner_remediation_f98c9a07af6afff3",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f98c9a07af6afff3_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_71b712afaa81c68b",
+      "geometry_id": "circle_corner_remediation_f98c9a07af6afff3",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f98c9a07af6afff3_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_f2473301c3e1fb69",
+      "geometry_id": "circle_corner_remediation_f98c9a07af6afff3",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f98c9a07af6afff3_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_07d4a6c1ef45a887",
+      "geometry_id": "circle_corner_remediation_f98c9a07af6afff3",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f98c9a07af6afff3_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_facd0610be5057c6",
+      "geometry_id": "circle_corner_remediation_f98c9a07af6afff3",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f98c9a07af6afff3_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_2af630a080a47cd2",
+      "geometry_id": "circle_corner_remediation_f98c9a07af6afff3",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f98c9a07af6afff3_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_60a48a418cf18d22",
+      "geometry_id": "circle_corner_remediation_f98c9a07af6afff3",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f98c9a07af6afff3_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_6988bf2c08259904",
+      "geometry_id": "circle_corner_remediation_dff1d7e9b7059a9e",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dff1d7e9b7059a9e_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_ba268b3093d7676a",
+      "geometry_id": "circle_corner_remediation_dff1d7e9b7059a9e",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dff1d7e9b7059a9e_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_3ccce06a641389be",
+      "geometry_id": "circle_corner_remediation_dff1d7e9b7059a9e",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dff1d7e9b7059a9e_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_aaec1fa3a1ff1f0c",
+      "geometry_id": "circle_corner_remediation_dff1d7e9b7059a9e",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dff1d7e9b7059a9e_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_319e1a736cb8dd43",
+      "geometry_id": "circle_corner_remediation_dff1d7e9b7059a9e",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dff1d7e9b7059a9e_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_d4c51e6926c51885",
+      "geometry_id": "circle_corner_remediation_dff1d7e9b7059a9e",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dff1d7e9b7059a9e_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_a819142724b68171",
+      "geometry_id": "circle_corner_remediation_dff1d7e9b7059a9e",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dff1d7e9b7059a9e_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_5ad54301e3416ba6",
+      "geometry_id": "circle_corner_remediation_dff1d7e9b7059a9e",
+      "lineage_id": "circle_corner_remediation_lineage_7d4f17242cc75eef",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_dff1d7e9b7059a9e_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_4538e4af6d6bbce4",
+      "geometry_id": "circle_corner_remediation_7c06781c26d599f3",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c06781c26d599f3_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_8ced6a750ec29811",
+      "geometry_id": "circle_corner_remediation_7c06781c26d599f3",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c06781c26d599f3_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_8bd81b76c33f0b49",
+      "geometry_id": "circle_corner_remediation_7c06781c26d599f3",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c06781c26d599f3_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_ef215377662ee604",
+      "geometry_id": "circle_corner_remediation_7c06781c26d599f3",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c06781c26d599f3_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_b8f883be72832ad8",
+      "geometry_id": "circle_corner_remediation_7c06781c26d599f3",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c06781c26d599f3_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_4209d4f5073a1ea5",
+      "geometry_id": "circle_corner_remediation_7c06781c26d599f3",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c06781c26d599f3_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_6e1af0a86bddd49f",
+      "geometry_id": "circle_corner_remediation_7c06781c26d599f3",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c06781c26d599f3_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_abcb9a5daedb92e9",
+      "geometry_id": "circle_corner_remediation_7c06781c26d599f3",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_7c06781c26d599f3_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_ab40ac9c86c19d94",
+      "geometry_id": "circle_corner_remediation_ea92433c136b72c7",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ea92433c136b72c7_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_2ad9d21ec3a39ae7",
+      "geometry_id": "circle_corner_remediation_ea92433c136b72c7",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ea92433c136b72c7_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_63f9672cbca7108d",
+      "geometry_id": "circle_corner_remediation_ea92433c136b72c7",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ea92433c136b72c7_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_fff62c846b05a3c5",
+      "geometry_id": "circle_corner_remediation_ea92433c136b72c7",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ea92433c136b72c7_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_d3a567f389ef2b55",
+      "geometry_id": "circle_corner_remediation_ea92433c136b72c7",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ea92433c136b72c7_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_5be48250016e57cb",
+      "geometry_id": "circle_corner_remediation_ea92433c136b72c7",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ea92433c136b72c7_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_0a93b4a63d259e8a",
+      "geometry_id": "circle_corner_remediation_ea92433c136b72c7",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ea92433c136b72c7_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_b35feb77151ba0a8",
+      "geometry_id": "circle_corner_remediation_ea92433c136b72c7",
+      "lineage_id": "circle_corner_remediation_lineage_d2239b108245ec06",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_ea92433c136b72c7_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_7cfbe12ce204afcd",
+      "geometry_id": "circle_corner_remediation_4ae7439fd9c3bd41",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_4ae7439fd9c3bd41_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_edfbe4b590a86714",
+      "geometry_id": "circle_corner_remediation_4ae7439fd9c3bd41",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_4ae7439fd9c3bd41_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_cbbc9a95aa32132d",
+      "geometry_id": "circle_corner_remediation_4ae7439fd9c3bd41",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_4ae7439fd9c3bd41_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_234bb61856a435fe",
+      "geometry_id": "circle_corner_remediation_4ae7439fd9c3bd41",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_4ae7439fd9c3bd41_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_a91d198ba83b582c",
+      "geometry_id": "circle_corner_remediation_4ae7439fd9c3bd41",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_4ae7439fd9c3bd41_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_90be911bafd061ea",
+      "geometry_id": "circle_corner_remediation_4ae7439fd9c3bd41",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_4ae7439fd9c3bd41_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_14d5ee25c716ccf7",
+      "geometry_id": "circle_corner_remediation_4ae7439fd9c3bd41",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_4ae7439fd9c3bd41_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_14ad9ad95498f8f9",
+      "geometry_id": "circle_corner_remediation_4ae7439fd9c3bd41",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_4ae7439fd9c3bd41_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_15f9ca37420faa46",
+      "geometry_id": "circle_corner_remediation_fa46dd21020b7da4",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_fa46dd21020b7da4_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_c90de2c96a9c2b70",
+      "geometry_id": "circle_corner_remediation_fa46dd21020b7da4",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_fa46dd21020b7da4_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_788aa9d3cb437f19",
+      "geometry_id": "circle_corner_remediation_fa46dd21020b7da4",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_fa46dd21020b7da4_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_b6d3d7dd5ba8988c",
+      "geometry_id": "circle_corner_remediation_fa46dd21020b7da4",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_fa46dd21020b7da4_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_93f4fb81f52dbcbf",
+      "geometry_id": "circle_corner_remediation_fa46dd21020b7da4",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_fa46dd21020b7da4_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_18940da23b3d912a",
+      "geometry_id": "circle_corner_remediation_fa46dd21020b7da4",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_fa46dd21020b7da4_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_3a0e4fcc442ec955",
+      "geometry_id": "circle_corner_remediation_fa46dd21020b7da4",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_fa46dd21020b7da4_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_2d333769b196aa82",
+      "geometry_id": "circle_corner_remediation_fa46dd21020b7da4",
+      "lineage_id": "circle_corner_remediation_lineage_be7502a7e417ff8b",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_fa46dd21020b7da4_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_4bf841ca6b7869bb",
+      "geometry_id": "circle_corner_remediation_aa8dd5dfbf076c2a",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_aa8dd5dfbf076c2a_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_c84fa3105766d95a",
+      "geometry_id": "circle_corner_remediation_aa8dd5dfbf076c2a",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_aa8dd5dfbf076c2a_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_2265008068b1f3b0",
+      "geometry_id": "circle_corner_remediation_aa8dd5dfbf076c2a",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_aa8dd5dfbf076c2a_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_224050d97331c3b2",
+      "geometry_id": "circle_corner_remediation_aa8dd5dfbf076c2a",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_aa8dd5dfbf076c2a_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_e98c39ab82d9d535",
+      "geometry_id": "circle_corner_remediation_aa8dd5dfbf076c2a",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_aa8dd5dfbf076c2a_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_15119d18c0fb8530",
+      "geometry_id": "circle_corner_remediation_aa8dd5dfbf076c2a",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_aa8dd5dfbf076c2a_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_31946115f7d05d5e",
+      "geometry_id": "circle_corner_remediation_aa8dd5dfbf076c2a",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_aa8dd5dfbf076c2a_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_5fd133e338fd5522",
+      "geometry_id": "circle_corner_remediation_aa8dd5dfbf076c2a",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_aa8dd5dfbf076c2a_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_dfa6bfda43051fd8",
+      "geometry_id": "circle_corner_remediation_f6384dcaf1920b64",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f6384dcaf1920b64_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_680740a88f6911f7",
+      "geometry_id": "circle_corner_remediation_f6384dcaf1920b64",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f6384dcaf1920b64_a0",
+      "incidence_angle_rad": 4.15,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_92d78682c671e6ea",
+      "geometry_id": "circle_corner_remediation_f6384dcaf1920b64",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f6384dcaf1920b64_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_44cab942b83a7fe8",
+      "geometry_id": "circle_corner_remediation_f6384dcaf1920b64",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f6384dcaf1920b64_a1",
+      "incidence_angle_rad": 4.55,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_a7bd4bb9a68a20db",
+      "geometry_id": "circle_corner_remediation_f6384dcaf1920b64",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f6384dcaf1920b64_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_9bd4fbaa6b090f73",
+      "geometry_id": "circle_corner_remediation_f6384dcaf1920b64",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f6384dcaf1920b64_a2",
+      "incidence_angle_rad": 5.25,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_9df25f6e6f339e7b",
+      "geometry_id": "circle_corner_remediation_f6384dcaf1920b64",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f6384dcaf1920b64_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_42656e4ac93005e1",
+      "geometry_id": "circle_corner_remediation_f6384dcaf1920b64",
+      "lineage_id": "circle_corner_remediation_lineage_b635bca50475e96e",
+      "split": "train",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_f6384dcaf1920b64_a3",
+      "incidence_angle_rad": 5.65,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_1fc85d2076ba19be",
+      "geometry_id": "circle_corner_remediation_0c4179009c0d574e",
+      "lineage_id": "circle_corner_remediation_lineage_da4464b55e9dd085",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0c4179009c0d574e_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_51b4a56f5566b8a6",
+      "geometry_id": "circle_corner_remediation_0c4179009c0d574e",
+      "lineage_id": "circle_corner_remediation_lineage_da4464b55e9dd085",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0c4179009c0d574e_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_c1813eed6174aa8e",
+      "geometry_id": "circle_corner_remediation_0c4179009c0d574e",
+      "lineage_id": "circle_corner_remediation_lineage_da4464b55e9dd085",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0c4179009c0d574e_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_5163eafd0e990211",
+      "geometry_id": "circle_corner_remediation_0c4179009c0d574e",
+      "lineage_id": "circle_corner_remediation_lineage_da4464b55e9dd085",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0c4179009c0d574e_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_bdfac31008a4222c",
+      "geometry_id": "circle_corner_remediation_43d0a0551abf9d8b",
+      "lineage_id": "circle_corner_remediation_lineage_da4464b55e9dd085",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_43d0a0551abf9d8b_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_62beec4f95c33c5b",
+      "geometry_id": "circle_corner_remediation_43d0a0551abf9d8b",
+      "lineage_id": "circle_corner_remediation_lineage_da4464b55e9dd085",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_43d0a0551abf9d8b_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_5e2c093fdeccff1a",
+      "geometry_id": "circle_corner_remediation_43d0a0551abf9d8b",
+      "lineage_id": "circle_corner_remediation_lineage_da4464b55e9dd085",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_43d0a0551abf9d8b_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_126fc55c345bcf84",
+      "geometry_id": "circle_corner_remediation_43d0a0551abf9d8b",
+      "lineage_id": "circle_corner_remediation_lineage_da4464b55e9dd085",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_43d0a0551abf9d8b_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f692f5988ad28a3c",
+      "geometry_id": "circle_corner_remediation_fb81cae34c24bd01",
+      "lineage_id": "circle_corner_remediation_lineage_3e5f12d04e1a4fe4",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_fb81cae34c24bd01_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_92908c52949f2241",
+      "geometry_id": "circle_corner_remediation_fb81cae34c24bd01",
+      "lineage_id": "circle_corner_remediation_lineage_3e5f12d04e1a4fe4",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_fb81cae34c24bd01_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_e702463ce8c3b86b",
+      "geometry_id": "circle_corner_remediation_fb81cae34c24bd01",
+      "lineage_id": "circle_corner_remediation_lineage_3e5f12d04e1a4fe4",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_fb81cae34c24bd01_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_c2b654c4fd038858",
+      "geometry_id": "circle_corner_remediation_fb81cae34c24bd01",
+      "lineage_id": "circle_corner_remediation_lineage_3e5f12d04e1a4fe4",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_fb81cae34c24bd01_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_a63c47e5d6134e3e",
+      "geometry_id": "circle_corner_remediation_62abf3c8263378d1",
+      "lineage_id": "circle_corner_remediation_lineage_3e5f12d04e1a4fe4",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_62abf3c8263378d1_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_5eb7621f5d75468f",
+      "geometry_id": "circle_corner_remediation_62abf3c8263378d1",
+      "lineage_id": "circle_corner_remediation_lineage_3e5f12d04e1a4fe4",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_62abf3c8263378d1_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_b2c6d4bf34ffdc4f",
+      "geometry_id": "circle_corner_remediation_62abf3c8263378d1",
+      "lineage_id": "circle_corner_remediation_lineage_3e5f12d04e1a4fe4",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_62abf3c8263378d1_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_2e744731385a8ba5",
+      "geometry_id": "circle_corner_remediation_62abf3c8263378d1",
+      "lineage_id": "circle_corner_remediation_lineage_3e5f12d04e1a4fe4",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_62abf3c8263378d1_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_2c1f74b2adc921ff",
+      "geometry_id": "circle_corner_remediation_3a4d894bafbf7f40",
+      "lineage_id": "circle_corner_remediation_lineage_883cb4234bc135d8",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3a4d894bafbf7f40_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_3b33ced408f996e3",
+      "geometry_id": "circle_corner_remediation_3a4d894bafbf7f40",
+      "lineage_id": "circle_corner_remediation_lineage_883cb4234bc135d8",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3a4d894bafbf7f40_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_76aba6151db23328",
+      "geometry_id": "circle_corner_remediation_3a4d894bafbf7f40",
+      "lineage_id": "circle_corner_remediation_lineage_883cb4234bc135d8",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3a4d894bafbf7f40_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_20e5ac06f3efffdd",
+      "geometry_id": "circle_corner_remediation_3a4d894bafbf7f40",
+      "lineage_id": "circle_corner_remediation_lineage_883cb4234bc135d8",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3a4d894bafbf7f40_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_f8f8373320ae4fe3",
+      "geometry_id": "circle_corner_remediation_3837e05b1b10f122",
+      "lineage_id": "circle_corner_remediation_lineage_883cb4234bc135d8",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3837e05b1b10f122_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_7899795b5fec4121",
+      "geometry_id": "circle_corner_remediation_3837e05b1b10f122",
+      "lineage_id": "circle_corner_remediation_lineage_883cb4234bc135d8",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3837e05b1b10f122_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_b6f1bdc156afe287",
+      "geometry_id": "circle_corner_remediation_3837e05b1b10f122",
+      "lineage_id": "circle_corner_remediation_lineage_883cb4234bc135d8",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3837e05b1b10f122_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_7652f4c310bd99a0",
+      "geometry_id": "circle_corner_remediation_3837e05b1b10f122",
+      "lineage_id": "circle_corner_remediation_lineage_883cb4234bc135d8",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_3837e05b1b10f122_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_543552d03d4e213c",
+      "geometry_id": "circle_corner_remediation_e02ac733e40be79e",
+      "lineage_id": "circle_corner_remediation_lineage_aa2ecc99da89425f",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_e02ac733e40be79e_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_a955872cdef1f33a",
+      "geometry_id": "circle_corner_remediation_e02ac733e40be79e",
+      "lineage_id": "circle_corner_remediation_lineage_aa2ecc99da89425f",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_e02ac733e40be79e_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_4befbda625d4f67f",
+      "geometry_id": "circle_corner_remediation_e02ac733e40be79e",
+      "lineage_id": "circle_corner_remediation_lineage_aa2ecc99da89425f",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_e02ac733e40be79e_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_8fca37baa2bd0de6",
+      "geometry_id": "circle_corner_remediation_e02ac733e40be79e",
+      "lineage_id": "circle_corner_remediation_lineage_aa2ecc99da89425f",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_e02ac733e40be79e_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_1788839c6a13a9b1",
+      "geometry_id": "circle_corner_remediation_33e22868c0fcb0d3",
+      "lineage_id": "circle_corner_remediation_lineage_aa2ecc99da89425f",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_33e22868c0fcb0d3_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_6d74f536f4f7242d",
+      "geometry_id": "circle_corner_remediation_33e22868c0fcb0d3",
+      "lineage_id": "circle_corner_remediation_lineage_aa2ecc99da89425f",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_33e22868c0fcb0d3_a0",
+      "incidence_angle_rad": 4.35,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_d31093966fa73c11",
+      "geometry_id": "circle_corner_remediation_33e22868c0fcb0d3",
+      "lineage_id": "circle_corner_remediation_lineage_aa2ecc99da89425f",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_33e22868c0fcb0d3_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_90359f1e13396529",
+      "geometry_id": "circle_corner_remediation_33e22868c0fcb0d3",
+      "lineage_id": "circle_corner_remediation_lineage_aa2ecc99da89425f",
+      "split": "validation",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_33e22868c0fcb0d3_a1",
+      "incidence_angle_rad": 5.45,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_19647e8678f25732",
+      "geometry_id": "circle_corner_remediation_e80d3a9bf97df6c6",
+      "lineage_id": "circle_corner_remediation_lineage_e384300e84d60c70",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_e80d3a9bf97df6c6_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_8cbcb2c4d8afdfc5",
+      "geometry_id": "circle_corner_remediation_e80d3a9bf97df6c6",
+      "lineage_id": "circle_corner_remediation_lineage_e384300e84d60c70",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_e80d3a9bf97df6c6_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_2584c6bc3a1fecda",
+      "geometry_id": "circle_corner_remediation_e80d3a9bf97df6c6",
+      "lineage_id": "circle_corner_remediation_lineage_e384300e84d60c70",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_e80d3a9bf97df6c6_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_9eb2cb8ad24d4639",
+      "geometry_id": "circle_corner_remediation_e80d3a9bf97df6c6",
+      "lineage_id": "circle_corner_remediation_lineage_e384300e84d60c70",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_e80d3a9bf97df6c6_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_fc1bc7dbf24b06ba",
+      "geometry_id": "circle_corner_remediation_37a135253cf5028e",
+      "lineage_id": "circle_corner_remediation_lineage_e384300e84d60c70",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_37a135253cf5028e_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_d4d2aa33dfdf4820",
+      "geometry_id": "circle_corner_remediation_37a135253cf5028e",
+      "lineage_id": "circle_corner_remediation_lineage_e384300e84d60c70",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_37a135253cf5028e_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_e67676d03504106c",
+      "geometry_id": "circle_corner_remediation_37a135253cf5028e",
+      "lineage_id": "circle_corner_remediation_lineage_e384300e84d60c70",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_37a135253cf5028e_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_0c0e69d414edebad",
+      "geometry_id": "circle_corner_remediation_37a135253cf5028e",
+      "lineage_id": "circle_corner_remediation_lineage_e384300e84d60c70",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_37a135253cf5028e_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_29f277aef0cfc9b7",
+      "geometry_id": "circle_corner_remediation_1de03bfde9309a4c",
+      "lineage_id": "circle_corner_remediation_lineage_2f046505860b8229",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_1de03bfde9309a4c_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_08bda50c3c2b019b",
+      "geometry_id": "circle_corner_remediation_1de03bfde9309a4c",
+      "lineage_id": "circle_corner_remediation_lineage_2f046505860b8229",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_1de03bfde9309a4c_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_17acc6dadf28c02d",
+      "geometry_id": "circle_corner_remediation_1de03bfde9309a4c",
+      "lineage_id": "circle_corner_remediation_lineage_2f046505860b8229",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_1de03bfde9309a4c_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_a1508dd959f8df8c",
+      "geometry_id": "circle_corner_remediation_1de03bfde9309a4c",
+      "lineage_id": "circle_corner_remediation_lineage_2f046505860b8229",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_1de03bfde9309a4c_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_8e940c04c1112c2d",
+      "geometry_id": "circle_corner_remediation_a31219c994728aea",
+      "lineage_id": "circle_corner_remediation_lineage_2f046505860b8229",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a31219c994728aea_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_dbe90271973b7601",
+      "geometry_id": "circle_corner_remediation_a31219c994728aea",
+      "lineage_id": "circle_corner_remediation_lineage_2f046505860b8229",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a31219c994728aea_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_50009f77baaff20d",
+      "geometry_id": "circle_corner_remediation_a31219c994728aea",
+      "lineage_id": "circle_corner_remediation_lineage_2f046505860b8229",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a31219c994728aea_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_88f041addbc1e84a",
+      "geometry_id": "circle_corner_remediation_a31219c994728aea",
+      "lineage_id": "circle_corner_remediation_lineage_2f046505860b8229",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_a31219c994728aea_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_3c8619c5dddb5856",
+      "geometry_id": "circle_corner_remediation_0814ce1d0dfaa614",
+      "lineage_id": "circle_corner_remediation_lineage_8c6070c011d169da",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0814ce1d0dfaa614_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_a06a8f45f31e358e",
+      "geometry_id": "circle_corner_remediation_0814ce1d0dfaa614",
+      "lineage_id": "circle_corner_remediation_lineage_8c6070c011d169da",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0814ce1d0dfaa614_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_8bb77d561e132b7a",
+      "geometry_id": "circle_corner_remediation_0814ce1d0dfaa614",
+      "lineage_id": "circle_corner_remediation_lineage_8c6070c011d169da",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0814ce1d0dfaa614_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_42d364d829f8fb21",
+      "geometry_id": "circle_corner_remediation_0814ce1d0dfaa614",
+      "lineage_id": "circle_corner_remediation_lineage_8c6070c011d169da",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_0814ce1d0dfaa614_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_e43dd32ef3d27fbc",
+      "geometry_id": "circle_corner_remediation_5aa8ede491c23998",
+      "lineage_id": "circle_corner_remediation_lineage_8c6070c011d169da",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_5aa8ede491c23998_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_2a3b86cffc011da8",
+      "geometry_id": "circle_corner_remediation_5aa8ede491c23998",
+      "lineage_id": "circle_corner_remediation_lineage_8c6070c011d169da",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_5aa8ede491c23998_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_1efcf1294ada2119",
+      "geometry_id": "circle_corner_remediation_5aa8ede491c23998",
+      "lineage_id": "circle_corner_remediation_lineage_8c6070c011d169da",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_5aa8ede491c23998_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_31830676414a1202",
+      "geometry_id": "circle_corner_remediation_5aa8ede491c23998",
+      "lineage_id": "circle_corner_remediation_lineage_8c6070c011d169da",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_5aa8ede491c23998_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_5fb9245df473e995",
+      "geometry_id": "circle_corner_remediation_17a425c777a64266",
+      "lineage_id": "circle_corner_remediation_lineage_da539dd0b0e081e6",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_17a425c777a64266_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_af83ac1b92200e5c",
+      "geometry_id": "circle_corner_remediation_17a425c777a64266",
+      "lineage_id": "circle_corner_remediation_lineage_da539dd0b0e081e6",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_17a425c777a64266_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_e2dfaf62c1a37faa",
+      "geometry_id": "circle_corner_remediation_17a425c777a64266",
+      "lineage_id": "circle_corner_remediation_lineage_da539dd0b0e081e6",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_17a425c777a64266_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_ef97a1d4e44693b0",
+      "geometry_id": "circle_corner_remediation_17a425c777a64266",
+      "lineage_id": "circle_corner_remediation_lineage_da539dd0b0e081e6",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_17a425c777a64266_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_fc90d040fc69cc84",
+      "geometry_id": "circle_corner_remediation_2c5cd687ad3d83c2",
+      "lineage_id": "circle_corner_remediation_lineage_da539dd0b0e081e6",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_2c5cd687ad3d83c2_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_0b3c9a5b38319b0d",
+      "geometry_id": "circle_corner_remediation_2c5cd687ad3d83c2",
+      "lineage_id": "circle_corner_remediation_lineage_da539dd0b0e081e6",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_2c5cd687ad3d83c2_a0",
+      "incidence_angle_rad": 4.7,
+      "cells_x": 48,
+      "cells_y": 48
+    },
+    {
+      "task_id": "condition_685bd2bc9018bc62",
+      "geometry_id": "circle_corner_remediation_2c5cd687ad3d83c2",
+      "lineage_id": "circle_corner_remediation_lineage_da539dd0b0e081e6",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_2c5cd687ad3d83c2_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 32,
+      "cells_y": 32
+    },
+    {
+      "task_id": "condition_aa1a239c49ef10cd",
+      "geometry_id": "circle_corner_remediation_2c5cd687ad3d83c2",
+      "lineage_id": "circle_corner_remediation_lineage_da539dd0b0e081e6",
+      "split": "test",
+      "family": "simple_corner_remediation",
+      "illumination_id": "circle_corner_remediation_2c5cd687ad3d83c2_a1",
+      "incidence_angle_rad": 5.1,
+      "cells_x": 48,
+      "cells_y": 48
+    }
+  ],
+  "dataset_id": "circle_corner_remediation_bcda979e44e4c968"
+}

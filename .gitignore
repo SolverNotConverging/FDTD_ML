@@ -16,5 +16,6 @@ archive/**/build/
 archive/**/INVENTORY.json
 archive/**/src/*.egg-info/
 runs/
+runs_v2/
 *.pt
 .idea/

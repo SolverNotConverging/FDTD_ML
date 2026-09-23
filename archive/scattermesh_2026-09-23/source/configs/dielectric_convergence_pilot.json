@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "campaign_id": "eps30_lossy_adaptive_pilot_v1",
+  "output_root": "../runs/dielectric_convergence_pilot/references",
+  "variation_threshold": 0.005,
+  "scenes": [
+    {
+      "scene_id": "eps30_lossy_single_cylinder",
+      "scene": "eps30_lossy",
+      "cell_levels": [512, 640, 768],
+      "duration_levels_ns": [50, 100],
+      "sample_levels": [24, 48],
+      "pml": 0.15
+    }
+  ]
+}
