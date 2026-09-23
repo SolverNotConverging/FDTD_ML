@@ -1,525 +1,65 @@
-# Mesh-CNN v2 implementation plan — 23 September 2026
+# Mesh-CNN v2 implementation plan
 
-The active plan is the [C0–C2 pilot contract](docs/v2_pilot.md). The prior
-scattering/CNN plan below is historical and has an exact frozen copy under
-`archive/scattermesh_2026-09-23/source/IMPLEMENTATION_PLAN.md`.
+Updated 23 September 2026. The sole project root is `/home/s2307298/projects/FDTD_ML`; new outputs belong in `runs_v2/`. The original scattering project is preserved under `archive/scattermesh_2026-09-23/`, with the receiver-CNN archive beside it. This document describes the active project only.
 
-The implementation sequence is: preserve and verify both archives; qualify
-continuous geometry and reference convergence; measure 16 shape/material rows;
-freeze 256 or 128 grouped lineages only if the measured 14-hour data allocation
-admits a complete balanced campaign; then generate physics-scored teacher meshes,
-train the large and small CNNs, select with validation FDTD, and evaluate one
-frozen test set. Accuracy at fixed spatial budget and minimum tested cells at
-specified error are the principal outcomes. The time-step exponent of 0.05 is
-weak regularization; all model selection and the scientific gate use raw field
-and width accuracy.
+## Research objective
 
-The 16-scene profile currently gives an 18.16-hour **partial projection** for
-128 lineages across four GPUs; several PEC rows are incompatible and no full
-estimate is available. The `launch` command enforces the requested pre-bulk
-stop. A revised numerical policy, scene design, or time allocation must be
-profiled and frozen before a bulk run. No 24-hour campaign is underway.
+Predict nonuniform tensor-product meshes for 2D TMz conformal FDTD scattering. The primary comparisons are **raw complex-field and scattering-width accuracy at the same spatial cell count** and **minimum tested cell count meeting a fixed accuracy target**. Sparse objects should use fewer cells than a uniform grid at equal accuracy. Stable time step, update count, runtime, and memory are measured alongside accuracy. The time-step term in teacher ranking is deliberately weak so it does not drive the CNN toward a uniform grid.
 
----
+A positive C0–C2 pilot requires a complete valid new-lineage test evaluation. On new dielectric test conditions, at least 75% of cases must improve raw joint accuracy by 5% or more and the median improvement must reach 1.2×. PEC results are reported independently. Missing these provisional gates produces a remediation report; the frozen test set is not retuned.
 
-# Plane-wave scattering and low-budget learned meshing
+## Current execution decision
 
-Status: active project, 22 September 2026. The receiver-waveform CNN project is retired.
-The scattering solver, first single-dielectric reference campaign, distillation fit,
-and frozen validation/test physics gate are complete. The separately frozen circle
-position/scale gate is in remediation before the sparse-scene curriculum begins.
-See [progress](PROGRESS.md) for measured validation.
+The 16-scene GPU sizing profile has stopped bulk execution. Only nine shape/material rows yielded complete compatible projections. Under the recorded 140 ns assumption, those rows project to 18.16 elapsed hours for 128 lineages or 36.31 hours for 256 lineages on four TITAN RTX GPUs. These are partial projections, not full estimates or rigorous lower bounds. Seven PEC examples had at least one incompatible tested grid; four dielectric examples were unsettled at 192 cells after 70 ns, and five PEC examples exceeded the 50,000-step profiling cap there. The approved data phase allows 14 hours. No new teacher corpus, trained v2 checkpoint, or frozen v2 test result exists. The runner records `sizing_gate_stopped` before launching bulk workers.
 
-## Objective and decision gates
+The next numerical milestone is to characterize the rejected PEC scene/grid combinations and the cost of settled references, then revise and re-profile the protocol. Preserve exact geometry and explicit split-edge rejection. A larger time allocation alone will not resolve incompatible PEC grids. Freeze any revised scene, grid, and reference rules before generating labels or touching the new test set.
 
-Learn where a limited number of nonuniform Yee cells most improve scattering
-accuracy. The primary experiment is at low budgets, with the same continuous scene,
-incident wave, physical domain, and simulation stopping criteria for every mesh.
-**The physics loss includes both source-normalized complex far-field error and
-RCS/scattering-width error. Complex targets retain absolute phase; both terms are
-stored and reported separately.** See the [simple-first curriculum](docs/curriculum.md),
-updated from the user's referenced discussion.
-Count PML cells and the time-step penalty from small cells in the computational cost.
-Do not infer success from teacher imitation loss, early stopping, or visual mesh density.
+## C0–C2 pilot contract
 
-The production target is **sparse scattering geometry**. A scene may contain several
-dielectric or PEC objects and one or more close gaps, but the objects and the local
-refinement regions must occupy a small part of the domain. For a tensor-product grid,
-sparsity is measured both by occupied area and by the union of projected x/y feature
-intervals: a few objects spread across the whole domain can consume nearly every mesh
-line and are not representative of the intended advantage. Translate the localized
-cluster between scenes so location generalization is still required. Dense assemblies
-remain stress tests and cannot compensate for failure on the sparse production strata.
+### Physics and geometry
 
-Before another large campaign, demonstrate that optimizing mesh placement actually
-improves scattering accuracy on a small held-out suite at matched cell and update
-budgets. If it does not, investigate solver, geometry representation, and mesh
-parameterization before allocating more training compute.
+- Retain the public `scattermesh` simulation interfaces and 2D TMz nonuniform Yee solver on a 1.2 m square. Observe 0.8, 1.0, and 1.2 GHz.
+- C0 varies size and position of circles, ellipses, and rectangles. C1 adds rotation and aspect ratio. C2 adds triangles, convex and concave polygons, stars, and smooth-lobed objects, introducing corners, concavity, and changing curvature.
+- Use continuous geometry for solver intersections, material sampling, bounds, rasterization, and feature descriptors. Ellipses use analytic conic intersections; polygons use segment intersections; smooth lobes use closed spline boundaries.
+- New scenes are approximately 75% dielectric and 25% PEC. Dielectric permittivities are 2, 4, 8, and 12, with lossless and lossy examples. Occupied area is 0.5–8% and projected support is at most 35% on each axis. Qualified historical training data may retain their original broader material range.
+- Reject unsupported PEC split edges and unresolved gaps explicitly. Never shift boundaries or close gaps to make a candidate feasible.
 
-## Archived project
+### References and teacher data
 
-- Source snapshot: branch `codex/archive-receiver-cnn-20260922`, commit `5878ddd`.
-- Physical archive: `archive/receiver_cnn_2026-09-22/`, including code, documentation,
-  reference manifests, checkpoints, plots, and compiled outputs.
-- Archive integrity: `ARCHIVE.json`, `INVENTORY.json`, `INVENTORY_SUMMARY.json` there.
-- Active branch: `codex/plane-wave-scattering`; independent package `scattermesh`.
-- The root `artifacts` symlink preserves old result links. Shared Python environments
-  remain available. Old datasets and checkpoints are historical, not new targets.
+1. Profile 16 independent scenes spanning all eight shape families and both material types. Size the full corpus at 256 lineages if feasible; otherwise select a complete balanced 128-lineage corpus. If neither fits the 14-hour data allocation, report the estimate before bulk launch. **This gate currently fails.**
+2. Split whole geometry lineages approximately 75%/12.5%/12.5% into training, validation, and test, stratified by family and material. Keep related transformations together. Use two incidence angles per scene and exact square budgets of 32, 48, 64, and 96 cells per axis.
+3. Use analytic references for circles. Qualify other references by uniform refinement through 192, 256, and 384 cells per axis, escalating to 512 when necessary. Require field tail below `1e-5`, maximum adjacent complex-field variation of 0.5%, and separate duration, material-quadrature, contour, and PML variations at most 0.5%. Store reference uncertainty. Unsettled or incompatible cases cannot become labels.
+4. Test up to 12 meshes per condition: uniform, four geometry policies, four seeded smooth-density perturbations, and three local refinements of the best valid first-round mesh. Retain all candidate axes, complex spectra, raw physical errors, stable time step, execution status, and provenance. Keep cases where uniform wins and retain multiple valid targets.
+5. Import qualified historical **training** examples only, with original manifests preserved and new portable paths. Draw 25% of training examples from the historical import. The imported set currently contains 1,104 examples; no historical validation or test examples entered it.
 
-## Numerical contract
+Teacher ranking uses the existing normalized complex-field plus 0.25 times floored log-scattering-width loss:
 
-1. Start in 2D TMz: fields Ez, Hx, Hy, SI units, infinite extent along z. Report
-   **2D scattering width in metres**, not 3D RCS in square metres. TEz/3D require
-   separate solvers and validation; TMz cannot establish every gap/polarization effect.
-2. Vacuum background; fixed mu_r=1 and sigma_h=0. Dielectrics have epsilon_r in
-   [1, 30] and nonnegative sigma_e. Dataset conductivity ranges will be specified
-   through both S/m and loss tangent at a declared reference frequency.
-3. Cartesian tensor-product nonuniform Yee mesh with exact requested Nx, Ny.
-   Configurable adjacent-cell ratio caps 2 and 3; 1.4 is an ablation, not the default.
-   Positive widths, conservative CFL, finite fields, and valid geometry remain hard
-   constraints. A loss cannot rescue unstable updates or an unrepresented PEC wire.
-4. No point TX/RX anchors. DFT contours select existing mesh nodes. Dielectrics
-   and the experimental conformal PEC modes require no object-boundary anchors.
-   Any future fallback alignment must be explicit and counted in the budget.
-5. Sample material filling fractions over actual Ez dual-cell areas. For this TMz
-   polarization Ez is tangential to extruded dielectric interfaces, so arithmetic
-   epsilon/sigma averaging is used. Keep sampling convergence separate from spatial
-   and temporal convergence. Material overlaps follow explicit last-object priority.
-6. Experimental PEC cut edges now preserve the actual circle/rectangle intersection
-   and impose zero total tangential E there. No PEC material averaging or protective
-   anchor triplets/quartets. Plain conformal mode respects its cut-cell CFL bound.
-   An optional `enlarged` mode couples tiny cut regions to neighboring field regions
-   through an energy-consistent Galerkin projection and checks the reduced operator's
-   CFL bound. Do not obtain speed by silently clipping cut fractions or shifting PEC.
-   Single PEC circles are the first training family, with analytic complex-field
-   references. Rectangles/corners follow after cylinder stages. Separated mixed
-   dielectric/PEC scenes are supported when enlargement transfers remain in vacuum.
-   Zero-thickness screens, split edges, unresolved gaps, and contacting mixed
-   interfaces remain explicit next work.
-   A 2D thin segment represents an extruded screen, not a finite 3D wire antenna.
+```text
+L_accuracy = L_complex + 0.25 L_width
+J = L_accuracy * (dt_uniform / dt_candidate)^0.05
+```
 
-## Source design and openEMS review
+Re-rank saved candidates at exponents 0, 0.02, 0.05, and 0.1 for sensitivity analysis. Use exponent 0.05 for training targets. Model selection and scientific claims use raw physical accuracy. Numerical fingerprints are separate from scoring and model fingerprints so physics results remain reusable after CNN changes.
 
-The current reference implementation evolves scattered fields everywhere and drives
-material contrast using a broadband analytic plane wave. For fixed mu_r=1:
+### CNN and training
 
-    epsilon * dEs/dt + sigma * Es = curl(Hs)
-                                      - (epsilon - epsilon0) * dEi/dt - sigma * Ei
-    mu0 * dHs/dt = -curl(Es)
+- Main model: five-level residual U-Net with widths 64/128/256/512/512, GroupNorm, SiLU, skip connections, bottleneck conditioning, and one eight-head spatial-attention block at the lowest resolution. It has 26,850,497 parameters.
+- Comparison model: the same architecture with base width 16 and 1,683,761 parameters. Initialize both afresh; reuse historical data rather than old checkpoint weights.
+- Input: nine 512×512 maps (the seven physical maps plus normalized x/y coordinates) and shape/material/illumination/budget conditioning. Output: positive x/y density profiles projected deterministically to exact requested cell counts, positive widths, and adjacent-cell ratios no greater than 3. Record projection repairs.
+- Distill against a set of physics-scored valid profiles. Use AdamW at `3e-4`, weight decay `1e-4`, FP16, and effective batch 32 with gradient accumulation. Select the largest microbatch among 1, 2, 4, and 8 that stays below 20 GiB. The main-model probe selected 8 at 16.16 GiB allocated memory on this server.
+- Train up to 120 epochs: 20 on C0, 20 on cumulative C0–C1, then up to 80 on cumulative C0–C2 with patience 20 in the final phase. Evaluate the three best validation-profile checkpoints using validation FDTD, select by raw physical accuracy, and freeze that checkpoint before testing.
 
-The incident signal is a Gaussian-modulated carrier evaluated at
-`t - dot(direction, position - phase_origin)/c0`. This preserves incidence angle
-across the pulse bandwidth. Conductivity uses a trapezoidal update; incident E is
-evaluated at the same electric time levels. CPML absorbs scattered fields.
-No plane-wave injection box is needed for this formulation. Vacuum produces zero
-scattering by construction, so that test alone does not validate the source.
+## Automated campaign and deliverables
 
-openEMS instead implements TFSF. We inspected its source at commit
-`8085f3129d4b41835e6e96365cb75218d60ef029`; see
-[review and exact links](docs/openems_review.md). Its optional dispersion correction
-uses one frequency and average cell widths. Our inference is that this is useful
-guidance, but cannot certify arbitrary strong grading over a broadband pulse.
+The planned overall limit is 24 hours: up to 1 hour for profiling and sizing, 14 for references and teachers, 6 for training and validation selection, and 3 for frozen testing and reporting. Four GPUs run independent FDTD workers; the two CNNs train on separate GPUs. The runner saves restartable state, enforces phase deadlines, and marks missing work incomplete. Incomplete, unconverged, and numerically incompatible cases cannot become labels. Campaign completion and positive scientific evidence are distinct outcomes.
 
-Keep a TFSF implementation as a comparison milestone: snap its rectangle to existing
-lines, evaluate E/H on their own staggered positions and times, apply local curl
-coefficients and correct signs, and test empty-box leakage before object scattering.
-Choose the production source using analytic and cross-solver evidence. Do not
-introduce point-source anchors or silently transplant a single-frequency phase-speed
-correction into the broadband contrast-source formulation.
+Required output includes raw complex-field and width error versus cell count; same-budget improvement by shape and material; minimum tested cell counts meeting both 2%, 5%, and 10% error limits, with unmet limits identified; cell-saving ratios and reference uncertainty; time step, update count, runtime, and memory; large-versus-small comparison and penalty sensitivity; representative mesh and scattering curves including failures; and counts of incompatible, unconverged, budget-limited, and incomplete cases.
 
-## Milestones and completion criteria
+The v2 runner is [`scripts/run_mesh_cnn_v2.py`](scripts/run_mesh_cnn_v2.py). The current machine-readable gate is [`runs_v2/c0_c2_pilot/campaign_status.json`](runs_v2/c0_c2_pilot/campaign_status.json). Detailed pilot assumptions and measured evidence are in [`docs/v2_pilot.md`](docs/v2_pilot.md). The prior implementation plan is preserved verbatim in the scattering source archive.
 
-### M0 — archive and CPU numerical reference (implemented foundation)
+## Later curriculum
 
-- Independent NumPy float64 solver with nonuniform curl metrics, sampled dielectrics,
-  lossy contrast forcing, CPML, oblique plane waves, and bounded execution.
-- Streaming complex surface DFT with E/H half-time-step correction and physical
-  quadrature weights; no full time-history storage.
-- Closed-contour 2D NF2FF; complex amplitude, angular scattering width, source-spectrum
-  normalization floor, field-tail and cost diagnostics.
-- Persist complex128 normalized far fields and incident spectra with frequency,
-  observation angle, Fourier sign, incident phase origin, and far-field origin.
-  Test absolute complex cylinder phase and subcell-translation phase factors.
-- Tests against outgoing Hankel waves and analytic lossless/lossy cylinder scattering.
-- Reproducible `scripts/qualify_scattering.py`, report and scientific plot.
-- Experimental off-grid PEC rectangles/circles with staircase, conformal, and
-  enlarged comparisons in `scripts/pilot_conformal_pec.py`. Test exact geometry,
-  positive projected energy/stiffness, tiny cut fractions, and analytic scattering.
-
-This is an executable starting point, not a qualified reference-data service.
-
-### M1 — broader numerical qualification and PEC
-
-Current evidence: the 35-case PEC-cylinder matrix passes its 128² complex-error,
-phase, tail, analytic-series, and full-time-step checks. Its 1.2 GHz near-to-far
-contour change is 0.521% at 128² and converges to 0.334% at 160², passing the
-proposed 0.5% observation gate after escalation. This milestone remains in progress
-for the other geometries, topologies, and external comparisons below; see the
-[measured qualification](docs/validation/pec_cylinder_qualification.md).
-
-The first dielectric substage is also measured. Three epsilon_r<=4 cases pass the
-initial analytic-reference gates at 192². CUDA escalation accepts lossless
-epsilon_r=12 at 512²/400 ns and conductive epsilon_r=30 at 512²/50 ns after
-independent duration, quadrature, and contour changes remain below 0.5%. Lossless
-epsilon_r=30 remains nonconverged at the bounded pilot hard limit and is skipped.
-See the [initial qualification](docs/validation/dielectric_cylinder_qualification.md)
-and [high-contrast escalation](docs/validation/dielectric_reference_escalation.md).
-Reference escalation therefore uses material wavelength and settling evidence,
-not exterior free-space resolution alone.
-
-- Extend the implemented PEC rectangle/cylinder prototype to split-edge thin
-  segments and contacting mixed interfaces; preserve total-field cancellation.
-- Qualify enlargement across location/scale/angle, strong grading, close gaps,
-  cavities, resonant structures, and late-time energy. A local aggregation can
-  sacrifice boundary accuracy; measure its error and cost against unreduced cuts.
-  Retain automatic CFL reduction when aggregation cannot safely recover the
-  background step. Do not infer a universal no-penalty method from isolated bodies.
-- Test displaced/scaled cylinders, epsilon_r up to 30, conductive dielectrics,
-  resonances, negative and oblique incidence directions, and abrupt ratios near 2/3.
-- Vary mesh, material quadrature, dt/CFL factor, runtime, PML thickness/resolution,
-  and NF2FF contour independently. Check complex far-field amplitude and width.
-- Add an openEMS-style TFSF comparison with empty-domain leakage, transmitted-wave
-  amplitude/phase, and interface tests. Add an external openEMS benchmark with
-  matched polarization/dimensional interpretation; do not compare 2D width to 3D RCS.
-- Initial engineering targets: analytic angular L2 complex-field error <1% on resolved
-  benchmarks; duration/PML/contour/quadrature variations each <0.5%. These are
-  proposed gates, to be calibrated across resonant and weak-scattering cases.
-  Also report magnitude, width, and phase errors. A width-only pass is insufficient.
-- Report angular nulls with absolute and floor-normalized errors, not unstable
-  pointwise relative percentages. Empty/no-contrast cases require absolute metrics.
-
-### M2 — CUDA solver and observables
-
-Foundation implemented: a PyTorch float64 backend now covers dielectric and PEC-only
-updates, conformal cuts, Galerkin enlargement transfers, CPML, analytic source
-evaluation, and streaming complex DFT on one GPU. It matches NumPy to roundoff and
-is 7.23x faster for dielectric and 5.27x faster for enlarged PEC at 512² in bounded
-throughput benchmarks. Small 128² runs remain launch-overhead dominated. See the
-[measured CUDA foundation](docs/validation/cuda_foundation.md). The remaining items
-below are still required before M2 is complete.
-
-Float32 passes the bounded precision gates for accepted epsilon_r=12, conductive
-epsilon_r=30, and enlarged-PEC references, but is slower than float64 in both 512²
-throughput probes on this server. Float64 therefore remains the production default;
-see the [precision qualification](docs/validation/cuda_precision.md).
-
-- Port validated update equations and coefficient construction without importing
-  legacy experiment policy. Keep fields, CPML state, source evaluation, and DFT on GPU.
-- Implement fused/batched surface DFT kernels; use phase recurrence with bounded
-  drift or direct phases validated against CPU. Preserve half-step H timing.
-- Separated mixed PEC/dielectric coupling is implemented and qualified for conformal
-  and enlarged modes when the enlargement transfer stencil remains in vacuum.
-  Derive a material-weighted projection before supporting dielectric-loaded
-  aggregation or contacting/overlapping interfaces. Continue validating shared-
-  master reductions and active-source field constraints.
-- Implement NF2FF reductions after time stepping. Start with accurate accumulation;
-  retain the measured float32/float64 comparison when changing reduction kernels.
-- Test CPU/GPU equivalence on uniform, graded, lossy, PEC, and oblique cases;
-  benchmark memory, wall time, cell updates, and DFT overhead separately.
-- The implemented restartable scheduler assigns attempts deterministically across
-  GPUs, validates source hashes, preserves nonconvergence, retries process failures,
-  and resumes atomically. Add batching only if measured beneficial; no host-device
-  field transfer each step.
-- The implemented adaptive policy advances mesh/time from measured individual gates,
-  requires independent spatial/duration/quadrature/contour agreement, and skips at
-  declared hard limits. Generalize it from the analytic-cylinder runner when the M4
-  scene schema is implemented.
-
-### M3 — prove low-budget mesh headroom before training
-
-The first 96-case interface-only search is complete and negative: uniform grids are
-the entire Pareto frontier for four PEC-cylinder scenes. Accepted focused meshes use
-more updates and have more joint complex/RCS loss; see the
-[measured pilot](docs/validation/mesh_headroom_pilot.md). Do not train from these
-targets. The 208-case object-region/hybrid/randomized expansion plus 96 dense
-uniform controls is also negative after a targeted 67² control removes the last
-apparent advantage. Continue M3 with simple dielectric cylinders, whose shorter
-internal wavelength can create genuine allocation headroom.
-
-The simple dielectric follow-up passes this gate. A 364-run candidate/control matrix
-shows matched-update advantages up to 1.896x for epsilon_r=4 and 1.448x for its
-lossy case, with both complex and scattering-width components improving. See the
-[qualification](docs/validation/dielectric_mesh_headroom.md). M3 can now feed the
-first M4 simple-scene candidate-label pool; the result does not justify CNN training
-before that larger pool and its grouped splits are validated.
-
-- Pilot 32/48/64 cells per axis and 96/128 controls, subject to actual feasibility.
-  These are proposed scattering budgets, not continuation of the retired campaign.
-- Compare true uniform, simple feature-based nonuniform, randomized density, and
-  a small direct search over density parameters; later add CNN meshes.
-- Compare both equal total Nx*Ny and equal total Nx*Ny*Nt. Record PML fraction,
-  movable lines, smallest cells, grading, geometry displacement, and runtime.
-- Allow independent Nx/Ny and unseen budget pairs. Vary grading caps 1.4/2/3.
-- Separate meshing error from source, PML, material-sampling, and NF2FF error.
-  A coarse mesh with a shifted PEC boundary must report the geometry error.
-- Require a measurable nonuniform advantage on representative low-budget cases.
-  Current focused-cylinder meshes are solver tests, not an optimized teacher.
-
-### M4 — new scene schema and converged references
-
-Start in controlled stages rather than immediately mixing every geometry family:
-
-1. Single PEC circular cylinders: vary electrical size, subcell location, incidence,
-   frequency band, and compute budget; analytic complex references.
-2. Single dielectric cylinders: start with moderate lossless contrast, then extend
-   epsilon_r to 30 and add conductivity; analytic complex references.
-3. Sparse localized pairs, in two qualified substages. **M4.3A** starts with two
-   dielectric cylinders so reference convergence and gap effects can be isolated.
-   **M4.3B** adds circle--rectangle, rectangle--rectangle, dielectric--PEC, and
-   PEC--PEC pairs, with controlled gaps, size/material contrasts, translations,
-   and orientations. Report each topology/material stratum separately; do not let
-   the easier dielectric-circle stratum hide failure on PEC or rectangle pairs.
-4. Sparse 3--4 object dielectric/PEC clusters, corners, and thin screens once their
-   solver treatment is qualified. Preserve low occupied and projected-support fractions.
-5. Dense or domain-filling assemblies only as generalization/stress tests and
-   negative controls, not as the production training distribution.
-
-Start with the implemented 32-geometry dielectric-cylinder pool for candidate-mesh
-experiments, before any large data campaign. PEC cylinders remain analytic controls
-after their negative headroom result. Final counts depend on acceptance, timing, and
-evidence from the label pilot. Follow [the staged curriculum](docs/curriculum.md).
-Analytic references still need series-order checks and consistent phase conventions;
-an over-refined FDTD result is not the default truth for single cylinders.
-
-The first implemented M4 manifest is `simple_dk_3ea40e8117434e5c`: 32 dielectric
-circle geometries grouped into eight lineages and 352 illumination/budget conditions.
-Its 24/4/4 geometry split holds every translated/scaled lineage together and uses
-disjoint validation/test size and angle regimes. The manifest precedes candidate
-physics generation; it must not be treated as completed labels or training data.
-
-The candidate-label runner is now verified by the 270-case campaign
-`simple_candidate_pilot_e38c11dcf8b35fc8`. It produces reusable per-case spectra and
-grouped Pareto labels, with four explicit unsettled rejections and valid uniform
-baselines throughout. Its selected training subset has no positive budget win while
-the epsilon_r=5 test geometry has two; do not train on that imbalance. Execute the
-generated 3,168-case full plan `simple_candidate_full_d535ccac015b3cd8`, then audit
-train/validation label diversity before starting M5.
-
-The pre-M5 audit is fixed before reading the full result. A meaningful candidate
-win is at least 5% lower joint scattering loss than the affordable uniform
-baseline. The full campaign must have complete uniform baselines, and training
-wins must span at least two lineages, two nonuniform candidate policies, and two
-budgets. Validation and test must each contain at least one meaningful win. The
-version-2 campaign report records these checks, per-split candidate/budget counts,
-and improvement statistics. Failing this gate triggers another candidate-search
-iteration rather than CNN fitting.
-
-The full campaign is complete: 3,146 of 3,168 cases settled, all uniform baselines
-are valid, and the report contains 88 illumination groups. Training passes its
-diversity checks with ten meaningful wins, and test has eleven wins, but validation
-selects uniform for all 32 labels. The frozen gate therefore returns
-`not_ready_for_m5`. The next M4 iteration must search intermediate candidate
-resolutions under each uniform update cap. The four-point 32/48/64/96 candidate
-ladder is too coarse: same-cell focused grids often improve accuracy but cost more
-time steps, while the next lower candidate resolution discards 25% of the axis
-resolution. Select resolution factors on training only, freeze them, and then
-reevaluate validation and test. Before CNN training, replace the correlated
-radius/permittivity/conductivity lineage schedule with an independently varied
-simple-scene pool.
-
-That replacement pool is now materialized as
-`simple_factorial_69168792914bfe03`. Its 148 geometries form 74 two-variant grouped
-lineages and 1,552 illumination/budget conditions. Low and moderate contrasts use
-an independent Cartesian product over epsilon_r={2,4,6,8}, three radii, and two
-conductivities, plus lossless epsilon_r={2,4} controls. A controlled sweep showed
-that all tested epsilon_r=10,20,30 cases with loss tangent >=0.10 settled within
-70 ns, while 33/36 cases at loss tangent 0.03 did not. The pool therefore extends
-training to epsilon_r={12,20,30} with loss tangent={0.10,0.20}; validation and test
-use disjoint permittivity and loss-tangent levels through epsilon_r=28. See the
-[high-permittivity qualification](docs/validation/high_epsilon_loss_qualification.md).
-
-The scaled-resolution search and its separately frozen held-out evaluation are now
-complete. Their combined 1,472 cases pass every predeclared strict-compute headroom
-check: training has 59/72 meaningful wins across three lineages and all four
-budgets, validation has 19/32 wins, and test has 28/32 wins. This is diagnostic
-evidence that the earlier failure came from the coarse resolution ladder.
-
-The final model contract requires exactly the requested `Nx` and `Ny`; candidate
-meshes and CNN outputs may redistribute those lines but may not reduce their count.
-Rank exact-axis candidates by
-`physics_loss * (Nt/Nt_uniform)^lambda`, starting with configurable `lambda=0.1`.
-Store raw physics loss, `Nt`, cell updates, runtime, and rankings at multiple lambda
-values. Retain strict matched-update evaluation separately. Never change the stable
-CFL time step to alter the ranking penalty.
-
-The 312-case exact-axis pilot is complete: every case settled at 70 ns, and the
-readiness gate passes with 32/36 meaningful training wins plus 8/8 validation and
-8/8 test wins. The full simple-curriculum campaign therefore uses the same six
-policies, exact 32/48/64/96 axis budgets, lambda=0.1, and adaptive
-70/140/560 ns duration schedule. See the
-[exact-budget pilot report](docs/validation/factorial_exact_budget_pilot.md).
-
-As stages expand, keep three separately tagged families and report their results separately:
-
-| Family | Initial contents | Controlled difficulty |
-|---|---|---|
-| Simple controls | Single dielectric/PEC objects | Scale, location, contrast, loss, incidence |
-| Sparse production | Localized clusters of 1–4 dielectric/PEC objects | Log-spaced gap, size ratio, cluster scale/location, orientation, incidence |
-| Dense stress | Domain-spanning mixed arrangements with explicit overlap policy | Multiple scattering, intersections, resonances, loss of tensor-grid headroom |
-
-For the first sparse pilots, target object occupancy of roughly 0.5–12% of domain
-area and keep each projected x/y feature-support union below roughly 45% of the
-domain. Treat these as pilot strata rather than silent clipping rules: record the
-actual occupied area, cluster envelope, projected support, minimum gap, object count,
-and PEC fraction for every scene. Measure headroom before freezing the final bounds.
-In combined training batches, sparse production scenes receive at least 70% of the
-sampling weight, analytic single-object controls retain at least 20%, and dense
-stress scenes receive at most 10%.
-
-Once M4.3 pair labels are qualified, run a full 3x3 residual-U-Net ablation crossing
-input resolutions 128/256/384 with 16/24/32 base feature channels. Every model uses
-the same seven physical input channels; "channels" in this ablation means network
-width, not withholding input variables. Reuse every compatible physics-evaluated
-single-object and sparse label by rerasterizing it into the expanded multi-object
-input schema. Hold dataset, split, seed, optimizer, effective batch size, and stopping
-policy fixed. Resolution-specific microbatches use gradient accumulation to retain
-the same effective batch. Select from frozen sparse-family physics gates, parameter
-count, and inference cost; distillation validation loss alone cannot promote a model.
-
-The hardware qualification measured all nine FP32 forward/backward combinations on
-one NVIDIA TITAN RTX. Peak allocation ranged from 1.18 GiB (128, width 16, batch 32)
-to 3.94 GiB (384, width 32, batch 6). The four 24-GiB GPUs can therefore run all nine
-fits concurrently when grouped by resolution, with effective-batch matching through
-accumulation. The immutable benchmark is `runs/model_grid_benchmark/report.json`.
-
-The first nine-fit launch uses qualified M4.3A/M4.3B pilot labels merged with the
-historical single-circle campaign. It is a capacity and input-resolution ablation,
-not the final sparse production campaign: only ten distinct sparse geometries are
-in its training split, so the declared 70% sparse sampler necessarily repeats them.
-Keep the scene-grouped sparse validation/test holdouts frozen; evaluate actual
-complex far-field and scattering-width physics for each model before drawing a
-capacity conclusion. Then generate a larger, more diverse sparse pair pool, retain
-the same nine-model comparison contract, and advance to 3--4 objects only after
-the pair topology/material gates remain stable across held-out scenes.
-
-- Mix locations/scales deliberately; do not fill every domain or use subpixel
-  decorations. Require features to span multiple finest-reference cells. Resolve
-  geometry in the model input independently of the candidate solver mesh.
-- Include empty/near-vacuum controls without allowing them to dominate training.
-- Sample incidence continuously over 0–2pi. Store geometry identity separately
-  from illumination identity. Group related geometry, translated/scaled variants,
-  and their illuminations into the same train/validation/test split.
-- Explicit held-out angle sectors and size/gap ranges test extrapolation. Also
-  evaluate unseen angles on held-out geometry to measure ordinary generalization.
-- Keep shape/topology holdouts once multiple families exist. For the initial
-  cylinder-only experiment use explicit held-out electrical-size intervals and
-  position/angle regimes; nearby-radius interpolation is not shape generalization.
-- Start with tens of qualified scenes, then hundreds; choose full campaign size
-  after timing and diversity review. Do not relabel the old 3,000 references.
-- Reference records contain immutable scene/config/code IDs, actual x/y, dt/Nt,
-  CPML and quadrature settings, native complex far fields (or explicit real/imag
-  arrays), derived angular widths, DFT contour, source spectrum, incident/far-field
-  phase origins, Fourier convention, settling histories, comparisons, and wall times.
-- Acceptance requires complex-field agreement under independent spatial refinement
-  and time extension, plus
-  monitored-tail and source-spectrum checks. Compare at least two successive fine
-  refinements; agreement of two underresolved meshes is not enough. Escalate mesh,
-  runtime, and quadrature within explicit limits; retain failed attempts and skip
-  unresolved scenes. No field-tail-only convergence labels.
-
-### M5 — new model and training targets
-
-- Start a fresh small CNN/residual U-Net. Condition on continuous-geometry raster/SDF, material
-  channels, gap/feature information, frequency band, sin/cos incidence, Nx/Ny, and
-  grading policy. Use an input resolution high enough to see the smallest admitted
-  features; test subpixel translations and resolution sensitivity explicitly.
-- Predict a spatial importance map projected to positive x/y axis densities, or
-  predict the two axis densities directly. A free 2D mask is not a realizable
-  tensor-product grid. The deterministic mesher enforces exact cell counts and
-  checks actual Nx*Ny*Nt against the compute-budget cap.
-  Conformal PEC is the preferred candidate to avoid boundary anchors, conditional
-  on M1 qualification. Cell enlargement changes effective degrees of freedom;
-  record aggregation counts and error sensitivity. Any fallback alignment is a
-  separate auditable projection; reject datasets dominated by fixed lines.
-- Sample multiple independent Nx/Ny combinations across the range; hold out
-  combinations and intermediate budgets from training. Resample budgets during
-  training while keeping reference geometry/physics fixed.
-- Optional short heuristic pretraining is initialization. Main supervision is
-  measured scattering accuracy and computational cost; the teacher must not
-  permanently cap the achievable mesh quality.
-- The complex component compares real and imaginary parts directly:
-
-      L_complex(f) = sum_angle w * |F_pred - F_ref|^2
-                     / (sum_angle w * |F_ref|^2 + F_floor^2)
-
-  Here F=A/Eincident is the complex far field in sqrt(m), angular weights sum to
-  one, and F_floor is calibrated to physical scale/numerical noise. No arbitrary
-  global phase rotation or time shift is fitted away. This retains interference
-  and propagation-phase information. Plain wrapped-angle MSE is not the primary
-  loss, and phase at scattering nulls is excluded from phase-only diagnostics.
-- Add a floored logarithmic RCS/scattering-width component:
-
-      delta_dB = 10*log10((width_pred + width_floor)/(width_ref + width_floor))
-      L_rcs = mean((delta_dB / (20/ln(10)))^2)
-      L_accuracy = lambda_complex*L_complex + lambda_rcs*L_rcs
-
-  Scaling the dB term by 20/ln(10) makes its small-amplitude-error limit comparable
-  to squared relative amplitude error. The implemented NumPy scorer starts with
-  **provisional** weights 1 and 0.25 and an RCS floor 1e-4 of each frequency's
-  reference peak, bounded below by an absolute floor. Calibrate these on training
-  pilots, then freeze them for validation/test; store components so reweighting
-  does not require rerunning FDTD. These are not tuned CNN loss weights.
-- Report weighted phase RMS, complex error, and RCS error separately. Include
-  worst-frequency performance and hard mesh-feasibility/settling/compute-budget
-  gates. Compare Pareto curves against uniform, wavelength/interface heuristics,
-  and classical solution/error-guided refinement. Do not inherit old loss weights.
-- Report family losses independently before choosing a combined weighted loss.
-  The primary promotion gate is evaluated on sparse production strata, including
-  single objects, localized pairs, close gaps, and sparse PEC/mixed scenes. Dense
-  stress cases are capped at 10% sampling weight and cannot offset a sparse-family
-  regression in an aggregate loss.
-- A forward solver alone does not give training gradients. First implement
-  budget-conditioned distillation from physics-evaluated candidate mesh searches;
-  then evaluate an adjoint/differentiable path as a distinct validated extension.
-- Retain multiple good candidate meshes and their ranking, density maps, and cost.
-  Avoid one arbitrary ground-truth mesh per scene. Evaluate ranking/set-valued
-  supervision in the first model pilot before direct differentiable FDTD.
-
-### M6 — frozen evaluation and campaign operation
-
-- Freeze final test families, illumination settings, budgets, and source/monitor
-  protocol. Report median and worst-tail accuracy, failure rates, runtimes, and
-  error-versus-cost curves for all baselines and each family.
-- Require useful improvement at low budgets, not just near-equality at 128 cells.
-- New restartable campaign runner: explicit CPU/GPU ownership, atomic results,
-  retry limits, progress/timing script, and no automatic training on partial or
-  unqualified reference outputs.
-
-After the main held-out simple-family gate, run the separately frozen analytic-circle
-position/scale suite before adding multi-object scenes. It spans center and four
-translated quadrant placements, radii below/inside/above the training range, low
-lossless and high lossy contrast, unseen incidence angles, and exact 32/48 budgets.
-Even the largest circle retains at least 2.5 cells of free space before the PML at
-the 32-cell budget, isolating translation generalization from near-PML truncation.
-Its thresholds are fixed in `configs/circle_position_scale_generalization.json`;
-failure triggers a broader translated/scaled simple-family training pool rather
-than progression to sparse scenes.
-
-After that gate passes, the next headroom pilot uses localized two-dielectric-cylinder
-clusters as M4.3A, followed by mixed circle/rectangle and dielectric/PEC pairs as
-M4.3B, then 3–4 object clusters. Each pilot compares exact-budget uniform and
-nonuniform meshes at 32/48/64 cells per axis, stratified by occupied area, projected
-x/y support, minimum gap, object count, shape topology, material topology, and
-incidence angle. Advancement requires a measurable low-budget advantage within each
-declared sparse stratum; dense-scene performance is reported separately.
-
-The simple-family handoff is now automated. The label-to-training workflow requires
-one terminal record per candidate and an accepted uniform baseline per condition;
-hard-limit rejected nonuniform candidates are masked from distillation. A second
-workflow waits for the completed full
-checkpoint, assigns every frozen validation/test case to one of four GPUs by stable
-case-ID hash, retries failed worker processes within a fixed limit, reuses only
-fingerprint-valid attempts, and runs the uniform/teacher physics gate after all
-shards finish. The workflow is ready while the 9,312-case label campaign runs.
-
-## Numerical references
-
-- [Scattered-field ADE-FDTD paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC2763393/):
-  field decomposition and material-contrast source formulation.
-- [openEMS source review](docs/openems_review.md): staggered TFSF implementation.
-- [Meep near-to-far documentation](https://meep.readthedocs.io/en/master/Python_User_Interface/#near-to-far-field-spectra):
-  frequency-domain surface observations and homogeneous exterior requirements.
-- [2D cylinder scattering benchmark](https://optics.ansys.com/hc/en-us/articles/360042703373-Mie-scattering-2D):
-  analytic scattering validation approach.
-- [Conformal PEC and cell enlargement experiment](docs/conformal_pec.md):
-  implemented 2D method, mathematical stability check, limitations, and sources.
+- C3–C5: mixed pairs, controlled gap sweeps, and 3–10 objects; measure spatial spread as well as object count.
+- C6–C7: holes, open cavities, thin sections, and multiscale details after numerical qualification.
+- C8–C9: frozen unseen engineering silhouettes and distributed scenes.
+- Before manuscript claims: independent solver comparison, repeated training seeds, larger frozen tests, and confidence intervals.
