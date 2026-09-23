@@ -9,7 +9,6 @@ dist/
 *.pyd
 *.so
 *.obj
-src/fdtdmesh/solver/cuda_runtime.cpp
 artifacts/
 archive/**/artifacts/
 archive/**/build/

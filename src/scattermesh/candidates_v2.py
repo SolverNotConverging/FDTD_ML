@@ -5,7 +5,7 @@ import hashlib
 import numpy as np
 
 from .curriculum_v2 import DOMAIN, scene_metrics
-from .distillation import axis_probability, probability_axis
+from .profiles_v2 import axis_probability, probability_axis
 
 CANDIDATE_NAMES = (
     "uniform",

@@ -12,8 +12,7 @@ import torch
 from torch.utils.data._utils.collate import default_collate
 
 from .dataset_v2 import MeshProfileDatasetV2
-from .model import set_valued_profile_loss
-from .model_v2 import AxisDensityUNetV2
+from .model_v2 import AxisDensityUNetV2, set_valued_profile_loss
 
 
 def _atomic_torch(path, value):

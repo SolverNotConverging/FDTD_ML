@@ -12,7 +12,7 @@ from torch.utils.data import Dataset
 
 from .candidates_v2 import CANDIDATE_NAMES
 from .curriculum_v2 import conditioning_v2, rasterize_v2
-from .distillation import axis_probability, resample_axis_profiles
+from .profiles_v2 import axis_probability, resample_axis_profiles
 from .scoring_v2 import rank_candidates
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]

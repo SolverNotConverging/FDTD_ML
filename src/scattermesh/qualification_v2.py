@@ -10,9 +10,9 @@ import numpy as np
 
 from .candidates_v2 import candidate_axes
 from .curriculum_v2 import object_from_scene
-from .generalization import widest_non_pml_monitor_bounds
 from .geometry import Circle
 from .grid import Grid
+from .monitor_v2 import widest_non_pml_monitor_bounds
 from .scoring_v2 import relative_l2
 from .simulation_v2 import DURATIONS, evaluate_case, numerical_source_hashes
 

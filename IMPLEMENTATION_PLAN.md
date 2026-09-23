@@ -1,6 +1,6 @@
 # Mesh-CNN v2 implementation plan
 
-Updated 23 September 2026. The sole project root is `/home/s2307298/projects/FDTD_ML`; new outputs belong in `runs_v2/`. The original scattering project is preserved under `archive/scattermesh_2026-09-23/`, with the receiver-CNN archive beside it. This document describes the active project only.
+Updated 23 September 2026. The sole project root is `/home/s2307298/projects/FDTD_ML`; new outputs belong in `runs_v2/`. The original scattering project is preserved under `archive/scattermesh_2026-09-23/`, with the receiver-CNN archive beside it. Historical scripts, configurations, reports, tests, and learning modules live only in the archive. The active tree keeps the numerical solver and current v2 workflow. This document describes the active project only.
 
 ## Research objective
 

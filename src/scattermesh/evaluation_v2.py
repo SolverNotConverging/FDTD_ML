@@ -11,8 +11,8 @@ import torch
 from .campaign_v2 import atomic_json
 from .candidates_v2 import CANDIDATE_NAMES
 from .curriculum_v2 import conditioning_v2, rasterize_v2
-from .distillation import probability_axis
 from .model_v2 import AxisDensityUNetV2
+from .profiles_v2 import probability_axis
 from .scoring_v2 import penalty_sensitivity, threshold_cell_savings
 from .simulation_v2 import evaluate_case
 

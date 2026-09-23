@@ -8,10 +8,13 @@ The active Git branch is `codex/mesh-cnn-v2` in
 `codex/archive-scattermesh-20260923`; its source, run inventory, dependency
 records, checkpoints, logs, and paused states are in
 `archive/scattermesh_2026-09-23/`. The receiver archive is adjacent. All 404
-receiver links now use relative paths, with original manifests unchanged and
-relocation recorded in `RELOCATION.json`. The scattering source archive also
+receiver links now resolve directly inside that archive, with original manifests unchanged and
+the original and intermediate targets recorded in `RELOCATION.json`. The scattering source archive also
 records its relocated `artifacts` link. The historical `runs/` name is a local
 relative symlink; new results use `runs_v2/`. The old Codex worktree is absent.
+Historical scripts, configurations, reports, tests, and learning modules are
+available in the source archive; the active tree retains only the numerical
+solver, its regressions, and the v2 workflow.
 
 The active `.venv` activation scripts and editable package metadata point to
 this directory. Dependency versions and the environment relocation record are

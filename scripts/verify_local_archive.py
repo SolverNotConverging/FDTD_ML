@@ -37,6 +37,7 @@ def verify(*, full=False):
             not link.is_symlink()
             or link.readlink().as_posix() != change["new_relative_target"]
             or not link.exists()
+            or not link.resolve().is_relative_to(receiver / "artifacts")
         ):
             errors.append(f"Receiver relocated link is broken: {item['path']}")
     files = old_inventory["regular_files"]
@@ -69,6 +70,8 @@ def verify(*, full=False):
     artifact_link = scattering / "source" / "artifacts"
     if not artifact_link.is_symlink() or not artifact_link.exists():
         errors.append("Archived source artifacts compatibility link is broken")
+    if (ROOT / "artifacts").exists() or (ROOT / "artifacts").is_symlink():
+        errors.append("Historical artifacts compatibility link remains in active root")
     return {
         "mode": "full" if full else "representative",
         "receiver_regular_inventory_count": len(files),

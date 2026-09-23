@@ -10,10 +10,10 @@ import numpy as np
 from .analytic import cylinder_far_field
 from .candidates_v2 import candidate_axes
 from .curriculum_v2 import DOMAIN, object_from_scene
-from .generalization import widest_non_pml_monitor_bounds
 from .geometry import Circle
 from .grid import Grid
 from .metrics import scattering_loss
+from .monitor_v2 import widest_non_pml_monitor_bounds
 from .scoring_v2 import relative_l2
 from .solver_cuda import simulate_cuda
 from .source import PlaneWave
@@ -28,7 +28,8 @@ NUMERICAL_MODULES = (
     "curriculum_v2.py",
     "geometry.py",
     "geometry_v2.py",
-    "generalization.py",
+    "monitor_v2.py",
+    "profiles_v2.py",
     "grid.py",
     "metrics.py",
     "observables.py",

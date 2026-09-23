@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "scattermesh"
 version = "0.1.0"
-description = "Nonuniform-grid plane-wave scattering and low-budget meshing research"
+description = "Mesh CNN v2 for nonuniform conformal FDTD scattering grids"
 requires-python = ">=3.11"
 dependencies = ["numpy>=2", "scipy>=1.14"]
 

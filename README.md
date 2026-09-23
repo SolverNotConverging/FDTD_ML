@@ -23,11 +23,11 @@ The launch command currently stops at `sizing_gate_stopped` before any bulk FDTD
 
 ## Project map
 
-- `src/scattermesh/`: retained TMz solver and versioned C0–C2 geometry, candidate, reference, dataset, CNN, training, and evaluation modules.
+- `src/scattermesh/`: retained TMz solver and current C0–C2 geometry, candidate, reference, dataset, CNN, training, and evaluation modules.
 - `scripts/run_mesh_cnn_v2.py`: measured sizing gate and deadline-aware campaign entry point.
 - `docs/v2_pilot.md`: numerical contract, resource evidence, positive scientific gate, and C3–C9 roadmap.
 - `runs_v2/`: new portable outputs, including the 1,104-example qualified historical training import.
 - `archive/scattermesh_2026-09-23/`: frozen original scattering source, historical runs, inventories, environment records, and restoration checks.
 - `archive/receiver_cnn_2026-09-22/`: preserved receiver-CNN project with 404 repaired relative links.
 
-The project-root `runs/` path is a relative compatibility link into the scattering archive. Historical manifests remain unchanged and may contain former paths as provenance; new import manifests resolve to local archived artifacts. The former Codex worktree is absent. The original project documentation remains in the archives rather than in this active README.
+The project-root `runs/` path is a relative compatibility link into the scattering archive. The former root `artifacts` link and historical scripts, configurations, reports, tests, and learning modules are archived only. Historical manifests remain unchanged and may contain former paths as provenance; new import manifests resolve to local archived artifacts. The former Codex worktree is absent.

@@ -6,7 +6,64 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from .model import ResidualBlock
+
+class ResidualBlock(nn.Module):
+    def __init__(self, input_channels, output_channels):
+        super().__init__()
+        groups = min(8, output_channels)
+        self.body = nn.Sequential(
+            nn.Conv2d(input_channels, output_channels, 3, padding=1, bias=False),
+            nn.GroupNorm(groups, output_channels),
+            nn.SiLU(),
+            nn.Conv2d(output_channels, output_channels, 3, padding=1, bias=False),
+            nn.GroupNorm(groups, output_channels),
+        )
+        self.skip = (
+            nn.Identity()
+            if input_channels == output_channels
+            else nn.Conv2d(input_channels, output_channels, 1, bias=False)
+        )
+
+    def forward(self, inputs):
+        return F.silu(self.body(inputs) + self.skip(inputs))
+
+
+def set_valued_profile_loss(
+    prediction,
+    targets,
+    scores,
+    best_index,
+    candidate_mask=None,
+    *,
+    score_temperature=4.0,
+    reduction="mean",
+):
+    """Combine best-candidate and physics-weighted set supervision in CDF space."""
+    if prediction.ndim != 3 or targets.ndim != 4 or scores.ndim != 2:
+        raise ValueError("Expected prediction [B,2,R], targets [B,K,2,R], scores [B,K]")
+    if candidate_mask is None:
+        candidate_mask = torch.ones_like(scores, dtype=torch.bool)
+    if candidate_mask.shape != scores.shape or not candidate_mask.any(dim=1).all():
+        raise ValueError("Each example requires at least one valid candidate")
+    if not candidate_mask.gather(1, best_index[:, None]).all():
+        raise ValueError("Selected best candidate must be valid")
+    cumulative_prediction = prediction.cumsum(dim=-1)[:, None]
+    cumulative_targets = targets.cumsum(dim=-1)
+    cdf_loss = (cumulative_prediction - cumulative_targets).square().mean(dim=(-1, -2))
+    density_loss = (prediction[:, None] - targets).abs().mean(dim=(-1, -2))
+    candidate_loss = cdf_loss + 0.05 * density_loss
+    masked_scores = scores.masked_fill(~candidate_mask, torch.inf)
+    relative_log_score = torch.log(masked_scores / masked_scores.min(dim=1, keepdim=True).values)
+    weights = F.softmax(-score_temperature * relative_log_score, dim=1)
+    weighted = (weights * candidate_loss).sum(dim=1)
+    selected = candidate_loss.gather(1, best_index[:, None]).squeeze(1)
+    per_example = 0.5 * selected + 0.5 * weighted
+    if reduction not in {"mean", "none"}:
+        raise ValueError("Reduction must be mean or none")
+    return (per_example.mean() if reduction == "mean" else per_example), {
+        "selected_cdf_l1": selected.detach().mean(),
+        "weighted_set_loss": weighted.detach().mean(),
+    }
 
 
 class AxisDensityUNetV2(nn.Module):
