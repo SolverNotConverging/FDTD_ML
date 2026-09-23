@@ -160,9 +160,12 @@ def run_profile(
     ]
     factors = [row["wall_seconds"] / (row["steps"] * 192**2) for row in measured]
     factor = float(np.median(factors)) if factors else None
-    projections = (
-        [_project_row(row, factor) for row in rows if "estimates" in row] if factor else []
-    )
+    projections = [
+        _project_row(row, factor)
+        if factor is not None and "estimates" in row
+        else {"status": "profile_error", "gpu_seconds_per_scene": None}
+        for row in rows
+    ]
     compatible = [
         (scene, projection)
         for scene, projection in zip(rows, projections)
@@ -172,6 +175,8 @@ def run_profile(
 
     # Each family has 12 dielectric and 4 PEC lineages for a 128-lineage corpus.
     def hours(count, *, partial):
+        if factor is None:
+            return None
         if not partial and not complete:
             return None
         per_family = count // len(FAMILIES)
