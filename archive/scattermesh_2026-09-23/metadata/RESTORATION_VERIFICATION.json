@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "verified_at_utc": "2026-09-23T01:13:46.412983+00:00",
+  "result": "all_representative_artifacts_opened",
+  "receiver_inventory_regular_files": 95496,
+  "receiver_relocated_symlinks": 404,
+  "scattering_runs_inventory_files": 59178,
+  "representatives": [
+    {
+      "kind": "receiver_completed_checkpoint",
+      "path": "archive/receiver_cnn_2026-09-22/artifacts/training_mixed_v7_3000/pretraining/best.pt",
+      "bytes": 534045,
+      "sha256": "62c0324a9c27292a5c10bf4126ee6c5f60552c09809918dd3e1be05be9bae151",
+      "load_method": "torch_weights_only",
+      "top_level_keys": [
+        "format_version",
+        "mesh_policy",
+        "architecture",
+        "input_channels",
+        "normalization",
+        "raster_shape",
+        "conditioning",
+        "pooling",
+        "output",
+        "training_commit",
+        "dataset_version",
+        "training",
+        "state_dict"
+      ]
+    },
+    {
+      "kind": "receiver_paused_training",
+      "path": "archive/receiver_cnn_2026-09-22/artifacts/training_mixed_v7_3000/pretraining/resume.pt",
+      "bytes": 1689169,
+      "sha256": "be78d863217b5f2712765820f0f54d82f86b45b5cef89f45343d98a12bf8c0fc",
+      "load_method": "torch_weights_only",
+      "top_level_keys": [
+        "version",
+        "epoch",
+        "best",
+        "config",
+        "dataset_id",
+        "target_id",
+        "training_kind",
+        "model",
+        "optimizer",
+        "history",
+        "stale_epochs"
+      ]
+    },
+    {
+      "kind": "scattering_completed_checkpoint",
+      "path": "archive/scattermesh_2026-09-23/runs/simple_factorial_exact_training_6916879/checkpoint.pt",
+      "bytes": 2150700,
+      "sha256": "bb2dc2f40187f5d54af44c576ad715be6c2c35d33ff258d170840663c3c9bc73",
+      "load_method": "torch_weights_only",
+      "top_level_keys": [
+        "schema_version",
+        "model",
+        "model_kwargs",
+        "model_state",
+        "dataset",
+        "config",
+        "source_hashes",
+        "best_epoch",
+        "best_validation_loss",
+        "test_loss",
+        "uniform_validation_loss",
+        "uniform_test_loss",
+        "validation_improvement_over_uniform",
+        "test_improvement_over_uniform"
+      ]
+    },
+    {
+      "kind": "scattering_paused_training",
+      "path": "archive/scattermesh_2026-09-23/runs/sparse_nine_model_finetune_96/r128_c16/training_state.pt",
+      "bytes": 8641603,
+      "sha256": "cdcaec6d61d4c446d6dadc25c236102163a536f5448c4d051c75ea4aeafb7f23",
+      "load_method": "torch_trusted_legacy",
+      "top_level_keys": [
+        "schema_version",
+        "source_hashes",
+        "epoch",
+        "model_state",
+        "optimizer_state",
+        "sampler_generator_state",
+        "python_rng_state",
+        "numpy_rng_state",
+        "torch_rng_state",
+        "cuda_rng_states",
+        "history",
+        "best_validation",
+        "best_state",
+        "best_epoch",
+        "stale_epochs",
+        "elapsed_seconds"
+      ]
+    },
+    {
+      "kind": "receiver_dataset",
+      "path": "archive/receiver_cnn_2026-09-22/artifacts/pec_anchor_check/pilot_faces/level_128.npz",
+      "bytes": 31457,
+      "sha256": "39217fb842f92af2e58639d2478ac70ad685e7055757c5c22e29ddeee3f72508",
+      "load_method": "npz",
+      "top_level_keys": [
+        "x",
+        "y",
+        "times",
+        "waveforms"
+      ]
+    },
+    {
+      "kind": "scattering_spectra",
+      "path": "archive/scattermesh_2026-09-23/runs/circle_corner_remediation_candidate_b52bad62a43d9f88/attempts/condition_0004c63f49b43245_region_strong/attempt_00/spectra.npz",
+      "bytes": 28066,
+      "sha256": "ba2fbcd108e91c656dd2cc7d0a6025a195b2f940f6ca62ba49ba5d08954bc711",
+      "load_method": "npz",
+      "top_level_keys": [
+        "x",
+        "y",
+        "frequencies",
+        "angles",
+        "complex_far_field",
+        "analytic_complex_far_field",
+        "scattering_width",
+        "analytic_scattering_width"
+      ]
+    }
+  ]
+}

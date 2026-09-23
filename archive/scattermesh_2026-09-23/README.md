@@ -8,6 +8,11 @@ The `source/` directory is a Git snapshot of the recorded commit. It excludes th
 
 `metadata/runs_inventory.csv` records each archived run file's relative path, byte size, and SHA-256 digest; symlink entries, if any, record their link target. `metadata/archive.json` summarizes the source revision and run inventory. Historical run manifests and checkpoints were moved as-is and were not rewritten.
 
+`metadata/RESTORATION_VERIFICATION.json` records successful load checks and
+SHA-256 digests for representative receiver/scattering datasets, completed
+checkpoints, and paused training states. The file inventories and relocated
+receiver links were also fully checked after the move.
+
 To restore the project-root compatibility path if needed, from the project root run:
 
 ```sh
