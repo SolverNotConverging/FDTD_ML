@@ -1,4 +1,4 @@
-"""Backend equivalence checks for the optional PyTorch dielectric solver."""
+"""Compiled CUDA and legacy Torch CPU equivalence checks."""
 
 import numpy as np
 import pytest
@@ -73,7 +73,9 @@ def test_cuda_float64_matches_numpy_reference():
     reference = simulate(grid, objects, source, **settings)
     candidate = simulate_cuda(grid, objects, source, device="cuda:0", dtype="float64", **settings)
     _assert_equivalent(reference, candidate, rtol=3e-12, atol=3e-14)
-    assert candidate.diagnostics["backend"] == "torch_cuda"
+    assert candidate.diagnostics["backend"] == "compiled_cuda"
+    assert candidate.diagnostics["host_transfers_during_steps"] == 0
+    assert candidate.diagnostics["host_scalar_checks"] == 0
 
 
 @pytest.mark.parametrize("pec_mode", ["staircase", "conformal", "enlarged"])

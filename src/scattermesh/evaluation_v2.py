@@ -1,4 +1,4 @@
-"""Frozen-checkpoint physical evaluation and accuracy-led C0--C2 summaries."""
+"""Frozen-checkpoint physical evaluation and accuracy-led scene summaries."""
 
 import json
 import time
@@ -8,13 +8,14 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from .campaign_v2 import atomic_json
+from .campaign_v2 import atomic_json, scoring_fingerprint
 from .candidates_v2 import CANDIDATE_NAMES
-from .curriculum_v2 import conditioning_v2, rasterize_v2
+from .curriculum_v2 import conditioning_v2, rasterize_v2, scene_material_kind
 from .model_v2 import AxisDensityUNetV2
 from .profiles_v2 import probability_axis
+from .qualification_v2 import qualify_compact_reference, qualify_reference
 from .scoring_v2 import penalty_sensitivity, threshold_cell_savings
-from .simulation_v2 import evaluate_case
+from .simulation_v2 import evaluate_case, numerical_source_hashes
 
 
 def load_checkpoint(path, device):
@@ -58,89 +59,145 @@ def evaluate_checkpoint(
     if split not in ("validation", "test"):
         raise ValueError("Only new validation or frozen test lineages may be evaluated")
     manifest = json.loads(Path(manifest_path).read_text())
+    if manifest.get("protocol") == "compact_c8_c9_poc_v1":
+        if manifest.get("numerical_source_hashes") != numerical_source_hashes():
+            raise ValueError("Numerical implementation changed after compact campaign freeze")
+        if manifest.get("scoring_fingerprint") != scoring_fingerprint():
+            raise ValueError("Scoring implementation changed after compact campaign freeze")
     output = Path(output)
     campaign_output = Path(campaign_output)
     model, checkpoint = load_checkpoint(checkpoint_path, device)
     rows = []
     requested = 0
+    evaluation_conditions = manifest.get("evaluation_conditions", {}).get(split, {})
     for scene in manifest["scenes"]:
         if scene["split"] != split:
             continue
-        for angle_index, angle in enumerate(manifest["incidence_angles"]):
+        conditions = evaluation_conditions.get(scene["lineage_id"])
+        if conditions is None:
+            conditions = [
+                {"angle_index": angle_index, "cells": cells}
+                for angle_index in range(len(manifest["incidence_angles"]))
+                for cells in manifest["budgets"]
+            ]
+        for condition in conditions:
+            angle_index, cells = condition["angle_index"], condition["cells"]
+            angle = manifest["incidence_angles"][angle_index]
+            requested += 1
             qualification_path = (
                 campaign_output / "qualifications" / f"{scene['lineage_id']}_a{angle_index}.json"
             )
+            if deadline is not None and time.time() >= deadline:
+                rows.append(
+                    {
+                        "scene_id": scene["lineage_id"],
+                        "angle_index": angle_index,
+                        "cells": cells,
+                        "status": "incomplete",
+                    }
+                )
+                continue
             qualification = (
                 json.loads(qualification_path.read_text()) if qualification_path.exists() else {}
             )
-            if not qualification.get("accepted"):
-                for cells in manifest["budgets"]:
-                    requested += 1
-                    rows.append(
-                        {
-                            "scene_id": scene["lineage_id"],
-                            "family": scene["family"],
-                            "material": scene["material"]["kind"],
-                            "angle_index": angle_index,
-                            "cells": cells,
-                            "status": "reference_not_qualified",
-                        }
-                    )
-                continue
-            with np.load(qualification_path.with_suffix(".npz")) as arrays:
-                reference = arrays["complex_far_field"].copy()
-            for cells in manifest["budgets"]:
-                requested += 1
-                uniform_path = (
-                    campaign_output
-                    / "cases"
-                    / f"{scene['lineage_id']}_a{angle_index}_n{cells}_uniform"
-                    / "record.json"
-                )
-                uniform = json.loads(uniform_path.read_text()) if uniform_path.exists() else {}
-                if deadline is not None and time.time() >= deadline:
-                    rows.append(
-                        {
-                            "scene_id": scene["lineage_id"],
-                            "angle_index": angle_index,
-                            "cells": cells,
-                            "status": "incomplete",
-                        }
-                    )
-                    continue
-                axes, repairs = predict_axes(
-                    model, scene, cells, angle, manifest["frequencies_hz"], device
-                )
-                learned, _ = evaluate_case(
+            if manifest.get("protocol") == "compact_c8_c9_poc_v1":
+                qualification = qualify_compact_reference(
                     scene,
-                    cells,
+                    angle_index,
                     angle,
-                    "learned",
-                    output / "cases" / f"{scene['lineage_id']}_a{angle_index}_n{cells}",
+                    campaign_output,
+                    manifest["reference_policy"],
+                    calibration_profile_sha256=manifest["reference_policy_source_profile_sha256"],
                     device=device,
-                    reference=reference,
-                    selected_axes=axes,
+                    deadline=deadline,
                 )
+            elif not qualification.get("accepted"):
+                qualification = qualify_reference(
+                    scene, angle_index, angle, campaign_output, device=device, deadline=deadline
+                )
+            if not qualification.get("accepted"):
                 rows.append(
                     {
                         "scene_id": scene["lineage_id"],
                         "family": scene["family"],
-                        "material": scene["material"]["kind"],
+                        "material": scene_material_kind(scene),
                         "stage": scene["stage"],
                         "angle_index": angle_index,
                         "cells": cells,
-                        "uniform": uniform,
-                        "learned": learned,
-                        "projection_repairs": repairs,
-                        "reference_cells": qualification["selected_cells"],
-                        "reference_uncertainty_relative": qualification.get(
-                            "reference_uncertainty_relative"
-                        ),
-                        "status": "accepted"
-                        if learned.get("accepted") and uniform.get("accepted")
-                        else "invalid",
+                        "status": qualification.get("status", "reference_not_qualified"),
                     }
                 )
+                continue
+            with np.load(qualification_path.with_suffix(".npz")) as arrays:
+                reference = arrays["complex_far_field"].copy()
+            uniform, _ = evaluate_case(
+                scene,
+                cells,
+                angle,
+                "uniform",
+                campaign_output
+                / "cases"
+                / f"{scene['lineage_id']}_a{angle_index}_n{cells}_uniform",
+                device=device,
+                reference=reference,
+            )
+            heuristic, _ = evaluate_case(
+                scene,
+                cells,
+                angle,
+                "interface",
+                campaign_output
+                / "cases"
+                / f"{scene['lineage_id']}_a{angle_index}_n{cells}_interface",
+                device=device,
+                reference=reference,
+            )
+            if deadline is not None and time.time() >= deadline:
+                rows.append(
+                    {
+                        "scene_id": scene["lineage_id"],
+                        "angle_index": angle_index,
+                        "cells": cells,
+                        "status": "incomplete",
+                    }
+                )
+                continue
+            axes, repairs = predict_axes(
+                model, scene, cells, angle, manifest["frequencies_hz"], device
+            )
+            learned, _ = evaluate_case(
+                scene,
+                cells,
+                angle,
+                "learned",
+                output / "cases" / f"{scene['lineage_id']}_a{angle_index}_n{cells}",
+                device=device,
+                reference=reference,
+                selected_axes=axes,
+            )
+            rows.append(
+                {
+                    "scene_id": scene["lineage_id"],
+                    "family": scene["family"],
+                    "material": scene_material_kind(scene),
+                    "stage": scene["stage"],
+                    "angle_index": angle_index,
+                    "cells": cells,
+                    "uniform": uniform,
+                    "heuristic": heuristic,
+                    "learned": learned,
+                    "projection_repairs": repairs,
+                    "reference_cells": qualification["selected_cells"],
+                    "reference_uncertainty_relative": qualification.get(
+                        "reference_uncertainty_relative"
+                    ),
+                    "status": "accepted"
+                    if learned.get("accepted")
+                    and uniform.get("accepted")
+                    and heuristic.get("accepted")
+                    else "invalid",
+                }
+            )
         atomic_json(
             output / "summary.json",
             {
@@ -214,14 +271,20 @@ def summarize_test(test_summary, campaign_output, destination):
     valid = [row for row in rows if row["status"] == "accepted"]
     grouped = defaultdict(list)
     for row in valid:
-        uniform, learned = row["uniform"], row["learned"]
+        uniform, heuristic, learned = row["uniform"], row["heuristic"], row["learned"]
         improvement = uniform["joint_scattering_loss"] / max(
             learned["joint_scattering_loss"], 1e-30
         )
         grouped[(row["family"], row["material"])].append(improvement)
         row["raw_accuracy_improvement_ratio"] = improvement
+        row["heuristic_raw_accuracy_improvement_ratio"] = uniform["joint_scattering_loss"] / max(
+            heuristic["joint_scattering_loss"], 1e-30
+        )
+        row["cnn_over_heuristic_accuracy_ratio"] = heuristic["joint_scattering_loss"] / max(
+            learned["joint_scattering_loss"], 1e-30
+        )
     material = {}
-    for kind in ("dielectric", "pec"):
+    for kind in sorted({row["material"] for row in valid}):
         subset = [row for row in valid if row["material"] == kind]
         ratios = [row["raw_accuracy_improvement_ratio"] for row in subset]
         material[kind] = {
@@ -231,6 +294,32 @@ def summarize_test(test_summary, campaign_output, destination):
             else None,
             "median_improvement_ratio": float(np.median(ratios)) if ratios else None,
         }
+    cohort_lineages = defaultdict(lambda: defaultdict(list))
+    for row in valid:
+        cohort_lineages[row["stage"]][row["scene_id"]].append(row["raw_accuracy_improvement_ratio"])
+    by_target_cohort = {}
+    for cohort in ("C8", "C9"):
+        scene_ratios = [
+            float(np.median(values)) for values in cohort_lineages[cohort].values() if values
+        ]
+        by_target_cohort[cohort] = {
+            "lineages_with_valid_conditions": len(scene_ratios),
+            "median_per_lineage_improvement_ratio": (
+                float(np.median(scene_ratios)) if scene_ratios else None
+            ),
+            "fraction_of_lineages_improving_at_least_5_percent": (
+                float(np.mean(np.asarray(scene_ratios) >= 1.05)) if scene_ratios else None
+            ),
+        }
+    positive_demonstration = bool(
+        summary["terminal"]
+        and summary["valid_conditions"] == summary["requested_conditions"]
+        and all(
+            by_target_cohort[cohort]["lineages_with_valid_conditions"] > 0
+            and by_target_cohort[cohort]["median_per_lineage_improvement_ratio"] > 1.0
+            for cohort in ("C8", "C9")
+        )
+    )
     savings = {}
     for scene_id in set(row["scene_id"] for row in valid):
         for angle_index in (0, 1):
@@ -248,12 +337,14 @@ def summarize_test(test_summary, campaign_output, destination):
     sensitivity = {}
     for row in valid:
         key = f"{row['family']}/{row['material']}/n{row['cells']}"
-        uniform, learned = row["uniform"], row["learned"]
+        uniform, heuristic, learned = row["uniform"], row["heuristic"], row["learned"]
         curves[key].append(
             {
                 "uniform_complex_error": uniform["complex_relative_l2"],
+                "heuristic_complex_error": heuristic["complex_relative_l2"],
                 "learned_complex_error": learned["complex_relative_l2"],
                 "uniform_width_error": uniform["width_relative_l2"],
+                "heuristic_width_error": heuristic["width_relative_l2"],
                 "learned_width_error": learned["width_relative_l2"],
                 "improvement_ratio": row["raw_accuracy_improvement_ratio"],
                 "reference_uncertainty_relative": row.get("reference_uncertainty_relative"),
@@ -267,7 +358,11 @@ def summarize_test(test_summary, campaign_output, destination):
                     "wall_seconds": record.get("wall_seconds"),
                     "peak_cuda_memory_bytes": record.get("peak_cuda_memory_bytes"),
                 }
-                for method, record in (("uniform", uniform), ("learned", learned))
+                for method, record in (
+                    ("uniform", uniform),
+                    ("heuristic", heuristic),
+                    ("learned", learned),
+                )
             }
         )
         candidates = []
@@ -306,6 +401,7 @@ def summarize_test(test_summary, campaign_output, destination):
         "requested_test_conditions": summary["requested_conditions"],
         "valid_test_conditions": len(valid),
         "by_material": material,
+        "by_target_cohort": by_target_cohort,
         "by_shape_material": {
             f"{family}/{kind}": {
                 "count": len(values),
@@ -319,13 +415,8 @@ def summarize_test(test_summary, campaign_output, destination):
         "teacher_penalty_sensitivity": sensitivity,
         "candidate_status_counts": dict(statuses),
         "reference_status_counts": dict(reference_statuses),
-        "positive_dielectric_gate": bool(
-            summary["terminal"]
-            and summary["valid_conditions"] == summary["requested_conditions"]
-            and material["dielectric"]["count"] > 0
-            and material["dielectric"]["fraction_improved_at_least_5_percent"] >= 0.75
-            and material["dielectric"]["median_improvement_ratio"] >= 1.2
-        ),
+        "positive_demonstration": positive_demonstration,
+        "positive_dielectric_gate": positive_demonstration,
         "rows": rows,
     }
     atomic_json(destination, report)
@@ -356,8 +447,8 @@ def compare_test_models(large_report, small_report, destination):
         "small_test_complete": reports[1]["test_complete"],
         "shared_valid_conditions": len(shared),
         "median_small_to_large_raw_error_ratio": float(np.median(ratios)) if ratios else None,
-        "large_positive_dielectric_gate": reports[0]["positive_dielectric_gate"],
-        "small_positive_dielectric_gate": reports[1]["positive_dielectric_gate"],
+        "large_positive_demonstration": reports[0]["positive_demonstration"],
+        "small_positive_demonstration": reports[1]["positive_demonstration"],
     }
     atomic_json(destination, comparison)
     return comparison
@@ -393,23 +484,29 @@ def render_test_figures(
         scene_id, angle_index, cells = row["scene_id"], row["angle_index"], row["cells"]
         key = f"{scene_id}_a{angle_index}_n{cells}"
         uniform_path = Path(campaign_output) / "cases" / f"{key}_uniform" / "spectra.npz"
+        heuristic_path = Path(campaign_output) / "cases" / f"{key}_interface" / "spectra.npz"
         learned_path = Path(evaluation_output) / "cases" / key / "spectra.npz"
         reference_path = Path(campaign_output) / "qualifications" / f"{scene_id}_a{angle_index}.npz"
-        if not (uniform_path.exists() and learned_path.exists() and reference_path.exists()):
+        if not all(
+            path.exists() for path in (uniform_path, heuristic_path, learned_path, reference_path)
+        ):
             figures.append({"label": label, "condition": key, "status": "spectra_unavailable"})
             continue
         with np.load(uniform_path) as data:
             x_u, y_u, field_u = (data[name].copy() for name in ("x", "y", "complex_far_field"))
+        with np.load(heuristic_path) as data:
+            x_h, y_h, field_h = (data[name].copy() for name in ("x", "y", "complex_far_field"))
         with np.load(learned_path) as data:
             x_l, y_l, field_l = (data[name].copy() for name in ("x", "y", "complex_far_field"))
         with np.load(reference_path) as data:
             field_ref = data["complex_far_field"].copy()
         occupation = rasterize_v2(scenes[scene_id], resolution=256)
         image = occupation[0] + occupation[3]
-        figure, axes = plt.subplots(2, 2, figsize=(11, 8), constrained_layout=True)
+        figure, axes = plt.subplots(2, 3, figsize=(15, 8), constrained_layout=True)
         for axis, x, y, title in (
             (axes[0, 0], x_u, y_u, "Uniform"),
-            (axes[0, 1], x_l, y_l, "Learned"),
+            (axes[0, 1], x_h, y_h, "Fixed interface"),
+            (axes[0, 2], x_l, y_l, "Learned"),
         ):
             axis.imshow(
                 image, origin="lower", extent=(0, 1.2, 0, 1.2), cmap="Greys", vmin=0, vmax=1
@@ -421,12 +518,15 @@ def render_test_figures(
         for field, title, color in (
             (field_ref, "Reference", "black"),
             (field_u, "Uniform", "tab:blue"),
+            (field_h, "Fixed interface", "tab:green"),
             (field_l, "Learned", "tab:orange"),
         ):
             axes[1, 0].plot(angle, 2 * np.pi * abs(field[1]) ** 2, label=title, color=color)
             axes[1, 1].plot(angle, field[1].real, label=title, color=color)
+            axes[1, 2].plot(angle, field[1].imag, label=title, color=color)
         axes[1, 0].set(xlabel="Observation angle (degrees)", ylabel="2D scattering width (m)")
         axes[1, 1].set(xlabel="Observation angle (degrees)", ylabel="Real far field (sqrt(m))")
+        axes[1, 2].set(xlabel="Observation angle (degrees)", ylabel="Imaginary far field (sqrt(m))")
         axes[1, 0].legend()
         figure.suptitle(f"{label}: {scene_id}, incidence {angle_index}, {row['status']}")
         target = destination / f"{label}_{key}.png"

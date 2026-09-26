@@ -13,7 +13,7 @@ import numpy as np
 from .conformal import CutCellPEC
 from .constants import C0, EPS0, MU0, Z0
 from .geometry import average_materials, split_material_objects
-from .observables import Contour, SurfaceDFT
+from .observables import Contour, SurfaceDFT, field_point_stencil, interpolate_field_points
 
 
 def _pml_profile(coordinates, length, thickness, dt):
@@ -51,6 +51,7 @@ def simulate(
     safety=0.9,
     max_steps=200_000,
     pec_mode="conformal",
+    field_sample_points=None,
 ):
     started = perf_counter()
     objects = tuple(objects)
@@ -137,6 +138,22 @@ def simulate(
         raise ValueError("Requested DFT frequencies exceed temporal Nyquist limit")
     if source.frequency * dt >= 0.5:
         raise ValueError("Source carrier exceeds temporal Nyquist limit")
+    point_stencil = (
+        field_point_stencil(grid, field_sample_points) if field_sample_points is not None else None
+    )
+    point_delay = (
+        source.retardation(
+            np.asarray(field_sample_points)[:, 0], np.asarray(field_sample_points)[:, 1]
+        )
+        if field_sample_points is not None
+        else None
+    )
+    point_scattered_dft = (
+        np.zeros((len(monitor.frequencies), len(point_delay)), dtype=np.complex128)
+        if point_delay is not None
+        else None
+    )
+    point_incident_dft = np.zeros_like(point_scattered_dft) if point_delay is not None else None
     peak, tail_peak = 0.0, 0.0
     for n in range(nt):
         if cut_pec:
@@ -170,15 +187,28 @@ def simulate(
         monitor.accumulate(
             ez, hx, hy, electric_time=te, magnetic_time=th, dt=dt, incident=source.pulse(te)
         )
+        if point_stencil is not None:
+            point_ez = interpolate_field_points(ez, point_stencil)
+            point_incident = source.pulse(te - point_delay)
+            point_phase = np.exp(2j * np.pi * monitor.frequencies * te)
+            point_scattered_dft += dt * point_phase[:, None] * point_ez[None, :]
+            point_incident_dft += dt * point_phase[:, None] * point_incident[None, :]
         maximum = float(np.max(abs(ez)))
         peak = max(peak, maximum)
         if n >= int(0.9 * nt):
             tail_peak = max(tail_peak, maximum)
         if not np.isfinite(maximum) or maximum > 1e8:
             raise RuntimeError("Scattered field became nonfinite or exceeded the amplitude limit")
+    fields = dict(Ez=ez, Hx=hx, Hy=hy)
+    if point_scattered_dft is not None:
+        fields.update(
+            Ez_point_scattered_dft=point_scattered_dft,
+            Ez_point_incident_dft=point_incident_dft,
+            field_sample_points=np.asarray(field_sample_points, dtype=float),
+        )
     return SimulationResult(
         monitor,
-        dict(Ez=ez, Hx=hx, Hy=hy),
+        fields,
         dict(
             **grid.diagnostics(),
             backend="numpy_reference",

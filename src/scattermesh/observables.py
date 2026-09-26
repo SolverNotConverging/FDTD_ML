@@ -10,6 +10,38 @@ import numpy as np
 from .constants import C0, MU0
 
 
+def field_point_stencil(grid, points):
+    """Return bilinear interpolation stencils for fixed physical field points."""
+    points = np.asarray(points, dtype=float)
+    if (
+        points.ndim != 2
+        or points.shape[1] != 2
+        or not len(points)
+        or not np.isfinite(points).all()
+        or np.any(points[:, 0] < grid.x[0])
+        or np.any(points[:, 0] > grid.x[-1])
+        or np.any(points[:, 1] < grid.y[0])
+        or np.any(points[:, 1] > grid.y[-1])
+    ):
+        raise ValueError("Field sample points must be finite [point, x/y] coordinates in the grid")
+    i0 = np.clip(np.searchsorted(grid.x, points[:, 0], side="right") - 1, 0, len(grid.x) - 2)
+    j0 = np.clip(np.searchsorted(grid.y, points[:, 1], side="right") - 1, 0, len(grid.y) - 2)
+    wx = (points[:, 0] - grid.x[i0]) / (grid.x[i0 + 1] - grid.x[i0])
+    wy = (points[:, 1] - grid.y[j0]) / (grid.y[j0 + 1] - grid.y[j0])
+    return i0, j0, wx, wy
+
+
+def interpolate_field_points(values, stencil):
+    """Bilinearly interpolate an x/y nodal field using a prepared stencil."""
+    i0, j0, wx, wy = stencil
+    return (
+        values[i0, j0] * (1 - wx) * (1 - wy)
+        + values[i0 + 1, j0] * wx * (1 - wy)
+        + values[i0, j0 + 1] * (1 - wx) * wy
+        + values[i0 + 1, j0 + 1] * wx * wy
+    )
+
+
 class Contour:
     """Closed rectangle on existing mesh nodes; does not insert mesh lines."""
 

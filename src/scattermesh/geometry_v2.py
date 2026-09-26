@@ -182,6 +182,121 @@ class Polygon:
         return _merge_intervals(list(zip(crossings[::2], crossings[1::2])) + boundary_segments)
 
 
+@dataclass(frozen=True)
+class PolygonWithHoles:
+    """One material region bounded by an outer polygon and void rings."""
+
+    outer: Polygon
+    holes: tuple[Polygon, ...]
+    material: Material | PEC
+
+    def __post_init__(self):
+        if not isinstance(self.outer, Polygon) or not self.holes:
+            raise ValueError("PolygonWithHoles requires an outer ring and at least one hole")
+        _valid_material(self.material)
+        if self.outer.material != self.material:
+            raise ValueError("All rings must carry the parent material definition")
+        for index, hole in enumerate(self.holes):
+            if not isinstance(hole, Polygon):
+                raise ValueError("Every hole must be a valid polygon ring")
+            if hole.material != self.material:
+                raise ValueError("All rings must carry the parent material definition")
+            if any(not self.outer.contains(x, y) for x, y in hole.vertices):
+                raise ValueError("Every hole vertex must lie inside the outer ring")
+            if _rings_intersect(self.outer.vertices, hole.vertices):
+                raise ValueError("A hole ring must not touch or intersect the outer ring")
+            for previous in self.holes[:index]:
+                if _rings_intersect(previous.vertices, hole.vertices):
+                    raise ValueError("Hole rings must not touch or intersect")
+                if previous.contains(*hole.vertices[0]) or hole.contains(*previous.vertices[0]):
+                    raise ValueError("Hole rings must not nest")
+
+    @property
+    def bounds(self):
+        return self.outer.bounds
+
+    @property
+    def rings(self):
+        return (self.outer, *self.holes)
+
+    @property
+    def minimum_feature_size(self):
+        """Conservative minimum of hole span and boundary-to-boundary thickness."""
+        hole_spans = [
+            min(hole.bounds[1] - hole.bounds[0], hole.bounds[3] - hole.bounds[2])
+            for hole in self.holes
+        ]
+        ring_pairs = [(self.outer, hole) for hole in self.holes]
+        ring_pairs.extend(
+            (self.holes[i], self.holes[j])
+            for i in range(len(self.holes))
+            for j in range(i + 1, len(self.holes))
+        )
+        gaps = []
+        for left, right in ring_pairs:
+            a, b = np.asarray(left.vertices), np.asarray(right.vertices)
+            for points, edges in ((a, b), (b, a)):
+                for point in points:
+                    for start, end in zip(edges, np.roll(edges, -1, axis=0)):
+                        direction = end - start
+                        fraction = np.clip(
+                            (point - start) @ direction / (direction @ direction), 0, 1
+                        )
+                        gaps.append(float(np.linalg.norm(point - (start + fraction * direction))))
+        return min((*hole_spans, *gaps))
+
+    def contains(self, x, y):
+        inside = self.outer.contains(x, y)
+        for hole in self.holes:
+            inside &= ~hole.contains(x, y)
+        return inside
+
+    def line_intervals(self, coordinate, axis, tolerance=0.0):
+        intervals = self.outer.line_intervals(coordinate, axis, tolerance)
+        for hole in self.holes:
+            cuts = hole.line_intervals(coordinate, axis, tolerance)
+            remaining = []
+            for left, right in intervals:
+                fragments = [(left, right)]
+                for cut_left, cut_right in cuts:
+                    next_fragments = []
+                    for low, high in fragments:
+                        if cut_right <= low or cut_left >= high:
+                            next_fragments.append((low, high))
+                        else:
+                            if low < cut_left:
+                                next_fragments.append((low, min(high, cut_left)))
+                            if cut_right < high:
+                                next_fragments.append((max(low, cut_right), high))
+                    fragments = next_fragments
+                remaining.extend(fragments)
+            intervals = remaining
+        return _merge_intervals(intervals, tolerance=max(1e-12, tolerance))
+
+
+def _rings_intersect(left, right):
+    """Closed-ring intersection check including endpoint and collinear contact."""
+    first_ring, second_ring = np.asarray(left, dtype=float), np.asarray(right, dtype=float)
+    for a, b in zip(first_ring, np.roll(first_ring, -1, axis=0)):
+        ab = b - a
+        for c, d in zip(second_ring, np.roll(second_ring, -1, axis=0)):
+            cd = d - c
+            denominator = _cross2(ab, cd)
+            offset = c - a
+            if abs(denominator) <= 1e-14:
+                if abs(_cross2(offset, ab)) <= 1e-14:
+                    projection = (c - a) @ ab / (ab @ ab)
+                    other = (d - a) @ ab / (ab @ ab)
+                    if max(min(projection, other), 0.0) <= min(max(projection, other), 1.0):
+                        return True
+                continue
+            t = _cross2(offset, cd) / denominator
+            u = _cross2(offset, ab) / denominator
+            if -1e-12 <= t <= 1 + 1e-12 and -1e-12 <= u <= 1 + 1e-12:
+                return True
+    return False
+
+
 def oriented_rectangle(center, width, height, angle, material):
     """Construct a rotated rectangle as an exact four-edge polygon."""
     center = _finite_pair(center, "center")

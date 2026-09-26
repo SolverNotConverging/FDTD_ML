@@ -1,0 +1,21 @@
+{
+  "reason": "Preserve the previous compact-pilot plan before the user-requested C0 sparse curriculum restart.",
+  "files": [
+    {
+      "path": "IMPLEMENTATION_PLAN.md",
+      "sha256": "f8e578e4bdc00405746f58d3be3a1d73528790f1ebabb9110cd5938e90ecede4"
+    },
+    {
+      "path": "README.md",
+      "sha256": "138fc2e6c5746e03c6fb4c8e0de2a4788a79817adcc38995e01adb9f3f3cf5a0"
+    },
+    {
+      "path": "PROGRESS.md",
+      "sha256": "3ed6c2a68fd62375d9729e59a4da80851d65df844efc38574c08e77de1e27945"
+    },
+    {
+      "path": "docs/v2_pilot.md",
+      "sha256": "8898a50684773ae8c2e519dad63b048302f48b9f9841dd210b6d486fc53758d7"
+    }
+  ]
+}

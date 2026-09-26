@@ -1,10 +1,8 @@
-"""PyTorch CUDA backend for TMz scattering and streaming surface DFT.
+"""Compiled CUDA FDTD entry point with a legacy Torch parity/benchmark path.
 
-The numerical equations match ``solver.simulate``. Geometry averaging remains a
-one-time CPU preprocessing step; fields, CPML state, analytic source evaluation,
-and DFT accumulation stay on the selected Torch device during time stepping.
-PEC intersection geometry remains one-time CPU preprocessing. Cut-edge gradients,
-total-field constraints, and projected cell-enlargement transfers run on device.
+Production CUDA calls dispatch to the Cython-bound persistent device kernel in
+``compiled_cuda``. The Torch implementation below is retained only for CPU
+regression checks and the archived same-GPU speed comparison.
 """
 
 from time import perf_counter
@@ -14,7 +12,7 @@ import numpy as np
 from .conformal import CutCellPEC
 from .constants import C0, EPS0, MU0
 from .geometry import average_materials, split_material_objects
-from .observables import Contour, SurfaceDFT
+from .observables import Contour, SurfaceDFT, field_point_stencil
 from .solver import SimulationResult, _pml_profile
 
 
@@ -154,14 +152,39 @@ def simulate_cuda(
     phase_reanchor_interval=2048,
     check_interval=256,
     pec_mode="conformal",
+    field_sample_points=None,
+    backend="compiled",
 ):
-    """Run the scattered-field solver on a Torch device.
+    """Run the scattered-field solver on the compiled CUDA or legacy Torch CPU path.
 
     ``device="cpu"`` exists for deterministic backend-equivalence tests. CUDA
     production checks should use float64 first; float32 requires separate error
     qualification. DFT phase recurrence is reset to the analytic phase at the
     declared interval to bound accumulated rotation error.
     """
+    if backend not in ("compiled", "torch"):
+        raise ValueError("CUDA backend must be compiled or torch")
+    if str(device).startswith("cuda") and backend == "compiled":
+        from .compiled_cuda import simulate_compiled_cuda
+
+        return simulate_compiled_cuda(
+            grid,
+            objects,
+            source,
+            frequencies=frequencies,
+            duration=duration,
+            pml_thickness=pml_thickness,
+            monitor_bounds=monitor_bounds,
+            samples=samples,
+            safety=safety,
+            max_steps=max_steps,
+            device=device,
+            dtype=dtype,
+            phase_reanchor_interval=phase_reanchor_interval,
+            check_interval=check_interval,
+            pec_mode=pec_mode,
+            field_sample_points=field_sample_points,
+        )
     torch = _torch_module()
     if dtype not in ("float32", "float64"):
         raise ValueError("dtype must be float32 or float64")
@@ -288,6 +311,22 @@ def simulate_cuda(
     magnetic_dft = torch.zeros_like(electric_dft)
     incident_dft = torch.zeros(len(frequencies), device=device, dtype=complex_dtype)
     incident_l1 = torch.zeros((), device=device, dtype=real_dtype)
+    point_stencil = (
+        field_point_stencil(grid, field_sample_points) if field_sample_points is not None else None
+    )
+    if point_stencil is not None:
+        point_i0 = torch.as_tensor(point_stencil[0], device=device, dtype=torch.long)
+        point_j0 = torch.as_tensor(point_stencil[1], device=device, dtype=torch.long)
+        point_wx = tensor(point_stencil[2])
+        point_wy = tensor(point_stencil[3])
+        points = np.asarray(field_sample_points, dtype=float)
+        point_delay = tensor(source.retardation(points[:, 0], points[:, 1]))
+        point_scattered_dft = torch.zeros(
+            (len(frequencies), len(points)), device=device, dtype=complex_dtype
+        )
+        point_incident_dft = torch.zeros_like(point_scattered_dft)
+    else:
+        point_scattered_dft = point_incident_dft = None
     peak = torch.zeros((), device=device, dtype=real_dtype)
     tail_peak = torch.zeros((), device=device, dtype=real_dtype)
     interior = np.s_[1:-1, 1:-1]
@@ -330,6 +369,16 @@ def simulate_cuda(
             incident_origin = incident_at_origin[n]
             incident_dft.add_(dt * phase_e * incident_origin)
             incident_l1.add_(dt * abs(incident_origin))
+            if point_stencil is not None:
+                point_ez = (
+                    ez[point_i0, point_j0] * (1 - point_wx) * (1 - point_wy)
+                    + ez[point_i0 + 1, point_j0] * point_wx * (1 - point_wy)
+                    + ez[point_i0, point_j0 + 1] * (1 - point_wx) * point_wy
+                    + ez[point_i0 + 1, point_j0 + 1] * point_wx * point_wy
+                )
+                point_incident = _pulse(torch, te - point_delay, source)
+                point_scattered_dft.add_(dt * phase_e[:, None] * point_ez[None, :])
+                point_incident_dft.add_(dt * phase_e[:, None] * point_incident[None, :])
             maximum = torch.max(torch.abs(ez))
             peak = torch.maximum(peak, maximum)
             if n >= int(0.9 * nt):
@@ -357,6 +406,12 @@ def simulate_cuda(
     monitor.incident = incident_dft.cpu().numpy()
     monitor.incident_l1 = float(incident_l1.item())
     fields = dict(Ez=ez.cpu().numpy(), Hx=hx.cpu().numpy(), Hy=hy.cpu().numpy())
+    if point_stencil is not None:
+        fields.update(
+            Ez_point_scattered_dft=point_scattered_dft.cpu().numpy(),
+            Ez_point_incident_dft=point_incident_dft.cpu().numpy(),
+            field_sample_points=np.asarray(field_sample_points, dtype=float),
+        )
     peak_value, tail_value = float(peak.item()), float(tail_peak.item())
     diagnostics = dict(
         **grid.diagnostics(),

@@ -1,113 +1,65 @@
-# Mesh-CNN v2: first demonstration protocol
+# First resumed experiment: C0 optimized-teacher calibration
 
-Updated 23 September 2026. This document specifies the compact first experiment within the [project-wide C0–C9 implementation plan](../IMPLEMENTATION_PLAN.md). Later stages have their own instructions in that plan. The protocol below is the implementation target; the current single-object campaign does not yet execute it.
+Revised 23 September 2026. C0 calibration and the first corrected acquisition batch are complete under `runs_v2/c0_restart/acquisition_002`; large-CNN training is active. This file specifies the first experiment in the [C0–C9 resolution-demand curriculum](../IMPLEMENTATION_PLAN.md). The former compact C8/C9 pilot protocol is preserved in `archive/plan_revisions/2026-09-23_before_sparse_curriculum_restart/docs/v2_pilot.md`.
 
-## Purpose and scope
+## Purpose
 
-Demonstrate learned nonuniform meshing on held-out individual silhouettes and distributed scenes with actual 2D TMz conformal FDTD results. Use C0–C2 foundation geometries and ordinary C3/C5 separated objects for training. Include bounded C8/C9 tests in this first experiment. Subsequent C4/C6/C7 work expands small-gap, topology, and multiscale capability.
+Establish that optimized teachers provide useful, numerically resolved mesh targets across shape, position, scale, and material, then train the first C0 CNN. The result must supply manuscript evidence for the learning mechanism and establish realistic costs for the expanded curriculum.
 
-Use simplified aircraft-like, ship-like, and vehicle-like outlines at modest electrical sizes. The initial physical setting is the existing 1.2 m square with 0.8/1.0/1.2 GHz observations. The core material study starts with lossless dielectric relative permittivities 2 and 4. Qualified historical data can retain their recorded broader material range. Lossy and PEC cases are separately declared extensions or supplements; a fixed 25% PEC quota is not required.
+Use the existing 2D TMz physics, 1.2 m square domain, 0.8/1.0/1.2 GHz observations, and compiled CUDA time loop. All new FDTD work uses the compiled kernel; CPU/Torch solvers are only numerical regression references.
 
-Define resolvable feature, gap, material, and boundary-clearance ranges during development calibration. Continuous geometry is authoritative. Preserve explicit rejection of incompatible PEC split edges and keep the geometry fixed across mesh methods. Freeze the scope and list every requested final condition before evaluation.
+## Step 1: balanced calibration
 
-## Development and frozen splits
+The first frozen calibration manifest has 18 independent circles, axis-aligned ellipses, and rectangles and 36 budget/angle conditions. It spans varied positions and scales, lossless epsilon_r 2/4/8/12, one prescribed lossy material class, and PEC. Inspect its actual area and projection distributions before claiming that all proposed strata have been covered. This panel is developmental and never part of final test claims.
 
-First use six to eight development cases spanning primitives, silhouettes, and separated objects. Measure whether nonuniform teacher meshes offer gains, whether the numerical references can resolve those gains, and what the full simulation costs are. Development silhouettes have different source templates from the target tests.
+Record union area, x/y projection coverage, physical/electrical feature sizes, and clearances. Occupied-area bins describe the first free-space primitive panel; they are not the project's definition of sparsity or an exclusion rule for dense material. Develop resolution-demand maps and entropy/effective-support descriptors, with spatial/interface and x/y demand diagnostics, as specified in the main plan. Correlate them with measured teacher gains before using them as acquisition gates. Include uniform-demand controls. Dense heterogeneous hosts follow region-partition qualification, and true non-vacuum domain backgrounds require consistent source/PML/far-field support.
 
-The starting corpus design is:
+Sample the legal domain interior. Respect source/monitor/PML constraints without moving geometry differently for different meshes.
 
-| Set | Starting size | Conditions and use |
-|---|---|---|
-| Historical training | 1,104 imported examples | Start with 25% of training draws; training provenance only |
-| New training | Approximately 64 lineages | One sampled incidence angle and two sampled budgets per lineage; up to six teachers per condition |
-| Validation | Approximately 16 separate lineages | Compact conditions fixed before training; profile validation and FDTD checkpoint selection |
-| Target silhouettes | 12 scenes | Held-out templates; four budgets and two incidence angles |
-| Target distributed scenes | 12 scenes, initially 2–6 objects | Held-out templates/layouts; four budgets and two incidence angles |
+Use analytic circle references after solver checks. For other shapes, compare successive uniform resolutions and probe independent duration, quadrature, contour, and PML sensitivities. Start with a target of at most 0.5% complex-field and 1% width variation for reference refinement; freeze actual tolerances from calibration and the gains to be resolved. These empirical differences are not certified error bounds.
 
-Use 32/48/64/96 cells per axis. Distribute sampled training budgets and angles across the intended conditioning range. The starting teacher allocation is at most 768 new training candidate simulations; reference, calibration, validation, and test work is additional. Select the validation condition count using measured costs before freezing the campaign.
+The initial settling ladder is 70/140/560 ns with finite fields and tail below `1e-5`. A longer ceiling may be proposed during calibration but must be frozen before acquisition. Separate settling, spatial nonconvergence, geometry incompatibility, and budget exhaustion.
 
-Group all transformations of a source shape and all related layout derivatives within a split. Reused test templates across scenes remain statistically grouped. Record unique template/lineage counts as well as scene counts. Final test geometry may be defined in advance, but test physics, teacher rankings, and model results must not guide training or protocol selection. State exactly whether the held-out distinction concerns templates, construction families, arrangements, or a combination.
+Keep settled lossless high-epsilon conditions. A failing candidate is rejected without changing material. If the original physical condition remains unsettled at the declared maximum duration, preserve its failure and optionally define a separate lossy variant with the same geometry ancestry and split. Record sigma, loss tangent at its reference frequency, and why the variant exists. Recompute its reference and baselines. Prescribed loss is allowed as its own physical input and is not this convergence fallback.
 
-## Scene representation and metrics
+## Step 2: teacher-search calibration
 
-Introduce a versioned scene schema with an object collection, materials, illumination, exact requested cell counts, lineage, and provenance. Adapt historical single-object samples explicitly. The same collection drives solver material/intersection queries, rasterization, candidate generation, and monitor enclosure.
+Optimize each complete geometry/material/illumination/budget condition independently. Begin with the current 12-parameter positive smooth-density search, seeded by uniform and existing geometry policies. Add material-aware seed information as implementation work.
 
-Generalize the nine maps and conditioning: union geometry and material fields, signed-distance/boundary information, a useful inter-object proximity map, x/y coordinates, object count, material descriptors, feature sizes, and support metrics. Finalize and record feature definitions before training. Recheck memory if encoding changes.
+Compare search budgets of 96, 192, and 384 FDTD evaluations on the development panel. Measure raw accuracy improvement, score improvement, rejection rate, target diversity, and wall time versus evaluation count. Use multiple seeds on a representative subset to estimate search variability. The output is the best mesh found within the tested search, not a certified global optimum.
 
-For each scene record:
-
-- Occupied union area, divided by domain area.
-- Union length of object projections on x and on y, divided by the corresponding domain extent.
-- Overall bounding-box extent, minimum separation, smallest represented feature, and object count.
-- Material composition, electrical size, and clearances to the PML and observation contour.
-
-Union projection coverage and bounding-box extent are distinct. A scattered collection can have a large overall extent but gaps in its axis projections. Compare compact, aligned, and dispersed layouts at similar occupied area; tensor-product refinement affects whole grid lines, so area sparsity alone does not establish a cell-saving advantage. Replace the single-object 35% support cap with declared scene ranges suitable for these comparisons.
-
-## Teachers and comparison methods
-
-Use up to six candidate meshes per training condition: uniform, three geometry policies, and two deterministic seeded perturbations. Policies must account for all objects and actual boundaries/features. Retain every valid profile and its physics score, rather than saving only the winning mesh. Extra local search is a bounded development diagnostic, not a default requirement on every scene.
-
-Keep the scoring contract:
+Project every trial to exact cell counts, positive widths, and adjacent ratios at most 3. Preserve continuous boundaries and record repairs. Score accepted fields with:
 
 ```text
 L_accuracy = L_complex + 0.25 L_width
 J = L_accuracy * (dt_uniform / dt_candidate)^0.05
 ```
 
-Here `L_complex` is the existing normalized complex-field term and `L_width` the existing floored log-scattering-width term. The uniform time step comes from the same scene and spatial budget. Candidate axes, raw spectra, errors, settling status, projection repairs, time step, runtime, memory, and provenance are retained. Exponents 0, 0.02, 0.05, and 0.1 can be compared by re-scoring saved results.
+Save all axes, raw spectra, physical errors, dt, attempts, costs, statuses, and provenance. Keep distinct good alternatives and uniform controls. Re-score dt exponents 0/0.02/0.05/0.1 from saved results. Resolve apparent gains against available reference variants; exclude unsettled, incomplete, incompatible, or unresolved labels.
 
-The final comparison is uniform versus a fixed geometry-based policy versus the frozen CNN. Select the heuristic rule and parameters on development/validation data, then freeze them. Choosing the best heuristic separately using each test reference would be an oracle search; label such an additional diagnostic explicitly and do not present it as a fixed mesh generator. Final tests need no full teacher search.
+Before unattended acquisition, verify optimizer resume, including failed trials, deadline interruption, target promotion, and dataset masks. The existing worker smoke verifies one ordinary condition only.
 
-Exact spatial budgets, domain, geometry, material, incidence, frequencies, and reference fields must match across methods. Report direct CNN meshes, deterministic grading repairs, and any fallback separately. Uniform-winning and failed predictions remain visible.
+## Step 3: C0 acquisition and training
 
-## Calibrated reference protocol
+The proposed C0 target is 512 independent geometry lineages: approximately 384 training, 64 validation, and 64 test. Acquire balanced 128–256-lineage batches, subject to measured cost. Keep all transformations and material descendants within one split.
 
-The goal is to distinguish physical mesh improvements from numerical uncertainty at affordable cost. The earlier mandatory per-condition 192/256/384/512 sweep and four independent probes are superseded as an experimental requirement, but remain in current code until changed.
+Start with 4–8 sampled physical conditions per train/validation lineage, balanced over material, two incidence angles, and four cell budgets. Full controlled sweeps belong to separate development panels. Every sampled train/validation condition receives teacher optimization. With 448 train/validation lineages, this means about 1,792–3,584 optimized conditions before any extra development work; it is substantially larger than the old compact experiment and needs a new measured forecast.
 
-1. **Calibration set:** check circle results against analytic fields and use representative polygon, silhouette, and multi-object development scenes to assess spatial resolution, simulation duration, PML thickness, contour placement, and material quadrature independently. Declare the supported geometry/material range.
-2. **Routine references:** use the analytic solution for supported isolated circles after calibration. For other shapes, compare successive uniform resolutions, starting at 128/192 and escalating to 256 or higher when necessary. A selected resolution must be justified by measured variation; none of these levels is automatically a reference.
-3. **Settling and duration:** retain the existing field-tail threshold `1e-5` initially. Verify duration sensitivity for calibrated regimes and repeat it for long-lived or suspicious cases. A small field tail does not prove spatial accuracy, and backend agreement does not prove convergence.
-4. **Teacher uncertainty:** evaluate candidate scores against the available reference variants. Preserve alternatives whose ordering cannot be resolved. Require additional refinement or exclude a label when the evidence cannot support its physical ranking; uniform remains a valid outcome.
-5. **Final conclusions:** recompute reported errors using the accepted reference variants. Count an improvement or threshold crossing as resolved only when the conclusion survives those variations under the frozen protocol. Otherwise report an uncertainty range or an unresolved result and escalate selectively if the budget allows.
+Train the existing large residual U-Net from fresh weights. Start with AdamW at `3e-4`, weight decay `1e-4`, FP16, and effective batch 32; recheck microbatch memory. Propose up to 80 C0 epochs with validation patience 15, finalized after learning-curve calibration. Historical data can be a qualified subset of training draws, with no historical validation/test leakage.
 
-Before bulk launch, store numeric tolerances for spatial/duration/probe variation, duration and step limits, escalation/cost caps, and the rule for unresolved comparisons. The tolerance selection uses development evidence and the effects the experiment aims to measure. Reference variation is an empirical uncertainty estimate, not a certified error bound. Do not loosen thresholds after seeing target results.
+Use profile validation followed by validation FDTD for the three best checkpoints, freeze one, then open the C0 test. C1 and later stages continue cumulatively from the selected checkpoint with balanced replay. The expanded scheduler remains planned work; current launch commands implement the superseded schedule.
 
-Cases outside the calibrated range require fresh qualification or an explicit out-of-scope status. Do not silently replace difficult frozen test scenes with easier ones. Retain numerical fingerprints independently from model and scoring versions so changing the CNN or time-step exponent does not unnecessarily discard physical results.
+## Required C0 results
 
-## Model and selection
+- Learning curves and optimization progress versus FDTD calls.
+- Uniform, fixed heuristic, optimized teacher, and CNN meshes/fields on paired shape, material, position, and size examples.
+- Raw complex-field and width errors versus cell budget; minimum tested counts meeting both 2%, 5%, and 10% targets, including unmet thresholds.
+- CNN-to-teacher accuracy gap, uniform-winning cases, uncertainty-sensitive rankings, and all failure statuses.
+- Cell savings versus demand concentration/entropy, absolute demand, interface/feature scales, occupied area and x/y coverage; dt, update count, runtime, memory, teacher-search cost, and CNN inference cost.
+- A frozen validation panel to track forgetting through C1/C2 and a separate untouched final silhouette/scene design.
 
-Retain the current large residual U-Net with widths 64/128/256/512/512, GroupNorm, SiLU, bottleneck conditioning, and eight-head attention. It currently has 26,850,497 parameters. Nine 512×512 raster inputs describe the geometry; FDTD budget and raster resolution are independent. Output densities are projected to exact cell counts, positive spacings, and adjacent ratios no greater than 3, with repair fractions recorded.
+Before scaling acquisition, require usable qualified teachers across the declared strata, teacher gains that survive reference variation where gains are claimed, and a feasible measured batch forecast. Weak teacher gains call for improving search or revisiting the physical regime; they do not justify deleting uniform-winning conditions.
 
-Use set-valued profile distillation, AdamW at `3e-4`, weight decay `1e-4`, FP16, and effective batch 32. The existing memory probe selected microbatch 8 at 16.16 GiB for the current encoding; remeasure if inputs change. Start with 10 foundation warm-up epochs and up to 50 cumulative epochs including ordinary multi-object scenes, with patience 10 in the cumulative phase. Finalize this schedule from development profiling.
+## Execution state
 
-Evaluate the three best profile checkpoints using the frozen validation FDTD conditions and raw physical accuracy. Freeze the selected checkpoint and heuristic before running target evaluations. The 1,683,761-parameter small model is a later ablation under the same data and split rules. A single training seed supports a bounded initial demonstration; repeated seeds strengthen later claims.
-
-## Execution and reporting
-
-Retain a 24-hour upper limit for the first revised automated campaign once implementation and calibration are ready. Profile the full proposed workload and reserve time for target evaluation and reporting. Allocate phase deadlines from measured costs, replacing the old fixed 14-hour data gate. Record calibration cost separately. Four GPUs can run independent FDTD jobs; the main CNN trains after data readiness. Further stage campaigns receive their own explicit finite budgets.
-
-If the proposed size does not fit, reduce new training/search work before freezing the workload while preserving both target cohorts. Save optimizer/RNG state and incomplete case records at deadlines. Unconverged and incomplete outputs cannot become training labels. No revised runtime projection or completion promise is available yet.
-
-Required outputs are:
-
-- Raw complex-field and scattering-width error versus cells for all three methods, with both target cohorts reported separately.
-- Minimum tested total cells satisfying both 5% and 10% error targets, and optionally 2% where reference sensitivity permits. Use `Nx × Ny` for savings; mark unmet or unresolved targets explicitly.
-- Same-budget improvement, error/threshold sensitivity to reference variants, valid coverage, and results grouped by source lineage, material, and spatial arrangement. Do not treat angles, budgets, or related layouts as independent shape samples.
-- Representative meshes and scattering curves, including weak/negative results and failures; savings versus union axis coverage and scene spread.
-- Time step, update count, runtime, memory, and inference time. Report training and teacher-search cost separately from amortized mesh generation.
-- Counts for incompatible, unsettled, reference-unresolved, budget-limited, and incomplete cases; PEC supplement and model-size ablation when available.
-
-A successful first demonstration shows repeatable, reference-resolved gains on held-out examples in both the silhouette and distributed cohorts, with the full frozen suite disclosed. Report medians, coverage, and individual outcomes without a universal success claim from selected examples. The former 75%/1.2× C0–C2 gate is superseded. If the CNN matches the fixed heuristic without improving physical accuracy, frame the result as learning to automate useful mesh construction and quantify any generation-cost advantage. Broader accuracy claims require supporting evidence.
-
-## Implementation checklist
-
-- [ ] Multiple-object schema and single-object legacy adapter; shared continuous geometry across all paths.
-- [ ] Scene raster/conditioning, boundary-aware candidates, support metrics, and whole-scene monitor checks.
-- [ ] Configurable corpus counts, grouped splits, per-split angles/budgets, candidate sets, and phase deadlines.
-- [ ] Calibrated adaptive references, ambiguous-teacher handling, and final reference-sensitivity reporting.
-- [ ] Fixed heuristic baseline alongside uniform and CNN; optional small-model orchestration.
-- [ ] Development-case results and measured compact workload; frozen numerical protocol and target manifest.
-- [ ] Cumulative multi-object training, validation FDTD selection, and frozen target evaluation.
-- [ ] Complete report with uncertainty, coverage, failures, and provenance.
-
-These are changes to the existing framework, not completed features. The current `scripts/run_mesh_cnn_v2.py launch` still executes the superseded C0–C2 logic. Use [PROGRESS.md](../PROGRESS.md) for implementation state and the [project-wide plan](../IMPLEMENTATION_PLAN.md) for later-stage work. Existing evidence under `runs_v2/profile_c0_c2/` and `runs_v2/c0_c2_pilot/` remains provenance for the earlier design.
+The user resumed execution on 23 September 2026. The first calibration qualified 6/18 references at a 0.5%/1% spatial threshold. The extended 1%/2% policy through 768 cells qualified 14/18; three scenes were unsettled and one remained spatially unresolved. Independent duration, quadrature, contour, and PML controls passed for representative dielectric circle, dielectric ellipse, and PEC circle references. Four compiled CUDA workers completed the corrected 128-lineage batch. It yielded 68 qualified training and 10 qualified validation lineages, with 262 and 39 examples respectively; the 16 test lineages remain untouched. The first split manifest was aborted because validation/test materials were imbalanced and contributed no CNN labels. Fresh large-CNN training is active with saved checkpoints. A validation watcher will evaluate the three best checkpoints on the 39 qualified validation conditions, then freeze one only if all three evaluations are complete. The old 2.92-hour compact forecast does not apply to this protocol.

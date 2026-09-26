@@ -1,4 +1,5 @@
 .venv/
+.venv-bootstrap/
 .uv-cache/
 __pycache__/
 .pytest_cache/
@@ -8,6 +9,8 @@ dist/
 *.egg-info/
 *.pyd
 *.so
+src/scattermesh/_cuda_fdtd.cpp
+src/scattermesh/_cuda_fdtd_build.json
 *.obj
 artifacts/
 archive/**/artifacts/
@@ -17,4 +20,13 @@ archive/**/src/*.egg-info/
 runs/
 runs_v2/
 *.pt
+*.pth
+*.ckpt
+*.safetensors
+*.npy
+*.npz
+*.h5
+*.hdf5
+*.parquet
+*.zarr/
 .idea/

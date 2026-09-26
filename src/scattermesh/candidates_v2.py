@@ -1,4 +1,4 @@
-"""Bounded exact-budget teacher mesh policies for the C0--C2 pilot."""
+"""Bounded exact-budget geometry-aware mesh policies for curriculum scenes."""
 
 import hashlib
 
@@ -54,33 +54,41 @@ def candidate_axes(scene, cells, name, *, selected_axes=None, domain=DOMAIN):
         return axis.copy(), axis.copy(), (0.0, 0.0)
     metrics = scene_metrics(scene, domain=domain)
     a, b, c, d = metrics["bounds_m"]
+    projection_intervals = metrics["projection_intervals"]
+    boundary_coordinates = metrics["boundary_coordinates"]
     coordinate = (np.arange(512) + 0.5) * domain / 512
     results, repairs = [], []
-    for axis, (low, high) in enumerate(((a, b), (c, d))):
+    for axis, intervals in enumerate(projection_intervals):
+        low, high = (a, b) if axis == 0 else (c, d)
         center = (low + high) / 2
         extent = high - low
         fine = max(0.12 * extent, 1.5 * domain / 512)
         wide = max(0.55 * extent, fine)
         rho = np.ones_like(coordinate)
         if name in {"center", "hybrid"}:
-            rho += 1.4 * _bump(coordinate, center, 0.35 * extent)
+            for left, right in intervals:
+                rho += 1.4 * _bump(coordinate, (left + right) / 2, max(0.35 * (right - left), fine))
         if name in {"interface", "hybrid"}:
-            rho += 1.1 * (_bump(coordinate, low, fine) + _bump(coordinate, high, fine))
+            local_width = max(0.15 * min(metrics["feature_size_m"], extent), 1.5 * domain / 512)
+            for boundary in boundary_coordinates[axis]:
+                rho += 1.1 * _bump(coordinate, boundary, local_width)
         if name == "wide":
             rho += 1.0 * _bump(coordinate, center, wide)
         if name.startswith("smooth_"):
             rng = np.random.default_rng(_seed(scene["lineage_id"], cells, name, axis))
             for _ in range(3):
-                focal = center + rng.uniform(-0.65, 0.65) * extent
-                width = extent * rng.uniform(0.12, 0.75)
+                left, right = intervals[int(rng.integers(len(intervals)))]
+                focal = rng.uniform(left, right)
+                width = max((right - left) * rng.uniform(0.12, 0.75), fine)
                 rho += rng.uniform(0.25, 2.0) * _bump(coordinate, focal, width)
         if name.startswith("refine_"):
             if selected_axes is None:
                 raise ValueError("Local refinement requires a selected feasible candidate")
             rho = axis_probability(selected_axes[axis], 512, length=domain) * 512
             rng = np.random.default_rng(_seed(scene["lineage_id"], cells, name, axis))
-            focal = center + rng.uniform(-0.5, 0.5) * extent
-            width = extent * rng.uniform(0.1, 0.4)
+            left, right = intervals[int(rng.integers(len(intervals)))]
+            focal = rng.uniform(left, right)
+            width = max((right - left) * rng.uniform(0.1, 0.4), fine)
             rho *= 1 + 0.35 * _bump(coordinate, focal, width)
         nodes, repair = probability_axis(rho, cells, length=domain, max_ratio=3.0)
         results.append(nodes)

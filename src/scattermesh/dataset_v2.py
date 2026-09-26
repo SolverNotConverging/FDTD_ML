@@ -1,4 +1,4 @@
-"""Portable C0--C2 mesh targets and verified legacy-data imports."""
+"""Portable curriculum mesh targets and verified legacy-data imports."""
 
 import hashlib
 import json
@@ -137,14 +137,31 @@ def build_legacy_import(source_dataset, campaign_output, destination):
 
 
 def build_new_dataset(manifest_path, campaign_output, destination):
-    """Create targets only from qualified references and terminal candidates."""
+    """Create train/validation targets; frozen test scenes never become labels."""
     manifest_path = Path(manifest_path)
     campaign_output = Path(campaign_output)
     manifest = json.loads(manifest_path.read_text())
+    if manifest.get("protocol") in ("compact_c8_c9_poc_v1", "c0_restart_v1"):
+        from .campaign_v2 import scoring_fingerprint
+
+        if manifest.get("scoring_fingerprint") != scoring_fingerprint():
+            raise ValueError("Scoring implementation changed after compact campaign freeze")
+    candidate_names = tuple(manifest.get("candidate_names", CANDIDATE_NAMES))
     examples, profiles, scores, masks = [], [], [], []
     excluded = []
     for scene in manifest["scenes"]:
-        for angle_index, angle in enumerate(manifest["incidence_angles"]):
+        if scene["split"] == "test":
+            continue
+        conditions = manifest.get("conditions_by_scene", {}).get(scene["lineage_id"])
+        if conditions is None:
+            conditions = [
+                {"angle_index": angle_index, "cells": cells}
+                for angle_index, angle in enumerate(manifest["incidence_angles"])
+                for cells in manifest["budgets"]
+            ]
+        for condition in conditions:
+            angle_index, cells = condition["angle_index"], condition["cells"]
+            angle = manifest["incidence_angles"][angle_index]
             qualification = (
                 campaign_output / "qualifications" / f"{scene['lineage_id']}_a{angle_index}.json"
             )
@@ -159,95 +176,94 @@ def build_new_dataset(manifest_path, campaign_output, destination):
                     }
                 )
                 continue
-            for cells in manifest["budgets"]:
-                rows, axes = [], []
-                for name in CANDIDATE_NAMES:
-                    directory = (
-                        campaign_output
-                        / "cases"
-                        / f"{scene['lineage_id']}_a{angle_index}_n{cells}_{name}"
-                    )
-                    record_path, arrays_path = directory / "record.json", directory / "spectra.npz"
-                    if not record_path.exists():
-                        rows = []
-                        break
-                    record = json.loads(record_path.read_text())
-                    rows.append(
-                        {
-                            "name": name,
-                            "accepted": bool(record.get("accepted")),
-                            "status": record.get("status"),
-                            "joint_scattering_loss": record.get("joint_scattering_loss"),
-                            "dt": record.get("dt"),
-                        }
-                    )
-                    if arrays_path.exists():
-                        with np.load(arrays_path) as arrays:
-                            axes.append((arrays["x"].copy(), arrays["y"].copy()))
-                    else:
-                        axes.append(None)
-                if len(rows) != len(CANDIDATE_NAMES):
-                    excluded.append(
-                        {
-                            "scene_id": scene["lineage_id"],
-                            "angle_index": angle_index,
-                            "cells": cells,
-                            "reason": "candidate_record_incomplete",
-                        }
-                    )
-                    continue
-                if any(row["status"] == "incomplete" for row in rows):
-                    excluded.append(
-                        {
-                            "scene_id": scene["lineage_id"],
-                            "angle_index": angle_index,
-                            "cells": cells,
-                            "reason": "candidate_execution_incomplete",
-                        }
-                    )
-                    continue
-                try:
-                    ranked = rank_candidates(rows)
-                except ValueError:
-                    excluded.append(
-                        {
-                            "scene_id": scene["lineage_id"],
-                            "angle_index": angle_index,
-                            "cells": cells,
-                            "reason": "uniform_invalid",
-                        }
-                    )
-                    continue
-                row_scores = np.ones(len(rows), dtype=np.float64)
-                row_mask = np.array([row["accepted"] for row in rows])
-                row_profiles = np.full((len(rows), 2, 512), 1 / 512, dtype=np.float32)
-                for candidate in ranked:
-                    index = CANDIDATE_NAMES.index(candidate["name"])
-                    if (
-                        axes[index] is None
-                        or len(axes[index][0]) - 1 != cells
-                        or len(axes[index][1]) - 1 != cells
-                    ):
-                        raise ValueError("Accepted candidate lacks exact-budget saved axes")
-                    row_scores[index] = candidate["teacher_score"]
-                    row_profiles[index, 0] = axis_probability(axes[index][0], 512)
-                    row_profiles[index, 1] = axis_probability(axes[index][1], 512)
-                examples.append(
+            rows, axes = [], []
+            for name in candidate_names:
+                directory = (
+                    campaign_output
+                    / "cases"
+                    / f"{scene['lineage_id']}_a{angle_index}_n{cells}_{name}"
+                )
+                record_path, arrays_path = directory / "record.json", directory / "spectra.npz"
+                if not record_path.exists():
+                    rows = []
+                    break
+                record = json.loads(record_path.read_text())
+                rows.append(
                     {
-                        "sample_id": f"{scene['lineage_id']}_a{angle_index}_n{cells}",
-                        "scene": scene,
-                        "source": "new",
-                        "split": scene["split"],
-                        "cells_x": cells,
-                        "cells_y": cells,
-                        "incidence_angle_rad": angle,
-                        "frequencies_hz": manifest["frequencies_hz"],
-                        "best_candidate_index": CANDIDATE_NAMES.index(ranked[0]["name"]),
+                        "name": name,
+                        "accepted": bool(record.get("accepted")),
+                        "status": record.get("status"),
+                        "joint_scattering_loss": record.get("joint_scattering_loss"),
+                        "dt": record.get("dt"),
                     }
                 )
-                profiles.append(row_profiles)
-                scores.append(row_scores)
-                masks.append(row_mask)
+                if arrays_path.exists():
+                    with np.load(arrays_path) as arrays:
+                        axes.append((arrays["x"].copy(), arrays["y"].copy()))
+                else:
+                    axes.append(None)
+            if len(rows) != len(candidate_names):
+                excluded.append(
+                    {
+                        "scene_id": scene["lineage_id"],
+                        "angle_index": angle_index,
+                        "cells": cells,
+                        "reason": "candidate_record_incomplete",
+                    }
+                )
+                continue
+            if any(row["status"] == "incomplete" for row in rows):
+                excluded.append(
+                    {
+                        "scene_id": scene["lineage_id"],
+                        "angle_index": angle_index,
+                        "cells": cells,
+                        "reason": "candidate_execution_incomplete",
+                    }
+                )
+                continue
+            try:
+                ranked = rank_candidates(rows)
+            except ValueError:
+                excluded.append(
+                    {
+                        "scene_id": scene["lineage_id"],
+                        "angle_index": angle_index,
+                        "cells": cells,
+                        "reason": "uniform_invalid",
+                    }
+                )
+                continue
+            row_scores = np.ones(len(rows), dtype=np.float64)
+            row_mask = np.array([row["accepted"] for row in rows])
+            row_profiles = np.full((len(rows), 2, 512), 1 / 512, dtype=np.float32)
+            for candidate in ranked:
+                index = candidate_names.index(candidate["name"])
+                if (
+                    axes[index] is None
+                    or len(axes[index][0]) - 1 != cells
+                    or len(axes[index][1]) - 1 != cells
+                ):
+                    raise ValueError("Accepted candidate lacks exact-budget saved axes")
+                row_scores[index] = candidate["teacher_score"]
+                row_profiles[index, 0] = axis_probability(axes[index][0], 512)
+                row_profiles[index, 1] = axis_probability(axes[index][1], 512)
+            examples.append(
+                {
+                    "sample_id": f"{scene['lineage_id']}_a{angle_index}_n{cells}",
+                    "scene": scene,
+                    "source": "new",
+                    "split": scene["split"],
+                    "cells_x": cells,
+                    "cells_y": cells,
+                    "incidence_angle_rad": angle,
+                    "frequencies_hz": manifest["frequencies_hz"],
+                    "best_candidate_index": candidate_names.index(ranked[0]["name"]),
+                }
+            )
+            profiles.append(row_profiles)
+            scores.append(row_scores)
+            masks.append(row_mask)
     if not examples:
         raise ValueError("No reference-qualified training examples found")
     path = _save_dataset(
@@ -257,7 +273,7 @@ def build_new_dataset(manifest_path, campaign_output, destination):
         np.asarray(scores),
         np.asarray(masks),
         {
-            "kind": "new_c0_c2",
+            "kind": "new_curriculum_v2",
             "manifest_sha256": _sha256(manifest_path),
             "excluded": excluded,
             "time_step_exponent": 0.05,

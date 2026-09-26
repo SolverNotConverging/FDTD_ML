@@ -1,4 +1,4 @@
-"""Restartable single-case FDTD evaluation for the C0--C2 campaign."""
+"""Restartable FDTD evaluation for supported continuous-geometry scenes."""
 
 import hashlib
 import json
@@ -9,7 +9,7 @@ import numpy as np
 
 from .analytic import cylinder_far_field
 from .candidates_v2 import candidate_axes
-from .curriculum_v2 import DOMAIN, object_from_scene
+from .curriculum_v2 import DOMAIN, objects_from_scene
 from .geometry import Circle
 from .grid import Grid
 from .metrics import scattering_loss
@@ -24,14 +24,17 @@ DURATIONS = (70e-9, 140e-9, 560e-9)
 NUMERICAL_MODULES = (
     "analytic.py",
     "conformal.py",
+    "compiled_cuda.py",
     "constants.py",
+    "cuda_fdtd_kernels.cu",
+    "cuda_fdtd_kernels.h",
+    "_cuda_fdtd.pyx",
     "curriculum_v2.py",
     "geometry.py",
     "geometry_v2.py",
     "monitor_v2.py",
     "profiles_v2.py",
     "grid.py",
-    "metrics.py",
     "observables.py",
     "solver.py",
     "solver_cuda.py",
@@ -66,15 +69,15 @@ def _atomic_arrays(path, **arrays):
 
 
 def _failure_status(error):
-    message = str(error)
+    message = str(error).lower()
     if any(
         fragment in message
         for fragment in (
             "split",
             "unresolved",
             "represented Ez nodes",
-            "PEC splits",
-            "Multiple PEC cuts",
+            "pec splits",
+            "multiple pec cuts",
             "scatterer must lie",
             "monitor",
             "geometry",
@@ -82,7 +85,7 @@ def _failure_status(error):
         )
     ):
         return "geometry_incompatible"
-    if "Simulation requires" in message and "exceeding" in message:
+    if "simulation requires" in message and "exceeding" in message:
         return "budget_limited"
     return "solver_error"
 
@@ -96,18 +99,29 @@ def evaluate_case(
     *,
     device="cuda:0",
     reference=None,
+    reference_near_field=None,
     selected_axes=None,
     pml_thickness=0.12,
     material_samples=12,
     durations=DURATIONS,
+    tail_tolerance=1e-5,
     monitor_bounds=None,
     source_hashes=None,
+    field_sample_points=None,
 ):
     """Evaluate one case, saving raw fields and the independent numerical record."""
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     source_hashes = source_hashes or numerical_source_hashes()
     reference = None if reference is None else np.asarray(reference)
+    reference_near_field = (
+        None if reference_near_field is None else np.asarray(reference_near_field)
+    )
+    sample_points = (
+        None if field_sample_points is None else np.asarray(field_sample_points, dtype=float)
+    )
+    if reference_near_field is not None and sample_points is None:
+        raise ValueError("A near-field reference requires matching field sample points")
     fingerprint = _hash_json(
         {
             "scene": scene,
@@ -116,6 +130,7 @@ def evaluate_case(
             "policy": policy,
             "pml": pml_thickness,
             "samples": material_samples,
+            "tail_tolerance": tail_tolerance,
             "source": source_hashes,
             "durations": durations,
             "monitor_bounds": monitor_bounds,
@@ -128,6 +143,12 @@ def evaluate_case(
             "reference_sha256": hashlib.sha256(reference.tobytes()).hexdigest()
             if reference is not None
             else None,
+            "reference_near_field_sha256": hashlib.sha256(
+                reference_near_field.tobytes()
+            ).hexdigest()
+            if reference_near_field is not None
+            else None,
+            "field_sample_points": sample_points.tolist() if sample_points is not None else None,
         }
     )
     record_path, arrays_path = output / "record.json", output / "spectra.npz"
@@ -153,22 +174,19 @@ def evaluate_case(
         "accepted": False,
     }
     try:
-        if str(device).startswith("cuda"):
-            import torch
-
-            cuda_device = torch.device(device)
-            torch.cuda.set_device(cuda_device)
-            torch.cuda.reset_peak_memory_stats(cuda_device)
+        if not np.isfinite(tail_tolerance) or tail_tolerance <= 0:
+            raise ValueError("Positive finite field-tail tolerance is required")
         x, y, repair = candidate_axes(scene, cells, policy, selected_axes=selected_axes)
         grid = Grid(x, y, max_ratio=3)
-        obj = object_from_scene(scene)
+        objects = objects_from_scene(scene)
         monitor = (
-            widest_non_pml_monitor_bounds(grid, [obj.bounds], pml_thickness)
+            widest_non_pml_monitor_bounds(grid, [obj.bounds for obj in objects], pml_thickness)
             if monitor_bounds is None
             else monitor_bounds
         )
         source = PlaneWave(1e9, 1e-9, 9e-9, angle=incidence_angle, origin=(DOMAIN / 2, DOMAIN / 2))
-        if reference is None and isinstance(obj, Circle):
+        if reference is None and len(objects) == 1 and isinstance(objects[0], Circle):
+            obj = objects[0]
             reference = np.stack(
                 [
                     cylinder_far_field(
@@ -189,7 +207,7 @@ def evaluate_case(
         for duration in durations:
             result = simulate_cuda(
                 grid,
-                [obj],
+                objects,
                 source,
                 frequencies=FREQUENCIES,
                 duration=duration,
@@ -200,6 +218,7 @@ def evaluate_case(
                 pec_mode="conformal",
                 device=device,
                 dtype="float64",
+                field_sample_points=sample_points,
             )
             field = result.monitor.normalized_far_field(ANGLES)
             tail = float(result.diagnostics["tail_peak_over_global_peak"])
@@ -211,9 +230,9 @@ def evaluate_case(
                     "tail_peak_over_global_peak": tail,
                 }
             )
-            if np.isfinite(field).all() and tail < 1e-5:
+            if np.isfinite(field).all() and tail < tail_tolerance:
                 break
-        accepted = bool(np.isfinite(field).all() and tail < 1e-5)
+        accepted = bool(np.isfinite(field).all() and tail < tail_tolerance)
         record.update(
             {
                 "status": "accepted" if accepted else "unsettled",
@@ -223,8 +242,6 @@ def evaluate_case(
                 **result.diagnostics,
             }
         )
-        if str(device).startswith("cuda"):
-            record["peak_cuda_memory_bytes"] = int(torch.cuda.max_memory_allocated(cuda_device))
         if reference is not None:
             record.update(scattering_loss(field, reference))
             width = 2 * np.pi * abs(field) ** 2
@@ -239,7 +256,41 @@ def evaluate_case(
             angles=ANGLES,
             complex_far_field=field,
             **({"reference_complex_far_field": reference} if reference is not None else {}),
+            **(
+                {
+                    "field_sample_points": result.fields["field_sample_points"],
+                    "complex_near_field": (
+                        result.fields["Ez_point_scattered_dft"]
+                        + result.fields["Ez_point_incident_dft"]
+                    )
+                    / result.fields["Ez_point_incident_dft"],
+                    "complex_scattered_near_field": result.fields["Ez_point_scattered_dft"]
+                    / result.fields["Ez_point_incident_dft"],
+                    "reference_complex_near_field": reference_near_field,
+                }
+                if sample_points is not None and reference_near_field is not None
+                else (
+                    {
+                        "field_sample_points": result.fields["field_sample_points"],
+                        "complex_near_field": (
+                            result.fields["Ez_point_scattered_dft"]
+                            + result.fields["Ez_point_incident_dft"]
+                        )
+                        / result.fields["Ez_point_incident_dft"],
+                        "complex_scattered_near_field": result.fields["Ez_point_scattered_dft"]
+                        / result.fields["Ez_point_incident_dft"],
+                    }
+                    if sample_points is not None
+                    else {}
+                )
+            ),
         )
+        if sample_points is not None:
+            with np.load(arrays_path) as arrays:
+                near_field = arrays["complex_near_field"].copy()
+            record["near_field_point_count"] = int(len(sample_points))
+            if reference_near_field is not None:
+                record["near_field_relative_l2"] = relative_l2(near_field, reference_near_field)
         record["spectra_sha256"] = hashlib.sha256(arrays_path.read_bytes()).hexdigest()
     except (ValueError, RuntimeError, FloatingPointError) as error:
         record["status"] = _failure_status(error)
