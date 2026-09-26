@@ -27,11 +27,16 @@ class CudaBuild(build_ext):
             "-std=c++17",
             "-O3",
             "--fmad=false",
-            "-gencode=arch=compute_75,code=sm_75",
-            "-gencode=arch=compute_89,code=sm_89",
-            "-gencode=arch=compute_89,code=compute_89",
         ]
-        command += ["-Xcompiler", "/MD"] if os.name == "nt" else ["-Xcompiler", "-fPIC"]
+        architectures = os.environ.get("FDTDMESH_CUDA_ARCHS", "89").split(",")
+        if not architectures or any(not a.isdigit() for a in architectures):
+            raise ValueError("FDTDMESH_CUDA_ARCHS must contain comma-separated numeric SM versions")
+        for arch in architectures:
+            command += [f"-gencode=arch=compute_{arch},code=sm_{arch}"]
+        command += [f"-gencode=arch=compute_{architectures[-1]},code=compute_{architectures[-1]}"]
+        command += (
+            ["-Xcompiler", "/MD,/Zc:preprocessor"] if os.name == "nt" else ["-Xcompiler", "-fPIC"]
+        )
         # setuptools initializes MSVC's environment when it starts compilation;
         # nvcc needs it earlier to locate cl.exe.
         if os.name == "nt":

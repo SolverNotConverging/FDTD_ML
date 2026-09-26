@@ -1,86 +1,99 @@
-> Historical stage-one validation. Current grading, CPML, source, and receiver
-> contracts and fresh results are in [stage 2 validation](stage2_validation.md).
+# Laptop qualification, 2026-09-27
 
-# Stage-one validation
+Reproduce with `python benchmarks/validate_scattering.py` after the native build.
+Machine: RTX 4070 Laptop GPU, 8188 MiB; Windows, Python 3.12, CUDA 13.3.
+Full measured diagnostics and acceptance gates are in
+[validation_results.json](validation_results.json). Raw arrays are regenerated
+under `artifacts/qualification/`. No training labels were produced.
 
-Validated on 2026-09-18 on Windows with an NVIDIA GeForce RTX 4070 Laptop GPU
-(8 GB), NVIDIA driver 596.49, CUDA toolkit 13.3, MSVC 14.51.36231,
-Python 3.12.14, PyTorch 2.14.0+cu130, NumPy 2.5.3, and SciPy 1.18.1.
-Dependencies are pinned in `uv.lock`; `uv sync --locked --python 3.12` was verified.
-Final suite: **46 tests passed**, including real-CUDA tests (no skips), in 2.69 s.
-Ruff lint and formatting checks passed.
+## Analytical cylinder
 
-## Numerical checks
+Radius 0.47 wavelengths, domain 6 × 6 wavelengths, 1 GHz, +x incidence,
+360 angular samples, float64. Errors are relative L2 norms over the complete
+absolute angular pattern. The graded cases have the same tensor-product cell
+budgets, using the demonstration Gaussian density and fixed physical collars.
 
-The native CUDA solver agrees with the NumPy oracle for all three final fields
-and receiver histories on uniform and nonuniform meshes. Those cases include
-lossy dielectric and magnetic materials, curved PEC geometry, duplicate point
-sources, and finite line receivers. Tolerances are `rtol=2e-5, atol=2e-6`
-for float32 and `rtol=1e-11, atol=1e-13` for float64. Zero-field runs stay exactly
-zero; an anchored PEC wall gives exactly zero transmission to the opposite side.
-
-An independent analytical rectangular-cavity standing wave checks the curl signs,
-staggering, dual spacing, boundary enforcement, and convergence. Domain:
-20 mm × 15 mm. Error is final Ez L2 error divided by initial Ez L2 norm after
-approximately 1.3 periods, evaluated at the actual final simulation time.
-The nonuniform axes are smooth sinusoidal perturbations of uniform coordinates.
-
-| Cells per axis | Uniform vacuum error | Nonuniform vacuum error | Nonuniform lossy magnetic error |
-|---:|---:|---:|---:|
-| 20 | 7.80697e-4 | 1.22931e-2 | 1.02996e-2 |
-| 40 | 1.93953e-4 | 3.11934e-3 | 2.61811e-3 |
-| 80 | 4.87666e-5 | 7.86537e-4 | 6.61146e-4 |
-
-The lossy case has epsilon_r=4, mu_r=2, sigma_e=0.04 S/m and uses the analytical
-damped-cavity solution, with H initialized at -dt/2. Halving mesh spacing reduces
-error by about four, consistent with second-order convergence for these smooth
-problems. These checks do not establish convergence order for staircase interfaces
-or subpixel features.
-
-## GPU residency and integration
-
-All field/coefficient/source/receiver buffers are allocated/uploaded before the
-native time loop and downloaded after it. Runtime counters report zero transfers
-while stepping. For source-free runs without monitors, upload/download byte counts
-are unchanged between 3 and 100 timesteps. Source and receiver memory grows with
-Nt when enabled. This is runtime accounting plus source inspection, not a separate
-Nsight/CUPTI transfer trace.
-
-Checkpoint round-trip preserves model predictions. Tests verify finite positive
-axis densities, axis orientation, FiLM/convolution gradient flow, exact line budgets,
-mandatory PEC anchors, physical scaling of input conditioning and raster maps,
-and incompatible checkpoint rejection. The end-to-end test loads a checkpoint,
-predicts densities, constructs an anchored mesh, then runs CUDA and checks nonzero
-receiver output and repeatability. No trained model quality is claimed.
-
-## Small timing experiment
-
-Command: `python benchmarks/benchmark_solver.py --nx 128 --ny 96 --repeats 3`.
-Same 20 mm × 15 mm vacuum domain, point source/receiver, 1 ns requested physical
-duration, float32. One warm-up run, then three measured runs; median times below.
-
-| Grid | Nt | Cell updates | GPU time | Total wall time |
+| Nominal cells/λ | Uniform width error | Graded width error | Uniform complex-amplitude error | Graded complex-amplitude error |
 |---|---:|---:|---:|---:|
-| Uniform | 2,857 | 35,106,816 | 69.1 ms | 70.4 ms |
-| Nonuniform density bump | 4,406 | 54,140,928 | 100.6 ms | 102.1 ms |
+| 16 | 1.623% | 2.204% | 3.827% | 6.583% |
+| 32 | 0.551% | 0.490% | 0.905% | 1.595% |
+| 64 | 0.137% | 0.077% | 0.226% | 0.386% |
 
-The smaller minimum spacing raises the nonuniform grid's timestep count at the
-same physical duration. These are laptop/WDDM measurements, not a general speed
-guarantee or accuracy comparison. Native launch overhead remains relevant on
-small grids; CUDA graph replay and batched simulations are possible later improvements.
+![Cylinder convergence and absolute scattering pattern](validation.png)
 
-## Reproduce
+These results establish convergence for the tested conformal/ECT cases. They do
+not show a general advantage for graded meshes: phase accuracy, smaller dt,
+update count and meshing cost also matter. At 64, the uniform and graded runs
+used 3,840 and 5,376 updates respectively. The uniform GPU run took about 285 ms
+and allocated 14.6 MB. Timings are individual laptop measurements, not a controlled
+performance benchmark. Density projection can dominate total runtime.
 
-```powershell
-New-Item -ItemType Directory -Force artifacts | Out-Null
-.\scripts\build_cuda.ps1
-.venv\Scripts\python.exe -m pytest -q --basetemp=artifacts/pytest
-.venv\Scripts\ruff.exe check .
-.venv\Scripts\python.exe examples\simple_uniform.py
-.venv\Scripts\python.exe examples\simple_nonuniform.py
-.venv\Scripts\python.exe examples\cnn_mesh.py
-```
+## Independent sensitivity controls
 
-The supplied examples ran successfully, including CNN inference on CUDA and native
-FDTD in the same process. The CNN example labels its randomly initialized model.
-CPML, training, batching, and interface/subpixel convergence remain outside stage one.
+At the 64-cell/λ uniform cylinder baseline:
+
+| Control | Relative width change or stated metric |
+|---|---:|
+| Move contour inward by 0.125 λ on each side | 0.0703% |
+| Refine PML 32→40 cells, same interior and same dt | 0.0554% |
+| Reduce baseline dt by 20% | 0.00572% |
+| Tighten DFT tolerance and require six stable checks, 3,840→4,608 steps | 1.05e-10 relative |
+| float32 versus float64 fields, float64 DFTs | 1.10e-7 relative |
+| Incident complex field versus continuum plane wave inside TFSF | 0.131% |
+| Translate cylinder by (0.013, 0.019) λ: analytical width error | 0.134% |
+| Change radius to 0.433 λ: analytical width error | 0.127% |
+| Empty graded domain: maximum absolute amplitude | 3.04e-15 |
+
+The PML control preserves every interior grid line, increases the total budget
+to 400 × 400, and compares against a baseline run at the same reduced timestep.
+It therefore avoids confusing interior mesh changes with PML sensitivity.
+The translated complex reference includes the incident and observation phase shifts.
+
+## Interacting and non-smooth shapes
+
+| Shape | Width change, 16→32 | Width change, 32→64 |
+|---|---:|---:|
+| Rectangle | 5.455% | 1.888% |
+| Two separated cylinders | 0.767% | 0.273% |
+| Slotted PEC body | 0.980% | 0.381% |
+
+These are consecutive-refinement differences, not errors against an exact
+solution. All decrease and pass the foundation's 3% final-difference gate.
+The rectangle is **not** qualified as a sub-percent training reference; further
+refinement is required for that purpose. This distinction must carry into Stage 3.
+The same caution applies to new corners, narrow gaps and high-Q resonators.
+
+## Regression and memory checks
+
+The complete suite reports **38 passed**, with no skips on this laptop.
+
+The test suite covers exact-budget meshes and grading, exact cut intersections,
+PEC walls around vacuum overlays, unsupported topology rejection, pair circulation
+conservation, positive-definite enlarged operators, and the lossless spectral bound.
+
+Native tests compare both field precisions against NumPy on uniform and graded
+meshes, using nonzero initial fields and staggered online DFTs. They compare GPU
+NF2FF against a separate CPU integral at 0.9, 1.0 and 1.1 GHz; check cylinder
+refinement and empty scattering; enforce the source guard, consecutive checks and
+exact safety cap; check buffer validation and normal-run transfer counts; and use
+a slow callback to verify that GPU execution continues independently.
+
+A lossless tiny-cut case remains bounded for 20,003 updates with dt above half
+the Cartesian limit. This supports the operator analysis; it does not replace
+geometry-specific validation of arbitrary configurations.
+
+CUDA Compute Sanitizer 13.3 `memcheck --error-exitcode 99` on the native parity
+and malformed-buffer tests completed with **ERROR SUMMARY: 0 errors**.
+The report is in the local `artifacts/compute_sanitizer.log`.
+No current or field array is transferred during stepping. A normal single-bin,
+360-angle run downloads 8,640 bytes of final amplitude/width arrays, plus small
+diagnostics. Explicit validation downloads are reported separately.
+
+## Remaining qualification limits
+
+Only +x TMz incidence and the documented cut topology are supported. Arbitrary
+rotated polygons can require explicit geometry anchors; invalid edge connectivity
+or an unavailable donor is an error, not an approximate fallback. The stopping
+policy detects settling and residual fields but does not prove an infinite-tail
+bound for every resonance. The Linux/server build and cross-device agreement
+remain to be checked before server-scale generation.

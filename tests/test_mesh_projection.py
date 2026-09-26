@@ -6,12 +6,12 @@ import numpy as np
 import pytest
 from scipy.optimize import linprog
 
-from fdtdmesh import FDTD_2D_Ez
 from fdtdmesh.mesh import (
     AxisCollar,
     AxisConstraints,
     Mesh,
     MeshInfeasibleError,
+    MeshOptimizationError,
     adjacent_ratio,
     axis_mesh,
 )
@@ -90,17 +90,6 @@ def test_fixed_collar_budget_spacing_and_interior_density_only():
     np.testing.assert_allclose(a, b, atol=1e-12)
 
 
-def test_pml_fixed_when_budget_changes_and_scene_exclusion():
-    s = FDTD_2D_Ez(0.02, 0.015, 80, 60, 20e9, Nt=3)
-    s.add_PML(8)
-    t = s.pml.x.thickness
-    s.mesh_from_density([1], [1], Nx=100, Ny=80)
-    assert s.mesh.x[8] == t and len(s.mesh.x) == 101
-    s.add_circle("PEC", (0.001, 0.007), 0.0001)
-    with pytest.raises(ValueError, match="Geometry"):
-        s._prepare()
-
-
 def test_grading_moves_lines_on_both_sides_of_close_anchors():
     target = density_quantiles(0.02, 40, [1])
     x = axis_mesh(0.02, 40, [1], [0.0098, 0.0102])
@@ -112,7 +101,7 @@ def test_grading_moves_lines_on_both_sides_of_close_anchors():
 def test_optimization_timeout_is_not_reported_as_infeasible(monkeypatch):
     from types import SimpleNamespace
 
-    from fdtdmesh import MeshOptimizationError, mesh_projection
+    from fdtdmesh import mesh_projection
 
     monkeypatch.setattr(
         mesh_projection,
@@ -121,13 +110,3 @@ def test_optimization_timeout_is_not_reported_as_infeasible(monkeypatch):
     )
     with pytest.raises(MeshOptimizationError, match="time limit"):
         axis_mesh(1, 10, [1, 100], [0.5])
-
-
-def test_uniform_pml_roundoff_and_failed_remesh_preserves_previous_mesh():
-    s = FDTD_2D_Ez(0.02, 0.015, 80, 60, 20e9, Nt=1)
-    s.add_PML(6)
-    original = s.mesh_uniform()
-    s.pml.validate_mesh(original)
-    with pytest.raises(ValueError, match="fixed PML"):
-        s.mesh_uniform(Nx=82)
-    assert s.mesh is original and s.Nx == 80

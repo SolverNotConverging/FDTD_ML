@@ -47,19 +47,9 @@ class PML:
                 not self.y.cells or (c > y0 and d < y1)
             )
 
-        for kind, _, data in scene.primitives:
-            if kind == "circle":
-                x, y, r = data
-                bounds = x - r, x + r, y - r, y + r
-            elif kind == "polygon":
-                bounds = data[:, 0].min(), data[:, 0].max(), data[:, 1].min(), data[:, 1].max()
-            else:
-                bounds = probe_bounds(data)
+        for bounds in scene.bounds():
             if not inside(bounds):
                 raise ValueError("Geometry must lie strictly inside the vacuum PML interfaces")
-        for probe in [s[0] for s in scene.sources] + scene.receivers:
-            if not inside(probe_bounds(probe)):
-                raise ValueError("Sources and receivers must lie strictly inside PML interfaces")
 
     def validate_mesh(self, mesh):
         for axis, collar in (("x", self.x), ("y", self.y)):
@@ -69,11 +59,6 @@ class PML:
                     raise MeshInfeasibleError(
                         f"{axis} mesh changes a fixed PML line at index {index}"
                     )
-
-
-def probe_bounds(probe):
-    x, y = np.atleast_1d(probe.x), np.atleast_1d(probe.y)
-    return x.min(), x.max(), y.min(), y.max()
 
 
 def profile(coordinates, length, collar, pml, dt):
@@ -102,10 +87,11 @@ def profile(coordinates, length, collar, pml, dt):
     return out
 
 
-def build_cpml(scene, mesh, dt, dtype):
-    pml = getattr(scene, "pml", None)
+def build_cpml(scene, mesh, dt, dtype, pml=None):
     if pml is None:
-        return np.empty((0, 3), dtype=dtype)
+        out = np.zeros((2 * mesh.Nx + 2 * mesh.Ny + 2, 3), dtype=dtype)
+        out[:, :2] = 1
+        return out
     pml.validate_scene(scene)
     pml.validate_mesh(mesh)
     return np.ascontiguousarray(

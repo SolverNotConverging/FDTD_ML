@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fdtdmesh"
-version = "0.5.0"
-description = "Nonuniform CUDA TMz FDTD and budget-conditioned CNN meshing"
+version = "0.6.0"
+description = "Conformal enlarged-cell TMz PEC scattering on nonuniform grids"
 requires-python = ">=3.11"
-dependencies = ["numpy>=2", "scipy>=1.14", "torch>=2.6"]
+dependencies = ["numpy>=2", "scipy>=1.14"]
 
 [dependency-groups]
 dev = [
@@ -24,14 +24,6 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 fdtdmesh = ["solver/*.pyx", "solver/cuda/*.h", "solver/cuda/*.cu"]
-
-[tool.uv.sources]
-torch = { index = "pytorch-cu130" }
-
-[[tool.uv.index]]
-name = "pytorch-cu130"
-url = "https://download.pytorch.org/whl/cu130"
-explicit = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
