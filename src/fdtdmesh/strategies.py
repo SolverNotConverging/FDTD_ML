@@ -96,6 +96,8 @@ def generate_mesh(
     checkpoint=None,
     strict=False,
     constraints=None,
+    anchors=None,
+    anchor_assignment="joint",
     time_limit=30.0,
 ):
     from .mesh import cell_count
@@ -103,6 +105,8 @@ def generate_mesh(
     if len(cells) != 2:
         raise ValueError("cells must be (Nx, Ny), including PML")
     nx, ny = (cell_count(n) for n in cells)
+    if anchor_assignment not in ("joint", "fixed", "local"):
+        raise ValueError("anchor_assignment must be joint, fixed or local")
     if density is not None and strategy != "density":
         raise ValueError("density is only accepted by the density strategy")
     if checkpoint is not None and strategy != "cnn":
@@ -113,7 +117,20 @@ def generate_mesh(
         [*layout.tfsf_box[:2], *layout.contour_box[:2], layout.source_x, layout.origin[0]]
     )
     ay = np.unique([*layout.tfsf_box[2:], *layout.contour_box[2:]])
-    meta = dict(strategy=strategy, strategy_version=1)
+    if anchors is not None:
+        if len(anchors) != 2:
+            raise ValueError("anchors must contain x and y coordinate vectors")
+        merged = []
+        for base, extra, length in zip((ax, ay), anchors, geometry.size):
+            values = list(base)
+            for value in np.asarray(extra, float):
+                if not np.isfinite(value):
+                    raise ValueError("Anchors must be finite")
+                if not any(abs(value - v) <= 64 * np.finfo(float).eps * length for v in values):
+                    values.append(value)
+            merged.append(np.sort(values))
+        ax, ay = merged
+    meta = dict(strategy=strategy, strategy_version=1, anchor_assignment=anchor_assignment)
     if strategy == "uniform":
         # Fast exact-uniform path. Never alter a user-supplied coordinate mesh.
         axes = []
@@ -157,6 +174,25 @@ def generate_mesh(
         a = np.asarray(a)
         if a.ndim != 1 or not len(a) or not np.isfinite(a).all() or np.any(a <= 0):
             raise ValueError("Density vectors must be finite and strictly positive")
+    fixed = []
+    for length, n, collar, values in zip(geometry.size, (nx, ny), (pml.x, pml.y), (ax, ay)):
+        indices = {}
+        if anchor_assignment == "fixed":
+            collar_lines = collar.fixed_lines(length, n)
+            interior = [v for v in values if v not in collar_lines.values()]
+            if any(not collar.thickness < v < length - collar.thickness for v in interior):
+                raise MeshInfeasibleError("Anchor conflicts with PML")
+            if len(interior) > n - 2 * collar.cells - 1:
+                raise MeshInfeasibleError("Too many fixed anchors for budget")
+            previous = collar.cells
+            for k, v in enumerate(interior):
+                index = max(
+                    previous + 1, min(round(v / length * n), n - collar.cells - (len(interior) - k))
+                )
+                indices[index] = v
+                previous = index
+        fixed.append(indices if anchor_assignment == "fixed" else None)
+    meta["anchor_assignment"] = anchor_assignment
     mesh = density_mesh(
         *geometry.size,
         nx,
@@ -169,5 +205,8 @@ def generate_mesh(
         x_constraints=constraints,
         y_constraints=constraints,
         time_limit=time_limit,
+        x_fixed_indices=fixed[0],
+        y_fixed_indices=fixed[1],
+        anchor_window=2 if anchor_assignment == "local" else None,
     )
     return Mesh(mesh.x, mesh.y, {**mesh.metadata, **meta})

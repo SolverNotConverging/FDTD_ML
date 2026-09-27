@@ -46,6 +46,8 @@ def project_axis(
     collar=None,
     return_diagnostics=False,
     time_limit=30.0,
+    fixed_indices=None,
+    anchor_window=None,
 ):
     started = perf_counter()
     count = cell_count(count)
@@ -53,8 +55,30 @@ def project_axis(
         raise ValueError("Axis length must be finite and positive")
     if not np.isfinite(time_limit) or time_limit <= 0:
         raise ValueError("time_limit must be finite and positive")
+    if anchor_window is not None and (
+        isinstance(anchor_window, bool)
+        or not np.isfinite(anchor_window)
+        or int(anchor_window) != anchor_window
+        or anchor_window < 0
+    ):
+        raise ValueError("anchor_window must be a nonnegative integer")
     c, collar = constraints or AxisConstraints(), collar or AxisCollar()
     fixed = collar.fixed_lines(length, count)
+    if fixed_indices is not None:
+        for index, value in fixed_indices.items():
+            if (
+                int(index) != index
+                or not 0 <= index <= count
+                or not np.isfinite(value)
+                or not 0 <= value <= length
+            ):
+                raise ValueError("Invalid fixed anchor index/coordinate")
+            if index in fixed and fixed[index] != value:
+                raise MeshInfeasibleError("Fixed anchor conflicts with a PML line")
+            fixed[int(index)] = float(value)
+        ordered = sorted(fixed.items())
+        if any(a[1] >= b[1] for a, b in zip(ordered, ordered[1:])):
+            raise MeshInfeasibleError("Fixed anchors must increase with their indices")
     anchors = np.unique(np.r_[0.0, anchors, length])
     if not np.isfinite(anchors).all() or anchors[0] < 0 or anchors[-1] > length:
         raise ValueError("Anchors must be finite and inside the domain")
@@ -94,6 +118,11 @@ def project_axis(
             candidates = list(
                 range(collar.cells + 1 + k, count - collar.cells - (len(free) - 1 - k))
             )
+            if anchor_window is not None:
+                centre = round(free[k] * count)
+                candidates = [i for i in candidates if abs(i - centre) <= anchor_window]
+                if not candidates:
+                    raise MeshInfeasibleError("No anchor indices in local assignment window")
             choices.append([(i, next_var + j) for j, i in enumerate(candidates)])
             next_var += len(candidates)
         nv = next_var

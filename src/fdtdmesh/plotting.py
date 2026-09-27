@@ -25,7 +25,7 @@ def _scale(config, units):
 
 def geometry_plot(geometry, mesh, config, units, ax):
     from matplotlib.collections import LineCollection
-    from matplotlib.patches import Circle, Polygon, Rectangle
+    from matplotlib.patches import Circle, Ellipse, Polygon, Rectangle
 
     fig, ax = _axis(ax)
     scale, label = _scale(config, units)
@@ -36,6 +36,8 @@ def geometry_plot(geometry, mesh, config, units, ax):
         color = "#34495e" if shape.material == "PEC" else "white"
         if shape.kind == "circle":
             patch = Circle(p[:2], p[2])
+        elif shape.kind == "ellipse":
+            patch = Ellipse(p[:2], 2 * p[2], 2 * p[3], angle=np.rad2deg(shape.parameters[4]))
         elif shape.kind == "rectangle":
             patch = Rectangle((p[0], p[2]), p[1] - p[0], p[3] - p[2])
         else:

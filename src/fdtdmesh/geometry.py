@@ -19,7 +19,7 @@ class Shape:
     name: str | None = None
 
     def __post_init__(self):
-        if self.kind not in ("circle", "rectangle", "polygon") or self.material not in (
+        if self.kind not in ("circle", "ellipse", "rectangle", "polygon") or self.material not in (
             "PEC",
             "air",
         ):
@@ -33,7 +33,10 @@ class Shape:
             if self.kind == "polygon"
             else tuple(map(float, self.parameters))
         )
-        if self.kind != "polygon" and len(values) != (3 if self.kind == "circle" else 4):
+        if (
+            self.kind != "polygon"
+            and len(values) != {"circle": 3, "ellipse": 5, "rectangle": 4}[self.kind]
+        ):
             raise ValueError("Invalid primitive parameters")
         object.__setattr__(self, "parameters", values)
 
@@ -69,6 +72,8 @@ class Geometry:
             p = s.parameters
             if s.kind == "circle":
                 scene.add_circle(p[:2], p[2], pec=s.material == "PEC")
+            elif s.kind == "ellipse":
+                scene.add_ellipse(p[:2], p[2:4], p[4], pec=s.material == "PEC")
             elif s.kind == "rectangle":
                 scene.add_rectangle(p[:2], p[2:], pec=s.material == "PEC")
             elif s.kind == "polygon":
@@ -96,6 +101,34 @@ class Geometry:
 
     def contains(self, x, y):
         return self.to_scene().contains(x, y)
+
+    def rotated(self, angle, *, origin=None):
+        """Return the same ordered continuous shapes rigidly rotated in radians."""
+        if not np.isfinite(angle):
+            raise ValueError("Rotation must be finite")
+        origin = np.array(self.size) / 2 if origin is None else np.asarray(origin, float)
+        if origin.shape != (2,) or not np.isfinite(origin).all():
+            raise ValueError("Invalid rotation origin")
+        c, s = np.cos(angle), np.sin(angle)
+        rotation = np.array([[c, -s], [s, c]])
+
+        def transform(p):
+            return (np.asarray(p) - origin) @ rotation.T + origin
+
+        shapes = []
+        for shape in self.shapes:
+            p = shape.parameters
+            kind = shape.kind
+            if kind in ("circle", "ellipse"):
+                values = (*transform(p[:2]), *p[2:])
+                if kind == "ellipse":
+                    values = (*values[:4], p[4] + angle)
+            else:
+                if kind == "rectangle":
+                    p = ((p[0], p[2]), (p[1], p[2]), (p[1], p[3]), (p[0], p[3]))
+                kind, values = "polygon", transform(p)
+            shapes.append(Shape(shape.id, kind, shape.material, values, shape.name))
+        return Geometry(self.size, tuple(shapes), self.next_id)
 
     def as_dict(self):
         return dict(

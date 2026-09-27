@@ -145,6 +145,8 @@ def axis_mesh(
     collar=None,
     return_diagnostics=False,
     time_limit=30.0,
+    fixed_indices=None,
+    anchor_window=None,
 ):
     from .mesh_projection import project_axis
 
@@ -157,6 +159,8 @@ def axis_mesh(
         collar=collar,
         return_diagnostics=return_diagnostics,
         time_limit=time_limit,
+        fixed_indices=fixed_indices,
+        anchor_window=anchor_window,
     )
 
 
@@ -175,6 +179,9 @@ def density_mesh(
     x_collar=None,
     y_collar=None,
     time_limit=30.0,
+    x_fixed_indices=None,
+    y_fixed_indices=None,
+    anchor_window=None,
 ):
     x, xd = axis_mesh(
         Lx,
@@ -185,6 +192,8 @@ def density_mesh(
         collar=x_collar,
         return_diagnostics=True,
         time_limit=time_limit,
+        fixed_indices=x_fixed_indices,
+        anchor_window=anchor_window,
     )
     y, yd = axis_mesh(
         Ly,
@@ -195,6 +204,8 @@ def density_mesh(
         collar=y_collar,
         return_diagnostics=True,
         time_limit=time_limit,
+        fixed_indices=y_fixed_indices,
+        anchor_window=anchor_window,
     )
     return Mesh(
         x, y, {**{f"x_{k}": v for k, v in xd.items()}, **{f"y_{k}": v for k, v in yd.items()}}

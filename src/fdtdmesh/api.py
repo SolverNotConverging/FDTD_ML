@@ -185,6 +185,17 @@ class Simulation:
         """Overlay a simple polygon with vertices in metres; return a handle."""
         return self._add("polygon", vertices, material, name)
 
+    def add_ellipse(self, center, radii, angle=0.0, material="PEC", name=None):
+        """Add an analytic ellipse: semiaxes in metres, rotation in radians."""
+        return self._add("ellipse", (*center, *radii, angle), material, name)
+
+    def set_geometry(self, geometry):
+        """Install an immutable geometry snapshot in this domain; invalidate mesh."""
+        if not isinstance(geometry, Geometry) or geometry.size != self.size:
+            raise ValueError("Geometry must match this simulation domain")
+        self._geometry = geometry
+        self._invalidate()
+
     def remove_geometry(self, handle):
         self._geometry = self.geometry.removed(handle)
         self._invalidate()
@@ -225,6 +236,8 @@ class Simulation:
         checkpoint=None,
         strict=False,
         constraints=None,
+        anchors=None,
+        anchor_assignment="joint",
         time_limit=30.0,
     ):
         """Prepare a grid and conformal enlarged-cell coefficients; return the Mesh.
@@ -243,6 +256,8 @@ class Simulation:
                 or checkpoint is not None
                 or strict
                 or constraints is not None
+                or anchors is not None
+                or anchor_assignment != "joint"
             ):
                 raise ValueError("An explicit Mesh cannot be combined with generator options")
             candidate = Mesh(strategy.x, strategy.y, dict(strategy.metadata))
@@ -265,6 +280,8 @@ class Simulation:
                 checkpoint=checkpoint,
                 strict=strict,
                 constraints=constraints,
+                anchors=anchors,
+                anchor_assignment=anchor_assignment,
                 time_limit=time_limit,
             )
             candidate = Mesh(

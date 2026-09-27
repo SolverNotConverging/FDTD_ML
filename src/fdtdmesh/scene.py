@@ -5,6 +5,13 @@ from dataclasses import dataclass, field
 import numpy as np
 
 
+def ellipse_matrix(data):
+    _, _, a, b, angle = data
+    c, s = np.cos(angle), np.sin(angle)
+    rotation = np.array([[c, -s], [s, c]])
+    return rotation @ np.diag([a**-2, b**-2]) @ rotation.T
+
+
 @dataclass
 class Scene2D:
     Lx: float
@@ -67,6 +74,17 @@ class Scene2D:
         self.primitives.append(("polygon", bool(pec), v))
         return self
 
+    def add_ellipse(self, center, radii, angle=0.0, *, pec=True):
+        cx, cy = center
+        a, b = radii
+        if not np.isfinite([cx, cy, a, b, angle]).all() or min(a, b) <= 0:
+            raise ValueError("Ellipse needs finite centre/angle and positive semiaxes")
+        c, s = np.cos(angle), np.sin(angle)
+        rx, ry = np.hypot(a * c, b * s), np.hypot(a * s, b * c)
+        self._points([(cx - rx, cy - ry), (cx + rx, cy + ry)])
+        self.primitives.append(("ellipse", bool(pec), tuple(map(float, (cx, cy, a, b, angle)))))
+        return self
+
     def add_rectangle(self, x, y, *, pec=True):
         x0, x1 = x
         y0, y1 = y
@@ -91,6 +109,13 @@ class Scene2D:
                 distance = (x - cx) ** 2 + (y - cy) ** 2
                 on_boundary |= abs(distance - r * r) <= tol * r
                 inside = distance <= r * r + tol * r if metal else distance < r * r - tol * r
+            elif kind == "ellipse":
+                q = ellipse_matrix(data)
+                u, v = x - data[0], y - data[1]
+                delta = 1 - q[0, 0] * u * u - 2 * q[0, 1] * u * v - q[1, 1] * v * v
+                eps = 2 * tol / min(data[2:4])
+                on_boundary |= abs(delta) <= eps
+                inside = delta >= -eps if metal else delta > eps
             else:
                 inside, boundary = np.zeros(x.shape, bool), np.zeros(x.shape, bool)
                 for (xa, ya), (xb, yb) in zip(data, np.roll(data, -1, axis=0)):
@@ -124,6 +149,14 @@ class Scene2D:
                     a = np.arctan2(y - cy, x - cx) + np.pi / 2
                     angles.extend([a, a + np.pi])
                     curved_tangents.extend([a, a + np.pi])
+            elif kind == "ellipse":
+                q = ellipse_matrix(data)
+                u = np.array([x - data[0], y - data[1]])
+                if abs(1 - u @ q @ u) <= 2 * tol / min(data[2:4]):
+                    normal = q @ u
+                    a = np.arctan2(normal[1], normal[0]) + np.pi / 2
+                    angles.extend([a, a + np.pi])
+                    curved_tangents.extend([a, a + np.pi])
             else:
                 for (xa, ya), (xb, yb) in zip(data, np.roll(data, -1, axis=0)):
                     if (
@@ -151,6 +184,14 @@ class Scene2D:
                 inside = np.full(len(probes), delta > 0)
                 if abs(delta) <= tol * r:
                     inside = (x - cx) * dx + (y - cy) * dy < -angular_tol * r
+            elif kind == "ellipse":
+                q = ellipse_matrix(data)
+                u = np.array([x - data[0], y - data[1]])
+                delta = 1 - u @ q @ u
+                inside = np.full(len(probes), delta > 0)
+                if abs(delta) <= 2 * tol / min(data[2:4]):
+                    normal = q @ u
+                    inside = normal[0] * dx + normal[1] * dy < -angular_tol * np.linalg.norm(normal)
             else:
                 inside = np.zeros(len(probes), bool)
                 along = np.zeros(len(probes), bool)
@@ -188,6 +229,13 @@ class Scene2D:
             if kind == "circle":
                 x, y, r = data
                 bounds.append((x - r, x + r, y - r, y + r))
+            elif kind == "ellipse":
+                x, y, a, b, angle = data
+                rx, ry = (
+                    np.hypot(a * np.cos(angle), b * np.sin(angle)),
+                    np.hypot(a * np.sin(angle), b * np.cos(angle)),
+                )
+                bounds.append((x - rx, x + rx, y - ry, y + ry))
             else:
                 bounds.append(
                     (data[:, 0].min(), data[:, 0].max(), data[:, 1].min(), data[:, 1].max())
@@ -198,20 +246,36 @@ class Scene2D:
         """Exact intersections and ordered Boolean overlays along an axis line."""
         length = self.Lx if axis == 0 else self.Ly
         breaks = [0.0, length]
+        tol = 8 * np.finfo(float).eps * max(self.Lx, self.Ly)
         for kind, _, data in self.primitives:
             if kind == "circle":
                 delta = data[2] ** 2 - (fixed - data[1 - axis]) ** 2
-                if delta > 0:
-                    root = np.sqrt(delta)
+                if delta >= -tol * data[2]:
+                    root = np.sqrt(delta) if delta > tol * data[2] else 0.0
                     breaks.extend([data[axis] - root, data[axis] + root])
+            elif kind == "ellipse":
+                q = ellipse_matrix(data)
+                offset = fixed - data[1 - axis]
+                a, b, c = (
+                    q[axis, axis],
+                    2 * q[axis, 1 - axis] * offset,
+                    q[1 - axis, 1 - axis] * offset**2 - 1,
+                )
+                discriminant = b * b - 4 * a * c
+                roundoff = 64 * np.finfo(float).eps * (b * b + 4 * abs(a * c) + a)
+                if discriminant >= -roundoff:
+                    root = np.sqrt(discriminant) if discriminant > roundoff else 0.0
+                    breaks.extend(
+                        [data[axis] + (-b - root) / (2 * a), data[axis] + (-b + root) / (2 * a)]
+                    )
             else:
                 for a, b in zip(data, np.roll(data, -1, axis=0)):
                     da = b[1 - axis] - a[1 - axis]
-                    if da != 0:
+                    if abs(da) > tol:
                         t = (fixed - a[1 - axis]) / da
-                        if 0 <= t <= 1:
-                            breaks.append(a[axis] + t * (b[axis] - a[axis]))
-                    elif fixed == a[1 - axis]:
+                        if -tol / abs(da) <= t <= 1 + tol / abs(da):
+                            breaks.append(a[axis] + np.clip(t, 0, 1) * (b[axis] - a[axis]))
+                    elif abs(fixed - a[1 - axis]) <= tol:
                         breaks.extend([a[axis], b[axis]])
         breaks = np.unique(np.clip(breaks, 0, length))
         mid = (breaks[:-1] + breaks[1:]) / 2

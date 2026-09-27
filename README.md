@@ -259,3 +259,11 @@ The public `Simulation`/`Result` API is the compatibility layer for new user cod
 Lower-level `ScatteringCase`, `run_scattering`, `prepare`, native runtime, and mesh
 projection functions remain available for tests and specialized numerical work, but
 their signatures and internal layout details are less stable.
+
+## Numerical mesh optimization
+
+[Notebook 03](notebooks/03_reference_and_optimized_mesh.ipynb) builds qualified
+fine-grid references and searches for meshes at a fixed cell budget using
+`strategy="differential_evolution"` or `"powell"`. It includes 12 exact procedural
+shapes and an optional multi-incidence sweep. See the [study API guide](docs/mesh_optimization.md)
+for qualification, resume, server commands, and current limitations.
