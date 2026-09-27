@@ -17,6 +17,7 @@ class Scene2D:
     Lx: float
     Ly: float
     primitives: list = field(default_factory=list)
+    validate_primitives: bool = True
 
     def __post_init__(self):
         if not np.isfinite([self.Lx, self.Ly]).all() or min(self.Lx, self.Ly) <= 0:
@@ -24,14 +25,17 @@ class Scene2D:
 
     def _points(self, points):
         p = np.asarray(points, dtype=float)
-        if (
-            p.ndim != 2
-            or p.shape[1] != 2
-            or not np.isfinite(p).all()
-            or np.any(p <= 0)
-            or np.any(p >= [self.Lx, self.Ly])
-        ):
-            raise ValueError("Geometry must lie strictly inside the domain")
+        if p.ndim != 2 or p.shape[1] != 2 or not np.isfinite(p).all():
+            raise ValueError("Geometry coordinates must be finite (x, y) pairs in metres")
+        if self.validate_primitives and (np.any(p <= 0) or np.any(p >= [self.Lx, self.Ly])):
+            lo, hi = p.min(axis=0), p.max(axis=0)
+            raise ValueError(
+                "Geometry must lie strictly inside the domain: "
+                f"primitive bounds x=[{lo[0]:.9g}, {hi[0]:.9g}], "
+                f"y=[{lo[1]:.9g}, {hi[1]:.9g}] m; "
+                f"domain x=(0, {self.Lx:.9g}), y=(0, {self.Ly:.9g}) m. "
+                "Coordinates and physical scale are in metres."
+            )
         return p
 
     def add_circle(self, center, radius, *, pec=True):
@@ -241,6 +245,12 @@ class Scene2D:
                     (data[:, 0].min(), data[:, 0].max(), data[:, 1].min(), data[:, 1].max())
                 )
         return bounds
+
+    def material_bounds(self):
+        """Bounds of the final PEC material, excluding hidden construction shapes."""
+        from .geometry_bounds import material_bounds
+
+        return material_bounds(self)
 
     def vacuum_intervals(self, axis, fixed):
         """Exact intersections and ordered Boolean overlays along an axis line."""

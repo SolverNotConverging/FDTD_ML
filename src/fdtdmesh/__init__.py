@@ -2,6 +2,7 @@
 
 from .api import DFTConvergence, ScatteringLayout, Simulation, SolverSettings
 from .constants import C0
+from .domain import DomainPolicy
 from .geometry import Geometry
 from .mesh import AxisCollar, AxisConstraints, Mesh, density_mesh
 from .result import Result
@@ -10,6 +11,7 @@ from .simulation import Convergence, ConvergenceError, ScatteringCase, run_scatt
 
 __all__ = [
     "Simulation",
+    "DomainPolicy",
     "SolverSettings",
     "DFTConvergence",
     "ScatteringLayout",

@@ -18,6 +18,7 @@ def run_sweep(
     cells=(192, 192),
     reference_settings=None,
     strategy="differential_evolution",
+    feature_anchors=False,
     max_evaluations=60,
     max_seconds=600.0,
     progress=None,
@@ -50,6 +51,7 @@ def run_sweep(
                 incidence_deg=angle,
                 directory=case.name,
                 reference_qualified=ref.qualified,
+                reference_directory=str(ref.directory.relative_to(directory)),
                 status=ref.report["status"],
                 best_error=None,
                 baseline_error=None,
@@ -65,6 +67,7 @@ def run_sweep(
                     ref,
                     cells=cells,
                     strategy=strategy,
+                    feature_anchors=feature_anchors,
                     directory=case / "optimization",
                     max_evaluations=max_evaluations,
                     max_seconds=max_seconds,
@@ -80,6 +83,7 @@ def run_sweep(
                     baseline_error=baselines[0] if baselines else None,
                     status=opt.report["status"],
                     validation=opt.report.get("validation"),
+                    optimization_directory=str(opt.directory.relative_to(directory)),
                 )
             lookup[(shape, angle)] = row
             rows = list(lookup.values())
@@ -124,7 +128,12 @@ def plot_gallery(directory, *, shapes=None, incidences=None):
                 )
                 ax.set_axis_off()
             else:
-                opt = Optimization.load(directory / row["directory"] / "optimization")
+                opt = Optimization.load(
+                    directory
+                    / row.get(
+                        "optimization_directory", str(Path(row["directory"]) / "optimization")
+                    )
+                )
                 opt.best.plot_geometry(mesh=True, units="wavelength", ax=ax)
                 if ax.get_legend():
                     ax.get_legend().remove()

@@ -85,6 +85,31 @@ def cnn_density(geometry, fmin, fmax, checkpoint):
     )
 
 
+def exterior_lines(length, count, collar, contour, tfsf, allocation):
+    """Exact exterior coordinates and cell counts; interior remains movable."""
+    if allocation is None:
+        return {}
+    outer, inner = allocation
+    if count - 2 * (collar.cells + outer + inner) <= 4:
+        raise MeshInfeasibleError(
+            "Cell budget leaves too few cells inside TFSF after exterior allocation"
+        )
+    p = collar.thickness
+    ca, cb = contour
+    a, b = tfsf
+    if not p < ca < a < b < cb < length - p:
+        raise MeshInfeasibleError("Exterior allocation requires nested PML, contour and TFSF")
+    fixed = {}
+    for index, low, high, cells in (
+        (collar.cells, p, ca, outer),
+        (collar.cells + outer, ca, a, inner),
+        (count - collar.cells - outer - inner, b, cb, inner),
+        (count - collar.cells - outer, cb, length - p, outer),
+    ):
+        fixed.update({index + j: float(v) for j, v in enumerate(np.linspace(low, high, cells + 1))})
+    return fixed
+
+
 def generate_mesh(
     geometry,
     layout,
@@ -130,11 +155,71 @@ def generate_mesh(
                     values.append(value)
             merged.append(np.sort(values))
         ax, ay = merged
-    meta = dict(strategy=strategy, strategy_version=1, anchor_assignment=anchor_assignment)
+    fixed = [
+        exterior_lines(length, n, collar, contour, box, layout.exterior_cells)
+        for length, n, collar, contour, box in zip(
+            geometry.size,
+            (nx, ny),
+            (pml.x, pml.y),
+            (layout.contour_box[:2], layout.contour_box[2:]),
+            (layout.tfsf_box[:2], layout.tfsf_box[2:]),
+        )
+    ]
+    if layout.scatterer_margin_cells is not None:
+        bounds = geometry.bounds
+        if bounds is None:
+            raise MeshInfeasibleError("Scatterer margins require PEC geometry")
+        margin = layout.scatterer_margin_cells
+        outer = sum(layout.exterior_cells)
+        for indices, n, collar, box, occupied in zip(
+            fixed,
+            (nx, ny),
+            (pml.x, pml.y),
+            (layout.tfsf_box[:2], layout.tfsf_box[2:]),
+            (bounds[:2], bounds[2:]),
+        ):
+            left, right = collar.cells + outer, n - collar.cells - outer
+            if right - left <= 2 * margin:
+                raise MeshInfeasibleError(
+                    "Cell budget leaves no cells inside scatterer bounding box"
+                )
+            if not box[0] < occupied[0] < occupied[1] < box[1]:
+                raise MeshInfeasibleError(
+                    "Geometry no longer fits the fitted TFSF box; call fit_domain again"
+                )
+            indices.update(
+                {
+                    left + j: float(v)
+                    for j, v in enumerate(np.linspace(box[0], occupied[0], margin + 1))
+                }
+            )
+            indices.update(
+                {
+                    right - margin + j: float(v)
+                    for j, v in enumerate(np.linspace(occupied[1], box[1], margin + 1))
+                }
+            )
+    # Preserve exact source/layout anchors that differ from linspace by roundoff.
+    for indices, values, length in zip(fixed, (ax, ay), geometry.size):
+        for v in values:
+            matches = [
+                i for i, x in indices.items() if abs(x - v) <= 64 * np.finfo(float).eps * length
+            ]
+            if matches:
+                indices[matches[0]] = float(v)
+    meta = dict(
+        strategy=strategy,
+        strategy_version=2,
+        anchor_assignment=anchor_assignment,
+        exterior_cells=layout.exterior_cells,
+        scatterer_margin_cells=layout.scatterer_margin_cells,
+    )
     if strategy == "uniform":
         # Fast exact-uniform path. Never alter a user-supplied coordinate mesh.
         axes = []
-        for length, n, collar, anchors in zip(geometry.size, (nx, ny), (pml.x, pml.y), (ax, ay)):
+        for length, n, collar, anchors, reserved in zip(
+            geometry.size, (nx, ny), (pml.x, pml.y), (ax, ay), fixed
+        ):
             lines = np.linspace(0, length, n + 1)
             valid = True
             for index, value in collar.fixed_lines(length, n).items():
@@ -144,6 +229,9 @@ def generate_mesh(
                 i = np.argmin(abs(lines - value))
                 valid &= abs(lines[i] - value) < 1e-12 * length
                 lines[i] = value
+            for index, value in reserved.items():
+                valid &= abs(lines[index] - value) < 1e-12 * length
+                lines[index] = value
             if not valid:
                 break
             axes.append(lines)
@@ -174,24 +262,22 @@ def generate_mesh(
         a = np.asarray(a)
         if a.ndim != 1 or not len(a) or not np.isfinite(a).all() or np.any(a <= 0):
             raise ValueError("Density vectors must be finite and strictly positive")
-    fixed = []
-    for length, n, collar, values in zip(geometry.size, (nx, ny), (pml.x, pml.y), (ax, ay)):
-        indices = {}
+    for length, n, collar, values, indices in zip(
+        geometry.size, (nx, ny), (pml.x, pml.y), (ax, ay), fixed
+    ):
         if anchor_assignment == "fixed":
-            collar_lines = collar.fixed_lines(length, n)
-            interior = [v for v in values if v not in collar_lines.values()]
-            if any(not collar.thickness < v < length - collar.thickness for v in interior):
-                raise MeshInfeasibleError("Anchor conflicts with PML")
-            if len(interior) > n - 2 * collar.cells - 1:
-                raise MeshInfeasibleError("Too many fixed anchors for budget")
-            previous = collar.cells
-            for k, v in enumerate(interior):
-                index = max(
-                    previous + 1, min(round(v / length * n), n - collar.cells - (len(interior) - k))
-                )
-                indices[index] = v
-                previous = index
-        fixed.append(indices if anchor_assignment == "fixed" else None)
+            known = {**collar.fixed_lines(length, n), **indices}
+            ordered = sorted(known.items())
+            for (lo, left), (hi, right) in zip(ordered, ordered[1:]):
+                interior = [v for v in values if left < v < right]
+                if len(interior) > hi - lo - 1:
+                    raise MeshInfeasibleError("Too many fixed anchors for interval budget")
+                previous = lo
+                for k, v in enumerate(interior):
+                    target = round(np.interp(v, [left, right], [lo, hi]))
+                    index = max(previous + 1, min(target, hi - (len(interior) - k)))
+                    indices[index] = v
+                    previous = index
     meta["anchor_assignment"] = anchor_assignment
     mesh = density_mesh(
         *geometry.size,
@@ -205,8 +291,8 @@ def generate_mesh(
         x_constraints=constraints,
         y_constraints=constraints,
         time_limit=time_limit,
-        x_fixed_indices=fixed[0],
-        y_fixed_indices=fixed[1],
+        x_fixed_indices=fixed[0] or None,
+        y_fixed_indices=fixed[1] or None,
         anchor_window=2 if anchor_assignment == "local" else None,
     )
     return Mesh(mesh.x, mesh.y, {**mesh.metadata, **meta})

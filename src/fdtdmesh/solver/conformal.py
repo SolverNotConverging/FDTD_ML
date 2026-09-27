@@ -131,6 +131,10 @@ def stiffness(mesh, pec, hx, hy):
 
 def build_conformal(scene, mesh):
     for x0, x1, y0, y1 in scene.bounds():
+        # Ordered air cutters may lie wholly outside a fitted domain. They have
+        # no physical intersection with any cell and need no grid representation.
+        if x1 <= 0 or x0 >= scene.Lx or y1 <= 0 or y0 >= scene.Ly:
+            continue
         if not np.any((mesh.x >= x0) & (mesh.x <= x1)) and not np.any(
             (mesh.y >= y0) & (mesh.y <= y1)
         ):

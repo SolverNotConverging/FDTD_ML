@@ -83,3 +83,32 @@ def test_all_catalog_shapes_are_mesh_independent_at_each_incidence(incidence):
 def test_make_simulation_rejects_nonpositive_or_nonfinite_frequency(frequency):
     with pytest.raises((ValueError, FloatingPointError)):
         make_simulation(frequency=frequency)
+
+
+def test_wifi_relative_scale_matches_si_geometry_without_raster(monkeypatch):
+    def no_raster(*args, **kwargs):
+        raise AssertionError("Geometry validation must not use an image")
+
+    monkeypatch.setattr(fd.Geometry, "rasterize", no_raster)
+    relative = make_simulation("wifi", scale_factor=1.5)
+    physical = make_simulation("wifi", scale=1.5 * 0.6 * relative.wavelength)
+    assert relative.geometry == physical.geometry
+    assert make_simulation("wifi").geometry == make_simulation("wifi", scale_factor=1).geometry
+    relative.apply_mesh("uniform", cells=(192, 192))
+    assert relative.mesh.Nx == relative.mesh.Ny == 192
+
+
+def test_oversized_si_scale_reports_actual_primitive_bounds():
+    with pytest.raises(ValueError, match=r"PEC geometry bounds.*domain"):
+        make_simulation("wifi", scale=1.5, fit_domain=False)
+
+
+@pytest.mark.parametrize("factor", [0, -1, math.nan, math.inf])
+def test_invalid_relative_scale(factor):
+    with pytest.raises(ValueError, match="scale_factor"):
+        make_simulation("wifi", scale_factor=factor)
+
+
+def test_scale_units_cannot_be_mixed():
+    with pytest.raises(ValueError, match="not both"):
+        make_simulation("wifi", scale=0.1, scale_factor=1.5)

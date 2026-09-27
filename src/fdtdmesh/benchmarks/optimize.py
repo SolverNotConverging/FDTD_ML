@@ -1,5 +1,6 @@
 """Budgeted black-box mesh optimization with checkpointed DE and optional Powell."""
 
+import hashlib
 import json
 from dataclasses import asdict, dataclass, replace
 from pathlib import Path
@@ -9,13 +10,22 @@ import h5py
 import numpy as np
 from scipy.optimize import minimize
 
-from ..mesh import AxisConstraints, MeshInfeasibleError, MeshOptimizationError
+from ..mesh import AxisConstraints, Mesh, MeshInfeasibleError, MeshOptimizationError
 from ..result import Result, json_text
 from ..simulation import ConvergenceError
 from ..solver.conformal import UnresolvedGeometryError
 from ..storage import _write
 from ..strategies import deterministic_density, mesh_id
-from .common import clone, errors, experiment_key, identity, run_cached
+from .common import (
+    archive_directory,
+    clone,
+    errors,
+    experiment_directory,
+    experiment_key,
+    identity,
+    run_cached,
+    simulation_description,
+)
 from .features import geometry_anchors
 
 
@@ -35,7 +45,7 @@ class Optimization:
 
     @classmethod
     def load(cls, directory):
-        directory = Path(directory)
+        directory = archive_directory(directory, "optimization.h5")
         with h5py.File(directory / "optimization.h5", "r") as h:
             if h.attrs.get("kind") != "mesh-optimization":
                 raise ValueError("Not a mesh optimization archive")
@@ -89,6 +99,8 @@ def optimize_mesh(
     population=12,
     seed=0,
     constraints=None,
+    feature_anchors=False,
+    initial_mesh=None,
     projection_seconds=5.0,
     resume=True,
     progress=None,
@@ -100,13 +112,31 @@ def optimize_mesh(
     Budgets count proposals including failed/cached trials and both baselines.
     Time limits are checked between evaluations; an active solve may overrun them.
     The input simulation is not mutated. Inspect best, report and plot_history().
+    feature_anchors=True forces geometry corner alignment for all proposals and
+    baselines. By default only the physical layout/PML lines are fixed. Invalid
+    conformal candidates remain infeasible; reference-only repairs are not used.
+    initial_mesh accepts a validated geometry-aware grid. Its witness anchors
+    constrain all same-budget projections, and it is scored as a baseline.
     """
     if strategy not in ("differential_evolution", "powell"):
         raise ValueError("strategy must be differential_evolution or powell")
+    if not isinstance(feature_anchors, bool):
+        raise ValueError("feature_anchors must be a boolean")
     if not reference.qualified or reference.result is None:
         raise ValueError("Mesh optimization requires a qualified numerical reference")
     if reference.report["case"] != experiment_key(sim):
         raise ValueError("Reference does not match this geometry, orientation or configuration")
+    if initial_mesh is not None:
+        if not isinstance(initial_mesh, Mesh):
+            raise TypeError("initial_mesh must be a Mesh")
+        construction = initial_mesh.metadata.get("geometry_aware", {})
+        if construction.get("status") != "valid" or "witness_anchors" not in construction:
+            raise ValueError("initial_mesh must be a validated geometry-aware mesh")
+        expected_geometry = hashlib.sha256(
+            json_text(sim.computational_geometry.as_dict()).encode()
+        ).hexdigest()
+        if construction.get("geometry_sha256") != expected_geometry:
+            raise ValueError("initial_mesh belongs to a different exact geometry")
     if (
         any(
             isinstance(v, bool) or int(v) != v
@@ -123,14 +153,32 @@ def optimize_mesh(
         or min(max_seconds, projection_seconds) <= 0
     ):
         raise ValueError("Time limits must be positive")
-    constraints = constraints or AxisConstraints(
-        min_spacing=sim.wavelength / 160, max_spacing=sim.wavelength / 12
-    )
     cells = tuple(cells)
     if len(cells) != 2 or any(isinstance(n, bool) or int(n) != n or n < 1 for n in cells):
         raise ValueError("cells must be two positive integers")
-    directory = Path(directory)
-    directory.mkdir(parents=True, exist_ok=True)
+    if initial_mesh is not None and (initial_mesh.Nx, initial_mesh.Ny) != cells:
+        raise ValueError("cells must match the geometry-aware initial_mesh budget")
+    if constraints is None:
+        if initial_mesh is not None:
+            exterior_h = max(p.thickness / p.cells for p in (sim.pml.x, sim.pml.y))
+            constraints = AxisConstraints(
+                max_spacing=max(exterior_h, construction["target_spacing"])
+            )
+        else:
+            minimum = sim.wavelength / 160
+            if sim.layout.scatterer_margin_cells is not None:
+                bounds = sim.geometry.bounds
+                for n, collar, span in zip(
+                    cells, (sim.pml.x, sim.pml.y), (bounds[1] - bounds[0], bounds[3] - bounds[2])
+                ):
+                    interior = n - 2 * (
+                        collar.cells
+                        + sum(sim.layout.exterior_cells)
+                        + sim.layout.scatterer_margin_cells
+                    )
+                    if interior > 0:
+                        minimum = min(minimum, span / (2 * interior))
+            constraints = AxisConstraints(min_spacing=minimum, max_spacing=sim.wavelength / 12)
     config = dict(
         case=experiment_key(sim),
         reference=reference.report["key"],
@@ -141,14 +189,41 @@ def optimize_mesh(
         population=population,
         seed=seed,
         constraints=asdict(constraints),
+        feature_anchors=feature_anchors,
+        initial_mesh=None if initial_mesh is None else dict(
+            x=initial_mesh.x.tolist(),
+            y=initial_mesh.y.tolist(),
+            witness_anchors=construction["witness_anchors"],
+        ),
         projection_seconds=projection_seconds,
         parameterization="log-density-v1",
+        max_evaluations=max_evaluations,
+        max_seconds=max_seconds,
     )
-    key = identity(config)
+    description = dict(
+        schema=1,
+        kind="optimization",
+        simulation=simulation_description(sim),
+        optimizer=config,
+        reference=dict(
+            description=reference.report.get("description"),
+            settings=reference.report.get("settings"),
+            key=reference.report["key"],
+            geometry=reference.result.geometry.as_dict(),
+            configuration=reference.result.configuration,
+            mesh=dict(x=reference.result.mesh.x.tolist(), y=reference.result.mesh.y.tolist()),
+            frequencies=reference.result.frequencies.tolist(),
+            angles=reference.result.angles.tolist(),
+            far_field_sha256=hashlib.sha256(reference.result.far_field.tobytes()).hexdigest(),
+        ),
+    )
+    directory = experiment_directory(directory, description)
+    key = identity(description)
     rng = np.random.default_rng(seed)
     dimensions = 2 * (controls - 1)
     report = dict(
         key=key,
+        description=description,
         config=config,
         trials=[],
         best_file=None,
@@ -170,12 +245,20 @@ def optimize_mesh(
             raise FileExistsError("Use a fresh directory or resume=True")
         report = Optimization.load(directory).report
         if report["key"] != key:
-            raise ValueError("Optimization archive belongs to different settings")
+            raise ValueError(
+                f"Optimization archive in {directory} is inconsistent with its experiment.json"
+            )
         rng.bit_generator.state = report["rng_state"]
     started = perf_counter()
     previous_seconds = report["wall_seconds"]
     reference_result = reference.result
-    anchors = geometry_anchors(sim.geometry)
+    anchors = geometry_anchors(sim.computational_geometry) if feature_anchors else None
+    if initial_mesh is not None:
+        witness = construction["witness_anchors"]
+        anchors = tuple(
+            np.unique(np.r_[w, extra])
+            for w, extra in zip(witness, anchors if anchors is not None else ([], []))
+        )
 
     def save():
         report["rng_state"] = rng.bit_generator.state
@@ -212,7 +295,9 @@ def optimize_mesh(
         begin = perf_counter()
         candidate = clone(sim)
         try:
-            if baseline:
+            if baseline == "geometry_aware":
+                candidate.apply_mesh(initial_mesh)
+            elif baseline:
                 candidate.apply_mesh(
                     baseline,
                     cells=cells,
@@ -264,8 +349,13 @@ def optimize_mesh(
 
     report["status"] = "running"
     try:
-        while report["baseline_index"] < 2:
-            evaluate(baseline=("uniform", "deterministic")[report["baseline_index"]])
+        baselines = (
+            ("geometry_aware", "uniform", "deterministic")
+            if initial_mesh is not None
+            else ("uniform", "deterministic")
+        )
+        while report["baseline_index"] < len(baselines):
+            evaluate(baseline=baselines[report["baseline_index"]])
             report["baseline_index"] += 1
             save()
             notify()
@@ -274,7 +364,7 @@ def optimize_mesh(
                 pop = rng.uniform(-0.3, 0.3, (population, dimensions))
                 pop[0] = 0
                 controls0 = []
-                for rho in deterministic_density(sim.geometry):
+                for rho in deterministic_density(sim.computational_geometry):
                     values = np.log(
                         np.interp(np.linspace(0, 1, controls), np.linspace(0, 1, len(rho)), rho)
                     )

@@ -113,6 +113,14 @@ class Result:
         return json.loads(self._configuration_json)
 
     @property
+    def input_geometry(self):
+        """Exact original-coordinate recipe, including before automatic translation."""
+        from .geometry import Geometry
+
+        automatic = self.configuration.get("automatic_domain")
+        return Geometry.from_dict(automatic["input_geometry"]) if automatic else self.geometry
+
+    @property
     def debug(self):
         return {} if self._debug is None else self._debug
 

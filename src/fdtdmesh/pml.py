@@ -47,7 +47,8 @@ class PML:
                 not self.y.cells or (c > y0 and d < y1)
             )
 
-        for bounds in scene.bounds():
+        material = scene.material_bounds()
+        for bounds in () if material is None else (material,):
             if not inside(bounds):
                 raise ValueError("Geometry must lie strictly inside the vacuum PML interfaces")
 

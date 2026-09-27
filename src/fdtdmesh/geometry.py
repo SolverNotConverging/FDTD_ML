@@ -43,15 +43,16 @@ class Shape:
 
 @dataclass(frozen=True)
 class Geometry:
-    size: tuple
+    size: tuple | None = None
     shapes: tuple = ()
     next_id: int = 0
 
     def __post_init__(self):
-        object.__setattr__(self, "size", tuple(float(v) for v in self.size))
-        if len(self.size) != 2:
-            raise ValueError("size must contain two lengths in metres")
-        Scene2D(*self.size)
+        if self.size is not None:
+            object.__setattr__(self, "size", tuple(float(v) for v in self.size))
+            if len(self.size) != 2:
+                raise ValueError("size must contain two lengths in metres")
+            Scene2D(*self.size)
         object.__setattr__(self, "shapes", tuple(self.shapes))
         if any(not isinstance(s, Shape) for s in self.shapes):
             raise ValueError("Geometry requires Shape records")
@@ -67,7 +68,41 @@ class Geometry:
         self.to_scene()
 
     def to_scene(self):
-        scene = Scene2D(*self.size)
+        # Unbounded design geometry uses a working scale only for roundoff tests.
+        # contains/material_bounds do not clip to the Scene2D rectangle.
+        scale = 1.0
+        if self.size is None and self.shapes:
+            spans = []
+            for shape in self.shapes:
+                p = np.asarray(shape.parameters)
+                spans.append(
+                    float(np.ptp(p, axis=0).max())
+                    if shape.kind == "polygon"
+                    else max(p[2:4]) * 2
+                    if shape.kind == "ellipse"
+                    else p[2] * 2
+                    if shape.kind == "circle"
+                    else max(p[1] - p[0], p[3] - p[2])
+                )
+            scale = max(spans)
+            # Subtracting a small radius from a far-away centre loses precision
+            # on the absolute-coordinate scale, even for a tiny shape.
+            scale = max(
+                scale,
+                *(
+                    float(
+                        np.max(
+                            np.abs(
+                                s.parameters[:2]
+                                if s.kind in ("circle", "ellipse")
+                                else s.parameters
+                            )
+                        )
+                    )
+                    for s in self.shapes
+                ),
+            )
+        scene = Scene2D(*(self.size or (scale, scale)), validate_primitives=False)
         for s in self.shapes:
             p = s.parameters
             if s.kind == "circle":
@@ -80,7 +115,33 @@ class Geometry:
                 scene.add_polygon(p, pec=s.material == "PEC")
             else:
                 raise ValueError(f"Unknown geometry type {s.kind}")
+        bounds = scene.material_bounds()
+        if bounds is not None and self.size is not None:
+            x0, x1, y0, y1 = bounds
+            if not (0 < x0 <= x1 < self.size[0] and 0 < y0 <= y1 < self.size[1]):
+                raise ValueError(
+                    f"Final PEC geometry bounds {bounds} m must lie strictly inside domain {self.size} m"
+                )
         return scene
+
+    @property
+    def bounds(self):
+        return self.to_scene().material_bounds()
+
+    def translated(self, offset, *, size=None):
+        """Translate the complete CSG recipe and optionally change domain size."""
+        dx, dy = offset
+        shapes = []
+        for shape in self.shapes:
+            p = shape.parameters
+            if shape.kind in ("circle", "ellipse"):
+                values = (p[0] + dx, p[1] + dy, *p[2:])
+            elif shape.kind == "rectangle":
+                values = (p[0] + dx, p[1] + dx, p[2] + dy, p[3] + dy)
+            else:
+                values = tuple((x + dx, y + dy) for x, y in p)
+            shapes.append(Shape(shape.id, shape.kind, shape.material, values, shape.name))
+        return Geometry(self.size if size is None else size, tuple(shapes), self.next_id)
 
     def added(self, kind, parameters, material="PEC", name=None):
         if material not in ("PEC", "air"):
@@ -106,7 +167,19 @@ class Geometry:
         """Return the same ordered continuous shapes rigidly rotated in radians."""
         if not np.isfinite(angle):
             raise ValueError("Rotation must be finite")
-        origin = np.array(self.size) / 2 if origin is None else np.asarray(origin, float)
+        if origin is None:
+            bounds = self.bounds
+            origin = (
+                np.array(self.size) / 2
+                if self.size
+                else (
+                    np.array([bounds[0] + bounds[1], bounds[2] + bounds[3]]) / 2
+                    if bounds
+                    else np.zeros(2)
+                )
+            )
+        else:
+            origin = np.asarray(origin, float)
         if origin.shape != (2,) or not np.isfinite(origin).all():
             raise ValueError("Invalid rotation origin")
         c, s = np.cos(angle), np.sin(angle)
@@ -148,7 +221,11 @@ class Geometry:
     def from_dict(cls, data):
         if data.get("schema") != 1 or data.get("units") != "m":
             raise ValueError("Unsupported geometry schema or units")
-        return cls(tuple(data["size"]), tuple(Shape(**s) for s in data["shapes"]), data["next_id"])
+        return cls(
+            None if data["size"] is None else tuple(data["size"]),
+            tuple(Shape(**s) for s in data["shapes"]),
+            data["next_id"],
+        )
 
     @property
     def geometry_id(self):
@@ -172,19 +249,27 @@ class Geometry:
         if len(shape) != 2 or any(isinstance(n, bool) or int(n) != n or n < 1 for n in shape):
             raise ValueError("shape must contain positive integer (height, width)")
         h, w = map(int, shape)
-        x0, x1, y0, y1 = (0.0, self.size[0], 0.0, self.size[1]) if bounds is None else bounds
+        if bounds is None:
+            bounds = (0.0, self.size[0], 0.0, self.size[1]) if self.size else self.bounds
+        if bounds is None:
+            raise ValueError("Empty unbounded geometry needs explicit raster bounds")
+        x0, x1, y0, y1 = bounds
         if (
             not np.isfinite([x0, x1, y0, y1]).all()
-            or not 0 <= x0 < x1 <= self.size[0]
-            or not 0 <= y0 < y1 <= self.size[1]
+            or not x0 < x1
+            or not y0 < y1
+            or (
+                self.size is not None
+                and (not 0 <= x0 < x1 <= self.size[0] or not 0 <= y0 < y1 <= self.size[1])
+            )
         ):
             raise ValueError("Raster bounds must lie in the domain")
         x, y = x0 + (np.arange(w) + 0.5) * (x1 - x0) / w, y0 + (np.arange(h) + 0.5) * (y1 - y0) / h
         xx, yy = np.meshgrid(x, y)
         available = {
             "occupancy": self.contains(xx, yy).astype(np.float32),
-            "x": (xx / self.size[0]).astype(np.float32),
-            "y": (yy / self.size[1]).astype(np.float32),
+            "x": (xx / self.size[0] if self.size else (xx - x0) / (x1 - x0)).astype(np.float32),
+            "y": (yy / self.size[1] if self.size else (yy - y0) / (y1 - y0)).astype(np.float32),
         }
         if not channels or any(c not in available for c in channels):
             raise ValueError("Supported channels: occupancy, x, y")

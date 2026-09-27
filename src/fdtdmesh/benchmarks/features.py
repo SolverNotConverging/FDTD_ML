@@ -3,6 +3,44 @@
 import numpy as np
 
 
+def unresolved_edge_anchors(geometry, mesh):
+    """Place nodes inside material intervals missed by equal-material endpoints.
+
+    These anchors depend on the proposed reference grid; the exact CSG is unchanged.
+    The caller must reproject and still validate the enlarged-cell operator.
+    """
+    scene = geometry.to_scene()
+    pec = scene.contains(mesh.x[:, None], mesh.y[None, :])
+    additions = [[], []]
+    tol = 1e-11 * max(geometry.size)
+    for axis in (0, 1):
+        lines, fixed = (mesh.x, mesh.y) if axis == 0 else (mesh.y, mesh.x)
+        mask = pec if axis == 0 else pec.T
+        for j, value in enumerate(fixed):
+            intervals = scene.vacuum_intervals(axis, value)
+            cuts = np.unique([v for interval in intervals for v in interval])
+            # Only edges containing a continuous boundary crossing can be unresolved.
+            indices = np.unique(np.searchsorted(lines, cuts, side="right") - 1)
+            for i in indices:
+                if i < 0 or i >= len(lines) - 1 or mask[i, j] != mask[i + 1, j]:
+                    continue
+                parts = np.r_[
+                    lines[i], cuts[(cuts > lines[i]) & (cuts < lines[i + 1])], lines[i + 1]
+                ]
+                for lo, hi in zip(parts[:-1], parts[1:]):
+                    if hi - lo <= tol:
+                        continue
+                    midpoint = (lo + hi) / 2
+                    inside = (
+                        scene.contains(midpoint, value)
+                        if axis == 0
+                        else scene.contains(value, midpoint)
+                    )
+                    if inside != mask[i, j]:
+                        additions[axis].append(midpoint)
+    return tuple(np.unique(values) for values in additions)
+
+
 def geometry_anchors(geometry):
     scene = geometry.to_scene()
     points, segments, circles = [], [], []

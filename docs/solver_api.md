@@ -1,10 +1,19 @@
 # Solver and Python API
 
+For reference qualification and mesh searches, see the
+[optimization API reference](mesh_optimization_api.md), including argument tables.
+
 This guide documents the public `Simulation` and `Result` workflow for
 `tmz-conformal-ect-v1`: vacuum/PEC, z-invariant TMz scattering with +x plane-wave
 incidence. Conformal cut faces and enlarged cells are part of the solver method.
 Geometry and mesh preparation happen on the CPU; native CUDA performs field updates,
 current DFT accumulation, convergence checks, and NF2FF.
+
+For geometry-first construction, omit `size`: `Simulation(fmin=..., fmax=...)`,
+add shapes in their original coordinates, then call `apply_mesh("geometry_aware")`.
+See [automatic domain and geometry-aware meshing](geometry_aware_meshing.md) for
+`DomainPolicy`, argument tables, coordinate transforms, limits and Notebook 04.
+The explicit-domain examples below remain supported.
 
 ## Install
 
@@ -110,8 +119,8 @@ remove_geometry(handle)
 ```
 
 Circles are `(cx, cy), radius`; rectangles use increasing `(x0, x1)` and `(y0,
-y1)` pairs; polygons use a simple, non-self-intersecting vertex sequence. Every
-primitive must lie strictly inside the domain. Later primitives overlay earlier
+y1)` pairs; polygons use a simple, non-self-intersecting vertex sequence. The final PEC
+material must lie strictly inside the domain; air cutters may extend outside it. Later primitives overlay earlier
 interiors, so an `air` primitive can carve a vacuum hole in a PEC primitive while
 the physical hole wall remains a PEC boundary. Touching same-material regions
 merge; shared air-cut boundaries do not retain artificial PEC sheets, and an
@@ -345,3 +354,36 @@ lower-level `ScatteringCase`, `run_scattering`, `prepare`, native runtime, and m
 projection functions remain useful for tests and specialized numerical work, but
 their internal layout and signatures are less stable. `fdtdmesh.cases.canonical_case`
 is a small benchmark helper rather than the primary API.
+
+## Compact domain and cell allocation
+
+After defining all geometry, call:
+
+```python
+sim.fit_domain(scatterer_margin_cells=5, exterior_cells=(6, 4))
+sim.apply_mesh("deterministic", cells=(192, 192))
+```
+
+| Argument | Default | Meaning |
+|---|---|---|
+| `scatterer_margin_cells` | `5` | Integer ≥ 3; cells from each side of the final PEC bounding box to TFSF. |
+| `exterior_cells` | `(6, 4)` | Cells from inner PML edge to contour, then contour to TFSF; each count ≥ 2. |
+
+`fit_domain` returns the simulation. It resizes the domain and translates the
+whole exact recipe and phase origin together, retaining their relative position.
+It invalidates the previous mesh/result. Physical gap widths use each axis's
+PML cell width (wavelength/24 for an axis without PML). PML thickness/counts are
+unchanged. The translated phase origin must remain inside the fitted TFSF box.
+Adding geometry afterward may require fitting again.
+
+With 12 PML cells per side and 192 cells per axis, the layout uses 24 PML,
+12 PML-to-contour, 8 contour-to-TFSF, and 10 scatterer-margin cells. This leaves
+138 cells across the scatterer bounding box per axis. All strategies use the
+same reserved coordinates. Insufficient budgets or incompatible spacing bounds
+raise a mesh-infeasibility error rather than relaxing the counts or grading.
+
+`ScatteringLayout` also accepts `exterior_cells=None` and
+`scatterer_margin_cells=None` for custom layouts without reserved counts.
+Default `Simulation` layouts reserve 6/4 exterior cells; `fit_domain` adds the
+scatterer margin and removes excess domain space. Fine study references turn
+these count constraints off and refine the whole domain at fixed physical boxes.

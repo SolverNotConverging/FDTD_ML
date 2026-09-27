@@ -48,7 +48,11 @@ def _base(h, geometry, mesh, config):
 
 
 def save_simulation(sim, path):
-    _write(path, "simulation", lambda h: _base(h, sim.geometry, sim.mesh, sim.configuration()))
+    _write(
+        path,
+        "simulation",
+        lambda h: _base(h, sim.computational_geometry, sim.mesh, sim.configuration()),
+    )
 
 
 def _validate(h, kind):
@@ -90,8 +94,26 @@ def load_simulation(path):
     pml = config.pop("pml")
     pml["x"], pml["y"] = AxisCollar(**pml["x"]), AxisCollar(**pml["y"])
     layout = ScatteringLayout(**config.pop("layout"))
-    sim = Simulation(**config, settings=SolverSettings(**settings), pml=PML(**pml), layout=layout)
-    sim._geometry = geometry
+    automatic = config.pop("automatic_domain", None)
+    if automatic is not None:
+        from .domain import DomainPolicy
+
+        config.pop("size")
+        sim = Simulation(
+            **config,
+            settings=SolverSettings(**settings),
+            domain=DomainPolicy(**automatic["policy"]),
+        )
+        sim.set_geometry(Geometry.from_dict(automatic["input_geometry"]))
+        if sim.computational_geometry != geometry or not np.allclose(
+            sim.coordinate_offset, automatic["coordinate_offset"], rtol=0, atol=1e-14
+        ):
+            raise ValueError("Automatic domain transform does not match saved geometry")
+    else:
+        sim = Simulation(
+            **config, settings=SolverSettings(**settings), pml=PML(**pml), layout=layout
+        )
+        sim._geometry = geometry
     if mesh is not None:
         sim.apply_mesh(mesh)
     return sim

@@ -65,7 +65,9 @@ def geometry_plot(geometry, mesh, config, units, ax):
         (px, 0, lx - 2 * px, py),
         (px, ly - py, lx - 2 * px, py),
     ):
-        ax.add_patch(Rectangle((x, y), w, h, facecolor="#dce5eb", edgecolor="none", zorder=1))
+        # Air cutters may extend into PML; show the absorber above construction
+        # patches so their white fill cannot erase the physical PML shading.
+        ax.add_patch(Rectangle((x, y), w, h, facecolor="#dce5eb", edgecolor="none", zorder=2.5))
     if mesh is not None:
         segments = [[(v / scale, 0), (v / scale, ly)] for v in mesh.x]
         segments += [[(0, v / scale), (lx, v / scale)] for v in mesh.y]

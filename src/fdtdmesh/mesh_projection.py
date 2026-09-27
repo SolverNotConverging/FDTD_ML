@@ -96,9 +96,18 @@ def project_axis(
     if len(free) >= learned_count:
         raise MeshInfeasibleError("Interior budget cannot represent all anchors")
     target = np.empty(count + 1)
-    target[collar.cells : count - collar.cells + 1] = density_quantiles(
-        length, learned_count, density, lower=left, upper=right
-    )
+    if fixed_indices:
+        ordered = sorted(fixed.items())
+        for (i, lower), (j, upper) in zip(ordered, ordered[1:]):
+            target[i : j + 1] = (
+                [lower, upper]
+                if j == i + 1
+                else density_quantiles(length, j - i, density, lower=lower, upper=upper)
+            )
+    else:
+        target[collar.cells : count - collar.cells + 1] = density_quantiles(
+            length, learned_count, density, lower=left, upper=right
+        )
     for index, value in fixed.items():
         target[index] = value
     normalized = target / length
@@ -118,8 +127,13 @@ def project_axis(
             candidates = list(
                 range(collar.cells + 1 + k, count - collar.cells - (len(free) - 1 - k))
             )
+            before = max(i for i, v in fixed.items() if v / length < free[k])
+            after = min(i for i, v in fixed.items() if v / length > free[k])
+            candidates = [i for i in candidates if before < i < after]
             if anchor_window is not None:
-                centre = round(free[k] * count)
+                centre = round(
+                    np.interp(free[k] * length, [fixed[before], fixed[after]], [before, after])
+                )
                 candidates = [i for i in candidates if abs(i - centre) <= anchor_window]
                 if not candidates:
                     raise MeshInfeasibleError("No anchor indices in local assignment window")

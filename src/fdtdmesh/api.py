@@ -6,6 +6,7 @@ from time import perf_counter
 import numpy as np
 
 from .constants import C0
+from .domain import DomainPolicy
 from .geometry import Geometry
 from .mesh import AxisCollar, Mesh
 from .pml import PML
@@ -69,6 +70,8 @@ class ScatteringLayout:
     contour_box: tuple
     source_x: float
     origin: tuple
+    exterior_cells: tuple | None = None
+    scatterer_margin_cells: int | None = None
 
     def __post_init__(self):
         for name, count in (("tfsf_box", 4), ("contour_box", 4), ("origin", 2)):
@@ -78,6 +81,20 @@ class ScatteringLayout:
             object.__setattr__(self, name, a)
         if not np.isfinite(self.source_x):
             raise ValueError("Invalid source_x")
+        if self.exterior_cells is not None:
+            from .mesh import cell_count
+
+            counts = tuple(cell_count(n) for n in self.exterior_cells)
+            if len(counts) != 2 or counts[0] < 2 or counts[1] < 2:
+                raise ValueError("exterior_cells needs at least two cells in each gap")
+            object.__setattr__(self, "exterior_cells", counts)
+        if self.scatterer_margin_cells is not None:
+            from .mesh import cell_count
+
+            if cell_count(self.scatterer_margin_cells) < 3:
+                raise ValueError("scatterer_margin_cells must be at least three")
+            if self.exterior_cells is None:
+                raise ValueError("Scatterer cell margins require exterior cell allocation")
 
 
 class Simulation:
@@ -88,8 +105,29 @@ class Simulation:
     native CUDA; construction, geometry, meshing and archive loading need no GPU.
     """
 
-    def __init__(self, size, fmin, fmax, *, settings=None, angles=None, pml=None, layout=None):
-        self._geometry = Geometry(tuple(size))
+    def __init__(
+        self,
+        size=None,
+        fmin=None,
+        fmax=None,
+        *,
+        settings=None,
+        angles=None,
+        pml=None,
+        layout=None,
+        domain=None,
+    ):
+        if fmin is None or fmax is None:
+            raise ValueError("Specify fmin and fmax in Hz")
+        self._automatic_domain = size is None
+        if domain is not None and (size is not None or not isinstance(domain, DomainPolicy)):
+            raise ValueError("DomainPolicy requires size=None")
+        if self._automatic_domain and (pml is not None or layout is not None):
+            raise ValueError("Use DomainPolicy for automatic-domain PML and margins")
+        self._domain_policy = (domain or DomainPolicy()) if self._automatic_domain else None
+        self._resolved_geometry = None
+        self._coordinate_offset = (0.0, 0.0)
+        self._geometry = Geometry(None if size is None else tuple(size))
         self._pulse = GaussianPulse(float(fmin), float(fmax))
         self._settings = settings or SolverSettings()
         self._settings.frequencies(fmin, fmax)
@@ -97,16 +135,24 @@ class Simulation:
         if angles.ndim != 1 or not angles.size or not np.isfinite(angles).all():
             raise ValueError("angles must be a finite nonempty vector in radians")
         self._angles = tuple(angles.tolist())
+        self._mesh = self._prepared = self._case = self._result = None
+        self._mesh_seconds = 0.0
+        if self._automatic_domain:
+            self._pml = self._layout = None
+            return
         lam = self.wavelength
         collar = AxisCollar(12, 0.5 * lam)
         self._pml = pml or PML(collar, collar)
         lx, ly = self.size
         px, py = self.pml.x.thickness, self.pml.y.thickness
+        hx = px / self.pml.x.cells if self.pml.x.cells else lam / 24
+        hy = py / self.pml.y.cells if self.pml.y.cells else lam / 24
         self._layout = layout or ScatteringLayout(
-            (px + lam, lx - px - lam, py + lam, ly - py - lam),
-            (px + 0.5 * lam, lx - px - 0.5 * lam, py + 0.5 * lam, ly - py - 0.5 * lam),
-            px + 0.25 * lam,
+            (px + 10 * hx, lx - px - 10 * hx, py + 10 * hy, ly - py - 10 * hy),
+            (px + 6 * hx, lx - px - 6 * hx, py + 6 * hy, ly - py - 6 * hy),
+            px + 3 * hx,
             (lx / 2, ly / 2),
+            exterior_cells=(6, 4),
         )
         a, b, c, d = self.layout.tfsf_box
         if not 0 < a < b < lx or not 0 < c < d < ly:
@@ -122,7 +168,24 @@ class Simulation:
 
     @property
     def size(self):
-        return self.geometry.size
+        return self.computational_geometry.size
+
+    def _resolve_domain(self):
+        if self._automatic_domain and self._resolved_geometry is None:
+            values = self._domain_policy.resolve(self.geometry, self.fmax)
+            self._resolved_geometry, self._pml, self._layout, self._coordinate_offset = values
+
+    @property
+    def computational_geometry(self):
+        """Exact geometry translated into the zero-based solver domain."""
+        self._resolve_domain()
+        return self._resolved_geometry if self._automatic_domain else self.geometry
+
+    @property
+    def coordinate_offset(self):
+        """Solver coordinates = input coordinates + this recorded translation."""
+        self._resolve_domain()
+        return self._coordinate_offset
 
     @property
     def source(self):
@@ -146,10 +209,12 @@ class Simulation:
 
     @property
     def layout(self):
+        self._resolve_domain()
         return self._layout
 
     @property
     def pml(self):
+        self._resolve_domain()
         return self._pml
 
     @property
@@ -166,6 +231,8 @@ class Simulation:
 
     def _invalidate(self):
         self._mesh = self._prepared = self._case = self._result = None
+        if self._automatic_domain:
+            self._resolved_geometry = None
 
     def _add(self, kind, parameters, material, name):
         g, handle = self.geometry.added(kind, parameters, material, name)
@@ -191,10 +258,67 @@ class Simulation:
 
     def set_geometry(self, geometry):
         """Install an immutable geometry snapshot in this domain; invalidate mesh."""
-        if not isinstance(geometry, Geometry) or geometry.size != self.size:
+        if not isinstance(geometry, Geometry) or (
+            not self._automatic_domain and geometry.size != self.size
+        ):
             raise ValueError("Geometry must match this simulation domain")
         self._geometry = geometry
         self._invalidate()
+
+    def fit_domain(self, *, scatterer_margin_cells=5, exterior_cells=(6, 4)):
+        """Fit the domain to final PEC bounds with fixed cell margins; invalidate mesh.
+
+        Translate the entire exact recipe and phase origin together. Physical
+        gap widths use the adjacent PML cell widths; PML thickness is unchanged.
+        Call after adding geometry and before applying a mesh.
+        """
+        from .mesh import cell_count
+
+        if self._automatic_domain:
+            from dataclasses import replace
+
+            self._domain_policy = replace(
+                self._domain_policy,
+                scatterer_to_tfsf=scatterer_margin_cells,
+                pml_to_contour=exterior_cells[0],
+                contour_to_tfsf=exterior_cells[1],
+            )
+            self._invalidate()
+            self._resolve_domain()
+            return self
+
+        margin = cell_count(scatterer_margin_cells)
+        gaps = tuple(cell_count(n) for n in exterior_cells)
+        if margin < 3 or len(gaps) != 2 or min(gaps) < 2:
+            raise ValueError("Need >=3 scatterer-margin cells and >=2 cells in each exterior gap")
+        bounds = self.geometry.bounds
+        if bounds is None:
+            raise ValueError("Cannot fit a domain without PEC material")
+        h = np.array(
+            [
+                p.thickness / p.cells if p.cells else self.wavelength / 24
+                for p in (self.pml.x, self.pml.y)
+            ]
+        )
+        thickness = np.array([self.pml.x.thickness, self.pml.y.thickness])
+        padding = thickness + (sum(gaps) + margin) * h
+        low, high = np.array(bounds)[[0, 2]], np.array(bounds)[[1, 3]]
+        offset = padding - low
+        size = high - low + 2 * padding
+        geometry = self.geometry.translated(offset, size=tuple(size))
+        t = thickness + sum(gaps) * h
+        c = thickness + gaps[0] * h
+        layout = ScatteringLayout(
+            (t[0], size[0] - t[0], t[1], size[1] - t[1]),
+            (c[0], size[0] - c[0], c[1], size[1] - c[1]),
+            thickness[0] + (gaps[0] // 2) * h[0],
+            tuple(np.asarray(self.layout.origin) + offset),
+            exterior_cells=gaps,
+            scatterer_margin_cells=margin,
+        )
+        self._geometry, self._layout = geometry, layout
+        self._invalidate()
+        return self
 
     def remove_geometry(self, handle):
         self._geometry = self.geometry.removed(handle)
@@ -212,7 +336,7 @@ class Simulation:
     def _make_case(self):
         p, layout = self.source, self.layout
         return ScatteringCase(
-            self.geometry.to_scene(),
+            self.computational_geometry.to_scene(),
             p.frequency,
             layout.tfsf_box,
             layout.contour_box,
@@ -239,13 +363,18 @@ class Simulation:
         anchors=None,
         anchor_assignment="joint",
         time_limit=30.0,
+        target_spacing=None,
+        max_cells=(512, 512),
+        max_passes=20,
     ):
         """Prepare a grid and conformal enlarged-cell coefficients; return the Mesh.
 
-        strategy: uniform, deterministic, density, cnn, or an explicit Mesh.
+        strategy: uniform, deterministic, density, cnn, geometry_aware, or an explicit Mesh.
         cells includes PML. strict=True requires an exactly uniform grid.
         Checkpoint bundles and density vectors are described in docs/solver_api.md.
         A failed proposal leaves the previously applied mesh intact.
+        geometry_aware selects counts using target_spacing, max_cells, max_passes,
+        and the construction time_limit. See docs/geometry_aware_meshing.md.
         """
         start = perf_counter()
         metadata = {}
@@ -258,20 +387,51 @@ class Simulation:
                 or constraints is not None
                 or anchors is not None
                 or anchor_assignment != "joint"
+                or target_spacing is not None
+                or max_cells != (512, 512)
+                or max_passes != 20
             ):
                 raise ValueError("An explicit Mesh cannot be combined with generator options")
             candidate = Mesh(strategy.x, strategy.y, dict(strategy.metadata))
+        elif strategy == "geometry_aware":
+            from .geometry_mesher import geometry_aware_mesh
+
+            if (
+                cells is not None
+                or density is not None
+                or checkpoint is not None
+                or strict
+                or anchors is not None
+                or anchor_assignment != "joint"
+            ):
+                raise ValueError(
+                    "geometry_aware chooses cell counts; use target_spacing and max_cells"
+                )
+            candidate = geometry_aware_mesh(
+                self.computational_geometry,
+                self.layout,
+                self.pml,
+                target_spacing=C0 / self.fmax / 32 if target_spacing is None else target_spacing,
+                constraints=constraints,
+                max_cells=max_cells,
+                max_passes=max_passes,
+                time_limit=time_limit,
+            )
         else:
+            if target_spacing is not None or max_cells != (512, 512) or max_passes != 20:
+                raise ValueError("target_spacing/max_cells/max_passes require geometry_aware")
             if cells is None:
                 raise ValueError("Specify cells=(Nx, Ny), including fixed PML collars")
             actual_strategy = strategy
             if strategy == "cnn":
                 if checkpoint is None or density is not None or strict:
                     raise ValueError("cnn requires checkpoint and does not accept density/strict")
-                density, metadata = cnn_density(self.geometry, self.fmin, self.fmax, checkpoint)
+                density, metadata = cnn_density(
+                    self.computational_geometry, self.fmin, self.fmax, checkpoint
+                )
                 actual_strategy, checkpoint = "density", None
             candidate = generate_mesh(
-                self.geometry,
+                self.computational_geometry,
                 self.layout,
                 self.pml,
                 cells,
@@ -325,7 +485,7 @@ class Simulation:
         data = dict(
             size=self.size,
             units="SI",
-            geometry_id=self.geometry.geometry_id,
+            geometry_id=self.computational_geometry.geometry_id,
             fmin=self.fmin,
             fmax=self.fmax,
             frequencies=self.frequencies.tolist(),
@@ -388,19 +548,19 @@ class Simulation:
             _prepared=self._prepared,
         )
         raw.diagnostics.update(
-            geometry_id=self.geometry.geometry_id,
+            geometry_id=self.computational_geometry.geometry_id,
             mesh_id=mesh_id(self.mesh),
             meshing_seconds=self._mesh_seconds,
             source=asdict(self.source),
         )
-        result = Result.from_run(raw, self.geometry, self.configuration())
+        result = Result.from_run(raw, self.computational_geometry, self.configuration())
         if not result.converged and require_converged:
             raise ConvergenceError(result)
         self._result = result
         return result
 
     def configuration(self):
-        return dict(
+        config = dict(
             size=self.size,
             fmin=self.fmin,
             fmax=self.fmax,
@@ -409,6 +569,13 @@ class Simulation:
             pml=asdict(self.pml),
             layout=asdict(self.layout),
         )
+        if self._automatic_domain:
+            config["automatic_domain"] = dict(
+                policy=asdict(self._domain_policy),
+                input_geometry=self.geometry.as_dict(),
+                coordinate_offset=self.coordinate_offset,
+            )
+        return config
 
     def plot_geometry(self, *, mesh=False, units="m", ax=None):
         from .plotting import geometry_plot
@@ -416,7 +583,11 @@ class Simulation:
         if mesh and self.mesh is None:
             raise RuntimeError("Call apply_mesh before plotting grid lines")
         return geometry_plot(
-            self.geometry, self.mesh if mesh else None, self.configuration(), units, ax
+            self.computational_geometry,
+            self.mesh if mesh else None,
+            self.configuration(),
+            units,
+            ax,
         )
 
     def plot_mesh(self, *, units="m", ax=None):
@@ -428,7 +599,12 @@ class Simulation:
         from .plotting import discretization_plot
 
         return discretization_plot(
-            self.geometry, self.mesh, self.discretization, self.configuration(), units, ax
+            self.computational_geometry,
+            self.mesh,
+            self.discretization,
+            self.configuration(),
+            units,
+            ax,
         )
 
     def plot_source(self, ax=None):

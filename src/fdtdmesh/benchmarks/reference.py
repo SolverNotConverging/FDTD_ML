@@ -14,13 +14,16 @@ from ..result import Result
 from ..simulation import ConvergenceError
 from ..solver.conformal import UnresolvedGeometryError
 from .common import (
+    archive_directory,
     clone,
     errors,
+    experiment_directory,
     experiment_key,
     identity,
     read_json,
     refined,
     run_cached,
+    simulation_description,
     write_json,
 )
 
@@ -61,7 +64,7 @@ class Reference:
 
     @classmethod
     def load(cls, directory):
-        directory = Path(directory)
+        directory = archive_directory(directory, "reference.json")
         report = read_json(directory / "reference.json")
         result = (
             Result.load(directory / report["result_file"]) if report.get("result_file") else None
@@ -118,18 +121,24 @@ def qualify_reference(sim, *, directory, settings=None, progress=None):
     An incomplete reference can be inspected but cannot be used by optimize_mesh.
     """
     settings = settings or ReferenceSettings()
-    directory = Path(directory)
-    directory.mkdir(parents=True, exist_ok=True)
-    key = identity(dict(case=experiment_key(sim), settings=asdict(settings)))
+    description = dict(
+        schema=1,
+        kind="reference",
+        simulation=simulation_description(sim),
+        settings=asdict(settings),
+    )
+    directory = experiment_directory(directory, description)
+    key = identity(description)
     report_path = directory / "reference.json"
     if report_path.exists():
         previous = read_json(report_path)
         if previous["key"] != key:
-            raise ValueError("Reference directory belongs to different settings/geometry")
+            raise ValueError("Reference archive is inconsistent with its experiment.json")
         if previous["qualified"]:
             return Reference.load(directory)
     report = dict(
         key=key,
+        description=description,
         case=experiment_key(sim),
         settings=asdict(settings),
         qualified=False,
@@ -165,6 +174,8 @@ def qualify_reference(sim, *, directory, settings=None, progress=None):
             report["levels"].append(dict(ppw=ppw, status=type(exc).__name__, message=str(exc)))
             passing, last = 0, None
             save()
+            if progress:
+                progress(report["levels"][-1])
             continue
         metric = errors(finest, last) if last is not None else None
         passing = passing + 1 if metric is not None and accepted(metric) else 0
@@ -186,7 +197,7 @@ def qualify_reference(sim, *, directory, settings=None, progress=None):
             break
     if passing < 2:
         if report["status"] == "running":
-            report["status"] = "spatial_unqualified"
+            report["status"] = "spatial_unqualified" if finest is not None else "no_valid_reference"
         save()
         return Reference(finest, report, directory)
     checks = {}
@@ -205,17 +216,26 @@ def qualify_reference(sim, *, directory, settings=None, progress=None):
             h = fine_sim.wavelength / ppw
             shift = max(1, round(ppw / 8)) * h
             a, b, c, d = fine_sim.layout.contour_box
+
+            def moved(lines, target, boundary, side):
+                index = int(np.argmin(abs(lines - target)))
+                edge = int(np.argmin(abs(lines - boundary)))
+                index = min(index, edge - 2) if side < 0 else max(index, edge + 2)
+                return float(lines[index])
+
             layout = replace(
                 fine_sim.layout,
                 contour_box=tuple(
-                    float(lines[np.argmin(abs(lines - target))])
-                    for lines, target in (
-                        (fine_sim.mesh.x, a + shift),
-                        (fine_sim.mesh.x, b - shift),
-                        (fine_sim.mesh.y, c + shift),
-                        (fine_sim.mesh.y, d - shift),
+                    moved(lines, target, boundary, side)
+                    for lines, target, boundary, side in (
+                        (fine_sim.mesh.x, a + shift, fine_sim.layout.tfsf_box[0], -1),
+                        (fine_sim.mesh.x, b - shift, fine_sim.layout.tfsf_box[1], 1),
+                        (fine_sim.mesh.y, c + shift, fine_sim.layout.tfsf_box[2], -1),
+                        (fine_sim.mesh.y, d - shift, fine_sim.layout.tfsf_box[3], 1),
                     )
                 ),
+                exterior_cells=None,
+                scatterer_margin_cells=None,
             )
             contour = clone(fine_sim, layout=layout)
             contour.apply_mesh(fine_sim.mesh)

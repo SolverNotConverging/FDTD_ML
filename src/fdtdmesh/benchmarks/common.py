@@ -2,7 +2,8 @@
 
 import hashlib
 import json
-from dataclasses import asdict
+import uuid
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import numpy as np
@@ -11,10 +12,9 @@ from ..api import Simulation, SolverSettings
 from ..mesh import AxisCollar
 from ..pml import PML
 from ..result import Result, json_text
-from ..strategies import mesh_id
-from .features import geometry_anchors
+from .features import geometry_anchors, unresolved_edge_anchors
 
-METHOD = "mesh-study-v4"
+METHOD = "mesh-study-v7"
 
 
 def identity(value):
@@ -24,7 +24,17 @@ def identity(value):
 def clone(sim, *, geometry=None, pml=None, layout=None, stop=None):
     settings = asdict(sim.settings)
     settings["stop"] = stop or sim.settings.stop
-    geometry = geometry or sim.geometry
+    if sim._automatic_domain and geometry is None and pml is None and layout is None:
+        out = Simulation(
+            fmin=sim.fmin,
+            fmax=sim.fmax,
+            domain=sim._domain_policy,
+            settings=SolverSettings(**settings),
+            angles=sim.configuration()["angles"],
+        )
+        out.set_geometry(sim.geometry)
+        return out
+    geometry = geometry or sim.computational_geometry
     out = Simulation(
         geometry.size,
         sim.fmin,
@@ -38,10 +48,65 @@ def clone(sim, *, geometry=None, pml=None, layout=None, stop=None):
     return out
 
 
-def experiment_key(sim):
-    return identity(
-        dict(method=METHOD, geometry=sim.geometry.as_dict(), config=sim.configuration())
+def simulation_description(sim):
+    """Complete resolved physical inputs, independent of a directory name."""
+    root = Path(__file__).parents[1]
+    sources = {
+        str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
+        for p in sorted(root.rglob("*"))
+        if p.is_file() and p.suffix in (".py", ".pyx", ".cu", ".h", ".pyd", ".so")
+    }
+    return dict(
+        method=METHOD,
+        implementation=identity(sources),
+        geometry=sim.geometry.as_dict(),
+        configuration=sim.configuration(),
+        source=asdict(sim.source),
+        frequencies=sim.frequencies.tolist(),
     )
+
+
+def experiment_key(sim):
+    return identity(simulation_description(sim))
+
+
+def experiment_directory(root, description):
+    """Reuse only an exact JSON match; preserve all incompatible/legacy data."""
+    root = Path(root)
+    canonical = json.loads(json_text(description))
+    key = identity(canonical)
+    candidates = [root, root / key]
+    if root.exists():
+        candidates.extend(sorted(root.glob(key + "-*")))
+    for candidate in candidates:
+        manifest = candidate / "experiment.json"
+        if manifest.exists():
+            try:
+                if read_json(manifest) == canonical:
+                    return candidate
+            except (ValueError, OSError):
+                pass
+    directory = root / key
+    if directory.exists():
+        directory = root / f"{key}-{uuid.uuid4().hex}"
+    directory.mkdir(parents=True, exist_ok=True)
+    write_json(directory / "experiment.json", canonical)
+    return directory
+
+
+def archive_directory(directory, filename):
+    """Allow loading an unambiguous root, or an explicit experiment directory."""
+    directory = Path(directory)
+    if (directory / filename).exists():
+        return directory
+    matches = sorted(p.parent for p in directory.glob(f"*/{filename}"))
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) > 1:
+        raise ValueError(
+            "Multiple experiments exist; use the returned object's .directory to select one"
+        )
+    return directory
 
 
 def errors(actual, reference):
@@ -71,8 +136,14 @@ def run_cached(sim, directory, *, force=False):
     """Cache only converged solves by actual mesh and full physical configuration."""
     if sim.mesh is None:
         raise ValueError("Prepare a mesh before running")
-    key = identity(dict(case=experiment_key(sim), mesh=mesh_id(sim.mesh)))
-    path = Path(directory) / f"{key}.h5"
+    description = dict(
+        schema=1,
+        kind="solver-result",
+        simulation=simulation_description(sim),
+        mesh=dict(x=sim.mesh.x.tolist(), y=sim.mesh.y.tolist()),
+    )
+    directory = experiment_directory(directory, description)
+    path = directory / "result.h5"
     if path.exists() and not force:
         result = Result.load(path)
         if not result.converged:
@@ -87,21 +158,43 @@ def refined(sim, ppw):
     """Uniform-target, corner-aligned refinement with proportionally refined PML."""
     h = sim.wavelength / ppw
     counts = np.rint(np.array(sim.size) / h).astype(int)
-    if not np.allclose(counts * h, sim.size, rtol=1e-12, atol=0):
-        raise ValueError("Reference domain must align with the requested uniform spacing")
     collars = []
     for collar in (sim.pml.x, sim.pml.y):
         n = round(collar.thickness / h)
-        if not np.isclose(n * h, collar.thickness, rtol=1e-12, atol=0):
-            raise ValueError("Reference PML thickness must align with the spacing")
-        collars.append(AxisCollar(n, collar.thickness))
+        collars.append(AxisCollar(max(1, n), collar.thickness))
     p = asdict(sim.pml)
     p.update(x=collars[0], y=collars[1])
-    result = clone(sim, pml=PML(**p))
-    anchors = geometry_anchors(sim.geometry)
-    result.apply_mesh(
-        "uniform", cells=tuple(counts), anchors=anchors, anchor_assignment="local", time_limit=30.0
+    # Numerical references refine the exterior too, preserving physical boxes.
+    result = clone(
+        sim,
+        pml=PML(**p),
+        layout=replace(sim.layout, exterior_cells=None, scatterer_margin_cells=None),
     )
+    anchors = geometry_anchors(result.geometry)
+    from ..solver.conformal import UnresolvedGeometryError
+    from ..strategies import generate_mesh
+
+    for attempt in range(9):
+        mesh = generate_mesh(
+            result.geometry,
+            result.layout,
+            result.pml,
+            tuple(counts),
+            "uniform",
+            anchors=anchors,
+            anchor_assignment="local",
+            time_limit=30.0,
+        )
+        additions = unresolved_edge_anchors(result.geometry, mesh)
+        if not any(len(values) for values in additions):
+            mesh.metadata.update(reference_anchor_passes=attempt, strategy="uniform")
+            result.apply_mesh(mesh)
+            break
+        if attempt == 8:
+            raise UnresolvedGeometryError(
+                "Reference edge alignment failed after eight anchor refinements"
+            )
+        anchors = tuple(np.unique(np.r_[old, new]) for old, new in zip(anchors, additions))
     return result
 
 
@@ -109,7 +202,9 @@ def write_json(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json_text(value), encoding="utf-8")
+    temporary.write_text(
+        json.dumps(json.loads(json_text(value)), indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     temporary.replace(path)
 
 

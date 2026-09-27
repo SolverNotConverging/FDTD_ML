@@ -6,6 +6,7 @@ from time import perf_counter
 import numpy as np
 
 from .constants import C0
+from .mesh import MeshInfeasibleError
 from .scattering import box_indices, grid_index, make_contour
 from .solver.coefficients import build_coefficients
 
@@ -109,6 +110,10 @@ class ConvergenceError(RuntimeError):
         )
 
 
+class MeshClearanceError(MeshInfeasibleError):
+    """A candidate grid lacks cells required to separate scattering regions."""
+
+
 def prepare(case, mesh, *, dtype="float64", safety=0.9, dt=None):
     scene = case.scene
     case.pml.validate_scene(scene)
@@ -118,22 +123,30 @@ def prepare(case, mesh, *, dtype="float64", safety=0.9, dt=None):
     a, b, c, d = box
     ca, cb, cc, cd = box_indices(mesh, case.contour_box)
     if not ca + 1 < a < b < cb - 1 or not cc + 1 < c < d < cd - 1:
-        raise ValueError("Contour must enclose TFSF with at least two cells of clearance")
+        raise MeshClearanceError("Contour must enclose TFSF with at least two cells of clearance")
     px, py = case.pml.x.cells, case.pml.y.cells
     if not px < ca < cb < mesh.Nx - px or not py < cc < cd < mesh.Ny - py:
-        raise ValueError("Contour and H interpolation must be strictly outside PML")
-    for x0, x1, y0, y1 in scene.bounds():
+        raise MeshClearanceError("Contour and H interpolation must be strictly outside PML")
+    material = scene.material_bounds()
+    for x0, x1, y0, y1 in () if material is None else (material,):
         if not (
             mesh.x[a + 2] < x0 < x1 < mesh.x[b - 2] and mesh.y[c + 2] < y0 < y1 < mesh.y[d - 2]
         ):
-            raise ValueError("Geometry and enlarged cells need clearance inside TFSF")
+            raise MeshClearanceError("Geometry and enlarged cells need clearance inside TFSF")
     source = grid_index(mesh.x, case.source_x)
     if not px < source < ca:
-        raise ValueError("Auxiliary incident source must lie between left PML and contour")
+        raise MeshClearanceError("Auxiliary incident source must lie between left PML and contour")
     ix = grid_index(mesh.x, case.origin[0])
     if not a < ix < b or not case.tfsf_box[2] < case.origin[1] < case.tfsf_box[3]:
         raise ValueError("Phase origin must be inside TFSF and x-anchored")
-    coeff = build_coefficients(scene, mesh, pml=case.pml, dtype=dtype, safety=safety, dt=dt)
+    coeff = build_coefficients(
+        scene,
+        mesh,
+        pml=case.pml,
+        dtype=dtype,
+        safety=safety,
+        dt=dt,
+    )
     # Do not test convergence before the pulse and two domain transits have passed.
     source_end = (
         (case.pulse_delay_periods + 6 * case.pulse_width_periods) / case.frequency

@@ -262,8 +262,22 @@ their signatures and internal layout details are less stable.
 
 ## Numerical mesh optimization
 
+The [optimization API reference](docs/mesh_optimization_api.md) lists all public
+study functions and their arguments in tables.
+
 [Notebook 03](notebooks/03_reference_and_optimized_mesh.ipynb) builds qualified
 fine-grid references and searches for meshes at a fixed cell budget using
 `strategy="differential_evolution"` or `"powell"`. It includes 12 exact procedural
 shapes and an optional multi-incidence sweep. See the [study API guide](docs/mesh_optimization.md)
 for qualification, resume, server commands, and current limitations.
+
+The notebook examples now fit the domain with
+`sim.fit_domain(scatterer_margin_cells=5, exterior_cells=(6, 4))` before meshing.
+This reserves, per side, 5 cells from final PEC bounds to TFSF, 4 to the contour,
+and 6 to PML. With 12 PML cells and a 192-cell axis, 138 cells remain across the
+scatterer bounding box. `make_simulation` uses this compact layout by default.
+
+Geometry-first setup is available with `Simulation(fmin=..., fmax=...)` and
+`apply_mesh("geometry_aware")`. See the [automatic domain guide](docs/geometry_aware_meshing.md)
+and [Notebook 04](notebooks/04_geometry_aware_meshing.ipynb) for fixed exterior
+allocation, exact input-coordinate geometry, and deterministic topology/donor repair.
