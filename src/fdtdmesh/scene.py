@@ -75,13 +75,21 @@ class Scene2D:
         return self.add_polygon([(x0, y0), (x1, y0), (x1, y1), (x0, y1)], pec=pec)
 
     def contains(self, x, y):
+        """PEC closure of the ordered, regularized material regions.
+
+        Boundary points are classified from analytic directional limits, so two
+        touching air cuts do not leave a fictitious zero-thickness PEC sheet.
+        No mesh spacing or finite-distance dilation enters the construction.
+        """
         x, y = np.broadcast_arrays(np.asarray(x, float), np.asarray(y, float))
         result = np.zeros(x.shape, bool)
-        tol = 2e-13 * max(self.Lx, self.Ly)
+        tol = 8 * np.finfo(float).eps * max(self.Lx, self.Ly)
+        on_boundary = np.zeros(x.shape, bool)
         for kind, metal, data in self.primitives:
             if kind == "circle":
                 cx, cy, r = data
                 distance = (x - cx) ** 2 + (y - cy) ** 2
+                on_boundary |= abs(distance - r * r) <= tol * r
                 inside = distance <= r * r + tol * r if metal else distance < r * r - tol * r
             else:
                 inside, boundary = np.zeros(x.shape, bool), np.zeros(x.shape, bool)
@@ -99,8 +107,80 @@ class Scene2D:
                             x < (xb - xa) * (y - ya) / (yb - ya) + xa
                         )
                 inside = inside | boundary if metal else inside & ~boundary
+                on_boundary |= boundary
             result[inside] = metal
+        for index in np.flatnonzero(on_boundary):
+            result.flat[index] = self._boundary_material(
+                float(x.flat[index]), float(y.flat[index]), tol
+            )
         return result
+
+    def _boundary_material(self, x, y, tol):
+        angles, curved_tangents = [], []
+        for kind, _, data in self.primitives:
+            if kind == "circle":
+                cx, cy, r = data
+                if abs((x - cx) ** 2 + (y - cy) ** 2 - r * r) <= tol * r:
+                    a = np.arctan2(y - cy, x - cx) + np.pi / 2
+                    angles.extend([a, a + np.pi])
+                    curved_tangents.extend([a, a + np.pi])
+            else:
+                for (xa, ya), (xb, yb) in zip(data, np.roll(data, -1, axis=0)):
+                    if (
+                        abs((x - xa) * (yb - ya) - (y - ya) * (xb - xa))
+                        <= tol * np.hypot(xb - xa, yb - ya)
+                        and min(xa, xb) - tol <= x <= max(xa, xb) + tol
+                        and min(ya, yb) - tol <= y <= max(ya, yb) + tol
+                    ):
+                        a = np.arctan2(yb - ya, xb - xa)
+                        angles.extend([a, a + np.pi])
+        angles = np.unique(np.mod(angles, 2 * np.pi))
+        if not len(angles):
+            return False
+        # Open sectors cover polygon corners, including arbitrarily narrow wedges.
+        # Circle tangents additionally detect cusps between touching circular cuts.
+        probes = (angles + np.r_[angles[1:], angles[0] + 2 * np.pi]) / 2
+        probes = np.r_[probes, curved_tangents]
+        dx, dy = np.cos(probes), np.sin(probes)
+        material = np.zeros(len(probes), bool)
+        angular_tol = 32 * np.finfo(float).eps
+        for kind, metal, data in self.primitives:
+            if kind == "circle":
+                cx, cy, r = data
+                delta = r * r - (x - cx) ** 2 - (y - cy) ** 2
+                inside = np.full(len(probes), delta > 0)
+                if abs(delta) <= tol * r:
+                    inside = (x - cx) * dx + (y - cy) * dy < -angular_tol * r
+            else:
+                inside = np.zeros(len(probes), bool)
+                along = np.zeros(len(probes), bool)
+                for (xa, ya), (xb, yb) in zip(data, np.roll(data, -1, axis=0)):
+                    if ya != yb:
+                        above_a = np.full(len(probes), ya > y) if abs(ya - y) > tol else dy < 0
+                        above_b = np.full(len(probes), yb > y) if abs(yb - y) > tol else dy < 0
+                        v = (xb - xa) * (y - ya) / (yb - ya) + xa - x
+                        right = (
+                            np.full(len(probes), v > 0)
+                            if abs(v) > tol
+                            else (xb - xa) * dy / (yb - ya) - dx > angular_tol
+                        )
+                        inside ^= (above_a != above_b) & right
+                    ex, ey = xb - xa, yb - ya
+                    length = np.hypot(ex, ey)
+                    if (
+                        abs((x - xa) * ey - (y - ya) * ex) <= tol * length
+                        and min(xa, xb) - tol <= x <= max(xa, xb) + tol
+                        and min(ya, yb) - tol <= y <= max(ya, yb) + tol
+                    ):
+                        tangent = abs(dx * ey - dy * ex) <= angular_tol * length
+                        if np.hypot(x - xa, y - ya) <= tol:
+                            tangent &= dx * ex + dy * ey > 0
+                        if np.hypot(x - xb, y - yb) <= tol:
+                            tangent &= dx * ex + dy * ey < 0
+                        along |= tangent
+                inside[along] = not metal
+            material[inside] = metal
+        return bool(np.any(material))
 
     def bounds(self):
         bounds = []

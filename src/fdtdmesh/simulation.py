@@ -48,11 +48,14 @@ class ScatteringCase:
     frequencies: tuple = ()
     angles: np.ndarray = field(default_factory=lambda: np.deg2rad(np.arange(360)))
     convergence: Convergence = field(default_factory=Convergence)
+    pulse_end: float | None = None
 
     def __post_init__(self):
         scalars = [self.frequency, self.pulse_width_periods, self.pulse_delay_periods]
         if not np.isfinite(scalars).all() or min(scalars) <= 0:
             raise ValueError("Frequency and pulse durations must be positive")
+        if self.pulse_end is not None and (not np.isfinite(self.pulse_end) or self.pulse_end <= 0):
+            raise ValueError("pulse_end must be finite and positive")
         freq = np.asarray(self.frequencies if len(self.frequencies) else (self.frequency,), float)
         if freq.ndim != 1 or not np.isfinite(freq).all() or np.any(freq <= 0):
             raise ValueError("Requested frequencies must be finite and positive")
@@ -73,6 +76,7 @@ class ScatteringResult:
     history: np.ndarray
     mesh: object
     debug: dict = field(default_factory=dict)
+    bin_history: np.ndarray | None = None
 
     @property
     def converged(self):
@@ -131,9 +135,12 @@ def prepare(case, mesh, *, dtype="float64", safety=0.9, dt=None):
         raise ValueError("Phase origin must be inside TFSF and x-anchored")
     coeff = build_coefficients(scene, mesh, pml=case.pml, dtype=dtype, safety=safety, dt=dt)
     # Do not test convergence before the pulse and two domain transits have passed.
-    earliest = (
-        case.pulse_delay_periods + 6 * case.pulse_width_periods
-    ) / case.frequency + 2 * np.hypot(scene.Lx, scene.Ly) / C0
+    source_end = (
+        (case.pulse_delay_periods + 6 * case.pulse_width_periods) / case.frequency
+        if case.pulse_end is None
+        else case.pulse_end
+    )
+    earliest = source_end + 2 * np.hypot(scene.Lx, scene.Ly) / C0
     minimum = int(np.ceil(earliest / coeff.dt))
     policy = case.convergence
     if policy.max_steps <= minimum:
@@ -154,6 +161,7 @@ def prepare(case, mesh, *, dtype="float64", safety=0.9, dt=None):
         source_scale=2 * C0 * coeff.dt / ((mesh.x[source + 1] - mesh.x[source - 1]) / 2),
         origin=case.origin,
         origin_index=ix,
+        pulse_end=case.pulse_end if case.pulse_end is not None else 1e100,
     )
     return coeff, box, source, contour, options
 
@@ -168,6 +176,7 @@ def run_scattering(
     progress=None,
     diagnostic_download=False,
     require_converged=True,
+    _prepared=None,
 ):
     """Run native CUDA FDTD -> current DFT -> convergence -> NF2FF -> final download.
 
@@ -178,12 +187,18 @@ def run_scattering(
 
     runtime = cuda_backend()
     start = perf_counter()
-    coeff, box, source, contour, options = prepare(case, mesh, dtype=dtype, safety=safety, dt=dt)
+    coeff, box, source, contour, options = (
+        _prepared
+        if _prepared is not None
+        else prepare(case, mesh, dtype=dtype, safety=safety, dt=dt)
+    )
+    options = dict(options)
     setup = perf_counter() - start
     options["debug"] = diagnostic_download
     amplitude, width, history, stats, debug = runtime.run(
         coeff, (mesh.Nx, mesh.Ny), box, source, contour, options, progress=progress
     )
+    bin_history = stats.pop("bin_history")
     if stats["status"] != "nonfinite" and (
         not np.isfinite(amplitude).all() or not np.isfinite(width).all()
     ):
@@ -219,6 +234,7 @@ def run_scattering(
             origin=case.origin,
             pulse_width_periods=case.pulse_width_periods,
             pulse_delay_periods=case.pulse_delay_periods,
+            pulse_end=case.pulse_end,
             convergence=asdict(case.convergence),
             minimum_steps=options["min_steps"],
         ),
@@ -232,6 +248,7 @@ def run_scattering(
         history,
         mesh,
         debug,
+        bin_history,
     )
     if require_converged and not result.converged:
         raise ConvergenceError(result)

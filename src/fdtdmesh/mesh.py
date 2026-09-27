@@ -46,7 +46,8 @@ class Mesh:
             if a[0] != 0:
                 raise ValueError("Mesh axes must begin at zero")
             validate_spacing(a, AxisConstraints())
-            a.flags.writeable = False
+            # A bytes-backed array cannot be made writable again by a caller.
+            a = np.frombuffer(a.tobytes(), dtype=np.float64)
             object.__setattr__(self, name, a)
 
     @property

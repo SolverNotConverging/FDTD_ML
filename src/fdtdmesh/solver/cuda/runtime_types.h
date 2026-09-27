@@ -3,7 +3,7 @@
 struct RunConfig {
     int nx, ny, a, b, c, d, source, origin, nf, nr, nd;
     int max_steps, check_interval, min_steps, stable_checks, auto_stop, debug;
-    double dt, f0, pulse_width, pulse_delay, source_scale;
+    double dt, f0, pulse_width, pulse_delay, source_scale, pulse_end;
     double rtol, atol, field_tol, origin_x, origin_y;
 };
 struct HostInputs {
@@ -14,7 +14,7 @@ struct HostInputs {
     const void *initial_e, *initial_hx, *initial_hy;
 };
 struct HostOutputs {
-    double *amplitude, *width, *history;
+    double *amplitude, *width, *history, *bin_history;
     void *ez, *hx, *hy;
     double *currents, *incident;
 };

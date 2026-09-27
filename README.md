@@ -1,26 +1,31 @@
 # PEC scattering and nonuniform meshing
 
-A small research foundation for learning mesh allocation for **2D TMz PEC scattering**.
-The current implementation covers restart stages 0–2: constrained tensor-product
-meshes, continuous PEC geometry, conformal enlarged-cell FDTD, normal-incidence
-TFSF, current DFTs, and bistatic near-to-far conversion. Training and mesh search
-are the next stages.
+FDTDMesh is a research solver for two-dimensional, z-invariant TMz scattering from
+continuous PEC geometry. It uses a tensor-product nonuniform Yee mesh, conformal
+cut-face coefficients, enlarged cells where a cut face needs a donor, a +x
+total-field/scattered-field (TFSF) incident wave, GPU current DFT accumulation,
+and GPU near-to-far-field (NF2FF) conversion. The reported quantity is a 2D
+scattering width in metres; it is not a 3D radar cross section.
 
-**FDTD, current DFT accumulation, convergence decisions, and NF2FF run in native
-CUDA.** The GPU stops itself using a conditional graph. Only final complex
-far-field amplitudes, scattering widths, and small diagnostics return to the CPU.
-Optional progress callbacks use asynchronous snapshots and do not control stepping.
+The supported user workflow is:
 
-The legacy dielectric/CNN experiments and original restart proposal are preserved
-on `legacy-project` at `17b1fb7f83feb95ea102417a60cd58f8c6f8136e`. Development
-continues on `master`. Old training code, generators, reports, and PyTorch
-dependencies have been removed from the active project.
+```text
+Simulation -> add exact geometry -> apply_mesh -> solve -> Result
+```
 
-## Laptop setup
+Geometry and mesh preparation run on the CPU. Native CUDA performs field updates,
+DFT accumulation, convergence checks, and NF2FF. The device controls the stopping
+decision. Progress telemetry is asynchronous and does not control the stepping loop.
 
-Requires Python 3.11+, an NVIDIA GPU, **CUDA Toolkit 13.x**, a compatible driver,
-and a supported C++ compiler. Validated locally with Python 3.12, CUDA 13.3,
-MSVC, and an RTX 4070 Laptop GPU (8 GB). There is no production CPU fallback.
+The active project contains the clean PEC restart. The previous dielectric/CNN
+experiments are preserved on the `legacy-project` branch and are not part of this
+runtime or dependency set.
+
+## Install and build
+
+Python 3.11+, an NVIDIA GPU, CUDA Toolkit 13.x, a compatible driver, and a supported
+C++ compiler are required. The validated local environment uses Python 3.12,
+CUDA 13.3, MSVC, and an RTX 4070 Laptop GPU. There is no production CPU fallback.
 
 ```powershell
 uv sync --group dev
@@ -28,12 +33,11 @@ uv sync --group dev
 .venv/Scripts/python.exe -m pytest -q
 ```
 
-The default native target is SM 89. Before building on another GPU, set
-`FDTDMESH_CUDA_ARCHS` to its compute capability, e.g. `80,89`. The last entry also
-gets PTX. Rebuild after changing the native source or architecture.
+The default native target is SM 89. Set `FDTDMESH_CUDA_ARCHS` before building on
+another GPU, for example `80,89`; the final entry also receives PTX. Rebuild after
+changing native sources or the target architecture.
 
-On a Linux server, the intended build is below; this platform has not yet been
-qualified. Rerun the numerical checks there before using it for references.
+The intended Linux build path is available but has not been qualified here:
 
 ```bash
 uv sync --group dev
@@ -41,12 +45,39 @@ FDTDMESH_BUILD_CUDA=1 FDTDMESH_CUDA_ARCHS=80 uv run --no-sync python setup.py bu
 uv run --no-sync pytest -q
 ```
 
-## Run examples
+## A first solve
 
-For a complete parameter reference and notebook setup, see the
-[solver/API guide](docs/solver_api.md). Interactive examples:
-[geometry and mesh](notebooks/01_geometry_and_mesh.ipynb) and
-[GPU convergence and far fields](notebooks/02_gpu_scattering_and_far_field.ipynb).
+All lengths and coordinates are SI metres. The default source is a finite Gaussian-
+modulated cosine pulse. `fmin` and `fmax` define its approximately -6 dB edge frequencies; the
+default pulse cutoff is five Gaussian widths. The default analysis contains 21 DFT
+bins over that band.
+
+```python
+import fdtdmesh
+from fdtdmesh import DFTConvergence, Simulation, SolverSettings
+
+f0 = 1e9
+lam = fdtdmesh.C0 / f0
+settings = SolverSettings(
+    dft_bins=21,
+    stop=DFTConvergence(check_interval=2048, max_steps=200_000, rtol=1e-5),
+    precision="float64",
+)
+sim = Simulation(
+    size=(6 * lam, 6 * lam),
+    fmin=0.9 * f0,
+    fmax=1.1 * f0,
+    settings=settings,
+)
+sim.add_circle((3 * lam, 3 * lam), 0.47 * lam, material="PEC")
+sim.apply_mesh("uniform", cells=(144, 144), strict=True)
+result = sim.solve(progress=True)
+result.save("artifacts/cylinder/scattering.h5")
+result.save_plots("artifacts/cylinder")
+```
+
+The `examples/pec_scattering.py` command exposes the same workflow for the
+`empty`, `cylinder`, `rectangle`, `pair`, and `slot` canonical shapes:
 
 ```powershell
 .venv/Scripts/python.exe examples/pec_scattering.py --shape cylinder --ppw 24
@@ -54,51 +85,177 @@ For a complete parameter reference and notebook setup, see the
 .venv/Scripts/python.exe examples/pec_scattering.py --shape pair --ppw 32 --graded --output artifacts/pair
 ```
 
-Shapes: `empty`, `cylinder`, `rectangle`, `pair`, `slot`. `--ppw` is a nominal
-budget, a multiple of eight. `--graded` uses the retained constrained density
-projector; its optimization can take much longer than the GPU solve. It is a
-demonstration density, not a tuned geometry baseline or a learned model.
+The example uses a six-wavelength square and a `6*ppw` square cell budget. The
+`--graded` option selects the deterministic geometry-density strategy; it is a
+demonstration allocation, not a tuned geometry baseline or a learned model.
 
-Each example saves `scattering.npz`, `diagnostics.json`, and `scattering.png`.
-NPZ contains frequencies, angles in radians, dimensionless complex amplitudes,
-2D scattering widths in metres, convergence history, and physical x/y grid lines.
-Outputs are ignored by Git under `artifacts/`.
+## Notebooks and API guide
 
-No time window is required. `--check-interval` defaults to 2048 updates;
-`--max-steps` is a failure cap. Nonconvergence raises an error and saves an
-explicitly named `unconverged.npz`, rather than silently accepting a label.
+- [Geometry, mesh and enlarged cells](notebooks/01_geometry_and_mesh.ipynb): CPU
+  preparation, exact geometry, uniform/deterministic meshes, source spectrum, and
+  CNN raster inputs.
+- [GPU scattering and far field](notebooks/02_gpu_scattering_and_far_field.ipynb):
+  one 21-bin solve, per-bin convergence, scattering width, complex far field,
+  analytical-cylinder comparison, and HDF5 reload.
+- [Solver/API reference](docs/solver_api.md): settings, material overlays, mesh
+  strategies, checkpoint format, archives, and plotting options.
+
+Install the `notebooks` dependency group and select the project `.venv` kernel.
+Both notebooks include executed example outputs.
+
+## Geometry
+
+`Simulation` owns one continuous `Geometry`. Add primitives in the order in which
+they should be applied:
 
 ```python
-from fdtdmesh.cases import canonical_case
-from fdtdmesh.simulation import run_scattering
-
-case, mesh = canonical_case("cylinder", ppw=32)
-result = run_scattering(case, mesh)
-result.save("artifacts/cylinder.npz")
+outer = sim.add_rectangle(
+    (2.5 * lam, 3.5 * lam), (2.55 * lam, 3.45 * lam), material="PEC"
+)
+sim.add_rectangle(
+    (2.87 * lam, 3.13 * lam), (2.85 * lam, 3.5 * lam), material="air"
+)
+sim.add_polygon(
+    [(2.0 * lam, 2.0 * lam), (2.3 * lam, 2.1 * lam), (2.2 * lam, 2.5 * lam)],
+    material="PEC",
+)
+sim.remove_geometry(outer)
 ```
 
-## Validation and scope
+`add_circle(center, radius, material="PEC")`, `add_rectangle(x, y,
+material="PEC")`, and `add_polygon(vertices, material="PEC")` accept only `PEC`
+or `air`. Every primitive must lie strictly inside the domain. Later primitives
+overlay earlier interiors, so an air primitive can carve a vacuum hole in a PEC
+primitive. Removing or adding geometry invalidates the applied mesh, prepared
+coefficients, and previous `sim.result`; apply a mesh again before solving.
+
+Continuous geometry is the source of truth. Display rasterization does not define
+the solver geometry. Analytic circles and simple non-self-intersecting polygons are
+supported. Unresolved cut topology, missing enlarged-cell donors, disconnected open
+segments, and hidden subcell gaps are rejected. Refinement does not guarantee that
+every corner alignment is supported; adjust geometry, anchors, or the budget.
+
+## Mesh strategies
+
+```python
+sim.apply_mesh("uniform", cells=(144, 144))
+sim.apply_mesh("deterministic", cells=(144, 144))
+sim.apply_mesh("density", cells=(144, 144), density=(rho_x, rho_y))
+sim.apply_mesh("cnn", cells=(144, 144), checkpoint="models/pec_mesher")
+sim.apply_mesh(existing_mesh)
+```
+
+The named strategies require an exact `(Nx, Ny)` budget, including fixed PML
+collars and compulsory layout anchors. `uniform` targets constant spacing but may
+need to adjust lines for those hard coordinates. Pass `strict=True` to reject an
+incompatible exact-uniform request instead of allowing the uniform preference to be
+projected through the constrained density mesher. `strict` is valid only for the
+uniform strategy. An explicit `Mesh` is used as supplied and cannot be combined
+with generator options.
+
+`deterministic` rasterizes resolved PEC occupancy, builds smoothed edge activity,
+and projects the resulting axis densities. It is a reproducible geometry rule,
+not an accuracy guarantee. `density` accepts two positive finite one-dimensional
+vectors over equal-width bins. All generated meshes retain the exact budget,
+anchors, PML lines, and adjacent-width grading constraints. Infeasible requests
+raise `MeshInfeasibleError`; an unfinished optimizer raises `MeshOptimizationError`.
+
+The default PML has 12 collar cells per side and physical thickness one half of the
+layout wavelength on each enabled axis. Uniform collar placement is a hard
+constraint. Geometry and the TFSF/contour layout must remain inside the permitted
+interior guards.
+
+## CNN strategy contract
+
+CNN inference is optional and lazy. Install it with:
 
 ```powershell
-.venv/Scripts/python.exe benchmarks/validate_scattering.py
+uv sync --extra cnn
 ```
 
-The recorded cylinder width errors at 64 nominal cells per wavelength are
-**0.137% uniform** and **0.077% graded**, against the independent cylinder series.
-Both precision modes have CPU/GPU regression checks; Compute Sanitizer memcheck
-reported zero errors. See [measured validation](docs/validation.md),
-[numerical method and restrictions](docs/numerical_method.md), and
-[remaining research stages](docs/pec_restart_plan.md).
+No trained checkpoint is supplied. A checkpoint is a directory containing
+`model.onnx` and `manifest.json`. The manifest must declare:
 
-Supported geometry consists of analytic circles and simple polygons with ordered
-vacuum overlays. Unsupported cut topology or missing enlarged-cell donors raises
-`UnresolvedGeometryError`. Arbitrary silhouettes may need geometry anchors or
-refinement; refinement alone does not guarantee every corner alignment is valid.
-The current solver is +x incidence, vacuum/PEC, TMz, and z-invariant. Its output
-is 2D scattering width, not 3D RCS. Small demonstration cases are qualified;
-high-Q resonators and general training references still need individual convergence
-and boundary-sensitivity checks.
+```text
+schema:        fdtdmesh-cnn-v1
+method:        tmz-conformal-ect-v1
+normalization: unit-domain
+outputs:       positive-axis-density
+shape:         raster height/width
+channels:      geometry raster channels
+sha256:        SHA-256 of model.onnx
+```
 
-The NumPy implementation and CPU NF2FF exist only as test oracles. Explicit
-`diagnostic_download=True` retrieves fields/currents **after** GPU NF2FF for validation;
-normal runs do not download them.
+The ONNX model must expose `rho_x` and `rho_y` outputs shaped `(1, bins)`. The
+runtime supplies the manifest's raster channels plus four physical features:
+domain-x/wavelength, domain-y/wavelength, `fmin/centre_frequency`, and
+`fmax/centre_frequency`. The model supplies preferences only; the deterministic
+mesher still owns counts, collars, anchors, spacing, and grading.
+
+## Results, plots, and archives
+
+`Result` is an immutable, plot-ready snapshot. It exposes `frequencies`, `angles`,
+complex `far_field`, `scattering_width`, `history`, `bin_history`, `geometry`,
+`mesh`, `diagnostics`, `configuration`, `converged`, and optional `debug` arrays.
+The normal solve downloads final far-field amplitudes, widths, and diagnostics;
+`diagnostic_download=True` is an explicit validation path for final fields/currents.
+
+Both `Simulation` and `Result` support HDF5 save/load:
+
+```python
+sim.save("artifacts/cylinder/simulation.h5")
+sim2 = Simulation.load("artifacts/cylinder/simulation.h5")
+
+result.save("artifacts/cylinder/result.h5")
+loaded = fdtdmesh.Result.load("artifacts/cylinder/result.h5")
+```
+
+`Simulation.save` stores the definition and any applied mesh. `Result.save` stores
+the geometry, mesh, configuration, far-field arrays, scattering widths, convergence
+history, and diagnostics. A loaded result can be inspected and plotted without a
+CUDA runtime.
+
+The following methods return a Matplotlib `Figure`; each accepts an optional `ax`
+where supported by the method:
+
+```python
+sim.plot_geometry(mesh=True)
+sim.plot_mesh()
+sim.plot_discretization()
+sim.plot_source()
+
+loaded.plot_geometry(mesh=True)
+loaded.plot_mesh()
+loaded.plot_convergence()
+loaded.plot_scattering(normalize="wavelength")
+loaded.plot_far_field(component="phase")
+```
+
+`result.save_plots(directory)` writes the standard geometry, mesh, convergence,
+scattering, amplitude, and phase PNGs. Matplotlib is included in the notebook
+dependency group:
+
+```powershell
+uv sync --group notebooks
+```
+
+## Numerical conventions and limits
+
+The phasor convention is `exp(+iωt)` and outgoing radiation uses Hankel functions
+of the second kind. With `k=2πf/C0`, the stored two-dimensional width is
+`4*abs(S)**2/k`, where `S` is the dimensionless complex far-field amplitude
+normalized to the incident DFT at the phase origin. Width is in metres. Normalize
+by `C0/f` for `σ₂D/λ`; a dB display uses `10*log10(σ₂D/λ)` with a plotting floor.
+Complex phases from different origins are not directly comparable.
+
+Automatic GPU stopping checks current and incident DFT changes for every requested
+bin and the maximum residual field after a source/propagation guard. This certifies
+the configured temporal settling policy; it does not certify spatial convergence,
+PML independence, or accuracy for a high-Q or unusually sensitive geometry.
+Compare meshes with the same physical geometry, analysis band, layout, and stopping
+policy while independently refining cells and checking contour/PML sensitivity.
+
+The public `Simulation`/`Result` API is the compatibility layer for new user code.
+Lower-level `ScatteringCase`, `run_scattering`, `prepare`, native runtime, and mesh
+projection functions remain available for tests and specialized numerical work, but
+their signatures and internal layout details are less stable.

@@ -8,7 +8,7 @@ cdef extern from "runtime_types.h":
     cdef struct RunConfig:
         int nx, ny, a, b, c, d, source, origin, nf, nr, nd
         int max_steps, check_interval, min_steps, stable_checks, auto_stop, debug
-        double dt, f0, pulse_width, pulse_delay, source_scale
+        double dt, f0, pulse_width, pulse_delay, source_scale, pulse_end
         double rtol, atol, field_tol, origin_x, origin_y
     cdef struct HostInputs:
         const void *ex, *ey, *ih, *hxq, *hyq, *hxc, *hyc, *profiles
@@ -17,7 +17,7 @@ cdef extern from "runtime_types.h":
         const double *points, *normals, *ds, *weights, *frequencies, *angles
         const void *initial_e, *initial_hx, *initial_hy
     cdef struct HostOutputs:
-        double *amplitude, *width, *history
+        double *amplitude, *width, *history, *bin_history
         void *ez, *hx, *hy
         double *currents, *incident
     cdef struct Progress:
@@ -72,6 +72,7 @@ def run(c, shape, box, source, contour, options, *, initial=None, progress=None)
     cfg.dt, cfg.f0 = c.dt, options["frequency"]
     cfg.pulse_width, cfg.pulse_delay = options["pulse_width"], options["pulse_delay"]
     cfg.source_scale = options["source_scale"]
+    cfg.pulse_end = options.get("pulse_end", 1e100)
     cfg.rtol, cfg.atol, cfg.field_tol = options["rtol"], options["atol"], options["field_tol"]
     cfg.origin_x, cfg.origin_y = options["origin"]
     freqs = np.ascontiguousarray(options["frequencies"], dtype=np.float64)
@@ -82,6 +83,10 @@ def run(c, shape, box, source, contour, options, *, initial=None, progress=None)
             or not np.isfinite(angles).all()):
         raise ValueError("Invalid frequency/angle values")
     cfg.nf, cfg.nd, cfg.nr = len(freqs), len(angles), len(contour.indices)
+    if cfg.check_interval < 1 or cfg.max_steps < 1:
+        raise ValueError("Invalid checkpoint counts")
+    if (cfg.max_steps//cfg.check_interval+2)*cfg.nf*3*8 > 64*1024*1024:
+        raise ValueError("Per-bin checkpoint history exceeds 64 MiB; increase check_interval or reduce bins/cap")
     nx, ny, nr, nf, nd = cfg.nx, cfg.ny, cfg.nr, cfg.nf, cfg.nd
     if (min(nx, ny) < 3 or min(cfg.max_steps, cfg.check_interval, cfg.stable_checks, nr) < 1
             or cfg.max_steps > 10_000_000 or cfg.min_steps < 0
@@ -90,7 +95,7 @@ def run(c, shape, box, source, contour, options, *, initial=None, progress=None)
             or not 0 < cfg.a < cfg.b < nx or not 0 < cfg.c < cfg.d < ny):
         raise ValueError("Invalid native dimensions, resource cap or indices")
     if (not np.isfinite([cfg.dt,cfg.f0,cfg.pulse_width,cfg.pulse_delay,cfg.source_scale,
-                         cfg.rtol,cfg.atol,cfg.field_tol,cfg.origin_x,cfg.origin_y]).all()
+                         cfg.rtol,cfg.atol,cfg.field_tol,cfg.origin_x,cfg.origin_y,cfg.pulse_end]).all()
             or min(cfg.dt,cfg.f0,cfg.pulse_width,cfg.rtol,cfg.atol,cfg.field_tol) <= 0):
         raise ValueError("Invalid source or convergence parameters")
     dtype = np.asarray(c.ex).dtype
@@ -149,6 +154,8 @@ def run(c, shape, box, source, contour, options, *, initial=None, progress=None)
     amplitude = np.empty((nf,nd),dtype=np.complex128)
     width = np.empty((nf,nd),dtype=np.float64)
     history = np.empty((cfg.max_steps//cfg.check_interval+2,8),dtype=np.float64)
+    bin_history = np.empty((len(history),nf,3),dtype=np.float64)
+    outputs.bin_history = <double*>pointer(bin_history)
     outputs.amplitude,outputs.width,outputs.history = <double*>pointer(amplitude),<double*>pointer(width),<double*>pointer(history)
     outputs.ez = NULL
     outputs.hx = NULL
@@ -179,5 +186,5 @@ def run(c, shape, box, source, contour, options, *, initial=None, progress=None)
                        device_bytes=stats.device_bytes,stepping_field_transfers=0,
                        Nt=stats.steps,status=["running","converged","max_steps","nonfinite"][stats.status],
                        checks=stats.checks,stable_checks=stats.stable,dft_error_ratio=stats.error,
-                       residual=stats.residual)
+                       residual=stats.residual,bin_history=bin_history[:stats.reports].copy())
     return amplitude,width,history[:stats.reports].copy(),diagnostics,debug

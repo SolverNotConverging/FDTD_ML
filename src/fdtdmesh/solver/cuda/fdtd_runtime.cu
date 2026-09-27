@@ -63,7 +63,7 @@ template<class T> struct Device {
     int *hxp,*hyp,*monitors;
     unsigned char* pec;
     double *points,*normals,*ds,*weights,*freq,*angles,*currents,*previous,*incident,*prev_inc;
-    double *bin_error,*field_partial,*amplitude,*width;
+    double *bin_error,*field_partial,*amplitude,*width,*bin_history;
     State* state;
     Progress *snapshots,*report;
     int* published;
@@ -124,7 +124,7 @@ template<class T> __global__ void update_e(Device<T> d) {
         const T* c=d.profiles+3*p;
         T v=d.hi[p]-d.hi[p-1]; d.pei[p]=c[1]*d.pei[p]+c[2]*v;
         d.ei[p]+=d.ex[p]*(c[0]*v+d.pei[p]);
-        if(p==d.cfg.source) {
+        if(p==d.cfg.source && (n+1)*d.cfg.dt<=d.cfg.pulse_end) {
             double u=(n+1)*d.cfg.dt*d.cfg.f0-d.cfg.pulse_delay;
             d.ei[p]+=T(d.cfg.source_scale*exp(-u*u/(d.cfg.pulse_width*d.cfg.pulse_width))*cos(2*pi*u));
         }
@@ -187,8 +187,12 @@ template<class T> __global__ void dft_check(Device<T> d) {
         d.prev_inc[2*f]=inc[0];d.prev_inc[2*f+1]=inc[1];
         double tolerance=d.cfg.atol*strength*sqrt(v[2][0])+d.cfg.rtol*sqrt(v[1][0]);
         double error=sqrt(v[0][0])/fmax(tolerance,1e-300);
-        error=fmax(error,change/fmax((d.cfg.atol+d.cfg.rtol)*strength,1e-300));
-        if(!isfinite(v[0][0]) || !isfinite(v[1][0]) || strength<1e-20 || !isfinite(strength)) error=INFINITY;
+        double incident_error=change/fmax((d.cfg.atol+d.cfg.rtol)*strength,1e-300);
+        if(!isfinite(v[0][0]) || !isfinite(v[1][0]) || !isfinite(error)) error=INFINITY;
+        if(strength<1e-20 || !isfinite(strength) || !isfinite(incident_error)) incident_error=INFINITY;
+        size_t row=(size_t(d.state->checks)*d.cfg.nf+f)*3;
+        d.bin_history[row]=error;d.bin_history[row+1]=incident_error;d.bin_history[row+2]=strength;
+        error=fmax(error,incident_error);
         d.bin_error[f]=error;
     }
 }
@@ -263,6 +267,7 @@ template<class T> void run(const RunConfig& c,const HostInputs& in,HostOutputs& 
     d.amplitude=r.allocate<double>(2*size_t(c.nf)*c.nd);d.width=r.allocate<double>(size_t(c.nf)*c.nd);
     d.state=r.allocate<State>(1);d.published=r.allocate<int>(1);
     d.snapshots=r.allocate<Progress>(c.max_steps/c.check_interval+2);d.report=r.allocate<Progress>(1);
+    d.bin_history=r.allocate<double>(size_t(c.max_steps/c.check_interval+2)*c.nf*3);
     check(cudaEventRecord(r.initialized,r.work));
     check(cudaStreamWaitEvent(r.telemetry,r.initialized,0));
     check(cudaGraphCreate(&r.graph,0));cudaGraphConditionalHandle condition;
@@ -319,6 +324,7 @@ template<class T> void run(const RunConfig& c,const HostInputs& in,HostOutputs& 
     }
     check(cudaStreamSynchronize(r.work));
     std::vector<Progress> records(state.checks);r.download(records.data(),d.snapshots,records.size(),stats->telemetry_bytes);
+    r.download(out.bin_history,d.bin_history,size_t(state.checks)*c.nf*3,stats->telemetry_bytes);
     check(cudaStreamSynchronize(r.work));
     for(int i=0;i<state.checks;++i) {
         const auto& v=records[i];double* dst=out.history+8*i;

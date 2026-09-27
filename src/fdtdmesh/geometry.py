@@ -1,0 +1,158 @@
+"""Immutable continuous geometry. No grid-dependent state lives in this module."""
+
+import hashlib
+import json
+from dataclasses import dataclass
+from pathlib import Path
+
+import numpy as np
+
+from .scene import Scene2D
+
+
+@dataclass(frozen=True)
+class Shape:
+    id: int
+    kind: str
+    material: str
+    parameters: tuple
+    name: str | None = None
+
+    def __post_init__(self):
+        if self.kind not in ("circle", "rectangle", "polygon") or self.material not in (
+            "PEC",
+            "air",
+        ):
+            raise ValueError("Unsupported geometry kind or material")
+        if isinstance(self.id, bool) or not isinstance(self.id, int) or self.id < 0:
+            raise ValueError("Geometry handle must be a nonnegative integer")
+        if self.name is not None and not isinstance(self.name, str):
+            raise ValueError("Geometry name must be a string or None")
+        values = (
+            tuple(tuple(map(float, p)) for p in self.parameters)
+            if self.kind == "polygon"
+            else tuple(map(float, self.parameters))
+        )
+        if self.kind != "polygon" and len(values) != (3 if self.kind == "circle" else 4):
+            raise ValueError("Invalid primitive parameters")
+        object.__setattr__(self, "parameters", values)
+
+
+@dataclass(frozen=True)
+class Geometry:
+    size: tuple
+    shapes: tuple = ()
+    next_id: int = 0
+
+    def __post_init__(self):
+        object.__setattr__(self, "size", tuple(float(v) for v in self.size))
+        if len(self.size) != 2:
+            raise ValueError("size must contain two lengths in metres")
+        Scene2D(*self.size)
+        object.__setattr__(self, "shapes", tuple(self.shapes))
+        if any(not isinstance(s, Shape) for s in self.shapes):
+            raise ValueError("Geometry requires Shape records")
+        ids = [s.id for s in self.shapes]
+        if (
+            isinstance(self.next_id, bool)
+            or not isinstance(self.next_id, int)
+            or self.next_id < 0
+            or len(set(ids)) != len(ids)
+            or any(i >= self.next_id for i in ids)
+        ):
+            raise ValueError("Invalid geometry handles")
+        self.to_scene()
+
+    def to_scene(self):
+        scene = Scene2D(*self.size)
+        for s in self.shapes:
+            p = s.parameters
+            if s.kind == "circle":
+                scene.add_circle(p[:2], p[2], pec=s.material == "PEC")
+            elif s.kind == "rectangle":
+                scene.add_rectangle(p[:2], p[2:], pec=s.material == "PEC")
+            elif s.kind == "polygon":
+                scene.add_polygon(p, pec=s.material == "PEC")
+            else:
+                raise ValueError(f"Unknown geometry type {s.kind}")
+        return scene
+
+    def added(self, kind, parameters, material="PEC", name=None):
+        if material not in ("PEC", "air"):
+            raise ValueError("material must be 'PEC' or 'air'")
+        p = (
+            tuple(tuple(map(float, v)) for v in parameters)
+            if kind == "polygon"
+            else tuple(map(float, parameters))
+        )
+        shape = Shape(self.next_id, kind, material, p, name)
+        result = Geometry(self.size, (*self.shapes, shape), self.next_id + 1)
+        return result, shape.id
+
+    def removed(self, handle):
+        if not any(s.id == handle for s in self.shapes):
+            raise KeyError(f"No geometry handle {handle}")
+        return Geometry(self.size, tuple(s for s in self.shapes if s.id != handle), self.next_id)
+
+    def contains(self, x, y):
+        return self.to_scene().contains(x, y)
+
+    def as_dict(self):
+        return dict(
+            schema=1,
+            units="m",
+            size=self.size,
+            next_id=self.next_id,
+            shapes=[
+                dict(
+                    id=s.id, kind=s.kind, material=s.material, parameters=s.parameters, name=s.name
+                )
+                for s in self.shapes
+            ],
+        )
+
+    @classmethod
+    def from_dict(cls, data):
+        if data.get("schema") != 1 or data.get("units") != "m":
+            raise ValueError("Unsupported geometry schema or units")
+        return cls(tuple(data["size"]), tuple(Shape(**s) for s in data["shapes"]), data["next_id"])
+
+    @property
+    def geometry_id(self):
+        return hashlib.sha256(
+            json.dumps(
+                self.as_dict(), sort_keys=True, separators=(",", ":"), allow_nan=False
+            ).encode()
+        ).hexdigest()
+
+    def save(self, path):
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(self.as_dict(), indent=2, allow_nan=False) + "\n")
+
+    @classmethod
+    def load(cls, path):
+        return cls.from_dict(json.loads(Path(path).read_text()))
+
+    def rasterize(self, shape=(256, 256), *, channels=("occupancy",), bounds=None):
+        """Pixel-centre samples, array order (channels, y, x), independent of any mesh."""
+        if len(shape) != 2 or any(isinstance(n, bool) or int(n) != n or n < 1 for n in shape):
+            raise ValueError("shape must contain positive integer (height, width)")
+        h, w = map(int, shape)
+        x0, x1, y0, y1 = (0.0, self.size[0], 0.0, self.size[1]) if bounds is None else bounds
+        if (
+            not np.isfinite([x0, x1, y0, y1]).all()
+            or not 0 <= x0 < x1 <= self.size[0]
+            or not 0 <= y0 < y1 <= self.size[1]
+        ):
+            raise ValueError("Raster bounds must lie in the domain")
+        x, y = x0 + (np.arange(w) + 0.5) * (x1 - x0) / w, y0 + (np.arange(h) + 0.5) * (y1 - y0) / h
+        xx, yy = np.meshgrid(x, y)
+        available = {
+            "occupancy": self.contains(xx, yy).astype(np.float32),
+            "x": (xx / self.size[0]).astype(np.float32),
+            "y": (yy / self.size[1]).astype(np.float32),
+        }
+        if not channels or any(c not in available for c in channels):
+            raise ValueError("Supported channels: occupancy, x, y")
+        return np.stack([available[c] for c in channels])

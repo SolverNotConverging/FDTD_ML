@@ -1,298 +1,341 @@
-# Solver usage and Python API
+# Solver and Python API
 
-This guide describes the current `tmz-conformal-ect-v1` implementation. It solves
-vacuum/PEC, z-invariant TMz scattering (`Ez,Hx,Hy`) with +x plane-wave incidence.
-Conformal boundaries and enlarged cells are always enabled. Geometry and mesh
-preparation use the CPU; FDTD, current DFT, convergence and NF2FF use native CUDA.
+This guide documents the public `Simulation` and `Result` workflow for
+`tmz-conformal-ect-v1`: vacuum/PEC, z-invariant TMz scattering with +x plane-wave
+incidence. Conformal cut faces and enlarged cells are part of the solver method.
+Geometry and mesh preparation happen on the CPU; native CUDA performs field updates,
+current DFT accumulation, convergence checks, and NF2FF.
 
-## Install and open the notebooks
+## Install
 
-From the repository root, with CUDA Toolkit 13.x and the C++ build tools installed:
+For the solver and native extension:
 
 ```powershell
-uv sync --cache-dir .uv-cache --group dev --group notebooks
+uv sync --group dev
 ./scripts/build_cuda.ps1
-.venv/Scripts/python.exe -m jupyterlab notebooks
 ```
 
-Select the kernel belonging to this repository's `.venv`, then **Restart Kernel
-and Run All Cells**. The notebooks discover the repository from either the root
-directory or `notebooks/`; opening them from an unrelated working directory will fail.
-For an existing editor's kernel selector, choose `.venv/Scripts/python.exe`.
-See [README](../README.md) for Linux and GPU architecture build settings.
+Plotting requires Matplotlib. It is included in the notebook group:
 
-| Notebook | Contents | GPU needed? |
-|---|---|---|
-| [01_geometry_and_mesh](../notebooks/01_geometry_and_mesh.ipynb) | Uniform/graded grids, PML/TFSF/contour placement, exact cut faces and enlarged pairs, axis spacing | No |
-| [02_gpu_scattering_and_far_field](../notebooks/02_gpu_scattering_and_far_field.ipynb) | Multi-frequency solve, stopping history, separate bin settling, absolute/dB scattering widths, complex amplitude/phase, save/load | Yes to solve; saved outputs can be viewed without one |
-
-Notebooks include executed example outputs. Running them again updates the plots
-and writes archives/figures under ignored `artifacts/notebooks/`. Geometry raster
-appearance is for display only; continuous geometry determines cut coefficients.
-
-## First solve
-
-```python
-from fdtdmesh.cases import canonical_case
-from fdtdmesh.simulation import Convergence, run_scattering
-
-case, mesh = canonical_case(
-    "cylinder", ppw=24,
-    frequencies=(0.9e9, 1e9, 1.1e9),
-    convergence=Convergence(check_interval=256),
-)
-result = run_scattering(case, mesh)
-assert result.converged
-result.save("artifacts/cylinder.npz")
+```powershell
+uv sync --group notebooks
 ```
 
-`canonical_case(kind="cylinder", *, ppw=24, nonuniform=False, frequency=1e9,
-shift=(0,0), radius=0.47, contour_offset=1.0, pml_cells=None,
-convergence=None, frequencies=()) -> (ScatteringCase, Mesh)`
+Optional CNN inference uses ONNX Runtime:
 
-`kind` is `empty`, `cylinder`, `rectangle`, `pair`, or `slot`. `ppw` is a multiple
-of eight and sets each total axis budget to `6*ppw`. Geometry lengths, `shift`,
-`radius`, and `contour_offset` use wavelengths at the pulse-centre `frequency`.
-The returned scene and mesh use metres. The default collar is 0.5 wavelengths
-thick. `nonuniform=True` uses a demonstration Gaussian density and constrained
-projection; it is not an optimized geometry mesher. Projection can take tens of
-seconds even when the subsequent GPU solve takes less than a second.
-
-## Case and source configuration
-
-Import `ScatteringCase` from `fdtdmesh.simulation`. It is a frozen dataclass;
-use `dataclasses.replace(case, field=value)` to change its fields. The contained
-`Scene2D` remains mutable, so construct a new scene when independent cases are needed.
-
-| Field | Meaning / units |
-|---|---|
-| `scene` | Continuous `Scene2D` containing ordered PEC/vacuum primitives |
-| `frequency` | Gaussian cosine pulse centre, Hz |
-| `frequencies=()` | Requested positive DFT bins, Hz; empty means the pulse centre |
-| `angles` | Finite nonempty 1D array, radians; default 0…359 degrees |
-| `tfsf_box` | `(x0,x1,y0,y1)` in metres, enclosing the object |
-| `contour_box` | Same order, enclosing TFSF, strictly outside PML |
-| `pml` | `fdtdmesh.pml.PML` with fixed x/y collars |
-| `source_x` | Auxiliary 1D source position, metres, between left PML and contour |
-| `origin` | `(x,y)` phase reference in metres, inside TFSF; x must be anchored |
-| `pulse_width_periods=1.5` | Gaussian width in pulse-centre periods |
-| `pulse_delay_periods=6.0` | Pulse delay in pulse-centre periods |
-| `convergence` | `Convergence` policy below |
-
-Changing monitored bins does not change the source pulse. Bins outside its usable
-bandwidth or above the temporal Nyquist limit are rejected. The source propagates
-along +x; an arbitrary incidence angle is not an available parameter. The auxiliary
-source is not a 2D line radiator. All lengths supplied directly to these APIs are SI.
-
-## Geometry, mesh and PML
-
-`Scene2D(Lx,Ly)` requires positive domain lengths. Primitive methods return the
-scene, allowing chained calls:
-
-```python
-from dataclasses import replace
-from fdtdmesh.scene import Scene2D
-from fdtdmesh.constants import C0
-
-base, mesh = canonical_case("empty", ppw=24)
-lam = C0/base.frequency
-scene = Scene2D(base.scene.Lx, base.scene.Ly)
-scene.add_rectangle((2.5*lam, 3.5*lam), (2.55*lam, 3.45*lam))
-scene.add_rectangle((2.87*lam, 3.13*lam), (2.85*lam, 3.5*lam), pec=False)
-custom = replace(base, scene=scene)
-result = run_scattering(custom, mesh)
+```powershell
+uv sync --extra cnn
 ```
 
-Other methods are `add_circle((cx,cy),radius,pec=True)` and
-`add_polygon(vertices,pec=True)` for simple, non-self-intersecting polygons.
-Primitives must lie strictly inside the domain. Later primitives overwrite earlier
-interiors; `pec=False` carves vacuum. PEC walls on hole boundaries are retained.
-`contains(x,y)` broadcasts coordinate arrays into a PEC mask; `bounds()` and
-`as_dict()` provide bounding boxes and serializable geometry.
+No trained CNN checkpoint is supplied. The validated local platform is Windows,
+Python 3.12, CUDA 13.3, MSVC, and an RTX 4070 Laptop GPU. There is no production
+CPU fallback.
 
-`Mesh(x,y)` accepts strictly increasing 1D node arrays starting at zero. Cell
-counts are `Nx=len(x)-1`, `Ny=len(y)-1`; node arrays are read-only. Adjacent cell
-width ratios must not exceed 1.4. `mesh.diagnostics()` reports spacing and grading.
+## Simulation object
 
-For density-based projection, import `density_mesh`, `AxisConstraints`, and
-`AxisCollar` from `fdtdmesh.mesh`:
+Create one `Simulation` with a physical size and a positive analysis band. The
+default `SolverSettings` uses 21 DFT bins, float64, and a 0.9 timestep safety
+factor. `DFTConvergence` is an alias for the convergence policy used by the GPU.
 
 ```python
-from fdtdmesh.mesh import density_mesh, AxisConstraints
-import numpy as np
+import fdtdmesh
+from fdtdmesh import DFTConvergence, Simulation, SolverSettings
 
-anchors = lam*np.array([.5,.75,1,1.5,3,4.5,5,5.5])
-u = (np.arange(96)+.5)/96
-rho = 1 + np.exp(-((u-.5)/.18)**2)
-graded = density_mesh(
-    scene.Lx, scene.Ly, 144, 144, rho, rho,
-    x_anchors=anchors, y_anchors=anchors,
-    x_collar=custom.pml.x, y_collar=custom.pml.y,
-    x_constraints=AxisConstraints(min_spacing=lam/96),
-    y_constraints=AxisConstraints(min_spacing=lam/96),
-    time_limit=30.0,
+f0 = 1e9
+lam = fdtdmesh.C0 / f0
+sim = Simulation(
+    size=(6 * lam, 6 * lam),
+    fmin=0.9 * f0,
+    fmax=1.1 * f0,
+    settings=SolverSettings(
+        dft_bins=21,
+        stop=DFTConvergence(
+            check_interval=2048,
+            max_steps=200_000,
+            stable_checks=3,
+            rtol=1e-5,
+            atol=1e-8,
+            field_tol=1e-5,
+        ),
+        precision="float64",
+        courant=0.9,
+    ),
 )
 ```
 
-Density vectors describe equal-width raster bins. `density_mesh` returns exact
-budgets including collar cells and accepts `x/y_anchors`, `x/y_constraints`, and
-`x/y_collar`. `AxisConstraints(min_spacing=0,max_spacing=None,max_ratio=1.4)`
-controls spacing. `AxisCollar(cells,thickness)` fixes symmetric collar lines.
-`time_limit` applies to each axis optimizer; infeasibility and optimizer timeout
-are distinct errors. For manually constructed meshes, preserve collar coordinates
-using `AxisCollar.fixed_lines(length,count)`; PML validation checks exact equality.
+All coordinates, domain sizes, PML thicknesses, anchors, and mesh lines are SI
+metres. The source is a finite Gaussian-modulated cosine. Its centre frequency is
+the midpoint `(fmin+fmax)/2`. Its envelope is `exp(-((t-t0)/tau)**2)` with
+`t0=5*tau` and an explicit cutoff at `10*tau`. The positive-frequency Gaussian
+lobe is designed to reach -6 dB amplitude at the band edges. The real pulse has
+two spectral lobes, so very broad bands have slightly different actual edge
+levels; `sim.plot_source()` shows their sum. Start with 0.9–1.1 GHz for the POC.
+Integer cell arguments are counts, never physical indices.
 
-`PML(x,y,order=3,kappa_max=3,alpha_max=0.05,R0=1e-8)` uses x/y collars and
-electric-equivalent conductivity `alpha_max` in S/m. Both axes should have collars
-for the documented scattering setup. Keep contour interpolation outside PML,
-at least two cells between contour and TFSF, and geometry beyond the two-cell
-interior guard of TFSF. Anchors must include all monitor/source coordinates.
+`dft_bins` may be an integer count or an explicit increasing tuple of positive Hz
+frequencies. Explicit bins must lie within `[fmin, fmax]`. The source is checked for
+usable excitation at every requested bin and for temporal Nyquist compliance on the
+applied mesh.
 
-Not every shape/grid combination has supported cut topology. Small faces need a
-complete unused vacuum donor. Edges with disconnected open segments, unresolved
-gaps, and hidden subcell primitives are rejected. Refinement or geometry anchors
-may be necessary, especially at rotated corners. See [method](numerical_method.md).
+Useful properties include `size`, `source`, `fmin`, `fmax`, `wavelength`,
+`frequencies`, `settings`, `layout`, `pml`, `geometry`, `mesh`, and `result`.
 
-## Running and stopping
+## Exact geometry
 
-`run_scattering(case, mesh, *, dtype="float64", safety=0.9, dt=None,
-progress=None, diagnostic_download=False, require_converged=True)` returns a
-`ScatteringResult`. No timestep count or fixed time window is required.
-
-| Argument | Behavior |
-|---|---|
-| `dtype` | `"float32"` or `"float64"` fields; DFT accumulators remain float64 |
-| `safety` | Fraction of the computed timestep bound, strictly between zero and one |
-| `dt` | Optional explicit timestep in seconds, strictly below the bound |
-| `progress` | Callable receiving small status dictionaries; may be coalesced |
-| `diagnostic_download` | Explicit test-only field/current download after GPU NF2FF |
-| `require_converged` | Default raises on failure; false returns a result to inspect |
-
-`Convergence(max_steps=200000,check_interval=2048,stable_checks=3,
-rtol=1e-5,atol=1e-8,field_tol=1e-5)` controls device stopping. `max_steps` is a
-failure/resource cap (at most ten million), not the simulation duration. Counts
-must be positive integers and the cap must exceed the source/propagation guard.
-
-Each checkpoint tests changes in current and incident DFTs for every bin and the
-maximum residual field. All must pass for `stable_checks` consecutive checkpoints
-after the guard. The current norm uses physical contour weights and impedance-scaled
-H. `atol` is scaled by incident spectral strength, so it is not an absolute SI
-current threshold. Tightening these values controls transient settling, not spatial
-mesh error or reference accuracy.
+The geometry is continuous and ordered. The public methods accept only `PEC` and
+`air` materials and return a geometry handle for removal:
 
 ```python
-def progress(report):
-    print(report["step"], report["dft_error_ratio"], report["residual"])
-
-result = run_scattering(case, mesh, progress=progress)
+circle = sim.add_circle((3 * lam, 3 * lam), 0.47 * lam, material="PEC")
+sim.add_rectangle(
+    (2.5 * lam, 3.5 * lam), (2.55 * lam, 3.45 * lam), material="PEC"
+)
+sim.add_polygon(
+    [(2.0 * lam, 2.0 * lam), (2.3 * lam, 2.1 * lam), (2.2 * lam, 2.5 * lam)],
+    material="PEC",
+)
+sim.add_rectangle(
+    (2.87 * lam, 3.13 * lam), (2.85 * lam, 3.5 * lam), material="air"
+)
+sim.remove_geometry(circle)
 ```
 
-Reports include `generation`, `step`, integer `status`, `stable_checks`,
-`simulated_time`, `dft_error_ratio`, and `residual`. They come from an asynchronous
-low-priority stream; the GPU graph never waits for Python callbacks. Delivery is
-throttled and short runs may show only a final callback. Callback exceptions are
-raised after the autonomous GPU execution finishes.
+The exact signatures are:
 
-## Result arrays and normalization
+```text
+add_circle(center, radius, material="PEC", name=None)
+add_rectangle(x, y, material="PEC", name=None)
+add_polygon(vertices, material="PEC", name=None)
+remove_geometry(handle)
+```
 
-Let F be the number of frequencies and A the number of angles.
+Circles are `(cx, cy), radius`; rectangles use increasing `(x0, x1)` and `(y0,
+y1)` pairs; polygons use a simple, non-self-intersecting vertex sequence. Every
+primitive must lie strictly inside the domain. Later primitives overlay earlier
+interiors, so an `air` primitive can carve a vacuum hole in a PEC primitive while
+the physical hole wall remains a PEC boundary. Touching same-material regions
+merge; shared air-cut boundaries do not retain artificial PEC sheets, and an
+identical air overlay completely erases the earlier PEC region. No mesh-dependent
+snapping or gap closing is applied. Adding or removing geometry invalidates
+the applied mesh, prepared coefficients, and previous `Simulation.result`; call
+`apply_mesh` again before solving.
 
-| Attribute | Shape / interpretation |
-|---|---|
-| `frequencies` | `(F,)`, Hz |
-| `angles` | `(A,)`, radians; 0 forward, π backscatter |
-| `amplitude` | `(F,A)`, complex128, dimensionless normalized far-field S |
-| `width` | `(F,A)`, float64, 2D scattering width in metres |
-| `history` | `(checks,8)`, checkpoint table below |
-| `diagnostics` | Status, steps, timing, transfer/memory counts, grid and case configuration |
-| `mesh` | The input mesh |
-| `converged` | True exactly when diagnostics status is `"converged"` |
-| `debug` | Empty by default; optional validation arrays |
-
-The phasor convention is `exp(+iωt)` and outgoing radiation uses Hankel kind 2.
-With `k=2πf/c0`, `width=4*abs(amplitude)**2/k`. S is normalized to the incident
-DFT at the chosen phase origin. Complex phases from different origins cannot be
-compared directly. To plot normalized width use `width/(C0/f)`; for a dimensionless
-dB ratio use `10*log10(width/(C0/f))` with a display floor at zeros. These are
-**2D scattering widths, not 3D RCS or dBsm**.
-
-History columns, zero-based:
-
-| Column | Value |
-|---:|---|
-| 0 | Update count |
-| 1 | Simulated time, seconds |
-| 2 | Worst-bin DFT/incident change divided by tolerance; pass below one |
-| 3 | Residual field / peak incident field; pass below `field_tol` |
-| 4 | Consecutive successful checks |
-| 5 | Status: 0 running, 1 converged, 2 cap, 3 nonfinite |
-| 6 | Peak time-domain incident field |
-| 7 | Checkpoint generation |
-
-Per-bin histories are not retained by the current multi-bin API. Notebook 02
-explicitly repeats single-bin solves to visualize separate traces. It does not
-present those as traces downloaded from the multi-bin solve.
-
-`gpu_ms` measures the GPU graph, including DFT/checks/NF2FF. `setup_seconds` covers
-preparation inside `run_scattering`; `wall_seconds` covers the function, including
-callbacks, but excludes mesh construction done earlier. Transfer counts distinguish
-final results, diagnostics and explicit debug arrays. Device byte counts account
-for application buffers, not all driver/graph overhead.
-
-With `diagnostic_download=True`, `debug` contains final `Ez(Nx+1,Ny+1)`,
-`Hx(Nx+1,Ny)`, `Hy(Nx,Ny+1)`, `currents(F,Ncontour,2)` as complex `(Ez,Ht)` DFTs,
-and `incident(F,Nx+1)`. This is a validation facility; ordinary visualization
-of final scattering needs none of these downloads.
-
-## Save, load and handle errors
+`sim.geometry` is an immutable continuous snapshot; `sim.discretization` is an
+independent inspection copy of the mesh-dependent Yee coefficients. For CNN inputs:
 
 ```python
-import json
-import numpy as np
-
-result.save("artifacts/result.npz")
-with np.load("artifacts/result.npz", allow_pickle=False) as saved:
-    amplitude = saved["amplitude"].copy()
-    width = saved["width"].copy()
-    history = saved["history"].copy()
-    diagnostics = json.loads(str(saved["diagnostics"]))
+geometry_id = sim.geometry.geometry_id
+pixels = sim.geometry.rasterize((128, 128), channels=("occupancy", "x", "y"))
+sim.geometry.save("artifacts/geometry.json")
 ```
 
-The archive also contains `frequencies`, `angles`, `x`, and `y`. There is currently
-no `ScatteringResult.load()` method. Loading saved results needs no GPU. Check
-`diagnostics["status"]` before treating an archive as converged.
+The raster has shape `(channels, height, width)`, sampled at pixel centres;
+`x` and `y` channels are domain-normalized. Its resolution is independent of the
+solver mesh. The geometry ID hashes the ordered recipe, names, and handles; it
+remains unchanged by remeshing, but is not a canonical ID for geometrically
+equivalent recipes. `Geometry.load` restores the standalone JSON definition.
+
+## Applying a mesh
+
+The public mesh strategies are:
 
 ```python
-from fdtdmesh.simulation import ConvergenceError
-try:
-    result = run_scattering(case, mesh)
-except ConvergenceError as exc:
-    failed = exc.result
-    print(failed.diagnostics["status"], failed.diagnostics["Nt"])
-    # Inspect history; do not use this result as a successful training label.
+sim.apply_mesh("uniform", cells=(144, 144), strict=True)
+sim.apply_mesh("deterministic", cells=(144, 144))
+sim.apply_mesh("density", cells=(144, 144), density=(rho_x, rho_y))
+sim.apply_mesh("cnn", cells=(144, 144), checkpoint="models/pec_mesher")
+sim.apply_mesh(existing_mesh)
 ```
 
-| Error | Typical action |
+Named strategies require exact `(Nx, Ny)` total cell budgets, including fixed PML
+collars and layout anchors. `uniform` first attempts exact constant spacing. If
+anchors or collar interfaces cannot align, the default `strict=False` permits a
+uniform density preference to go through the constrained projector. `strict=True`
+is valid only for `uniform` and raises `MeshInfeasibleError` instead of accepting a
+projected mesh. An explicit `Mesh` cannot be combined with `cells`, `density`,
+`checkpoint`, `strict`, or other generator options.
+
+`deterministic` uses the resolved PEC occupancy raster, smoothed boundary activity,
+and occupancy to form reproducible axis densities. It is a geometry rule for
+demonstrations, not a learned or accuracy-optimized baseline. `density` accepts
+two finite, strictly positive one-dimensional vectors over equal-width raster bins.
+Projection retains exact counts and hard anchors and enforces the adjacent-cell
+width ratio policy. Proven infeasibility raises `MeshInfeasibleError`; a projection
+that reaches its optimization time limit raises `MeshOptimizationError`.
+
+The default PML uses 12 cells per side and physical thickness one half of the
+layout wavelength on both axes. PML lines and interfaces are hard mesh constraints.
+The TFSF and contour layout must stay outside collars and satisfy their clearance
+guards. A supplied mesh is validated against those fixed lines.
+
+### CNN checkpoint contract
+
+`cnn` requires a directory containing `model.onnx` and `manifest.json`. The manifest
+must contain the following values and fields:
+
+```text
+schema:        fdtdmesh-cnn-v1
+method:        tmz-conformal-ect-v1
+normalization: unit-domain
+outputs:       positive-axis-density
+shape:         raster shape
+channels:      geometry raster channel names
+sha256:        SHA-256 of model.onnx
+```
+
+The model must return `rho_x` and `rho_y` with shape `(1, bins)`. The runtime sends
+the manifest channels from `Geometry.rasterize` and four physical features:
+`Lx/lambda`, `Ly/lambda`, `fmin/fcentre`, and `fmax/fcentre`, where
+`lambda=C0/fcentre`. The checkpoint only proposes densities. The exact-budget
+mesher remains responsible for anchors, collars, spacing, and grading. ONNX Runtime
+is loaded lazily and is available through `uv sync --extra cnn`; no trained model is
+included in this repository.
+
+Inputs must be named `geometry` (float32, `(1,C,H,W)`) and `physics` (float32,
+`(1,4)`). `shape` is `[H,W]`; supported channels are `occupancy`, `x`, and `y`.
+Inference currently uses ONNX Runtime on the CPU during mesh preparation; FDTD
+and far-field conversion remain native CUDA. Density outputs must be finite and
+strictly positive. Incompatible bundles fail explicitly.
+
+## Solving and asynchronous stopping
+
+```python
+result = sim.solve(progress=True)
+```
+
+The native run does not require a caller-supplied time window. `DFTConvergence`
+controls the device stop policy:
+
+| Field | Meaning |
 |---|---|
-| CUDA unavailable / no usable device | Select project kernel, build extension, check driver/toolkit |
-| `ValueError` about anchors, clearance, dt or bandwidth | Correct the case/grid/source configuration |
-| `UnresolvedGeometryError` from `solver.conformal` | Resolve unsupported cut topology or donor availability |
-| `MeshInfeasibleError` from `mesh` | Increase budget or revise conflicting spacing/anchor constraints |
-| `MeshOptimizationError` from `mesh` | Inspect/increase projection time limit; timeout is not proven infeasibility |
-| `ConvergenceError` | Inspect status and history, source excitation, residuals and safety cap |
+| `max_steps` | Positive safety/resource cap, at most ten million |
+| `check_interval` | Steps between stopping checks |
+| `stable_checks` | Consecutive passing checks required |
+| `rtol` | Relative current/incident DFT change tolerance |
+| `atol` | Incident-strength-scaled absolute floor |
+| `field_tol` | Residual-field tolerance |
 
-For unusual resonators, demonstrate stability under stronger stopping policies.
-For mesh comparisons, independently refine space and vary contour/PML; automatic
-stopping alone does not certify scattering accuracy.
+The cap must exceed the source and propagation guard. Each check evaluates current
+and incident DFT changes for every requested frequency and the maximum residual
+field. The device requires all criteria for `stable_checks` consecutive checks.
+This is a temporal settling policy; it is not spatial convergence, PML independence,
+or a general accuracy certificate.
 
-## Lower-level inspection and analytical reference
+`progress=True` prints coalesced asynchronous snapshots. A callable may be passed
+instead. The callback is delivered on a low-priority telemetry path and cannot pause
+or steer the GPU graph. Short runs may produce only a final snapshot. Set
+`diagnostic_download=True` only when final field/current arrays are needed for
+validation; ordinary far-field results do not download them.
 
-`prepare(case,mesh,dtype="float64",safety=0.9,dt=None)` validates the layout and
-returns `(coefficients,tfsf_indices,source_index,contour,options)` without CUDA
-stepping. Notebook 01 uses its cut lengths and pair list for inspection. Treat
-these solver-internal layouts as implementation details, not a stable native API.
+`sim.configure_solver(dft_bins=..., stop=...)` replaces settings and invalidates
+the applied mesh/preparation. On failed convergence, `solve()` raises
+`ConvergenceError`; its `.result` contains the unqualified diagnostic result.
+Use `require_converged=False` only to inspect such runs explicitly.
 
-`fdtdmesh.scattering.cylinder_amplitude(radius,frequency,angles,incidence=0,terms=None)`
-returns the independent PEC-cylinder series. `pattern_error(actual,reference)`
-returns relative L2 error and rejects a zero reference norm. The CPU `far_field`
-and NumPy time stepper are test oracles; production solves call `run_scattering`.
+## Result data and conventions
+
+`Result` is immutable and can be used without a CUDA runtime after the solve. Its
+main fields are:
+
+| Attribute | Meaning |
+|---|---|
+| `frequencies` | `(F,)` positive DFT frequencies in Hz |
+| `angles` | `(A,)` observation angles in radians |
+| `far_field` / `amplitude` | `(F,A)` complex dimensionless normalized amplitude |
+| `scattering_width` / `width` | `(F,A)` 2D width in metres |
+| `history` | checkpoint table with eight columns |
+| `bin_history` | `(checks,F,3)`: current ratio, incident ratio, incident strength |
+| `diagnostics` | JSON-compatible status, timing, mesh, and transfer data |
+| `configuration` | JSON-compatible simulation settings and layout |
+| `converged` | true only when status is `"converged"` |
+| `debug` | optional arrays from `diagnostic_download=True` |
+
+The phasor convention is `exp(+iωt)` and outgoing radiation uses Hankel functions
+of the second kind. With `k=2πf/C0`,
+
+```text
+scattering_width = 4 * abs(far_field_amplitude)**2 / k
+```
+
+The width is a two-dimensional quantity in metres, not 3D RCS or dBsm. For plots,
+`scattering_width/(C0/f)` is `σ₂D/λ`; the dB view is `10 log10(σ₂D/λ)` with a
+display floor. Complex phase depends on the stored phase origin and should not be
+compared between runs with different origins.
+
+`result.convergence` provides named arrays: `steps`, `times`,
+`current_error_ratio`, `incident_error_ratio`, `incident_strength`, `residual`,
+`stable_checks`, and `status`. The two error ratios are divided by their acceptance
+tolerances. `plot_convergence` plots their maximum for each bin. The per-bin
+history has a 64 MiB allocation cap; increase checkpoint spacing if needed.
+
+## Saving, loading, and plotting
+
+Simulation definitions and completed results use versioned HDF5 archives:
+
+```python
+sim.save("artifacts/cylinder/simulation.h5")
+sim2 = Simulation.load("artifacts/cylinder/simulation.h5")
+
+result.save("artifacts/cylinder/result.h5")
+loaded = fdtdmesh.Result.load("artifacts/cylinder/result.h5")
+```
+
+`Simulation.save` stores the continuous definition and optional applied mesh.
+`Result.save` stores geometry, mesh, configuration, far-field arrays, widths,
+convergence histories, and diagnostics. Loaded results are plot-ready without a
+CUDA runtime.
+
+Archive schema `fdtdmesh-h5-v1` contains `/config/json`, `/geometry/recipe`,
+`/mesh/{x,y,metadata}`, `/far_field/{frequencies,angles,amplitude,scattering_width}`,
+`/convergence/{checkpoints,current_error_ratio,incident_error_ratio,incident_strength}`,
+`/source/json`, and `/diagnostics/json` (result-only groups omitted for simulation
+archives). Geometry and mesh hashes are checked on load. Complex amplitudes are
+stored as complex128; no equivalent-current arrays are archived by default.
+
+Every plot method returns a Matplotlib `Figure` and accepts an optional axes object
+where applicable:
+
+```python
+sim.plot_geometry(mesh=True)
+sim.plot_mesh()
+sim.plot_discretization()
+sim.plot_source()
+
+loaded.plot_geometry(mesh=True)
+loaded.plot_mesh()
+loaded.plot_convergence(per_bin=True)
+loaded.plot_scattering(normalize="wavelength", polar=True)
+loaded.plot_far_field(component="phase")
+```
+
+`Result.save_plots(directory)` writes geometry, mesh, convergence, scattering,
+amplitude, and phase PNGs. Matplotlib is not required for native stepping; install
+the notebook group before calling plot methods.
+
+Geometry/mesh plots accept `units="m"` or `"wavelength"`; the latter uses the
+pulse-centre wavelength. `plot_source(ax=...)` takes two axes. Scattering plots
+accept `scale="linear"`/`"db"`, `normalize="wavelength"`/`"metres"`, and `polar`.
+Far-field components are `magnitude`, `real`, `imag`, `phase`, or `complex`.
+Frequency selection must match a stored bin; omission selects the middle bin.
+
+## Errors and compatibility
+
+Typical errors identify the corrective action:
+
+| Error | Meaning |
+|---|---|
+| `MeshInfeasibleError` | Hard budget, collar, anchor, spacing, or strict-uniform conflict |
+| `MeshOptimizationError` | Density projection did not finish or failed final verification |
+| `UnresolvedGeometryError` | Cut topology or enlarged-cell donor is unsupported |
+| `ConvergenceError` | Device stop reached a cap/nonfinite state before qualification |
+| `ValueError` | Invalid SI geometry, bins, layout, timestep, or source bandwidth |
+
+For unusual geometries, refine independently, vary contour/PML placement, and retain
+the stopping history. Automatic temporal stopping does not replace spatial or
+boundary-sensitivity checks.
+
+The public `Simulation`/`Result` classes are the stable user-facing layer. The
+lower-level `ScatteringCase`, `run_scattering`, `prepare`, native runtime, and mesh
+projection functions remain useful for tests and specialized numerical work, but
+their internal layout and signatures are less stable. `fdtdmesh.cases.canonical_case`
+is a small benchmark helper rather than the primary API.
