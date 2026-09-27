@@ -1,5 +1,5 @@
 {
-  "schema": 1,
+  "schema": 2,
   "physical_setup": {
     "fmin_hz": 900000000.0,
     "fmax_hz": 1100000000.0,
@@ -11,7 +11,10 @@
   },
   "search": {
     "strategy": "differential_evolution",
-    "evaluations": 60,
+    "evaluation_budgets": [
+      60,
+      200
+    ],
     "controls": 6,
     "population": 12,
     "seed": 0,
@@ -984,6 +987,2308 @@
       "seconds": 7.52
     }
   ],
+  "engineered_angle_feasibility": [
+    {
+      "shape": "swept_aircraft",
+      "angle": 15.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware construction reached its time limit",
+          "passes": 19,
+          "seconds": 15.653
+        },
+        {
+          "target_ppw": 24,
+          "status": "valid",
+          "cells": [
+            209,
+            189
+          ],
+          "passes": 10,
+          "witness_anchors": [
+            12,
+            7
+          ],
+          "seconds": 4.795
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 24,
+      "cells": [
+        209,
+        189
+      ]
+    },
+    {
+      "shape": "swept_aircraft",
+      "angle": 30.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware construction reached its time limit",
+          "passes": 21,
+          "seconds": 15.422
+        },
+        {
+          "target_ppw": 24,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware projection did not complete: Mesh optimization did not finish: Time limit reached. (HiGHS Status 13: Time limit reached)",
+          "passes": 23,
+          "seconds": 14.919
+        },
+        {
+          "target_ppw": 40,
+          "status": "valid",
+          "cells": [
+            334,
+            314
+          ],
+          "passes": 13,
+          "witness_anchors": [
+            13,
+            18
+          ],
+          "seconds": 12.221
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 40,
+      "cells": [
+        334,
+        314
+      ]
+    },
+    {
+      "shape": "swept_aircraft",
+      "angle": 45.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware construction reached its time limit",
+          "passes": 22,
+          "seconds": 15.618
+        },
+        {
+          "target_ppw": 24,
+          "status": "valid",
+          "cells": [
+            173,
+            173
+          ],
+          "passes": 10,
+          "witness_anchors": [
+            9,
+            9
+          ],
+          "seconds": 5.101
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 24,
+      "cells": [
+        173,
+        173
+      ]
+    },
+    {
+      "shape": "swept_aircraft",
+      "angle": 60.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware construction reached its time limit",
+          "passes": 23,
+          "seconds": 17.817
+        },
+        {
+          "target_ppw": 24,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware projection did not complete: Mesh optimization did not finish: Time limit reached. (HiGHS Status 13: Time limit reached)",
+          "passes": 22,
+          "seconds": 14.463
+        },
+        {
+          "target_ppw": 40,
+          "status": "valid",
+          "cells": [
+            314,
+            334
+          ],
+          "passes": 13,
+          "witness_anchors": [
+            18,
+            13
+          ],
+          "seconds": 13.029
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 40,
+      "cells": [
+        314,
+        334
+      ]
+    },
+    {
+      "shape": "swept_aircraft",
+      "angle": 90.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "valid",
+          "cells": [
+            159,
+            178
+          ],
+          "passes": 5,
+          "witness_anchors": [
+            2,
+            11
+          ],
+          "seconds": 2.688
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 32,
+      "cells": [
+        159,
+        178
+      ]
+    },
+    {
+      "shape": "propeller_aeroplane",
+      "angle": 15.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware construction reached its time limit",
+          "passes": 21,
+          "seconds": 15.827
+        },
+        {
+          "target_ppw": 24,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware construction reached max_cells=(768, 768); proposed (872, 846)",
+          "passes": 23,
+          "seconds": 11.539
+        },
+        {
+          "target_ppw": 40,
+          "status": "valid",
+          "cells": [
+            426,
+            413
+          ],
+          "passes": 18,
+          "witness_anchors": [
+            14,
+            15
+          ],
+          "seconds": 17.136
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 40,
+      "cells": [
+        426,
+        413
+      ]
+    },
+    {
+      "shape": "propeller_aeroplane",
+      "angle": 30.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware projection did not complete: Mesh optimization did not finish: Time limit reached. (HiGHS Status 13: Time limit reached)",
+          "passes": 21,
+          "seconds": 14.72
+        },
+        {
+          "target_ppw": 24,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware projection did not complete: Mesh optimization did not finish: Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)",
+          "passes": 24,
+          "seconds": 15.122
+        },
+        {
+          "target_ppw": 40,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware construction reached its time limit",
+          "passes": 20,
+          "seconds": 16.811
+        },
+        {
+          "target_ppw": 64,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware projection did not complete: Mesh optimization did not finish: Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)",
+          "passes": 15,
+          "seconds": 15.148
+        }
+      ],
+      "status": "not_constructed"
+    },
+    {
+      "shape": "propeller_aeroplane",
+      "angle": 45.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware projection did not complete: Mesh optimization did not finish: Time limit reached. (HiGHS Status 13: Time limit reached)",
+          "passes": 24,
+          "seconds": 15.183
+        },
+        {
+          "target_ppw": 24,
+          "status": "valid",
+          "cells": [
+            362,
+            362
+          ],
+          "passes": 20,
+          "witness_anchors": [
+            5,
+            5
+          ],
+          "seconds": 12.009
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 24,
+      "cells": [
+        362,
+        362
+      ]
+    },
+    {
+      "shape": "propeller_aeroplane",
+      "angle": 60.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware projection did not complete: Mesh optimization did not finish: Time limit reached. (HiGHS Status 13: Time limit reached)",
+          "passes": 22,
+          "seconds": 14.896
+        },
+        {
+          "target_ppw": 24,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware projection did not complete: Mesh optimization did not finish: Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)",
+          "passes": 21,
+          "seconds": 14.438
+        },
+        {
+          "target_ppw": 40,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware projection did not complete: Mesh optimization did not finish: Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)",
+          "passes": 17,
+          "seconds": 14.09
+        },
+        {
+          "target_ppw": 64,
+          "status": "GeometryMeshingError",
+          "message": "Geometry-aware projection did not complete: Mesh optimization did not finish: Time limit reached. (HiGHS Status 13: Time limit reached)",
+          "passes": 14,
+          "seconds": 14.836
+        }
+      ],
+      "status": "not_constructed"
+    },
+    {
+      "shape": "propeller_aeroplane",
+      "angle": 90.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "valid",
+          "cells": [
+            136,
+            139
+          ],
+          "passes": 1,
+          "witness_anchors": [
+            3,
+            1
+          ],
+          "seconds": 1.112
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 32,
+      "cells": [
+        136,
+        139
+      ]
+    },
+    {
+      "shape": "radio_telescope",
+      "angle": 15.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "valid",
+          "cells": [
+            141,
+            131
+          ],
+          "passes": 7,
+          "witness_anchors": [
+            7,
+            8
+          ],
+          "seconds": 7.704
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 32,
+      "cells": [
+        141,
+        131
+      ]
+    },
+    {
+      "shape": "radio_telescope",
+      "angle": 30.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "valid",
+          "cells": [
+            173,
+            176
+          ],
+          "passes": 8,
+          "witness_anchors": [
+            10,
+            5
+          ],
+          "seconds": 7.821
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 32,
+      "cells": [
+        173,
+        176
+      ]
+    },
+    {
+      "shape": "radio_telescope",
+      "angle": 45.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "valid",
+          "cells": [
+            140,
+            140
+          ],
+          "passes": 3,
+          "witness_anchors": [
+            4,
+            4
+          ],
+          "seconds": 4.31
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 32,
+      "cells": [
+        140,
+        140
+      ]
+    },
+    {
+      "shape": "radio_telescope",
+      "angle": 60.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "valid",
+          "cells": [
+            176,
+            173
+          ],
+          "passes": 8,
+          "witness_anchors": [
+            5,
+            10
+          ],
+          "seconds": 8.18
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 32,
+      "cells": [
+        176,
+        173
+      ]
+    },
+    {
+      "shape": "radio_telescope",
+      "angle": 90.0,
+      "scale": 1.0,
+      "attempts": [
+        {
+          "target_ppw": 32,
+          "status": "valid",
+          "cells": [
+            116,
+            128
+          ],
+          "passes": 1,
+          "witness_anchors": [
+            4,
+            1
+          ],
+          "seconds": 2.957
+        }
+      ],
+      "status": "valid",
+      "selected_target_ppw": 32,
+      "cells": [
+        116,
+        128
+      ]
+    }
+  ],
+  "reference_attempts": [
+    {
+      "case": "circle_0_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\circle_0_0.2\\reference\\d9f2637fba86e6b37dfa378690716f53b6bee2fc664ae28b6a23b7cca1dc2e49",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0013691683583080764,
+          "worst_frequency": 0.00170492846808287
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0005894889739873477,
+          "worst_frequency": 0.0007668199805529762
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.00031713955004633983,
+          "passed": true
+        },
+        "pml": {
+          "error": 3.534150879893667e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "circle_0_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\circle_0_0.2\\reference\\fea79090e24275da145b4eb565e11821731341d00d679a5808096c42ee002f8e",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0013691683583080764,
+          "worst_frequency": 0.00170492846808287
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0005894889739873477,
+          "worst_frequency": 0.0007668199805529762
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.00031713955004633983,
+          "passed": true
+        },
+        "pml": {
+          "error": 3.534150879893667e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "circle_0_0.4",
+      "directory": "artifacts\\geometry_optimization_study\\circle_0_0.4\\reference\\63c32b4adad52dd2d3f0d31099146a018926c45358bc756b7b46b18ef59e6409",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.002452926730058495,
+          "worst_frequency": 0.003017904876381738
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0008338729025849901,
+          "worst_frequency": 0.00108161995227394
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.0003112259014585961,
+          "passed": true
+        },
+        "pml": {
+          "error": 2.8131439521967824e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "circle_0_0.4",
+      "directory": "artifacts\\geometry_optimization_study\\circle_0_0.4\\reference\\78379c0231aa4a22c08701e16bd18156fb5df1b063aa8cd365b8ac0f4644d0ab",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.002452926730058495,
+          "worst_frequency": 0.003017904876381738
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0008338729025849901,
+          "worst_frequency": 0.00108161995227394
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.0003112259014585961,
+          "passed": true
+        },
+        "pml": {
+          "error": 2.8131439521967824e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "moon_30_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\moon_30_0.2\\reference\\4858f30bcc93b99c87495568d4937c96a483a2fbc4cfd8ecf8ba21635483e887",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0016927499860458055,
+          "worst_frequency": 0.0020735974839138868
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0009285875150013985,
+          "worst_frequency": 0.0011955801309777943
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.00034805895597633183,
+          "passed": true
+        },
+        "pml": {
+          "error": 3.574036418856075e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "moon_30_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\moon_30_0.2\\reference\\b8485bc5a2cbea95a7c69a23cb94527e02ab0364116b241dc4177c0d5e9afc3f",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0016927499860458055,
+          "worst_frequency": 0.0020735974839138868
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0009285875150013985,
+          "worst_frequency": 0.0011955801309777943
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.00034805895597633183,
+          "passed": true
+        },
+        "pml": {
+          "error": 3.574036418856075e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "propeller_aeroplane_0_1",
+      "directory": "artifacts\\geometry_optimization_study\\propeller_aeroplane_0_1\\reference\\64eb46156c0180c274096565ca98b63934a5bd6dc3d1d45f26261ff48a387bc1",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 108,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 164,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 196,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 256,
+          "status": "converged",
+          "error": 0.0004228433005237182,
+          "worst_frequency": 0.0004347576444275023
+        },
+        {
+          "resolution": 320,
+          "status": "converged",
+          "error": 0.0002483637969033709,
+          "worst_frequency": 0.00024929356388545584
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 3.195276909396797e-05,
+          "passed": true
+        },
+        "pml": {
+          "error": 4.664512970354885e-08,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "propeller_aeroplane_90_1",
+      "directory": "artifacts\\geometry_optimization_study\\propeller_aeroplane_90_1\\reference\\e099096d646aad617c3f479ce2a18d1b34f90cbfce098dcf10baceffe99926d0",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 108,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 164,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 196,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 256,
+          "status": "converged",
+          "error": 0.0003573506207728124,
+          "worst_frequency": 0.00037790309721828325
+        },
+        {
+          "resolution": 320,
+          "status": "converged",
+          "error": 0.00020926113098892145,
+          "worst_frequency": 0.0002242306974362901
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 2.8604110093848682e-05,
+          "passed": true
+        },
+        "pml": {
+          "error": 6.444648633313514e-08,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "pytest_seeded",
+      "directory": "artifacts\\geometry_optimization_study\\pytest_seeded\\test_reference_reports_every_p0\\1fea747e7b9926a73f00e85edda9d28d7f2b80f09eb95dd6a56344d4773a84c6",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "no_valid_reference",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 108,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 164,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        }
+      ],
+      "checks": {}
+    },
+    {
+      "case": "pytest_seeded",
+      "directory": "artifacts\\geometry_optimization_study\\pytest_seeded\\test_reference_requires_spatia0\\e6d4d2345e06b48e85db775f21d845c128eef9084ab592bebc94b0e5bcc48b77",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "sensitivity_unqualified",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0,
+          "worst_frequency": 0.0
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0,
+          "worst_frequency": 0.0
+        }
+      ],
+      "checks": {
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "pytest_seeded",
+      "directory": "artifacts\\geometry_optimization_study\\pytest_seeded\\test_reference_requires_spatia1\\8d05a42bbf8e02d9606ca761e19fcaadfc80805a3fddfc807bab75da5dddc65f",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0,
+          "worst_frequency": 0.0
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0,
+          "worst_frequency": 0.0
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.0,
+          "passed": true
+        },
+        "pml": {
+          "error": 0.0,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "pytest_seeded_exterior",
+      "directory": "artifacts\\geometry_optimization_study\\pytest_seeded_exterior\\test_reference_reports_every_p0\\c000705ffe66d2728d65ae5fd750e150b36c4c0515e19f7119ea89e29cae657f",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "no_valid_reference",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 108,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 164,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        }
+      ],
+      "checks": {}
+    },
+    {
+      "case": "pytest_seeded_exterior",
+      "directory": "artifacts\\geometry_optimization_study\\pytest_seeded_exterior\\test_reference_requires_spatia0\\b368e5ae34ccd285f3e6cee08ea3f33ec461efded2b5dd52287aaf5e393b77f0",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "sensitivity_unqualified",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0,
+          "worst_frequency": 0.0
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0,
+          "worst_frequency": 0.0
+        }
+      ],
+      "checks": {
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "pytest_seeded_exterior",
+      "directory": "artifacts\\geometry_optimization_study\\pytest_seeded_exterior\\test_reference_requires_spatia1\\057dd140327640de621d81572357d5b8eb2a43e87436c844ffcd548928fda103",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0,
+          "worst_frequency": 0.0
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0,
+          "worst_frequency": 0.0
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.0,
+          "passed": true
+        },
+        "pml": {
+          "error": 0.0,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "pytest_seeded_final",
+      "directory": "artifacts\\geometry_optimization_study\\pytest_seeded_final\\test_reference_reports_every_p0\\4d13433796400930cb74aa389e3efdfd17985a16f07451435630903c4ba4459e",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "no_valid_reference",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 108,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 164,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        }
+      ],
+      "checks": {}
+    },
+    {
+      "case": "pytest_seeded_final",
+      "directory": "artifacts\\geometry_optimization_study\\pytest_seeded_final\\test_reference_requires_spatia0\\d8e5037e702cb76b982b662112c9dcd167c86e7884b0b1c9ee2948d38422c3e3",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "sensitivity_unqualified",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0,
+          "worst_frequency": 0.0
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0,
+          "worst_frequency": 0.0
+        }
+      ],
+      "checks": {
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "pytest_seeded_final",
+      "directory": "artifacts\\geometry_optimization_study\\pytest_seeded_final\\test_reference_requires_spatia1\\4fa5d4be6819bfc69d10201f6035a9e9cb4981ee454d17d0c013a6f552fd6691",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0,
+          "worst_frequency": 0.0
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0,
+          "worst_frequency": 0.0
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.0,
+          "passed": true
+        },
+        "pml": {
+          "error": 0.0,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "radio_telescope_0_1",
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_0_1\\reference\\e4cfc2b071f732f3af26e5ca00be03091811144be9105dedbbdedd3c7c909e0d",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "no_valid_reference",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 108,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 164,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 196,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 256,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 320,
+          "status": "MeshOptimizationError",
+          "error": null,
+          "worst_frequency": null
+        }
+      ],
+      "checks": {}
+    },
+    {
+      "case": "radio_telescope_0_1",
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_0_1\\subdivision_reference\\1070c4f366593ef078e9c4c054f1db6fca6694f50c861c25d60670f956d7fc54",
+      "method": "nested_geometry_aware_subdivision",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 2,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 3,
+          "status": "converged",
+          "error": 0.006104364521123309,
+          "worst_frequency": 0.006376716672392817
+        },
+        {
+          "resolution": 4,
+          "status": "converged",
+          "error": 0.0018597000962295596,
+          "worst_frequency": 0.0020403469499226438
+        },
+        {
+          "resolution": 5,
+          "status": "converged",
+          "error": 0.0002957642416140266,
+          "worst_frequency": 0.0003258865179662592
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.00017922202091271043,
+          "passed": true
+        },
+        "pml": {
+          "error": 3.057450816128527e-08,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "radio_telescope_0_1",
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_0_1\\subdivision_reference\\8d487be83f40691b0e07fbbb66f60db2eee022821489bec6cb517abf501bc1d3",
+      "method": "nested_geometry_aware_subdivision",
+      "status": "spatial_unqualified",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 2,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 3,
+          "status": "converged",
+          "error": 0.006104364521123309,
+          "worst_frequency": 0.006376716672392817
+        },
+        {
+          "resolution": 4,
+          "status": "converged",
+          "error": 0.0018597000962295596,
+          "worst_frequency": 0.0020403469499226438
+        }
+      ],
+      "checks": {}
+    },
+    {
+      "case": "radio_telescope_15_1",
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_15_1\\subdivision_reference\\406ec6c81bf12415086fa424ee2337e5b25fd77f27e4108482209dd2c241d24d",
+      "method": "nested_geometry_aware_subdivision",
+      "status": "spatial_unqualified",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 2,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 3,
+          "status": "converged",
+          "error": 0.0056201600769654496,
+          "worst_frequency": 0.00626103723124709
+        },
+        {
+          "resolution": 4,
+          "status": "converged",
+          "error": 0.0015794096080657856,
+          "worst_frequency": 0.0017921133603064486
+        },
+        {
+          "resolution": 5,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 6,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 7,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        }
+      ],
+      "checks": {}
+    },
+    {
+      "case": "radio_telescope_15_1",
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_15_1\\subdivision_reference\\a41ca9945de136cc056c73980912aa6cdbe32ad78caa4352964cc5f337161cb2",
+      "method": "nested_geometry_aware_subdivision",
+      "status": "running",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 2,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 3,
+          "status": "converged",
+          "error": 0.0056201600769654496,
+          "worst_frequency": 0.00626103723124709
+        },
+        {
+          "resolution": 4,
+          "status": "converged",
+          "error": 0.0015794096080657856,
+          "worst_frequency": 0.0017921133603064486
+        }
+      ],
+      "checks": {}
+    },
+    {
+      "case": "radio_telescope_30_1",
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_30_1\\fine_geometry_reference\\493ec766fae921a0764d1537987fe5e92ccb7e1d233a2fe7131f872ef65c2af0",
+      "method": "geometry_aware_fine_grid",
+      "status": "spatial_unqualified",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 40,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 64,
+          "status": "converged",
+          "error": 0.005693520441778678,
+          "worst_frequency": 0.006803525609582292
+        },
+        {
+          "resolution": 96,
+          "status": "converged",
+          "error": 0.0019962067097701796,
+          "worst_frequency": 0.002542673443424586
+        }
+      ],
+      "checks": {}
+    },
+    {
+      "case": "radio_telescope_30_1",
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_30_1\\reference\\aad207e73a19bc26ee4e9700c5d31bc3e45a62d4b81419d1612419d168cc266c",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "no_valid_reference",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 108,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 164,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 196,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 256,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 320,
+          "status": "MeshOptimizationError",
+          "error": null,
+          "worst_frequency": null
+        }
+      ],
+      "checks": {}
+    },
+    {
+      "case": "radio_telescope_90_1",
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_90_1\\reference\\f357945f7924423ce9bcbc1a2a0004e0416b3bb045c5b7f03158cf37f7183d8a",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "no_valid_reference",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 108,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 164,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 196,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 256,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 320,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        }
+      ],
+      "checks": {}
+    },
+    {
+      "case": "radio_telescope_90_1",
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_90_1\\subdivision_reference\\beea105b3a36245a9aeea87f09c3b637f58d36a7134d835f19035aa2ed4daa3e",
+      "method": "nested_geometry_aware_subdivision",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 2,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 3,
+          "status": "converged",
+          "error": 0.0021991986564812065,
+          "worst_frequency": 0.0026344014232613645
+        },
+        {
+          "resolution": 4,
+          "status": "converged",
+          "error": 0.0009148275434121151,
+          "worst_frequency": 0.0009739229342999769
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.0003052310663620861,
+          "passed": true
+        },
+        "pml": {
+          "error": 6.588754099099113e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "rectangle_0_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\rectangle_0_0.2\\reference\\ba34d96747d3394799956626a075bbde89c7635cbaf7b114a6a7b921d2a1079d",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0033609004608687503,
+          "worst_frequency": 0.003526034055368156
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.001415325548015981,
+          "worst_frequency": 0.00155991445555465
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.0003512240074278756,
+          "passed": true
+        },
+        "pml": {
+          "error": 3.262862026267417e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "rectangle_0_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\rectangle_0_0.2\\reference\\d27a347a202a310473b18b5d66e50a5e7b5bf4eb36e3a59f2700aa20fc56fb37",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0033609004608687503,
+          "worst_frequency": 0.003526034055368156
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.001415325548015981,
+          "worst_frequency": 0.00155991445555465
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.0003512240074278756,
+          "passed": true
+        },
+        "pml": {
+          "error": 3.262862026267417e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "star_30_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\star_30_0.2\\reference\\8c0160db418225cf430114f130e179c7a5b6b2ea5e1f5031a41823ecbe8e2e9c",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.00539813577768674,
+          "worst_frequency": 0.006357403796435823
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0032752517415484653,
+          "worst_frequency": 0.0034613569747918844
+        },
+        {
+          "resolution": 164,
+          "status": "converged",
+          "error": 0.0014913004895936062,
+          "worst_frequency": 0.0015936432538919535
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.0001164033235874164,
+          "passed": true
+        },
+        "pml": {
+          "error": 6.614792113284994e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "star_30_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\star_30_0.2\\reference\\f59b3e61d5ecd7472e0eb2aba1d2be2d501bc0d20539999ba3684d5ac1d25714",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.00539813577768674,
+          "worst_frequency": 0.006357403796435823
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.0032752517415484653,
+          "worst_frequency": 0.0034613569747918844
+        },
+        {
+          "resolution": 164,
+          "status": "converged",
+          "error": 0.0014913004895936062,
+          "worst_frequency": 0.0015936432538919535
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.0001164033235874164,
+          "passed": true
+        },
+        "pml": {
+          "error": 6.614792113284994e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "sun_0_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\sun_0_0.2\\reference\\5445d3a0db5fa26a7980f76421311078554c01925e623b5cf526f20a382c6f8d",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.011818054790118254,
+          "worst_frequency": 0.012605287162177145
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.008171237368372448,
+          "worst_frequency": 0.008604757387662787
+        },
+        {
+          "resolution": 164,
+          "status": "converged",
+          "error": 0.003845171202956174,
+          "worst_frequency": 0.00408648915983023
+        },
+        {
+          "resolution": 196,
+          "status": "converged",
+          "error": 0.0010666802866418567,
+          "worst_frequency": 0.0011461181092689877
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 8.592106426706066e-05,
+          "passed": true
+        },
+        "pml": {
+          "error": 5.146809860384404e-08,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "sun_0_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\sun_0_0.2\\reference\\a13d25ad2b6e4700237194a833be47575f10b7fed6e46519ecd61dffb72fd14a",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.011818054790118254,
+          "worst_frequency": 0.012605287162177145
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.008171237368372448,
+          "worst_frequency": 0.008604757387662787
+        },
+        {
+          "resolution": 164,
+          "status": "converged",
+          "error": 0.003845171202956174,
+          "worst_frequency": 0.00408648915983023
+        },
+        {
+          "resolution": 196,
+          "status": "converged",
+          "error": 0.0010666802866418567,
+          "worst_frequency": 0.0011461181092689877
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 8.592106426706066e-05,
+          "passed": true
+        },
+        "pml": {
+          "error": 5.146809860384404e-08,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "sun_0_0.4",
+      "directory": "artifacts\\geometry_optimization_study\\sun_0_0.4\\reference\\34336f0ec883c4aa70a3cfb59392432d0ff8eb81f2fd75fcb280179e43855547",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "spatial_unqualified",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.007874979811903835,
+          "worst_frequency": 0.009183417614628256
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.003468700833017237,
+          "worst_frequency": 0.003931370106525941
+        },
+        {
+          "resolution": 164,
+          "status": "converged",
+          "error": 0.004873610542215526,
+          "worst_frequency": 0.005339362541185946
+        },
+        {
+          "resolution": 196,
+          "status": "converged",
+          "error": 0.0004713726658751413,
+          "worst_frequency": 0.0005581797973796116
+        }
+      ],
+      "checks": {}
+    },
+    {
+      "case": "sun_0_0.4",
+      "directory": "artifacts\\geometry_optimization_study\\sun_0_0.4\\reference\\b950fd063269cc2e2d1bfdb6c96dc31631e9cf1e48714ae98301349d0c1bf9b1",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.007874979811903835,
+          "worst_frequency": 0.009183417614628256
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.003468700833017237,
+          "worst_frequency": 0.003931370106525941
+        },
+        {
+          "resolution": 164,
+          "status": "converged",
+          "error": 0.004873610542215526,
+          "worst_frequency": 0.005339362541185946
+        },
+        {
+          "resolution": 196,
+          "status": "converged",
+          "error": 0.0004713726658751413,
+          "worst_frequency": 0.0005581797973796116
+        },
+        {
+          "resolution": 256,
+          "status": "converged",
+          "error": 0.0016247336490001864,
+          "worst_frequency": 0.00183515321484496
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 5.6345569427728314e-05,
+          "passed": true
+        },
+        "pml": {
+          "error": 4.454226143231374e-08,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "swept_aircraft_0_1",
+      "directory": "artifacts\\geometry_optimization_study\\swept_aircraft_0_1\\reference\\747dc2bfc8ad867c02e23781751cca9c2d446d23d5f55824cd4503ef7ab41ec6",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 164,
+          "status": "MeshOptimizationError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 196,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 256,
+          "status": "converged",
+          "error": 0.000525813141729038,
+          "worst_frequency": 0.0006063957556272611
+        },
+        {
+          "resolution": 320,
+          "status": "converged",
+          "error": 0.00018046490579690599,
+          "worst_frequency": 0.0002158430447416177
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 3.261587088496999e-05,
+          "passed": true
+        },
+        "pml": {
+          "error": 5.541673086983648e-08,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "swept_aircraft_45_1",
+      "directory": "artifacts\\geometry_optimization_study\\swept_aircraft_45_1\\subdivision_reference\\af17879c7e5c4fd4c7682ed619369601e78697476315f90b77350e0ad193c6ea",
+      "method": "nested_geometry_aware_subdivision",
+      "status": "spatial_unqualified",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 2,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 3,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 4,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 5,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 6,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 7,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        }
+      ],
+      "checks": {}
+    },
+    {
+      "case": "swept_aircraft_90_1",
+      "directory": "artifacts\\geometry_optimization_study\\swept_aircraft_90_1\\reference\\b57010799cbb6f1c648fa52c677ae31ed55ec42da2ef978981454003ea7a4ca2",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "MeshInfeasibleError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 164,
+          "status": "MeshOptimizationError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 196,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 256,
+          "status": "converged",
+          "error": 0.00039675422261688123,
+          "worst_frequency": 0.0004346646783135414
+        },
+        {
+          "resolution": 320,
+          "status": "converged",
+          "error": 0.00026332756261448527,
+          "worst_frequency": 0.0002701519576488962
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 3.2977512895110415e-05,
+          "passed": true
+        },
+        "pml": {
+          "error": 5.560059739904868e-08,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "u_shape_30_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\u_shape_30_0.2\\reference\\3b0c38389c8a5922b3c6a5063faf4785ebf508916a105511d3f8b56b1094ee1a",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0033491927841834933,
+          "worst_frequency": 0.003863382999789177
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.001178109194328384,
+          "worst_frequency": 0.0014058566390084137
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.0002862510641375372,
+          "passed": true
+        },
+        "pml": {
+          "error": 3.373383691611774e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "u_shape_30_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\u_shape_30_0.2\\reference\\49c4f041317004d95e948f4982fc2bb0329243ad478422154361c794e8c2df34",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0033491927841834933,
+          "worst_frequency": 0.003863382999789177
+        },
+        {
+          "resolution": 108,
+          "status": "converged",
+          "error": 0.001178109194328384,
+          "worst_frequency": 0.0014058566390084137
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 0.0002862510641375372,
+          "passed": true
+        },
+        "pml": {
+          "error": 3.373383691611774e-07,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "wifi_30_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\wifi_30_0.2\\reference\\8531798ab28c4ce2e7a705ddf4049a873bdae53b2490754985e4b6ad2ee89939",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "qualified",
+      "qualified": true,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0043506203159272274,
+          "worst_frequency": 0.004779653726393274
+        },
+        {
+          "resolution": 108,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 164,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 196,
+          "status": "converged",
+          "error": 0.00026189318468763283,
+          "worst_frequency": 0.0002977655172984331
+        },
+        {
+          "resolution": 256,
+          "status": "converged",
+          "error": 0.0005738713834881173,
+          "worst_frequency": 0.0005935754717982306
+        }
+      ],
+      "checks": {
+        "contour": {
+          "error": 4.278428528610134e-05,
+          "passed": true
+        },
+        "pml": {
+          "error": 7.382081155668121e-08,
+          "passed": true
+        },
+        "temporal": {
+          "error": 0.0,
+          "passed": true
+        }
+      }
+    },
+    {
+      "case": "wifi_30_0.2",
+      "directory": "artifacts\\geometry_optimization_study\\wifi_30_0.2\\reference\\e301841e98e5d615dc712bcabda53bfdddda71291973419b90fc5771a33736b6",
+      "method": "uniform_target_with_exact_anchors",
+      "status": "spatial_unqualified",
+      "qualified": false,
+      "levels": [
+        {
+          "resolution": 48,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 72,
+          "status": "converged",
+          "error": 0.0043506203159272274,
+          "worst_frequency": 0.004779653726393274
+        },
+        {
+          "resolution": 108,
+          "status": "UnresolvedGeometryError",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 164,
+          "status": "converged",
+          "error": null,
+          "worst_frequency": null
+        },
+        {
+          "resolution": 196,
+          "status": "converged",
+          "error": 0.00026189318468763283,
+          "worst_frequency": 0.0002977655172984331
+        }
+      ],
+      "checks": {}
+    }
+  ],
   "perforated_feasibility": [
     {
       "n": 3,
@@ -1106,6 +3411,368 @@
       "seconds": 30.2
     }
   ],
+  "budget_series": [
+    {
+      "shape": "circle",
+      "angle": 0.0,
+      "scale": 0.2,
+      "cells": [
+        85,
+        85
+      ],
+      "evaluation_budget": 60,
+      "status": "evaluation_limit",
+      "trials": 60,
+      "search_feasible": 57,
+      "baseline_error": 0.006854923945760974,
+      "best_error": 0.006187900916619373,
+      "gain": 0.0006670230291416007,
+      "observed_reference_difference": 0.0013691683583080764,
+      "validation_passed": true,
+      "wall_seconds": 12.633561700000428,
+      "directory": "artifacts\\geometry_optimization_study\\circle_0_0.2\\optimization\\5dfae19990a7c02377fec6972c84f48ea3c2a6c394fad9f6d4b1bc25e1bf46ff"
+    },
+    {
+      "shape": "circle",
+      "angle": 0.0,
+      "scale": 0.4,
+      "cells": [
+        116,
+        116
+      ],
+      "evaluation_budget": 60,
+      "status": "evaluation_limit",
+      "trials": 60,
+      "search_feasible": 57,
+      "baseline_error": 0.007865001827243822,
+      "best_error": 0.007349557835831481,
+      "gain": 0.0005154439914123411,
+      "observed_reference_difference": 0.002452926730058495,
+      "validation_passed": true,
+      "wall_seconds": 16.38071570000011,
+      "directory": "artifacts\\geometry_optimization_study\\circle_0_0.4\\optimization\\ca890c0cdfada4aed675225d1e1d230b17446e7db974990234ee956fe4c1b335"
+    },
+    {
+      "shape": "moon",
+      "angle": 30.0,
+      "scale": 0.2,
+      "cells": [
+        86,
+        94
+      ],
+      "evaluation_budget": 60,
+      "status": "evaluation_limit",
+      "trials": 60,
+      "search_feasible": 35,
+      "baseline_error": 0.007581837401120517,
+      "best_error": 0.006868207966858451,
+      "gain": 0.0007136294342620659,
+      "observed_reference_difference": 0.0016927499860458055,
+      "validation_passed": true,
+      "wall_seconds": 10.583889200000158,
+      "directory": "artifacts\\geometry_optimization_study\\moon_30_0.2\\optimization\\2714a60bbb65a2e063775909e389b9b4f0f7419da0c8a1467320a88ed8a317c9"
+    },
+    {
+      "shape": "propeller_aeroplane",
+      "angle": 0.0,
+      "scale": 1.0,
+      "cells": [
+        139,
+        136
+      ],
+      "evaluation_budget": 60,
+      "status": "evaluation_limit",
+      "trials": 60,
+      "search_feasible": 47,
+      "baseline_error": 0.021509952599469948,
+      "best_error": 0.012194543606884283,
+      "gain": 0.009315408992585665,
+      "observed_reference_difference": 0.0004228433005237182,
+      "validation_passed": true,
+      "wall_seconds": 46.79685740000059,
+      "directory": "artifacts\\geometry_optimization_study\\propeller_aeroplane_0_1\\optimization\\0b76e2f3a7f3321b723961de51b34f8aa25bc2324d8ea817f87d4397e82fc91d"
+    },
+    {
+      "shape": "propeller_aeroplane",
+      "angle": 0.0,
+      "scale": 1.0,
+      "cells": [
+        139,
+        136
+      ],
+      "evaluation_budget": 200,
+      "status": "evaluation_limit",
+      "trials": 200,
+      "search_feasible": 152,
+      "baseline_error": 0.021509952599469948,
+      "best_error": 0.010240996032840906,
+      "gain": 0.011268956566629042,
+      "observed_reference_difference": 0.0004228433005237182,
+      "validation_passed": true,
+      "wall_seconds": 204.54884200000015,
+      "directory": "artifacts\\geometry_optimization_study\\propeller_aeroplane_0_1\\optimization\\5c3aeb839b2259162d669969ff87e353e91ff0cb909c22bc6c52b1d39771e9ed"
+    },
+    {
+      "shape": "propeller_aeroplane",
+      "angle": 90.0,
+      "scale": 1.0,
+      "cells": [
+        136,
+        139
+      ],
+      "evaluation_budget": 200,
+      "status": "evaluation_limit",
+      "trials": 200,
+      "search_feasible": 166,
+      "baseline_error": 0.020154474590300526,
+      "best_error": 0.011064200371828462,
+      "gain": 0.009090274218472064,
+      "observed_reference_difference": 0.0003573506207728124,
+      "validation_passed": true,
+      "wall_seconds": 196.0788577000003,
+      "directory": "artifacts\\geometry_optimization_study\\propeller_aeroplane_90_1\\optimization\\93b5a8e9101c08d7083ca44aff824a56a7ac4b694fbd1443334305789ab48cab"
+    },
+    {
+      "shape": "radio_telescope",
+      "angle": 0.0,
+      "scale": 1.0,
+      "cells": [
+        128,
+        116
+      ],
+      "evaluation_budget": 60,
+      "status": "evaluation_limit",
+      "trials": 60,
+      "search_feasible": 57,
+      "baseline_error": 0.014275125371647346,
+      "best_error": 0.01018415740551251,
+      "gain": 0.004090967966134836,
+      "observed_reference_difference": 0.0018597000962295596,
+      "validation_passed": true,
+      "wall_seconds": 106.22739260000162,
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_0_1\\optimization\\0bfbda072072c5717199ca831c02e26717929f8e1b41d16edcafc648f28e79b0"
+    },
+    {
+      "shape": "radio_telescope",
+      "angle": 0.0,
+      "scale": 1.0,
+      "cells": [
+        128,
+        116
+      ],
+      "evaluation_budget": 200,
+      "status": "evaluation_limit",
+      "trials": 200,
+      "search_feasible": 192,
+      "baseline_error": 0.014275125371647346,
+      "best_error": 0.01018415740551251,
+      "gain": 0.004090967966134836,
+      "observed_reference_difference": 0.0018597000962295596,
+      "validation_passed": true,
+      "wall_seconds": 495.86585790000026,
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_0_1\\optimization\\e1b07a341f501d8de6ca35cfe0c46de709a5c3a4de4f5b6535e276afecaeb088"
+    },
+    {
+      "shape": "radio_telescope",
+      "angle": 90.0,
+      "scale": 1.0,
+      "cells": [
+        116,
+        128
+      ],
+      "evaluation_budget": 200,
+      "status": "evaluation_limit",
+      "trials": 200,
+      "search_feasible": 194,
+      "baseline_error": 0.009914144928914601,
+      "best_error": 0.009001498069479346,
+      "gain": 0.0009126468594352552,
+      "observed_reference_difference": 0.0021991986564812065,
+      "validation_passed": true,
+      "wall_seconds": 505.04127619999963,
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_90_1\\optimization\\de4dd7b8503abc3d34c77d8696969ec82f55725ea6b1430bfe06c2fe28f7aee7"
+    },
+    {
+      "shape": "rectangle",
+      "angle": 0.0,
+      "scale": 0.2,
+      "cells": [
+        90,
+        78
+      ],
+      "evaluation_budget": 60,
+      "status": "evaluation_limit",
+      "trials": 60,
+      "search_feasible": 57,
+      "baseline_error": 0.011609733638827776,
+      "best_error": 0.011609733638827776,
+      "gain": 0.0,
+      "observed_reference_difference": 0.0033609004608687503,
+      "validation_passed": true,
+      "wall_seconds": 13.64599730000009,
+      "directory": "artifacts\\geometry_optimization_study\\rectangle_0_0.2\\optimization\\0506d4c8243e3016e1773449d7d827ee3440daefafa83c627af26c51f7821048"
+    },
+    {
+      "shape": "star",
+      "angle": 30.0,
+      "scale": 0.2,
+      "cells": [
+        94,
+        94
+      ],
+      "evaluation_budget": 60,
+      "status": "evaluation_limit",
+      "trials": 60,
+      "search_feasible": 39,
+      "baseline_error": 0.03202440331362244,
+      "best_error": 0.023741846606236166,
+      "gain": 0.008282556707386275,
+      "observed_reference_difference": 0.0032752517415484653,
+      "validation_passed": true,
+      "wall_seconds": 13.744442799999888,
+      "directory": "artifacts\\geometry_optimization_study\\star_30_0.2\\optimization\\4dab99c621c5ea7e3fd1c42f0e57f75db3cf1bab50c9248e36dfe908339cd456"
+    },
+    {
+      "shape": "sun",
+      "angle": 0.0,
+      "scale": 0.2,
+      "cells": [
+        97,
+        97
+      ],
+      "evaluation_budget": 60,
+      "status": "evaluation_limit",
+      "trials": 60,
+      "search_feasible": 2,
+      "baseline_error": 0.05778829771582732,
+      "best_error": 0.05778829771582732,
+      "gain": 0.0,
+      "observed_reference_difference": 0.003845171202956174,
+      "validation_passed": true,
+      "wall_seconds": 25.351112899999862,
+      "directory": "artifacts\\geometry_optimization_study\\sun_0_0.2\\optimization\\b1f2d494065429a45d7df887a4b67ab1e8456dfe06cc3013762416478c1b2beb"
+    },
+    {
+      "shape": "sun",
+      "angle": 0.0,
+      "scale": 0.4,
+      "cells": [
+        232,
+        232
+      ],
+      "evaluation_budget": 60,
+      "status": "evaluation_limit",
+      "trials": 60,
+      "search_feasible": 4,
+      "baseline_error": 0.029332746033304054,
+      "best_error": 0.015038505705961021,
+      "gain": 0.014294240327343033,
+      "observed_reference_difference": 0.0016247336490001864,
+      "validation_passed": true,
+      "wall_seconds": 201.04205300000012,
+      "directory": "artifacts\\geometry_optimization_study\\sun_0_0.4\\optimization\\4d67b6d20491a21cd3872fb959197f0676f901cb03d54d6a06cddb4985e6aafc"
+    },
+    {
+      "shape": "swept_aircraft",
+      "angle": 0.0,
+      "scale": 1.0,
+      "cells": [
+        178,
+        159
+      ],
+      "evaluation_budget": 60,
+      "status": "evaluation_limit",
+      "trials": 60,
+      "search_feasible": 17,
+      "baseline_error": 0.02229830177352968,
+      "best_error": 0.01759867913953044,
+      "gain": 0.0046996226339992425,
+      "observed_reference_difference": 0.000525813141729038,
+      "validation_passed": true,
+      "wall_seconds": 61.62232730000051,
+      "directory": "artifacts\\geometry_optimization_study\\swept_aircraft_0_1\\optimization\\521638c4017f1ce7732404e4f863fa3ded819ec2d1ca5b5e318e5d51f9e1cf35"
+    },
+    {
+      "shape": "swept_aircraft",
+      "angle": 0.0,
+      "scale": 1.0,
+      "cells": [
+        178,
+        159
+      ],
+      "evaluation_budget": 200,
+      "status": "evaluation_limit",
+      "trials": 200,
+      "search_feasible": 74,
+      "baseline_error": 0.02229830177352968,
+      "best_error": 0.01695499772599906,
+      "gain": 0.005343304047530622,
+      "observed_reference_difference": 0.000525813141729038,
+      "validation_passed": true,
+      "wall_seconds": 229.19815179999932,
+      "directory": "artifacts\\geometry_optimization_study\\swept_aircraft_0_1\\optimization\\b189c109a274310f602b857b9df2852f1418271604cf2fc9b95043f09a1f1a8b"
+    },
+    {
+      "shape": "swept_aircraft",
+      "angle": 90.0,
+      "scale": 1.0,
+      "cells": [
+        159,
+        178
+      ],
+      "evaluation_budget": 200,
+      "status": "evaluation_limit",
+      "trials": 200,
+      "search_feasible": 57,
+      "baseline_error": 0.02383322588033868,
+      "best_error": 0.01149707060966737,
+      "gain": 0.01233615527067131,
+      "observed_reference_difference": 0.00039675422261688123,
+      "validation_passed": true,
+      "wall_seconds": 277.3066904999996,
+      "directory": "artifacts\\geometry_optimization_study\\swept_aircraft_90_1\\optimization\\543bcf0d4f80252a7c450265131a22d408d60af05c48735ed2e9781b378f3d4c"
+    },
+    {
+      "shape": "u_shape",
+      "angle": 30.0,
+      "scale": 0.2,
+      "cells": [
+        111,
+        111
+      ],
+      "evaluation_budget": 60,
+      "status": "evaluation_limit",
+      "trials": 60,
+      "search_feasible": 3,
+      "baseline_error": 0.010025910150008237,
+      "best_error": 0.010025910150008237,
+      "gain": 0.0,
+      "observed_reference_difference": 0.0033491927841834933,
+      "validation_passed": true,
+      "wall_seconds": 9.080729499999507,
+      "directory": "artifacts\\geometry_optimization_study\\u_shape_30_0.2\\optimization\\d836f2b5c7177cd7551aae9045c44417065b3876d85d0b51dd7c001f3f0836ae"
+    },
+    {
+      "shape": "wifi",
+      "angle": 30.0,
+      "scale": 0.2,
+      "cells": [
+        93,
+        84
+      ],
+      "evaluation_budget": 60,
+      "status": "evaluation_limit",
+      "trials": 60,
+      "search_feasible": 12,
+      "baseline_error": 0.019608653602945687,
+      "best_error": 0.017205909418358045,
+      "gain": 0.002402744184587642,
+      "observed_reference_difference": 0.0005738713834881173,
+      "validation_passed": true,
+      "wall_seconds": 11.190250599999672,
+      "directory": "artifacts\\geometry_optimization_study\\wifi_30_0.2\\optimization\\b1c90fd7f35ff0c5e4ff4b16550e7c728c7aeab00ad6f85e28b15aae2302a2a7"
+    }
+  ],
   "comparisons": [
     {
       "shape": "circle",
@@ -1124,6 +3791,7 @@
       "observed_reference_difference": 0.0013691683583080764,
       "validation_passed": true,
       "directory": "artifacts\\geometry_optimization_study\\circle_0_0.2\\optimization\\5dfae19990a7c02377fec6972c84f48ea3c2a6c394fad9f6d4b1bc25e1bf46ff",
+      "wall_seconds": 12.633561700000428,
       "best_baseline_kind": "geometry_aware",
       "best_baseline_error": 0.006854923945760974,
       "search_feasible": 57,
@@ -1301,7 +3969,8 @@
           "worst_frequency": 0.0
         }
       },
-      "reference_directory": "artifacts\\geometry_optimization_study\\circle_0_0.2\\reference\\fea79090e24275da145b4eb565e11821731341d00d679a5808096c42ee002f8e"
+      "reference_directory": "artifacts\\geometry_optimization_study\\circle_0_0.2\\reference\\fea79090e24275da145b4eb565e11821731341d00d679a5808096c42ee002f8e",
+      "evaluation_budget": 60
     },
     {
       "shape": "rectangle",
@@ -1320,6 +3989,7 @@
       "observed_reference_difference": 0.0033609004608687503,
       "validation_passed": true,
       "directory": "artifacts\\geometry_optimization_study\\rectangle_0_0.2\\optimization\\0506d4c8243e3016e1773449d7d827ee3440daefafa83c627af26c51f7821048",
+      "wall_seconds": 13.64599730000009,
       "best_baseline_kind": "geometry_aware",
       "best_baseline_error": 0.011609733638827776,
       "search_feasible": 57,
@@ -1497,7 +4167,8 @@
           "worst_frequency": 0.0
         }
       },
-      "reference_directory": "artifacts\\geometry_optimization_study\\rectangle_0_0.2\\reference\\d27a347a202a310473b18b5d66e50a5e7b5bf4eb36e3a59f2700aa20fc56fb37"
+      "reference_directory": "artifacts\\geometry_optimization_study\\rectangle_0_0.2\\reference\\d27a347a202a310473b18b5d66e50a5e7b5bf4eb36e3a59f2700aa20fc56fb37",
+      "evaluation_budget": 60
     },
     {
       "shape": "star",
@@ -1518,6 +4189,7 @@
       "observed_reference_difference": 0.0032752517415484653,
       "validation_passed": true,
       "directory": "artifacts\\geometry_optimization_study\\star_30_0.2\\optimization\\4dab99c621c5ea7e3fd1c42f0e57f75db3cf1bab50c9248e36dfe908339cd456",
+      "wall_seconds": 13.744442799999888,
       "best_baseline_kind": "geometry_aware",
       "best_baseline_error": 0.03202440331362244,
       "search_feasible": 39,
@@ -1729,7 +4401,8 @@
           "worst_frequency": 0.0
         }
       },
-      "reference_directory": "artifacts\\geometry_optimization_study\\star_30_0.2\\reference\\f59b3e61d5ecd7472e0eb2aba1d2be2d501bc0d20539999ba3684d5ac1d25714"
+      "reference_directory": "artifacts\\geometry_optimization_study\\star_30_0.2\\reference\\f59b3e61d5ecd7472e0eb2aba1d2be2d501bc0d20539999ba3684d5ac1d25714",
+      "evaluation_budget": 60
     },
     {
       "shape": "moon",
@@ -1750,6 +4423,7 @@
       "observed_reference_difference": 0.0016927499860458055,
       "validation_passed": true,
       "directory": "artifacts\\geometry_optimization_study\\moon_30_0.2\\optimization\\2714a60bbb65a2e063775909e389b9b4f0f7419da0c8a1467320a88ed8a317c9",
+      "wall_seconds": 10.583889200000158,
       "best_baseline_kind": "deterministic",
       "best_baseline_error": 0.007381487888352276,
       "search_feasible": 35,
@@ -1927,7 +4601,8 @@
           "worst_frequency": 0.0
         }
       },
-      "reference_directory": "artifacts\\geometry_optimization_study\\moon_30_0.2\\reference\\b8485bc5a2cbea95a7c69a23cb94527e02ab0364116b241dc4177c0d5e9afc3f"
+      "reference_directory": "artifacts\\geometry_optimization_study\\moon_30_0.2\\reference\\b8485bc5a2cbea95a7c69a23cb94527e02ab0364116b241dc4177c0d5e9afc3f",
+      "evaluation_budget": 60
     },
     {
       "shape": "wifi",
@@ -1948,6 +4623,7 @@
       "observed_reference_difference": 0.0005738713834881173,
       "validation_passed": true,
       "directory": "artifacts\\geometry_optimization_study\\wifi_30_0.2\\optimization\\b1c90fd7f35ff0c5e4ff4b16550e7c728c7aeab00ad6f85e28b15aae2302a2a7",
+      "wall_seconds": 11.190250599999672,
       "best_baseline_kind": "deterministic",
       "best_baseline_error": 0.01822987646587255,
       "search_feasible": 12,
@@ -2171,7 +4847,8 @@
           "worst_frequency": 0.0
         }
       },
-      "reference_directory": "artifacts\\geometry_optimization_study\\wifi_30_0.2\\reference\\8531798ab28c4ce2e7a705ddf4049a873bdae53b2490754985e4b6ad2ee89939"
+      "reference_directory": "artifacts\\geometry_optimization_study\\wifi_30_0.2\\reference\\8531798ab28c4ce2e7a705ddf4049a873bdae53b2490754985e4b6ad2ee89939",
+      "evaluation_budget": 60
     },
     {
       "shape": "sun",
@@ -2192,6 +4869,7 @@
       "observed_reference_difference": 0.003845171202956174,
       "validation_passed": true,
       "directory": "artifacts\\geometry_optimization_study\\sun_0_0.2\\optimization\\b1f2d494065429a45d7df887a4b67ab1e8456dfe06cc3013762416478c1b2beb",
+      "wall_seconds": 25.351112899999862,
       "best_baseline_kind": "geometry_aware",
       "best_baseline_error": 0.05778829771582732,
       "search_feasible": 2,
@@ -2437,7 +5115,8 @@
           "worst_frequency": 0.0
         }
       },
-      "reference_directory": "artifacts\\geometry_optimization_study\\sun_0_0.2\\reference\\5445d3a0db5fa26a7980f76421311078554c01925e623b5cf526f20a382c6f8d"
+      "reference_directory": "artifacts\\geometry_optimization_study\\sun_0_0.2\\reference\\5445d3a0db5fa26a7980f76421311078554c01925e623b5cf526f20a382c6f8d",
+      "evaluation_budget": 60
     },
     {
       "shape": "u_shape",
@@ -2458,6 +5137,7 @@
       "observed_reference_difference": 0.0033491927841834933,
       "validation_passed": true,
       "directory": "artifacts\\geometry_optimization_study\\u_shape_30_0.2\\optimization\\d836f2b5c7177cd7551aae9045c44417065b3876d85d0b51dd7c001f3f0836ae",
+      "wall_seconds": 9.080729499999507,
       "best_baseline_kind": "geometry_aware",
       "best_baseline_error": 0.010025910150008237,
       "search_feasible": 3,
@@ -2635,7 +5315,8 @@
           "worst_frequency": 0.0
         }
       },
-      "reference_directory": "artifacts\\geometry_optimization_study\\u_shape_30_0.2\\reference\\3b0c38389c8a5922b3c6a5063faf4785ebf508916a105511d3f8b56b1094ee1a"
+      "reference_directory": "artifacts\\geometry_optimization_study\\u_shape_30_0.2\\reference\\3b0c38389c8a5922b3c6a5063faf4785ebf508916a105511d3f8b56b1094ee1a",
+      "evaluation_budget": 60
     },
     {
       "shape": "circle",
@@ -2654,6 +5335,7 @@
       "observed_reference_difference": 0.002452926730058495,
       "validation_passed": true,
       "directory": "artifacts\\geometry_optimization_study\\circle_0_0.4\\optimization\\ca890c0cdfada4aed675225d1e1d230b17446e7db974990234ee956fe4c1b335",
+      "wall_seconds": 16.38071570000011,
       "best_baseline_kind": "geometry_aware",
       "best_baseline_error": 0.007865001827243822,
       "search_feasible": 57,
@@ -2831,7 +5513,8 @@
           "worst_frequency": 0.0
         }
       },
-      "reference_directory": "artifacts\\geometry_optimization_study\\circle_0_0.4\\reference\\78379c0231aa4a22c08701e16bd18156fb5df1b063aa8cd365b8ac0f4644d0ab"
+      "reference_directory": "artifacts\\geometry_optimization_study\\circle_0_0.4\\reference\\78379c0231aa4a22c08701e16bd18156fb5df1b063aa8cd365b8ac0f4644d0ab",
+      "evaluation_budget": 60
     },
     {
       "shape": "sun",
@@ -2853,6 +5536,7 @@
       "observed_reference_difference": 0.0016247336490001864,
       "validation_passed": true,
       "directory": "artifacts\\geometry_optimization_study\\sun_0_0.4\\optimization\\4d67b6d20491a21cd3872fb959197f0676f901cb03d54d6a06cddb4985e6aafc",
+      "wall_seconds": 201.04205300000012,
       "best_baseline_kind": "geometry_aware",
       "best_baseline_error": 0.029332746033304054,
       "search_feasible": 4,
@@ -3132,7 +5816,8 @@
           "worst_frequency": 0.0
         }
       },
-      "reference_directory": "artifacts\\geometry_optimization_study\\sun_0_0.4\\reference\\b950fd063269cc2e2d1bfdb6c96dc31631e9cf1e48714ae98301349d0c1bf9b1"
+      "reference_directory": "artifacts\\geometry_optimization_study\\sun_0_0.4\\reference\\b950fd063269cc2e2d1bfdb6c96dc31631e9cf1e48714ae98301349d0c1bf9b1",
+      "evaluation_budget": 60
     },
     {
       "shape": "swept_aircraft",
@@ -3143,22 +5828,23 @@
         159
       ],
       "status": "evaluation_limit",
-      "trials": 60,
-      "feasible": 19,
+      "trials": 200,
+      "feasible": 76,
       "failures": {
-        "UnresolvedGeometryError": 41
+        "UnresolvedGeometryError": 124
       },
       "baseline_error": 0.02229830177352968,
-      "best_error": 0.01759867913953044,
+      "best_error": 0.01695499772599906,
       "observed_reference_difference": 0.000525813141729038,
       "validation_passed": true,
-      "directory": "artifacts\\geometry_optimization_study\\swept_aircraft_0_1\\optimization\\521638c4017f1ce7732404e4f863fa3ded819ec2d1ca5b5e318e5d51f9e1cf35",
+      "directory": "artifacts\\geometry_optimization_study\\swept_aircraft_0_1\\optimization\\b189c109a274310f602b857b9df2852f1418271604cf2fc9b95043f09a1f1a8b",
+      "wall_seconds": 229.19815179999932,
       "best_baseline_kind": "geometry_aware",
       "best_baseline_error": 0.02229830177352968,
-      "search_feasible": 17,
+      "search_feasible": 74,
       "best_kind": "differential_evolution",
-      "gain": 0.0046996226339992425,
-      "gain_over_reference_difference": 8.93781889616797,
+      "gain": 0.005343304047530622,
+      "gain_over_reference_difference": 10.161982695906321,
       "gain_exceeds_reference_difference": true,
       "reference_method": "uniform_target_with_exact_anchors",
       "reference_levels": [
@@ -3352,7 +6038,8 @@
           "worst_frequency": 0.0
         }
       },
-      "reference_directory": "artifacts\\geometry_optimization_study\\swept_aircraft_0_1\\reference\\747dc2bfc8ad867c02e23781751cca9c2d446d23d5f55824cd4503ef7ab41ec6"
+      "reference_directory": "artifacts\\geometry_optimization_study\\swept_aircraft_0_1\\reference\\747dc2bfc8ad867c02e23781751cca9c2d446d23d5f55824cd4503ef7ab41ec6",
+      "evaluation_budget": 200
     },
     {
       "shape": "propeller_aeroplane",
@@ -3363,22 +6050,23 @@
         136
       ],
       "status": "evaluation_limit",
-      "trials": 60,
-      "feasible": 49,
+      "trials": 200,
+      "feasible": 154,
       "failures": {
-        "UnresolvedGeometryError": 11
+        "UnresolvedGeometryError": 46
       },
       "baseline_error": 0.021509952599469948,
-      "best_error": 0.012194543606884283,
+      "best_error": 0.010240996032840906,
       "observed_reference_difference": 0.0004228433005237182,
       "validation_passed": true,
-      "directory": "artifacts\\geometry_optimization_study\\propeller_aeroplane_0_1\\optimization\\0b76e2f3a7f3321b723961de51b34f8aa25bc2324d8ea817f87d4397e82fc91d",
+      "directory": "artifacts\\geometry_optimization_study\\propeller_aeroplane_0_1\\optimization\\5c3aeb839b2259162d669969ff87e353e91ff0cb909c22bc6c52b1d39771e9ed",
+      "wall_seconds": 204.54884200000015,
       "best_baseline_kind": "geometry_aware",
       "best_baseline_error": 0.021509952599469948,
-      "search_feasible": 47,
+      "search_feasible": 152,
       "best_kind": "differential_evolution",
-      "gain": 0.009315408992585665,
-      "gain_over_reference_difference": 22.03040459916934,
+      "gain": 0.011268956566629042,
+      "gain_over_reference_difference": 26.65043185660439,
       "gain_exceeds_reference_difference": true,
       "reference_method": "uniform_target_with_exact_anchors",
       "reference_levels": [
@@ -3570,7 +6258,8 @@
           "worst_frequency": 0.0
         }
       },
-      "reference_directory": "artifacts\\geometry_optimization_study\\propeller_aeroplane_0_1\\reference\\64eb46156c0180c274096565ca98b63934a5bd6dc3d1d45f26261ff48a387bc1"
+      "reference_directory": "artifacts\\geometry_optimization_study\\propeller_aeroplane_0_1\\reference\\64eb46156c0180c274096565ca98b63934a5bd6dc3d1d45f26261ff48a387bc1",
+      "evaluation_budget": 200
     },
     {
       "shape": "radio_telescope",
@@ -3581,17 +6270,20 @@
         116
       ],
       "status": "evaluation_limit",
-      "trials": 60,
-      "feasible": 60,
-      "failures": {},
+      "trials": 200,
+      "feasible": 195,
+      "failures": {
+        "UnresolvedGeometryError": 5
+      },
       "baseline_error": 0.014275125371647346,
       "best_error": 0.01018415740551251,
       "observed_reference_difference": 0.0018597000962295596,
       "validation_passed": true,
-      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_0_1\\optimization\\0bfbda072072c5717199ca831c02e26717929f8e1b41d16edcafc648f28e79b0",
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_0_1\\optimization\\e1b07a341f501d8de6ca35cfe0c46de709a5c3a4de4f5b6535e276afecaeb088",
+      "wall_seconds": 495.86585790000026,
       "best_baseline_kind": "deterministic",
       "best_baseline_error": 0.012291433057055148,
-      "search_feasible": 57,
+      "search_feasible": 192,
       "best_kind": "differential_evolution",
       "gain": 0.004090967966134836,
       "gain_over_reference_difference": 2.1997998356988044,
@@ -3816,7 +6508,662 @@
           "worst_frequency": 0.0
         }
       },
-      "reference_directory": "artifacts\\geometry_optimization_study\\radio_telescope_0_1\\subdivision_reference\\1070c4f366593ef078e9c4c054f1db6fca6694f50c861c25d60670f956d7fc54"
+      "reference_directory": "artifacts\\geometry_optimization_study\\radio_telescope_0_1\\subdivision_reference\\1070c4f366593ef078e9c4c054f1db6fca6694f50c861c25d60670f956d7fc54",
+      "evaluation_budget": 200
+    },
+    {
+      "shape": "propeller_aeroplane",
+      "angle": 90.0,
+      "scale": 1.0,
+      "cells": [
+        136,
+        139
+      ],
+      "status": "evaluation_limit",
+      "trials": 200,
+      "feasible": 168,
+      "failures": {
+        "UnresolvedGeometryError": 32
+      },
+      "baseline_error": 0.020154474590300526,
+      "best_error": 0.011064200371828462,
+      "observed_reference_difference": 0.0003573506207728124,
+      "validation_passed": true,
+      "directory": "artifacts\\geometry_optimization_study\\propeller_aeroplane_90_1\\optimization\\93b5a8e9101c08d7083ca44aff824a56a7ac4b694fbd1443334305789ab48cab",
+      "wall_seconds": 196.0788577000003,
+      "best_baseline_kind": "geometry_aware",
+      "best_baseline_error": 0.020154474590300526,
+      "search_feasible": 166,
+      "best_kind": "differential_evolution",
+      "gain": 0.009090274218472064,
+      "gain_over_reference_difference": 25.43796957400909,
+      "gain_exceeds_reference_difference": true,
+      "reference_method": "uniform_target_with_exact_anchors",
+      "reference_levels": [
+        {
+          "message": "No mesh satisfies anchors, fixed collars, budget and grading/spacing",
+          "ppw": 48,
+          "status": "MeshInfeasibleError"
+        },
+        {
+          "message": "No mesh satisfies anchors, fixed collars, budget and grading/spacing",
+          "ppw": 72,
+          "status": "MeshInfeasibleError"
+        },
+        {
+          "message": "No mesh satisfies anchors, fixed collars, budget and grading/spacing",
+          "ppw": 108,
+          "status": "MeshInfeasibleError"
+        },
+        {
+          "message": "No mesh satisfies anchors, fixed collars, budget and grading/spacing",
+          "ppw": 164,
+          "status": "MeshInfeasibleError"
+        },
+        {
+          "cached": true,
+          "difference": null,
+          "dt": 1.1898083599931462e-12,
+          "ppw": 196,
+          "status": "converged"
+        },
+        {
+          "cached": true,
+          "difference": {
+            "error": 0.0003573506207728124,
+            "per_frequency": [
+              0.0003332349836195091,
+              0.0003344236645703444,
+              0.00033567450771847853,
+              0.00033715804055364014,
+              0.00033901319837075525,
+              0.00034132997302098954,
+              0.00034413750490580673,
+              0.00034739967839545345,
+              0.00035101909694985103,
+              0.00035484891666520886,
+              0.0003587108231988038,
+              0.00036241674843685064,
+              0.0003657918000796987,
+              0.00036869616026196484,
+              0.00037104414664049413,
+              0.000372819003588468,
+              0.00037408219294048875,
+              0.0003749759956756659,
+              0.0003757182423599483,
+              0.00037658817733056746,
+              0.00037790309721828325
+            ],
+            "width_error": 0.00012228069144689386,
+            "worst_frequency": 0.00037790309721828325
+          },
+          "dt": 1.1898083599931462e-12,
+          "ppw": 256,
+          "status": "converged"
+        },
+        {
+          "cached": true,
+          "difference": {
+            "error": 0.00020926113098892145,
+            "per_frequency": [
+              0.00019704788253696796,
+              0.00019798018020404388,
+              0.00019876996680934735,
+              0.00019948648042142524,
+              0.0002002026054217437,
+              0.00020098839532752783,
+              0.00020190453064514359,
+              0.00020299642604382424,
+              0.00020428973184715205,
+              0.0002057878762777071,
+              0.00020747206172038149,
+              0.00020930380302067812,
+              0.00021122974889908555,
+              0.00021318823681860358,
+              0.00021511684825888,
+              0.00021696016706428275,
+              0.0002186769739708622,
+              0.00022024619837172343,
+              0.00022167105882658003,
+              0.00022298094159407374,
+              0.0002242306974362901
+            ],
+            "width_error": 7.182714081197337e-05,
+            "worst_frequency": 0.0002242306974362901
+          },
+          "dt": 1.1478247368590115e-12,
+          "ppw": 320,
+          "status": "converged"
+        }
+      ],
+      "reference_checks": {
+        "contour": {
+          "cached": false,
+          "error": 2.8604110093848682e-05,
+          "passed": true,
+          "per_frequency": [
+            2.603888407169676e-05,
+            2.708699199285937e-05,
+            2.794988645597616e-05,
+            2.8598479200777695e-05,
+            2.9013310242789546e-05,
+            2.9186336459308556e-05,
+            2.912284069025517e-05,
+            2.884346180298405e-05,
+            2.838625004014421e-05,
+            2.7808443581152846e-05,
+            2.7187264408515674e-05,
+            2.66184174953668e-05,
+            2.621035653416545e-05,
+            2.6072497620816868e-05,
+            2.6297607616635757e-05,
+            2.6942775789406992e-05,
+            2.8016816355880672e-05,
+            2.9480156347490458e-05,
+            3.125639461205292e-05,
+            3.324903411358875e-05,
+            3.535684518551084e-05
+          ],
+          "width_error": 3.797719838247262e-05,
+          "worst_frequency": 3.535684518551084e-05
+        },
+        "pml": {
+          "cached": true,
+          "error": 6.444648633313514e-08,
+          "passed": true,
+          "per_frequency": [
+            8.101127517527906e-08,
+            7.702515456489021e-08,
+            7.297466553213583e-08,
+            6.89585668035521e-08,
+            6.509055880758964e-08,
+            6.150020648631573e-08,
+            5.833063858286994e-08,
+            5.573089190816726e-08,
+            5.384141723011968e-08,
+            5.27721639618135e-08,
+            5.2579034488932744e-08,
+            5.3248137021877705e-08,
+            5.469614360732318e-08,
+            5.678631483846239e-08,
+            5.935263515634029e-08,
+            6.222293992675224e-08,
+            6.523495942317088e-08,
+            6.824502907812971e-08,
+            7.113243165604991e-08,
+            7.380049981171074e-08,
+            7.617598407055077e-08
+          ],
+          "width_error": 9.886283837504705e-08,
+          "worst_frequency": 8.101127517527906e-08
+        },
+        "temporal": {
+          "cached": true,
+          "error": 0.0,
+          "passed": true,
+          "per_frequency": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "width_error": 0.0,
+          "worst_frequency": 0.0
+        }
+      },
+      "reference_directory": "artifacts\\geometry_optimization_study\\propeller_aeroplane_90_1\\reference\\e099096d646aad617c3f479ce2a18d1b34f90cbfce098dcf10baceffe99926d0",
+      "evaluation_budget": 200
+    },
+    {
+      "shape": "radio_telescope",
+      "angle": 90.0,
+      "scale": 1.0,
+      "cells": [
+        116,
+        128
+      ],
+      "status": "evaluation_limit",
+      "trials": 200,
+      "feasible": 197,
+      "failures": {
+        "UnresolvedGeometryError": 3
+      },
+      "baseline_error": 0.009914144928914601,
+      "best_error": 0.009001498069479346,
+      "observed_reference_difference": 0.0021991986564812065,
+      "validation_passed": true,
+      "directory": "artifacts\\geometry_optimization_study\\radio_telescope_90_1\\optimization\\de4dd7b8503abc3d34c77d8696969ec82f55725ea6b1430bfe06c2fe28f7aee7",
+      "wall_seconds": 505.04127619999963,
+      "best_baseline_kind": "geometry_aware",
+      "best_baseline_error": 0.009914144928914601,
+      "search_feasible": 194,
+      "best_kind": "differential_evolution",
+      "gain": 0.0009126468594352552,
+      "gain_over_reference_difference": 0.4149906406797836,
+      "gain_exceeds_reference_difference": false,
+      "reference_method": "nested_geometry_aware_subdivision",
+      "reference_levels": [
+        {
+          "cached": false,
+          "cells": [
+            232,
+            256
+          ],
+          "difference": null,
+          "dt": 7.353759925406345e-12,
+          "factor": 2,
+          "status": "converged"
+        },
+        {
+          "cached": false,
+          "cells": [
+            348,
+            384
+          ],
+          "difference": {
+            "error": 0.0021991986564812065,
+            "per_frequency": [
+              0.0017678124999305036,
+              0.0017881845886151056,
+              0.001810927280330333,
+              0.0018371467772074505,
+              0.0018677573762833765,
+              0.001903405105574917,
+              0.001944410452372718,
+              0.0019907378191481367,
+              0.0020419951354361545,
+              0.0020974620515921533,
+              0.002156140912168162,
+              0.002216822367862781,
+              0.0022781572817085036,
+              0.0023387279907469203,
+              0.0023971141435289688,
+              0.0024519504869429387,
+              0.002501975677798597,
+              0.002546072314353219,
+              0.002583298985152582,
+              0.0026129153681359266,
+              0.0026344014232613645
+            ],
+            "width_error": 0.0009128730950133056,
+            "worst_frequency": 0.0026344014232613645
+          },
+          "dt": 4.902506616937533e-12,
+          "factor": 3,
+          "status": "converged"
+        },
+        {
+          "cached": false,
+          "cells": [
+            464,
+            512
+          ],
+          "difference": {
+            "error": 0.0009148275434121151,
+            "per_frequency": [
+              0.0008239429434696674,
+              0.0008342966995399864,
+              0.0008447059907337748,
+              0.0008551148854647764,
+              0.000865463444665946,
+              0.0008756892854866732,
+              0.0008857280587689491,
+              0.0008955133877874327,
+              0.0009049768700994704,
+              0.0009140486297150789,
+              0.0009226587040640678,
+              0.0009307393333453924,
+              0.0009382280371693904,
+              0.0009450712384984515,
+              0.0009512281294589732,
+              0.0009566744568239925,
+              0.0009614059213463068,
+              0.0009654409198780236,
+              0.0009688224025254007,
+              0.0009716186635606388,
+              0.0009739229342999769
+            ],
+            "width_error": 0.000998816532171046,
+            "worst_frequency": 0.0009739229342999769
+          },
+          "dt": 3.676879962703141e-12,
+          "factor": 4,
+          "status": "converged"
+        }
+      ],
+      "reference_checks": {
+        "contour": {
+          "cached": false,
+          "error": 0.0003052310663620861,
+          "passed": true,
+          "per_frequency": [
+            0.0002287630035321198,
+            0.0002371651617162799,
+            0.00024510803042681467,
+            0.0002525679003058839,
+            0.00025955817166144505,
+            0.0002661306797078922,
+            0.0002723743962307456,
+            0.0002784110535066161,
+            0.0002843874450377311,
+            0.00029046449455988273,
+            0.0002968036526718102,
+            0.000303551725674242,
+            0.000310825742420384,
+            0.00031869975182482053,
+            0.0003271953687187283,
+            0.00033627740649703244,
+            0.0003458551607382153,
+            0.00035578906558788155,
+            0.00036590177095876825,
+            0.00037599233095138616,
+            0.0003858521576340684
+          ],
+          "width_error": 0.00022270630393028,
+          "worst_frequency": 0.0003858521576340684
+        },
+        "pml": {
+          "cached": false,
+          "error": 6.588754099099113e-07,
+          "passed": true,
+          "per_frequency": [
+            3.831457685545713e-07,
+            4.002012354796991e-07,
+            4.193514146471498e-07,
+            4.403518550863393e-07,
+            4.629733666333419e-07,
+            4.870135628510474e-07,
+            5.123011735887192e-07,
+            5.386946948018704e-07,
+            5.66077161738068e-07,
+            5.943488906832948e-07,
+            6.234195346248663e-07,
+            6.532004051678759e-07,
+            6.835980124849175e-07,
+            7.145087742639281e-07,
+            7.45815131972623e-07,
+            7.773832128548993e-07,
+            8.090616030290662e-07,
+            8.406811583852146e-07,
+            8.720558030134228e-07,
+            9.029840132230371e-07,
+            9.332509569181704e-07
+          ],
+          "width_error": 7.918768049198265e-07,
+          "worst_frequency": 9.332509569181704e-07
+        },
+        "temporal": {
+          "cached": false,
+          "error": 0.0,
+          "passed": true,
+          "per_frequency": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "width_error": 0.0,
+          "worst_frequency": 0.0
+        }
+      },
+      "reference_directory": "artifacts\\geometry_optimization_study\\radio_telescope_90_1\\subdivision_reference\\beea105b3a36245a9aeea87f09c3b637f58d36a7134d835f19035aa2ed4daa3e",
+      "evaluation_budget": 200
+    },
+    {
+      "shape": "swept_aircraft",
+      "angle": 90.0,
+      "scale": 1.0,
+      "cells": [
+        159,
+        178
+      ],
+      "status": "evaluation_limit",
+      "trials": 200,
+      "feasible": 59,
+      "failures": {
+        "UnresolvedGeometryError": 141
+      },
+      "baseline_error": 0.02383322588033868,
+      "best_error": 0.01149707060966737,
+      "observed_reference_difference": 0.00039675422261688123,
+      "validation_passed": true,
+      "directory": "artifacts\\geometry_optimization_study\\swept_aircraft_90_1\\optimization\\543bcf0d4f80252a7c450265131a22d408d60af05c48735ed2e9781b378f3d4c",
+      "wall_seconds": 277.3066904999996,
+      "best_baseline_kind": "geometry_aware",
+      "best_baseline_error": 0.02383322588033868,
+      "search_feasible": 57,
+      "best_kind": "differential_evolution",
+      "gain": 0.01233615527067131,
+      "gain_over_reference_difference": 31.092688035694838,
+      "gain_exceeds_reference_difference": true,
+      "reference_method": "uniform_target_with_exact_anchors",
+      "reference_levels": [
+        {
+          "message": "No mesh satisfies anchors, fixed collars, budget and grading/spacing",
+          "ppw": 48,
+          "status": "MeshInfeasibleError"
+        },
+        {
+          "message": "No mesh satisfies anchors, fixed collars, budget and grading/spacing",
+          "ppw": 72,
+          "status": "MeshInfeasibleError"
+        },
+        {
+          "cached": true,
+          "difference": null,
+          "dt": 9.614772950482696e-13,
+          "ppw": 108,
+          "status": "converged"
+        },
+        {
+          "message": "Mesh optimization did not finish: Time limit reached. (HiGHS Status 13: Time limit reached)",
+          "ppw": 164,
+          "status": "MeshOptimizationError"
+        },
+        {
+          "cached": true,
+          "difference": null,
+          "dt": 9.614772950482696e-13,
+          "ppw": 196,
+          "status": "converged"
+        },
+        {
+          "cached": true,
+          "difference": {
+            "error": 0.00039675422261688123,
+            "per_frequency": [
+              0.0003434064122963475,
+              0.00035059425171321144,
+              0.0003579468315568631,
+              0.00036529744691771334,
+              0.0003724585223049736,
+              0.0003792401738302365,
+              0.00038546940240649527,
+              0.0003910082397171453,
+              0.0003957693955897464,
+              0.0003997281414757987,
+              0.00040292928343984305,
+              0.00040548816319178606,
+              0.0004075847630923719,
+              0.0004094503105477098,
+              0.00041134642008982755,
+              0.00041353786425441755,
+              0.00041626145593892135,
+              0.000419694946911043,
+              0.0004239307630551307,
+              0.0004289592517240947,
+              0.0004346646783135414
+            ],
+            "width_error": 0.00015840327501321315,
+            "worst_frequency": 0.0004346646783135414
+          },
+          "dt": 9.359312246977274e-13,
+          "ppw": 256,
+          "status": "converged"
+        },
+        {
+          "cached": true,
+          "difference": {
+            "error": 0.00026332756261448527,
+            "per_frequency": [
+              0.00024679277391129683,
+              0.0002489148798887158,
+              0.00025112965640858027,
+              0.00025346187051132586,
+              0.0002558960375715803,
+              0.000258380782056003,
+              0.00026083711330088585,
+              0.0002631695394271744,
+              0.00026527862512146694,
+              0.0002670735402054355,
+              0.0002684832871034594,
+              0.00026946554371350454,
+              0.0002700123297969543,
+              0.0002701519576488962,
+              0.00026994696595919785,
+              0.00026948799546111903,
+              0.000268883896712289,
+              0.00026824879544652913,
+              0.000267687362770691,
+              0.0002672800515529408,
+              0.00026707040250503603
+            ],
+            "width_error": 9.231996413293437e-05,
+            "worst_frequency": 0.0002701519576488962
+          },
+          "dt": 8.959071020682251e-13,
+          "ppw": 320,
+          "status": "converged"
+        }
+      ],
+      "reference_checks": {
+        "contour": {
+          "cached": false,
+          "error": 3.2977512895110415e-05,
+          "passed": true,
+          "per_frequency": [
+            2.2612742011684897e-05,
+            2.3015229005623708e-05,
+            2.3434909280562746e-05,
+            2.3933809156810707e-05,
+            2.4573644737616448e-05,
+            2.5405221843872396e-05,
+            2.6458345772646968e-05,
+            2.7735195248016568e-05,
+            2.9209087251423427e-05,
+            3.082845861365579e-05,
+            3.2524181164573064e-05,
+            3.4217956584077874e-05,
+            3.583023390623554e-05,
+            3.728703301889977e-05,
+            3.852570023913254e-05,
+            3.949987832723209e-05,
+            4.018397030561911e-05,
+            4.057723730531591e-05,
+            4.0707434221479846e-05,
+            4.063352128877825e-05,
+            4.044643469608667e-05
+          ],
+          "width_error": 2.292444658145284e-05,
+          "worst_frequency": 4.0707434221479846e-05
+        },
+        "pml": {
+          "cached": false,
+          "error": 5.560059739904868e-08,
+          "passed": true,
+          "per_frequency": [
+            8.164738474339429e-08,
+            7.776480342574848e-08,
+            7.358656411772989e-08,
+            6.927675811682117e-08,
+            6.501305989138341e-08,
+            6.097471572508473e-08,
+            5.732621959699748e-08,
+            5.419685191884161e-08,
+            5.1659724133026106e-08,
+            4.97174687832577e-08,
+            4.830258849816459e-08,
+            4.729516597432844e-08,
+            4.655267911459069e-08,
+            4.5942938235134027e-08,
+            4.53719463875946e-08,
+            4.480281468003377e-08,
+            4.426513929950799e-08,
+            4.3855426544601105e-08,
+            4.3727923284115733e-08,
+            4.407272893885459e-08,
+            4.508059109223843e-08
+          ],
+          "width_error": 7.34394755095727e-08,
+          "worst_frequency": 8.164738474339429e-08
+        },
+        "temporal": {
+          "cached": true,
+          "error": 0.0,
+          "passed": true,
+          "per_frequency": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "width_error": 0.0,
+          "worst_frequency": 0.0
+        }
+      },
+      "reference_directory": "artifacts\\geometry_optimization_study\\swept_aircraft_90_1\\reference\\b57010799cbb6f1c648fa52c677ae31ed55ec42da2ef978981454003ea7a4ca2",
+      "evaluation_budget": 200
     }
   ]
 }

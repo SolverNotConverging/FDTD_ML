@@ -99,6 +99,9 @@ demonstration allocation, not a tuned geometry baseline or a learned model.
   analytical-cylinder comparison, and HDF5 reload.
 - [Solver/API reference](docs/solver_api.md): settings, material overlays, mesh
   strategies, checkpoint format, archives, and plotting options.
+- [Geometry-aware optimization study](docs/geometry_aware_optimization_study.md):
+  strict-conformal PEC meshing, engineered-shape angle screens, fixed-budget
+  GPU comparisons, numerical-reference checks, and a constrained CNN proposal.
 
 Install the `notebooks` dependency group and select the project `.venv` kernel.
 Both notebooks include executed example outputs.

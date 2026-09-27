@@ -2,25 +2,19 @@
 
 import json
 import sys
-from pathlib import Path
 
-from fdtdmesh import Simulation
-from fdtdmesh.benchmarks import ReferenceSettings, make_engineered_geometry, qualify_reference
-from fdtdmesh.benchmarks.shapes import SHAPES, make_geometry
+from study_cases import apply_seed_mesh, case_directory, make_simulation
+
+from fdtdmesh.benchmarks import ReferenceSettings, qualify_reference
 from fdtdmesh.solver.tmz import cuda_backend
 
 cuda_backend()
 shape = sys.argv[1]
 angle = float(sys.argv[2])
 scale = float(sys.argv[3])
-root = Path("artifacts/geometry_optimization_study") / f"{shape}_{angle:g}_{scale:g}"
-sim = Simulation(fmin=0.9e9, fmax=1.1e9)
-sim.set_geometry(
-    make_geometry(shape, size=(2.0, 2.0), scale=scale, incidence_deg=angle)
-    if shape in SHAPES
-    else make_engineered_geometry(shape, scale=scale, incidence_deg=angle)
-)
-base = sim.apply_mesh("geometry_aware", time_limit=40, max_cells=(512, 512))
+root = case_directory(shape, angle, scale)
+sim = make_simulation(shape, angle, scale)
+base = apply_seed_mesh(sim, shape, angle, scale)
 print("BASE", shape, angle, scale, base.Nx, base.Ny, flush=True)
 
 
@@ -32,7 +26,11 @@ def progress(item):
 settings = ReferenceSettings(
     ppw=(48, 72, 108, 164, 196, 256, 320), rtol=0.005, worst_rtol=0.005, max_seconds=300
 )
-ref = qualify_reference(sim, directory=root / "reference", settings=settings, progress=progress)
+for attempt in range(1, 4):
+    ref = qualify_reference(sim, directory=root / "reference", settings=settings, progress=progress)
+    if ref.qualified or ref.report["status"] != "time_limit":
+        break
+    print("REFERENCE PASS", attempt, "restarting from cached solves", flush=True)
 print(
     "REFERENCE",
     ref.report["status"],

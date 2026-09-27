@@ -1,4 +1,4 @@
-"""Independent telescope reference via nested refinement of a valid strict grid.
+"""Independent engineered-shape reference via nested refinement of a valid strict grid.
 
 Unlike the corner-anchor uniform-target projector, this keeps all validated
 geometry-aware lines and divides every interval. It is a study protocol, not a
@@ -8,12 +8,10 @@ general meshing API.
 import json
 import sys
 from dataclasses import asdict, replace
-from pathlib import Path
 
 import numpy as np
+from study_cases import apply_seed_mesh, case_directory, make_simulation
 
-from fdtdmesh import Simulation
-from fdtdmesh.benchmarks import make_engineered_geometry
 from fdtdmesh.benchmarks.common import (
     clone,
     errors,
@@ -25,18 +23,19 @@ from fdtdmesh.benchmarks.common import (
     write_json,
 )
 from fdtdmesh.benchmarks.reference import _expanded_pml
-from fdtdmesh.mesh import AxisCollar, Mesh
+from fdtdmesh.mesh import AxisCollar, Mesh, MeshInfeasibleError, MeshOptimizationError
 from fdtdmesh.pml import PML
+from fdtdmesh.solver.conformal import UnresolvedGeometryError
 
 angle = float(sys.argv[1]) if len(sys.argv) > 1 else 0.0
 scale = float(sys.argv[2]) if len(sys.argv) > 2 else 1.0
-root = Path("artifacts/geometry_optimization_study") / f"radio_telescope_{angle:g}_{scale:g}"
-sim = Simulation(fmin=0.9e9, fmax=1.1e9)
-sim.set_geometry(make_engineered_geometry("radio_telescope", scale=scale, incidence_deg=angle))
-base = sim.apply_mesh("geometry_aware", time_limit=40, max_cells=(512, 512))
+shape = sys.argv[3] if len(sys.argv) > 3 else "radio_telescope"
+root = case_directory(shape, angle, scale)
+sim = make_simulation(shape, angle, scale)
+base = apply_seed_mesh(sim, shape, angle, scale)
 settings = dict(
     method="nested_geometry_aware_subdivision",
-    factors=(2, 3, 4, 5),
+    factors=(2, 3, 4, 5, 6, 7),
     rtol=0.005,
     worst_rtol=0.005,
     check_boundaries=True,
@@ -98,8 +97,14 @@ def accepted(metric):
 last = finest = fine_sim = None
 passing = 0
 for factor in settings["factors"]:
-    fine_sim = subdivided(factor)
-    finest, path, cached = run_cached(fine_sim, root / "subdivision_runs")
+    try:
+        fine_sim = subdivided(factor)
+        finest, path, cached = run_cached(fine_sim, root / "subdivision_runs")
+    except (UnresolvedGeometryError, MeshInfeasibleError, MeshOptimizationError) as exc:
+        report["levels"].append(dict(factor=factor, status=type(exc).__name__, message=str(exc)))
+        save()
+        print("LEVEL", factor, type(exc).__name__, flush=True)
+        continue
     difference = errors(finest, last) if last is not None else None
     passing = passing + 1 if difference is not None and accepted(difference) else 0
     report["levels"].append(
@@ -122,6 +127,8 @@ for factor in settings["factors"]:
         None if difference is None else difference["error"],
         flush=True,
     )
+    if passing >= 2:
+        break
 
 if passing < 2:
     report["status"] = "spatial_unqualified"
@@ -173,7 +180,7 @@ for name, check in checks.items():
     print("CHECK", name, metric["error"], metric["worst_frequency"], flush=True)
 
 report["observed_reference_difference"] = max(
-    [x["difference"]["error"] for x in report["levels"][-2:]]
+    [x["difference"]["error"] for x in report["levels"] if x.get("difference")][-2:]
     + [x["error"] for x in report["checks"].values()]
 )
 report["qualified"] = all(x["passed"] for x in report["checks"].values())
@@ -183,7 +190,7 @@ save()
 (root / "baseline.json").write_text(
     json.dumps(
         dict(
-            shape="radio_telescope",
+            shape=shape,
             angle=angle,
             scale=scale,
             cells=(base.Nx, base.Ny),

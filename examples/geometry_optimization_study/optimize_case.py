@@ -3,24 +3,21 @@
 import json
 import sys
 from collections import Counter
-from pathlib import Path
 
-from fdtdmesh import Simulation
-from fdtdmesh.benchmarks import Reference, make_engineered_geometry, optimize_mesh
-from fdtdmesh.benchmarks.shapes import SHAPES, make_geometry
+from study_cases import apply_seed_mesh, case_directory, make_simulation
+
+from fdtdmesh.benchmarks import Reference, optimize_mesh
+from fdtdmesh.benchmarks.shapes import SHAPES
 
 shape = sys.argv[1]
 angle = float(sys.argv[2])
 scale = float(sys.argv[3])
-budget = int(sys.argv[4]) if len(sys.argv) > 4 else 60
-root = Path("artifacts/geometry_optimization_study") / f"{shape}_{angle:g}_{scale:g}"
-sim = Simulation(fmin=0.9e9, fmax=1.1e9)
-sim.set_geometry(
-    make_geometry(shape, size=(2.0, 2.0), scale=scale, incidence_deg=angle)
-    if shape in SHAPES
-    else make_engineered_geometry(shape, scale=scale, incidence_deg=angle)
-)
-base = sim.apply_mesh("geometry_aware", time_limit=40, max_cells=(512, 512))
+budget = int(sys.argv[4]) if len(sys.argv) > 4 else (60 if shape in SHAPES else 200)
+if budget < 3 or budget > 200:
+    raise SystemExit("Evaluation budget must be between 3 and 200")
+root = case_directory(shape, angle, scale)
+sim = make_simulation(shape, angle, scale)
+base = apply_seed_mesh(sim, shape, angle, scale)
 ref = Reference.load(json.loads((root / "baseline.json").read_text())["reference_directory"])
 print("INPUT", shape, angle, scale, base.Nx, base.Ny, "ref", ref.qualified, flush=True)
 if not ref.qualified:
@@ -47,7 +44,7 @@ opt = optimize_mesh(
     initial_mesh=base,
     directory=root / "optimization",
     max_evaluations=budget,
-    max_seconds=240,
+    max_seconds=1200 if budget > 60 else 240,
     controls=6,
     population=12,
     seed=0,
@@ -70,5 +67,7 @@ summary = dict(
     validation_passed=opt.report.get("validation", {}).get("passed"),
     directory=str(opt.directory),
 )
-(root / "comparison.json").write_text(json.dumps(summary, indent=2), encoding="utf8")
+(root / ("comparison.json" if budget == 60 else f"comparison_{budget}.json")).write_text(
+    json.dumps(summary, indent=2), encoding="utf8"
+)
 print("RESULT", json.dumps(summary), flush=True)
