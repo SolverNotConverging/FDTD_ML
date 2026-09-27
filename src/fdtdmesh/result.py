@@ -157,12 +157,10 @@ class Result:
 
         return convergence_plot(self, per_bin, ax)
 
-    def plot_scattering(
-        self, *, frequency=None, scale="linear", normalize="wavelength", polar=False, ax=None
-    ):
+    def plot_scattering(self, *, frequency=None, scale="linear", normalize="wavelength", ax=None):
         from .plotting import scattering_plot
 
-        return scattering_plot(self, frequency, scale, normalize, polar, ax)
+        return scattering_plot(self, frequency, scale, normalize, ax)
 
     def plot_far_field(self, *, frequency=None, component="magnitude", ax=None):
         from .plotting import far_field_plot
@@ -189,7 +187,8 @@ class Result:
         for name, make in factories.items():
             fig = Figure(figsize=(7, 5))
             FigureCanvasAgg(fig)
-            make(fig.subplots())
+            angular = name in ("scattering", "amplitude", "phase")
+            make(fig.subplots(subplot_kw={"projection": "polar"} if angular else {}))
             target = path / f"{name}.png"
             fig.savefig(target, dpi=160, bbox_inches="tight")
             fig.clear()

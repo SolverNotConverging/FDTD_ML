@@ -304,7 +304,7 @@ sim.plot_source()
 loaded.plot_geometry(mesh=True)
 loaded.plot_mesh()
 loaded.plot_convergence(per_bin=True)
-loaded.plot_scattering(normalize="wavelength", polar=True)
+loaded.plot_scattering(normalize="wavelength")
 loaded.plot_far_field(component="phase")
 ```
 
@@ -314,7 +314,13 @@ the notebook group before calling plot methods.
 
 Geometry/mesh plots accept `units="m"` or `"wavelength"`; the latter uses the
 pulse-centre wavelength. `plot_source(ax=...)` takes two axes. Scattering plots
-accept `scale="linear"`/`"db"`, `normalize="wavelength"`/`"metres"`, and `polar`.
+accept `scale="linear"`/`"db"` and `normalize="wavelength"`/`"metres"`.
+All angle-dependent plots use polar axes, with zero degrees at +x and angles
+increasing counterclockwise. When supplying `ax`, create it with
+`plt.subplots(subplot_kw={"projection": "polar"})`. Signed real/imaginary values,
+dB levels, and phase retain their signed radial labels; phase ranges from −π to π.
+The `complex` view plots Re S against Im S on Cartesian axes because its axes
+are complex components, not scattering angle.
 Far-field components are `magnitude`, `real`, `imag`, `phase`, or `complex`.
 Frequency selection must match a stored bin; omission selects the middle bin.
 

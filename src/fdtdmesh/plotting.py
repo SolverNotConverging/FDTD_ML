@@ -202,7 +202,26 @@ def _frequency(result, frequency):
     return int(indices[0])
 
 
-def scattering_plot(result, frequency, scale, normalize, polar, ax):
+def _angular_line(ax, angles, values, *, phase=False):
+    """Use scattering angle as theta; preserve signed values as radial labels."""
+    ax.plot(angles, values)
+    ax.set_theta_zero_location("E")
+    ax.set_theta_direction(1)
+    finite = values[np.isfinite(values)]
+    if phase:
+        lo, hi = -np.pi, np.pi
+    elif len(finite):
+        lo, hi = min(0.0, float(finite.min())), max(0.0, float(finite.max()))
+        pad = 0.05 * (hi - lo) if hi > lo else 1.0
+        lo, hi = lo - pad if lo < 0 else 0.0, hi + pad
+    else:
+        lo, hi = 0.0, 1.0
+    ax.set_ylim(lo, hi)
+    # Negative components/dB/phase are radial levels, never a pi rotation.
+    ax.set_rorigin(lo)
+
+
+def scattering_plot(result, frequency, scale, normalize, ax):
     i = _frequency(result, frequency)
     width = result.scattering_width[i]
     if normalize == "wavelength":
@@ -218,19 +237,16 @@ def scattering_plot(result, frequency, scale, normalize, polar, ax):
         )
     elif scale != "linear":
         raise ValueError("scale must be 'linear' or 'db'")
-    fig, ax = _axis(ax, polar)
-    ax.plot(result.angles if polar else np.rad2deg(result.angles), width)
-    ax.set(title=f"2D scattering width · {result.frequencies[i] / 1e9:g} GHz", ylabel=label)
-    if not polar:
-        ax.set_xlabel("Scattering angle [deg]")
+    fig, ax = _axis(ax, polar=True)
+    _angular_line(ax, result.angles, width)
+    ax.set_title(f"2D scattering width · {result.frequencies[i] / 1e9:g} GHz\n{label}", pad=22)
     return fig
 
 
 def far_field_plot(result, frequency, component, ax):
     i = _frequency(result, frequency)
     s = result.far_field[i]
-    fig, ax = _axis(ax)
-    angle = np.rad2deg(result.angles)
+    fig, ax = _axis(ax, polar=component != "complex")
     if component == "complex":
         ax.plot(s.real, s.imag)
         ax.set(xlabel="Re S", ylabel="Im S")
@@ -244,10 +260,12 @@ def far_field_plot(result, frequency, component, ax):
             y, label = s.imag, "Im S"
         elif component == "phase":
             y = np.where(abs(s) > max(abs(s).max() * 1e-8, 1e-30), np.angle(s), np.nan)
+            # Do not draw a radial chord across the wrapped phase discontinuity.
+            y[1:][abs(np.diff(y)) > np.pi] = np.nan
             label = "arg S [rad] (nulls masked)"
         else:
             raise ValueError("component must be magnitude, real, imag, phase or complex")
-        ax.plot(angle, y)
-        ax.set(xlabel="Scattering angle [deg]", ylabel=label)
-    ax.set_title(f"Complex far field · {result.frequencies[i] / 1e9:g} GHz")
+        _angular_line(ax, result.angles, y, phase=component == "phase")
+    title = f"Complex far field · {result.frequencies[i] / 1e9:g} GHz"
+    ax.set_title(title if component == "complex" else f"{title}\n{label}", pad=22)
     return fig
