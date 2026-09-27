@@ -43,6 +43,11 @@ uv run --no-sync pytest -q
 
 ## Run examples
 
+For a complete parameter reference and notebook setup, see the
+[solver/API guide](docs/solver_api.md). Interactive examples:
+[geometry and mesh](notebooks/01_geometry_and_mesh.ipynb) and
+[GPU convergence and far fields](notebooks/02_gpu_scattering_and_far_field.ipynb).
+
 ```powershell
 .venv/Scripts/python.exe examples/pec_scattering.py --shape cylinder --ppw 24
 .venv/Scripts/python.exe examples/pec_scattering.py --shape slot --ppw 24 --bins 9e8 1e9 1.1e9 --output artifacts/slot
