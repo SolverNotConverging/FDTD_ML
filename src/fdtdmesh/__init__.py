@@ -1,30 +1,27 @@
-"""Conformal enlarged-cell TMz scattering on nonuniform Cartesian grids."""
+"""Geometry-first native-CUDA TMz PEC scattering."""
 
-from .api import DFTConvergence, ScatteringLayout, Simulation, SolverSettings
+from .api import DFTConvergence, Simulation, SolverSettings
+from .boundary import BoundaryPolicy, StaircaseFallbackWarning
 from .constants import C0
 from .domain import DomainPolicy
 from .geometry import Geometry
-from .mesh import AxisCollar, AxisConstraints, Mesh, density_mesh
+from .mesh import AxisConstraints, Mesh
+from .meshing import MeshOptions
 from .result import Result
-from .scene import Scene2D
-from .simulation import Convergence, ConvergenceError, ScatteringCase, run_scattering
+from .simulation import ConvergenceError
 
 __all__ = [
     "Simulation",
     "DomainPolicy",
+    "BoundaryPolicy",
     "SolverSettings",
     "DFTConvergence",
-    "ScatteringLayout",
-    "Result",
     "Geometry",
+    "Mesh",
+    "MeshOptions",
+    "AxisConstraints",
+    "Result",
     "C0",
     "ConvergenceError",
-    "AxisCollar",
-    "AxisConstraints",
-    "Mesh",
-    "Scene2D",
-    "density_mesh",
-    "Convergence",
-    "ScatteringCase",
-    "run_scattering",
+    "StaircaseFallbackWarning",
 ]

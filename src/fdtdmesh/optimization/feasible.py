@@ -6,7 +6,6 @@ conformal feasibility. This searches one anchor-index allocation, not every
 possible geometry-aware mesh at a given budget.
 """
 
-import hashlib
 from collections import Counter
 from dataclasses import dataclass
 
@@ -22,7 +21,6 @@ from ..mesh import (
     MeshOptimizationError,
     validate_spacing,
 )
-from ..result import json_text
 from ..solver.conformal import UnresolvedGeometryError, build_conformal
 
 
@@ -54,7 +52,8 @@ def seed_constraints(sim, mesh):
     return AxisConstraints(
         max_spacing=max(
             *(p.thickness / p.cells for p in (sim.pml.x, sim.pml.y)),
-            mesh.metadata["geometry_aware"]["target_spacing"],
+            float(np.diff(mesh.x).max()),
+            float(np.diff(mesh.y).max()),
         )
     )
 
@@ -160,15 +159,9 @@ class FeasibleSpace:
             raise ValueError("Projection time limit must be positive")
         self.seed = mesh
         self.geometry = sim.computational_geometry
-        construction = mesh.metadata.get("geometry_aware", {})
-        if (
-            construction.get("status") != "valid"
-            or construction.get("geometry_sha256")
-            != hashlib.sha256(json_text(self.geometry.as_dict()).encode()).hexdigest()
-        ):
-            raise ValueError("A validated geometry-aware seed for this exact geometry is required")
+        self.boundary = sim._boundary
         self.constraints = constraints or seed_constraints(sim, mesh)
-        witnesses = mesh.metadata["geometry_aware"]["witness_anchors"]
+        witnesses = mesh.metadata.get("preparation", {}).get("witness_anchors", ([], []))
         layout = sim.layout
         coordinates = (
             [*layout.tfsf_box[:2], *layout.contour_box[:2], layout.source_x, layout.origin[0]],
@@ -191,9 +184,9 @@ class FeasibleSpace:
                 fixed.add(i)
             self.axes.append(_AxisSpace(lines, fixed, self.constraints, time_limit))
         issues, _ = inspect_mesh(self.geometry, mesh)
-        if issues:
+        if issues and self.boundary.mode == "conformal":
             raise MeshInfeasibleError("Seed fails exact edge topology or donor inspection")
-        build_conformal(self.geometry.to_scene(), mesh)
+        build_conformal(self.geometry.to_scene(), mesh, boundary=self.boundary)
 
     def movement(self, mesh, origin):
         values = [
@@ -256,8 +249,8 @@ class FeasibleSpace:
                         break
                     continue
                 issues, _ = inspect_mesh(self.geometry, mesh)
-                if not issues:
-                    build_conformal(self.geometry.to_scene(), mesh)
+                if not issues or self.boundary.mode == "hybrid":
+                    build_conformal(self.geometry.to_scene(), mesh, boundary=self.boundary)
                     info.update(
                         raw_valid=attempt == 0,
                         accepted_stage=stage,
@@ -275,6 +268,13 @@ class FeasibleSpace:
                 )
                 if stage != "backtrack":
                     for issue in issues:
+                        if "cell" in issue:
+                            for k in (0, 1):
+                                i = issue["cell"][k]
+                                restored[k].update(
+                                    range(max(0, i - 1), min(len(parent_axes[k]), i + 3))
+                                )
+                            continue
                         axis = issue["axis"]
                         edge = np.searchsorted(axes[axis], issue["edge"][0])
                         transverse = int(np.argmin(abs(axes[1 - axis] - issue["fixed"])))

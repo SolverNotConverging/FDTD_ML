@@ -30,9 +30,16 @@ def geometry_plot(geometry, mesh, config, units, ax):
     fig, ax = _axis(ax)
     scale, label = _scale(config, units)
     lx, ly = np.array(geometry.size) / scale
+    ox, oy = np.asarray(config.get("automatic_domain", {}).get("coordinate_offset", (0, 0))) / scale
     ax.set_facecolor("white")
     for shape in geometry.shapes:
         p = np.asarray(shape.parameters) / scale
+        if shape.kind in ("circle", "ellipse"):
+            p[:2] -= (ox, oy)
+        elif shape.kind == "rectangle":
+            p -= (ox, ox, oy, oy)
+        else:
+            p -= (ox, oy)
         color = "#34495e" if shape.material == "PEC" else "white"
         if shape.kind == "circle":
             patch = Circle(p[:2], p[2])
@@ -45,7 +52,7 @@ def geometry_plot(geometry, mesh, config, units, ax):
         patch.set(facecolor=color, edgecolor="none", zorder=2)
         ax.add_patch(patch)
     for key, color in (("tfsf_box", "#208b6d"), ("contour_box", "#b97518")):
-        a, b, c, d = np.asarray(config["layout"][key]) / scale
+        a, b, c, d = np.asarray(config["layout"][key]) / scale - (ox, ox, oy, oy)
         ax.add_patch(
             Rectangle(
                 (a, c),
@@ -67,20 +74,24 @@ def geometry_plot(geometry, mesh, config, units, ax):
     ):
         # Air cutters may extend into PML; show the absorber above construction
         # patches so their white fill cannot erase the physical PML shading.
-        ax.add_patch(Rectangle((x, y), w, h, facecolor="#dce5eb", edgecolor="none", zorder=2.5))
+        ax.add_patch(
+            Rectangle((x - ox, y - oy), w, h, facecolor="#dce5eb", edgecolor="none", zorder=2.5)
+        )
     if mesh is not None:
-        segments = [[(v / scale, 0), (v / scale, ly)] for v in mesh.x]
-        segments += [[(0, v / scale), (lx, v / scale)] for v in mesh.y]
+        segments = [[(v / scale - ox, -oy), (v / scale - ox, ly - oy)] for v in mesh.x]
+        segments += [[(-ox, v / scale - oy), (lx - ox, v / scale - oy)] for v in mesh.y]
         ax.add_collection(
             LineCollection(segments, colors="#778899", linewidths=0.3, alpha=0.5, zorder=3)
         )
     ax.set(
-        xlim=(0, lx),
-        ylim=(0, ly),
+        xlim=(-ox, lx - ox),
+        ylim=(-oy, ly - oy),
         xlabel=f"x [{label}]",
         ylabel=f"y [{label}]",
         title="Exact geometry" + (" and Yee grid" if mesh is not None else ""),
     )
+    if mesh is not None and ax is fig.axes[0]:
+        fig.set_size_inches(16, 14)
     ax.set_aspect("equal")
     ax.legend(loc="upper right", fontsize=8)
     return fig
@@ -103,20 +114,59 @@ def mesh_plot(mesh, wavelength, units, ax):
     return fig
 
 
-def discretization_plot(geometry, mesh, coeff, config, units, ax):
+def discretization_plot(geometry, mesh, coeff, config, units, ax, show_fallback=True):
     fig = geometry_plot(geometry, mesh, config, units, ax)
     ax = fig.axes[0] if ax is None else ax
     scale, _ = _scale(config, units)
+    ox, oy = np.asarray(config.get("automatic_domain", {}).get("coordinate_offset", (0, 0))) / scale
+    xx, yy = np.meshgrid(mesh.x / scale - ox, mesh.y / scale - oy, indexing="ij")
+    ax.scatter(
+        xx,
+        yy,
+        s=5,
+        c=np.where(coeff.pec.ravel(), "#111111", "#2166ac"),
+        marker="o",
+        label="Ez (black PEC, blue air)",
+        zorder=5,
+    )
+    if show_fallback:
+        from matplotlib.patches import Rectangle
+
+        for k, (i, j) in enumerate(coeff.boundary_report.get("fallback_indices", [])):
+            ax.add_patch(
+                Rectangle(
+                    (mesh.x[i] / scale - ox, mesh.y[j] / scale - oy),
+                    (mesh.x[i + 1] - mesh.x[i]) / scale,
+                    (mesh.y[j + 1] - mesh.y[j]) / scale,
+                    facecolor="#d73027",
+                    alpha=0.25,
+                    zorder=4,
+                    label="Staircase patch" if k == 0 else None,
+                )
+            )
     for op, xx, yy, full in (
         (coeff.hy, (mesh.x[:-1] + mesh.x[1:]) / 2, mesh.y, np.diff(mesh.x)[:, None]),
         (coeff.hx, mesh.x, (mesh.y[:-1] + mesh.y[1:]) / 2, np.diff(mesh.y)[None, :]),
     ):
-        x, y = np.meshgrid(xx / scale, yy / scale, indexing="ij")
+        x, y = np.meshgrid(xx / scale - ox, yy / scale - oy, indexing="ij")
+        is_hy = op is coeff.hy
+        ax.scatter(
+            x,
+            y,
+            s=5,
+            marker="|" if is_hy else "_",
+            color="#7b3294" if is_hy else "#008837",
+            label="Hy" if is_hy else "Hx",
+            zorder=5,
+        )
         cut = (op.length > 0) & (op.length < full * (1 - 1e-10))
         ax.scatter(x[cut], y[cut], s=9, color="#f29d38", zorder=5)
         for a, b, _ in op.pairs:
             ax.plot(x.ravel()[[a, b]], y.ravel()[[a, b]], color="#d33f49", lw=1.4, zorder=6)
-    ax.set_title("Conformal cut faces (orange), enlarged pairs (red)")
+    ax.set_title(
+        "Yee fields; conformal cuts (orange), enlarged pairs (red), staircase patches (shaded)"
+    )
+    ax.legend(loc="upper right", fontsize=8)
     return fig
 
 

@@ -158,7 +158,7 @@ repository root with the archived engineered study present; `--rerun-de` perform
 a new DE search too. Then run
 `python examples/geometry_optimization_study/build_feasible_report.py`.
 Notebook 04 provides an opt-in API example independent of these archived cases.
-See [API argument tables](mesh_optimization_api.md) for all settings.
+See [API argument tables](../docs/mesh_optimization_api.md) for all settings.
 
 ## Additional oblique geometry-only checks
 

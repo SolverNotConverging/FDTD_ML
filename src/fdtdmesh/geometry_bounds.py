@@ -4,7 +4,7 @@ import numpy as np
 from numpy.polynomial import Polynomial as Poly
 
 
-def material_bounds(scene):
+def boundary_candidates(scene):
     points, segments, curves = [], [], []
     for kind, _, data in scene.primitives:
         if kind == "polygon":
@@ -63,9 +63,13 @@ def material_bounds(scene):
             p = c - A[:, 0]
             if abs((p - d) @ Q @ (p - d) - 1) < 1e-10:
                 points.append(p)
-    if not points:
+    return np.asarray(points, dtype=float).reshape(-1, 2)
+
+
+def material_bounds(scene):
+    points = boundary_candidates(scene)
+    if not len(points):
         return None
-    points = np.asarray(points)
     points = points[scene.contains(points[:, 0], points[:, 1])]
     if not len(points):
         return None

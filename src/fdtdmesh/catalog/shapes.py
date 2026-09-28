@@ -38,7 +38,7 @@ def _polygon(g, center, scale, offsets, material="PEC"):
     return _add(g, "polygon", tuple(_point(center, scale, p) for p in offsets), material)
 
 
-def make_geometry(name, *, size, scale, incidence_deg=0.0):
+def make_geometry(name, *, size=None, scale, incidence_deg=0.0):
     """Build one of the canonical benchmark shapes.
 
     ``size`` is the domain size in metres and ``scale`` converts canonical
@@ -60,8 +60,8 @@ def make_geometry(name, *, size, scale, incidence_deg=0.0):
     if not math.isfinite(incidence_deg):
         raise ValueError("incidence_deg must be finite")
 
-    g = Geometry(tuple(size))
-    center = (g.size[0] / 2.0, g.size[1] / 2.0)
+    g = Geometry(None if size is None else tuple(size))
+    center = (0.0, 0.0) if size is None else (g.size[0] / 2.0, g.size[1] / 2.0)
 
     if name == "circle":
         g = _add(g, "circle", (*center, 0.65 * scale))

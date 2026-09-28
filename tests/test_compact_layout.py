@@ -2,11 +2,11 @@
 
 import numpy as np
 import pytest
+from legacy_fixtures import make_simulation
 
 from fdtdmesh import Geometry, Simulation
-from fdtdmesh.benchmarks import make_simulation
-from fdtdmesh.benchmarks.common import refined
 from fdtdmesh.mesh import MeshInfeasibleError
+from fdtdmesh.optimization.common import refined
 from fdtdmesh.scattering import box_indices, grid_index
 
 
@@ -38,7 +38,7 @@ def test_compact_allocation_and_fixed_exterior_across_strategies(tmp_path):
         ("deterministic", {}),
         ("density", dict(density=([1, 1.3, 1], [1.2, 1, 1.1]))),
     ]:
-        mesh = sim.apply_mesh(strategy, cells=(192, 192), **kwargs)
+        mesh = sim._apply_mesh(strategy, cells=(192, 192), **kwargs)
         a, b, c, d = box_indices(mesh, sim.layout.tfsf_box)
         ca, cb, cc, cd = box_indices(mesh, sim.layout.contour_box)
         assert (a, b, c, d) == (22, 170, 22, 170)
@@ -59,13 +59,13 @@ def test_compact_allocation_and_fixed_exterior_across_strategies(tmp_path):
     assert loaded.layout == sim.layout
     np.testing.assert_array_equal(loaded.mesh.x, sim.mesh.x)
     with pytest.raises(MeshInfeasibleError):
-        sim.apply_mesh("uniform", cells=(48, 48))
+        sim._apply_mesh("uniform", cells=(48, 48))
     assert sim.mesh is meshes[-1]
 
 
 def test_reference_refines_exterior_without_moving_boxes():
     sim = make_simulation()
-    sim.apply_mesh("uniform", cells=(192, 192))
+    sim._apply_mesh("uniform", cells=(192, 192))
     fine = refined(sim, 72)
     assert fine.layout.contour_box == sim.layout.contour_box
     assert fine.layout.tfsf_box == sim.layout.tfsf_box

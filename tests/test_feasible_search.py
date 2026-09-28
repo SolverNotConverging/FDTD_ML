@@ -4,28 +4,28 @@ import importlib
 
 import numpy as np
 import pytest
+from legacy_fixtures import make_simulation
 from test_benchmarks import synthetic
 
 from fdtdmesh import Simulation
-from fdtdmesh.benchmarks import (
+from fdtdmesh.catalog import make_engineered_geometry
+from fdtdmesh.geometry_mesher import inspect_mesh
+from fdtdmesh.mesh import validate_spacing
+from fdtdmesh.optimization import (
     FeasibleSettings,
     Reference,
     analyze_mesh_adaptivity,
-    make_engineered_geometry,
-    make_simulation,
-    optimize_mesh,
 )
-from fdtdmesh.benchmarks.common import experiment_key
-from fdtdmesh.benchmarks.feasible import FeasibleSpace
-from fdtdmesh.geometry_mesher import inspect_mesh
-from fdtdmesh.mesh import validate_spacing
+from fdtdmesh.optimization.common import experiment_key
+from fdtdmesh.optimization.feasible import FeasibleSpace
+from fdtdmesh.optimization.optimize import _optimize_mesh as optimize_mesh
 from fdtdmesh.strategies import mesh_id
 
 
 def test_local_proposals_restore_aircraft_failures_without_losing_variation():
     sim = Simulation(fmin=0.9e9, fmax=1.1e9)
     sim.set_geometry(make_engineered_geometry("swept_aircraft", scale=1))
-    seed = sim.apply_mesh("geometry_aware", time_limit=40)
+    seed = sim._apply_mesh("geometry_aware", time_limit=40)
     space = FeasibleSpace(sim, seed)
     accepted, repaired = [], []
     rng = np.random.default_rng(0)
@@ -59,7 +59,7 @@ def test_linear_adaptivity_ranges_contain_seed_and_fixed_lines_have_zero_width()
 
 
 def test_feasible_resume_matches_uninterrupted_and_limits_unique_solves(tmp_path, monkeypatch):
-    module = importlib.import_module("fdtdmesh.benchmarks.optimize")
+    module = importlib.import_module("fdtdmesh.optimization.optimize")
     sim = make_simulation("circle", scale_factor=0.5)
     seed = sim.apply_mesh("geometry_aware")
     ref = Reference(

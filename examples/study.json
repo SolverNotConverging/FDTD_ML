@@ -1,0 +1,12 @@
+{
+  "shapes": ["circle"],
+  "orientations_deg": [0.0],
+  "budgets": [[100, 100], [120, 120]],
+  "scale": 0.14,
+  "fmin": 900000000.0,
+  "fmax": 1100000000.0,
+  "boundary": {"mode": "conformal"},
+  "reference": {"method": "subdivide", "factors": [2, 3, 4], "rtol": 0.005, "worst_rtol": 0.01},
+  "search": {"max_evaluations": 20, "max_solves": 20, "max_seconds": 120.0},
+  "output": "artifacts/study"
+}

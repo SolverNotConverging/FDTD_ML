@@ -22,14 +22,18 @@ class Coefficients:
     dt_cartesian: float
     dt_bound: float
     spectral_bound: float
+    boundary_report: dict
 
 
-def build_coefficients(scene, mesh, *, pml=None, dt=None, safety=0.9, dtype="float64"):
+def build_coefficients(
+    scene, mesh, *, pml=None, dt=None, safety=0.9, dtype="float64", boundary=None
+):
     if dtype not in ("float32", "float64") or not 0 < safety < 1:
         raise ValueError("Require float32/float64 and 0<safety<1")
     if mesh.x[-1] != scene.Lx or mesh.y[-1] != scene.Ly:
         raise ValueError("Mesh and physical domain differ")
-    pec, hx, hy, bound = build_conformal(scene, mesh)
+    report = {}
+    pec, hx, hy, bound = build_conformal(scene, mesh, boundary=boundary, report=report, warn=True)
     dx, dy = np.diff(mesh.x), np.diff(mesh.y)
     ux = np.r_[dx[0] / 2, (dx[:-1] + dx[1:]) / 2, dx[-1] / 2]
     uy = np.r_[dy[0] / 2, (dy[:-1] + dy[1:]) / 2, dy[-1] / 2]
@@ -53,4 +57,5 @@ def build_coefficients(scene, mesh, *, pml=None, dt=None, safety=0.9, dtype="flo
         cartesian,
         stable,
         bound,
+        report,
     )

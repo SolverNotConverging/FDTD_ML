@@ -23,7 +23,7 @@ class FaradayOperator:
     pairs: list
 
 
-def open_lengths(scene, mesh, axis, pec):
+def open_lengths(scene, mesh, axis, pec, *, validate=True):
     lines, fixed = (mesh.x, mesh.y) if axis == 0 else (mesh.y, mesh.x)
     mask = pec if axis == 0 else pec.T
     lengths = np.zeros((len(lines) - 1, len(fixed)))
@@ -34,11 +34,11 @@ def open_lengths(scene, mesh, axis, pec):
         full = np.diff(lines)
         both_vacuum = ~mask[:-1, j] & ~mask[1:, j]
         both_metal = mask[:-1, j] & mask[1:, j]
-        if np.any(both_vacuum & (lengths[:, j] < full - tol)):
+        if validate and np.any(both_vacuum & (lengths[:, j] < full - tol)):
             raise UnresolvedGeometryError(
                 "PEC crosses an edge with two vacuum endpoints; refine grid"
             )
-        if np.any(both_metal & (lengths[:, j] > tol)):
+        if validate and np.any(both_metal & (lengths[:, j] > tol)):
             raise UnresolvedGeometryError(
                 "Vacuum gap crosses an edge with two PEC endpoints; refine grid"
             )
@@ -47,7 +47,7 @@ def open_lengths(scene, mesh, axis, pec):
     return lengths if axis == 0 else lengths.T
 
 
-def enlarge(length, full, pec, axis):
+def enlarge(length, full, pec, axis, forbidden=None):
     """Pair a small face with a complete face on its vacuum side.
 
     Cut length s, donor d, borrowed length b, S=s+b, r=b/d:
@@ -68,6 +68,7 @@ def enlarge(length, full, pec, axis):
             not (0 <= ii < length.shape[0] and 0 <= jj < length.shape[1])
             or not np.isclose(length[ii, jj], full[ii, jj], rtol=1e-11, atol=0)
             or peer[ii, jj] != -1
+            or (forbidden is not None and forbidden[ii, jj])
         ):
             raise UnresolvedGeometryError(
                 "Small conformal face has no unused full vacuum donor; refine gap"
@@ -129,20 +130,129 @@ def stiffness(mesh, pec, hx, hy):
     return K.tocsr(), mass, active
 
 
-def build_conformal(scene, mesh):
-    for x0, x1, y0, y1 in scene.bounds():
-        # Ordered air cutters may lie wholly outside a fitted domain. They have
-        # no physical intersection with any cell and need no grid representation.
-        if x1 <= 0 or x0 >= scene.Lx or y1 <= 0 or y0 >= scene.Ly:
-            continue
-        if not np.any((mesh.x >= x0) & (mesh.x <= x1)) and not np.any(
-            (mesh.y >= y0) & (mesh.y <= y1)
-        ):
-            raise UnresolvedGeometryError("Primitive lies entirely inside a cell; refine grid")
+def build_conformal(scene, mesh, *, boundary=None, report=None, warn=False):
+    """Prepare strict or hybrid edges once; shared edges have a single operator."""
+    import warnings
+
+    from ..boundary import BoundaryPolicy, StaircaseFallbackWarning
+    from .topology import inspect_scene
+
+    policy = boundary or BoundaryPolicy()
+    issues, _ = inspect_scene(scene, mesh)
+    if issues and policy.mode == "conformal":
+        mask = scene.contains(mesh.x[:, None], mesh.y[None, :])
+        open_lengths(scene, mesh, 0, mask)
+        open_lengths(scene, mesh, 1, mask)
+        if any(i["kind"] == "unresolved_cell_feature" for i in issues):
+            raise UnresolvedGeometryError(
+                "Resolved feature lies entirely inside a cell or is unresolved by its nodes; refine grid"
+            )
+        raise UnresolvedGeometryError(
+            f"Unresolved conformal geometry: {issues[0]['kind']}; refine grid"
+        )
     pec = scene.contains(mesh.x[:, None], mesh.y[None, :])
-    lx, ly = open_lengths(scene, mesh, 0, pec), open_lengths(scene, mesh, 1, pec)
-    hy = enlarge(lx, np.diff(mesh.x)[:, None], pec, 0)
-    hx = enlarge(ly, np.diff(mesh.y)[None, :], pec, 1)
+    lx = open_lengths(scene, mesh, 0, pec, validate=False)
+    ly = open_lengths(scene, mesh, 1, pec, validate=False)
+    patch = np.zeros((mesh.Nx, mesh.Ny), bool)
+    reasons = {}
+
+    def mark(axis, i, j):
+        if axis == 0:
+            patch[i, max(0, j - 1) : min(mesh.Ny, j + 1)] = True
+        else:
+            patch[max(0, i - 1) : min(mesh.Nx, i + 1), j] = True
+
+    for issue in issues:
+        kind = issue["kind"]
+        reasons[kind] = reasons.get(kind, 0) + 1
+        if "cell" in issue:
+            patch[tuple(issue["cell"])] = True
+        else:
+            i, j = issue["index"]
+            mark(issue["axis"], i, j) if issue["axis"] == 0 else mark(1, j, i)
+    initial = int(patch.sum())
+    boundary_cells = patch.copy()
+    corners = pec[:-1, :-1].astype(int) + pec[1:, :-1] + pec[:-1, 1:] + pec[1:, 1:]
+    boundary_cells |= (corners > 0) & (corners < 4)
+    # Closure terminates because each failed donor adds at least one cell to
+    # the patch, and full staircasing has no small faces requiring enlargement.
+    for _ in range(mesh.Nx * mesh.Ny + 1):
+        fx = np.zeros_like(lx, dtype=bool)
+        fy = np.zeros_like(ly, dtype=bool)
+        fx[:, :-1] |= patch
+        fx[:, 1:] |= patch
+        fy[:-1, :] |= patch
+        fy[1:, :] |= patch
+        xlen, ylen = lx.copy(), ly.copy()
+        xfull = np.broadcast_to(np.diff(mesh.x)[:, None], lx.shape)
+        yfull = np.broadcast_to(np.diff(mesh.y)[None, :], ly.shape)
+        xlen[fx] = np.where((pec[:-1] & pec[1:])[fx], 0, xfull[fx])
+        ylen[fy] = np.where((pec[:, :-1] & pec[:, 1:])[fy], 0, yfull[fy])
+        failed = []
+        operators = []
+        for axis, lengths, full, forbidden in ((0, xlen, xfull, fx), (1, ylen, yfull, fy)):
+            # Rebuild the same disjoint donor allocation used by enlarge.
+            used = set()
+            for i, j in np.argwhere((lengths > 0) & (lengths < 0.5 * full * (1 - 1e-12))):
+                step = 1 if pec[i, j] else -1
+                ii, jj = (i + step, j) if axis == 0 else (i, j + step)
+                valid = (
+                    0 <= ii < lengths.shape[0]
+                    and 0 <= jj < lengths.shape[1]
+                    and not forbidden[ii, jj]
+                    and (ii, jj) not in used
+                    and (i, j) not in used
+                    and np.isclose(lengths[ii, jj], full[ii, jj], rtol=1e-11, atol=0)
+                    and 0 < 0.5 * full[i, j] - lengths[i, j] < full[ii, jj]
+                )
+                if valid:
+                    used.update(((i, j), (ii, jj)))
+                else:
+                    failed.append((axis, int(i), int(j)))
+            if not failed:
+                operators.append(enlarge(lengths, full, pec, axis, forbidden))
+        if not failed:
+            hy, hx = operators
+            break
+        if policy.mode == "conformal":
+            raise UnresolvedGeometryError("Small conformal face has no valid enlarged-cell donor")
+        for axis, i, j in failed:
+            mark(axis, i, j)
+        reasons["donor_closure"] = reasons.get("donor_closure", 0) + len(failed)
+    else:
+        raise UnresolvedGeometryError("Hybrid patch closure failed")
+    area = np.diff(mesh.x)[:, None] * np.diff(mesh.y)[None, :]
+    fraction = float(area[patch].sum() / area.sum())
+    details = dict(
+        mode=policy.mode,
+        fallback_cells=int(patch.sum()),
+        initial_fallback_cells=initial,
+        expanded_cells=int(patch.sum()) - initial,
+        fallback_area_fraction=fraction,
+        reasons=reasons,
+        boundary_cells=int(boundary_cells.sum()),
+        fallback_boundary_fraction=float(
+            (patch & boundary_cells).sum() / max(1, boundary_cells.sum())
+        ),
+        fallback_indices=np.argwhere(patch).tolist(),
+        fallback_x_edges=np.argwhere(fx).tolist(),
+        fallback_y_edges=np.argwhere(fy).tolist(),
+        raw_issues=issues,
+        enlarged_pairs=len(hx.pairs) + len(hy.pairs),
+    )
+    if patch.any() and (policy.on_fallback == "error" or fraction > policy.max_fallback_fraction):
+        raise UnresolvedGeometryError(
+            f"Staircase fallback exceeds policy: {int(patch.sum())} cells, area fraction {fraction:.6g}"
+        )
+    if report is not None:
+        report.update(details)
+    if warn and patch.any():
+        warnings.warn(
+            f"Local staircase fallback in {int(patch.sum())} cells ({fraction:.3%} domain area); "
+            "thin PEC/gaps may be lost. Inspect discretization diagnostics.",
+            StaircaseFallbackWarning,
+            stacklevel=2,
+        )
     pec[[0, -1], :] = True
     pec[:, [0, -1]] = True
     K, mass, _ = stiffness(mesh, pec, hx, hy)

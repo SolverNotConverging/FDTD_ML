@@ -12,7 +12,7 @@ from .geometry import Geometry
 from .mesh import Mesh
 from .result import Result, json_text
 
-SCHEMA = "fdtdmesh-h5-v1"
+SCHEMA = "fdtdmesh-h5-v2"
 
 
 def _write(path, kind, writer):
@@ -24,7 +24,7 @@ def _write(path, kind, writer):
     os.close(fd)
     try:
         with h5py.File(name, "w") as h:
-            h.attrs.update(schema=SCHEMA, kind=kind, units="SI", method="tmz-conformal-ect-v1")
+            h.attrs.update(schema=SCHEMA, kind=kind, units="SI", method="tmz-ect-hybrid-v2")
             writer(h)
         os.replace(name, path)
     finally:
@@ -89,6 +89,10 @@ def load_simulation(path):
     with h5py.File(path, "r") as h:
         _validate(h, "simulation")
         geometry, mesh, config = _read_base(h)
+    from .boundary import BoundaryPolicy
+
+    boundary = BoundaryPolicy(**config.pop("boundary"))
+    config.pop("domain_allocation", None)
     settings = dict(config.pop("settings"))
     settings["stop"] = DFTConvergence(**settings["stop"])
     pml = config.pop("pml")
@@ -99,23 +103,33 @@ def load_simulation(path):
         from .domain import DomainPolicy
 
         config.pop("size")
+        import numpy as np
+
+        saved_angles = tuple(config.pop("angles"))
+        config["observation_angles_deg"] = np.rad2deg(saved_angles)
         sim = Simulation(
             **config,
-            settings=SolverSettings(**settings),
+            solver=SolverSettings(**settings),
+            boundary=boundary,
             domain=DomainPolicy(**automatic["policy"]),
         )
+        sim._angles = saved_angles
         sim.set_geometry(Geometry.from_dict(automatic["input_geometry"]))
         if sim.computational_geometry != geometry or not np.allclose(
             sim.coordinate_offset, automatic["coordinate_offset"], rtol=0, atol=1e-14
         ):
             raise ValueError("Automatic domain transform does not match saved geometry")
     else:
-        sim = Simulation(
-            **config, settings=SolverSettings(**settings), pml=PML(**pml), layout=layout
+        sim = Simulation._from_resolved(
+            **config,
+            boundary=boundary,
+            settings=SolverSettings(**settings),
+            pml=PML(**pml),
+            layout=layout,
         )
         sim._geometry = geometry
     if mesh is not None:
-        sim.apply_mesh(mesh)
+        sim.apply_mesh("custom", mesh=mesh)
     return sim
 
 

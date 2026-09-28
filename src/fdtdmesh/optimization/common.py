@@ -14,7 +14,7 @@ from ..pml import PML
 from ..result import Result, json_text
 from .features import geometry_anchors, unresolved_edge_anchors
 
-METHOD = "mesh-study-v7"
+METHOD = "mesh-study-v8"
 
 
 def identity(value):
@@ -29,17 +29,20 @@ def clone(sim, *, geometry=None, pml=None, layout=None, stop=None):
             fmin=sim.fmin,
             fmax=sim.fmax,
             domain=sim._domain_policy,
-            settings=SolverSettings(**settings),
-            angles=sim.configuration()["angles"],
+            solver=SolverSettings(**settings),
+            observation_angles_deg=np.rad2deg(sim.configuration()["angles"]),
+            boundary=sim._boundary,
         )
+        out._angles = sim._angles
         out.set_geometry(sim.geometry)
         return out
     geometry = geometry or sim.computational_geometry
-    out = Simulation(
+    out = Simulation._from_resolved(
         geometry.size,
         sim.fmin,
         sim.fmax,
         settings=SolverSettings(**settings),
+        boundary=sim._boundary,
         angles=sim.configuration()["angles"],
         pml=pml or sim.pml,
         layout=layout or sim.layout,
@@ -54,7 +57,10 @@ def simulation_description(sim):
     sources = {
         str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in sorted(root.rglob("*"))
-        if p.is_file() and p.suffix in (".py", ".pyx", ".cu", ".h", ".pyd", ".so")
+        if p.is_file()
+        and p.suffix in (".py", ".pyx", ".cu", ".h", ".pyd", ".so")
+        and p.relative_to(root).parts[0] not in ("optimization", "catalog")
+        and p.name != "plotting.py"
     }
     return dict(
         method=METHOD,
@@ -64,6 +70,12 @@ def simulation_description(sim):
         source=asdict(sim.source),
         frequencies=sim.frequencies.tolist(),
     )
+
+
+def physical_key(sim):
+    description = simulation_description(sim)
+    description["configuration"].pop("boundary", None)
+    return identity(description)
 
 
 def experiment_key(sim):
@@ -188,7 +200,7 @@ def refined(sim, ppw):
         additions = unresolved_edge_anchors(result.geometry, mesh)
         if not any(len(values) for values in additions):
             mesh.metadata.update(reference_anchor_passes=attempt, strategy="uniform")
-            result.apply_mesh(mesh)
+            result._apply_mesh(mesh)
             break
         if attempt == 8:
             raise UnresolvedGeometryError(

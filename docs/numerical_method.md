@@ -1,6 +1,6 @@
 # TMz conformal enlarged-cell scattering
 
-Method identifier: `tmz-conformal-ect-v1`. Coordinates are SI metres. The solver
+Method identifier: `tmz-ect-hybrid-v2`. Coordinates are SI metres. The solver
 uses Ez at grid nodes, Hx on y edges, and Hy on x edges, with vacuum constants
 and PEC Ez constraints. Objects are invariant along z. This is a TMz reduction
 with a conservative enlarged-face construction, not a complete 3D ECT port.
@@ -30,13 +30,29 @@ with entries `Q_ss=1/S`, `Q_sd=Q_ds=r/S`,
 The physical cut lengths and PEC silhouette are retained. Hx uses the negative
 y circulation; Hy uses the positive x circulation.
 
-Reject a candidate if an edge has disconnected open pieces, a vacuum gap between
-two PEC endpoints, a primitive wholly hidden within one cell, or a small face
-without an unused complete donor. These configurations need more degrees of
-freedom or geometry-aware anchors/refinement. A rotated polygon can encounter
-an invalid corner alignment even after refinement. Rejection is deliberate;
-there is no silent staircase or area-clipping fallback. The checks do not prove
-that an arbitrary complex shape is sufficiently resolved for accurate scattering.
+Strict `BoundaryPolicy(mode="conformal")` rejects multiple material transitions
+on an edge, subcell islands/holes unresolved by the grid, and unavailable enlarged
+faces. Exact CSG scanlines plus boundary extrema/intersections drive a shared
+classifier used by meshing and operator construction. Hidden construction
+primitives overwritten by later overlays are not physical features.
+
+With `mode="hybrid"`, these failures seed a local staircase patch. The original
+PEC mask is sampled at Ez nodes. On a staircase edge the open length is zero if
+both endpoints are PEC, otherwise the full edge length; PEC Ez values remain zero.
+Every shared edge has one coefficient. Remaining supported cuts retain exact
+conformal lengths and disjoint enlarged pairs. Fallback edges cannot serve as
+conformal donors. If that exclusion invalidates another small face, its adjacent
+cells join the patch and donor allocation is rebuilt. Closure only adds cells and
+terminates on the finite grid. It may extend beyond the original offending cell.
+
+The effective staircase geometry can erase thin PEC or close gaps. The exact
+continuous geometry is retained separately, and diagnostics record initial/final
+patches, shared-edge masks, reasons, area fraction, boundary-cell fraction and
+expanded cells. `max_fallback_fraction` limits the fraction of total domain area;
+`on_fallback="error"` forbids any fallback. Accepted mixed coefficients use the
+same stiffness/CFL construction below. This establishes the lossless matrix
+property, not small scattering error or arbitrary CPML stability. This is our
+specified hybrid method, not a reproduction of Lumerical's proprietary method.
 
 ## Timestep and stability
 

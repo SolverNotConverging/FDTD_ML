@@ -20,6 +20,7 @@ from .common import (
     experiment_directory,
     experiment_key,
     identity,
+    physical_key,
     read_json,
     refined,
     run_cached,
@@ -31,12 +32,24 @@ from .common import (
 @dataclass(frozen=True)
 class ReferenceSettings:
     ppw: tuple = (48, 72, 108, 164)
+    method: str = "refine"
+    factors: tuple = (2, 3, 4, 5)
     rtol: float = 0.002
     worst_rtol: float = 0.005
     max_seconds: float = 900.0
     check_boundaries: bool = True
 
     def __post_init__(self):
+        if self.method not in ("refine", "subdivide"):
+            raise ValueError("Reference method must be refine or subdivide")
+        factors = tuple(self.factors)
+        if (
+            len(factors) < 3
+            or any(isinstance(n, bool) or int(n) != n or n < 1 for n in factors)
+            or any(a >= b for a, b in zip(factors, factors[1:]))
+        ):
+            raise ValueError("Use at least three increasing subdivision factors")
+        object.__setattr__(self, "factors", factors)
         levels = tuple(self.ppw)
         if (
             len(levels) < 3
@@ -110,22 +123,59 @@ def _expanded_pml(sim, ppw):
     for lines, collar, length in ((x, other.pml.x, other.size[0]), (y, other.pml.y, other.size[1])):
         for i, v in collar.fixed_lines(length, len(lines) - 1).items():
             lines[i] = v
-    other.apply_mesh(Mesh(x, y))
+    other._apply_mesh(Mesh(x, y))
     return other
 
 
-def qualify_reference(sim, *, directory, settings=None, progress=None):
+def qualify_reference(sim, *, directory, settings=None, initial_mesh=None, progress=None):
     """Resume cached fine solves; refuse qualification without all requested checks.
 
     Wall-time limits are checked between solves, never interrupt a native CUDA run.
     An incomplete reference can be inspected but cannot be used by optimize_mesh.
     """
     settings = settings or ReferenceSettings()
+    from ..boundary import BoundaryPolicy
+    from ..mesh import Mesh
+
+    physical_case = physical_key(sim)
+    original_mesh = sim.mesh
+    sim = clone(sim)
+    sim._boundary = BoundaryPolicy()
+    seed = initial_mesh if initial_mesh is not None else original_mesh
+    if settings.method == "subdivide" and seed is None:
+        raise ValueError("subdivide reference requires initial_mesh or an applied mesh")
+
+    def subdivided(factor):
+        def axis(v):
+            return np.r_[
+                np.concatenate([np.linspace(a, b, factor + 1)[:-1] for a, b in zip(v[:-1], v[1:])]),
+                v[-1],
+            ]
+
+        axes = [axis(seed.x), axis(seed.y)]
+        p = asdict(sim.pml)
+        p.update(
+            x=AxisCollar(factor * sim.pml.x.cells, sim.pml.x.thickness),
+            y=AxisCollar(factor * sim.pml.y.cells, sim.pml.y.thickness),
+        )
+        for lines, collar in zip(axes, (p["x"], p["y"])):
+            for i, value in collar.fixed_lines(lines[-1], len(lines) - 1).items():
+                lines[i] = value
+        candidate = clone(
+            sim,
+            pml=PML(**p),
+            layout=replace(sim.layout, exterior_cells=None, scatterer_margin_cells=None),
+        )
+        candidate._apply_mesh(Mesh(*axes))
+        return candidate
+
     description = dict(
         schema=1,
         kind="reference",
         simulation=simulation_description(sim),
         settings=asdict(settings),
+        seed=None if settings.method == "refine" else dict(x=seed.x.tolist(), y=seed.y.tolist()),
+        protocol_sha256=__import__("hashlib").sha256(Path(__file__).read_bytes()).hexdigest(),
     )
     directory = experiment_directory(directory, description)
     key = identity(description)
@@ -140,6 +190,7 @@ def qualify_reference(sim, *, directory, settings=None, progress=None):
         key=key,
         description=description,
         case=experiment_key(sim),
+        physical_case=physical_case,
         settings=asdict(settings),
         qualified=False,
         levels=[],
@@ -158,12 +209,17 @@ def qualify_reference(sim, *, directory, settings=None, progress=None):
     def accepted(metric):
         return metric["error"] <= settings.rtol and metric["worst_frequency"] <= settings.worst_rtol
 
-    for ppw in settings.ppw:
+    for resolution in settings.ppw if settings.method == "refine" else settings.factors:
+        ppw = resolution
         if perf_counter() - started > settings.max_seconds:
             report["status"] = "time_limit"
             break
         try:
-            fine_sim = refined(sim, ppw)
+            fine_sim = refined(sim, ppw) if settings.method == "refine" else subdivided(resolution)
+            if settings.method == "subdivide":
+                ppw = max(
+                    8, round(sim.wavelength / (fine_sim.pml.x.thickness / fine_sim.pml.x.cells))
+                )
             finest, path, cached = run_cached(fine_sim, directory / "runs")
         except (
             UnresolvedGeometryError,
@@ -182,6 +238,7 @@ def qualify_reference(sim, *, directory, settings=None, progress=None):
         report["levels"].append(
             dict(
                 ppw=ppw,
+                resolution=resolution,
                 status="converged",
                 difference=metric,
                 cached=cached,
@@ -209,7 +266,7 @@ def qualify_reference(sim, *, directory, settings=None, progress=None):
                 stop, rtol=stop.rtol * 0.1, atol=stop.atol * 0.1, field_tol=stop.field_tol * 0.1
             ),
         )
-        tighter.apply_mesh(fine_sim.mesh)
+        tighter._apply_mesh(fine_sim.mesh)
         checks["temporal"] = tighter
         if settings.check_boundaries:
             checks["pml"] = _expanded_pml(fine_sim, ppw)
@@ -238,7 +295,7 @@ def qualify_reference(sim, *, directory, settings=None, progress=None):
                 scatterer_margin_cells=None,
             )
             contour = clone(fine_sim, layout=layout)
-            contour.apply_mesh(fine_sim.mesh)
+            contour._apply_mesh(fine_sim.mesh)
             checks["contour"] = contour
         for name, check in checks.items():
             if perf_counter() - started > settings.max_seconds:

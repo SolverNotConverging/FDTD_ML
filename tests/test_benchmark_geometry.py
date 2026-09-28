@@ -2,9 +2,10 @@ import math
 
 import numpy as np
 import pytest
+from legacy_fixtures import make_simulation
 
 import fdtdmesh as fd
-from fdtdmesh.benchmarks import SHAPES, make_geometry, make_simulation
+from fdtdmesh.catalog.shapes import SHAPES, make_geometry
 from fdtdmesh.scene import Scene2D, ellipse_matrix
 
 
@@ -94,7 +95,7 @@ def test_wifi_relative_scale_matches_si_geometry_without_raster(monkeypatch):
     physical = make_simulation("wifi", scale=1.5 * 0.6 * relative.wavelength)
     assert relative.geometry == physical.geometry
     assert make_simulation("wifi").geometry == make_simulation("wifi", scale_factor=1).geometry
-    relative.apply_mesh("uniform", cells=(192, 192))
+    relative._apply_mesh("uniform", cells=(192, 192))
     assert relative.mesh.Nx == relative.mesh.Ny == 192
 
 

@@ -1,14 +1,10 @@
 """Mesh proposal strategies; all generated grids pass through the same projector."""
 
 import hashlib
-import json
-from functools import lru_cache
-from pathlib import Path
 
 import numpy as np
 from scipy.ndimage import gaussian_filter1d
 
-from .constants import C0
 from .mesh import Mesh, MeshInfeasibleError, density_mesh
 
 
@@ -27,62 +23,6 @@ def deterministic_density(geometry, bins=128):
         activity /= max(float(activity.max()), 1e-12)
         result.append(1 + 3 * activity + occupied)
     return tuple(result)
-
-
-@lru_cache(maxsize=4)
-def _session(path, checksum):
-    try:
-        import onnxruntime as ort
-    except ImportError as exc:
-        raise RuntimeError("CNN inference requires the 'cnn' extra: uv sync --extra cnn") from exc
-    return ort.InferenceSession(path, providers=["CPUExecutionProvider"])
-
-
-def cnn_density(geometry, fmin, fmax, checkpoint):
-    """Portable ONNX checkpoint bundle; no pickle or silent heuristic fallback."""
-    root = Path(checkpoint)
-    manifest = json.loads((root / "manifest.json").read_text())
-    if (
-        manifest.get("schema") != "fdtdmesh-cnn-v1"
-        or manifest.get("method") != "tmz-conformal-ect-v1"
-    ):
-        raise ValueError("Checkpoint schema/physics is incompatible with this solver")
-    if (
-        manifest.get("normalization") != "unit-domain"
-        or manifest.get("outputs") != "positive-axis-density"
-    ):
-        raise ValueError("Unsupported checkpoint feature/output normalization")
-    model = root / "model.onnx"
-    checksum = hashlib.sha256(model.read_bytes()).hexdigest()
-    if checksum != manifest.get("sha256"):
-        raise ValueError("Checkpoint checksum does not match model.onnx")
-    channels = tuple(manifest["channels"])
-    features = geometry.rasterize(tuple(manifest["shape"]), channels=channels)[None]
-    wavelength = C0 / ((fmin + fmax) / 2)
-    physics = np.array(
-        [
-            [
-                geometry.size[0] / wavelength,
-                geometry.size[1] / wavelength,
-                fmin / ((fmin + fmax) / 2),
-                fmax / ((fmin + fmax) / 2),
-            ]
-        ],
-        np.float32,
-    )
-    runtime = _session(str(model.resolve()), checksum)
-    prediction = runtime.run(["rho_x", "rho_y"], {"geometry": features, "physics": physics})
-    axes = []
-    for values in prediction:
-        a = np.asarray(values)
-        if a.ndim != 2 or a.shape[0] != 1 or a.shape[1] < 2:
-            raise ValueError("CNN outputs must be (1, bins) axis-density vectors")
-        axes.append(a[0].astype(float))
-    return tuple(axes), dict(
-        checkpoint_sha256=checksum,
-        checkpoint_schema=manifest["schema"],
-        architecture=manifest.get("architecture", "onnx"),
-    )
 
 
 def exterior_lines(length, count, collar, contour, tfsf, allocation):
@@ -118,7 +58,6 @@ def generate_mesh(
     strategy,
     *,
     density=None,
-    checkpoint=None,
     strict=False,
     constraints=None,
     anchors=None,
@@ -134,8 +73,6 @@ def generate_mesh(
         raise ValueError("anchor_assignment must be joint, fixed or local")
     if density is not None and strategy != "density":
         raise ValueError("density is only accepted by the density strategy")
-    if checkpoint is not None and strategy != "cnn":
-        raise ValueError("checkpoint is only accepted by the cnn strategy")
     if strict and strategy != "uniform":
         raise ValueError("strict is only accepted by the uniform strategy")
     ax = np.unique(
@@ -185,7 +122,7 @@ def generate_mesh(
                 )
             if not box[0] < occupied[0] < occupied[1] < box[1]:
                 raise MeshInfeasibleError(
-                    "Geometry no longer fits the fitted TFSF box; call fit_domain again"
+                    "Geometry does not fit the resolved TFSF box; resolve the automatic domain again"
                 )
             indices.update(
                 {
@@ -250,11 +187,9 @@ def generate_mesh(
         density = (np.ones(64), np.ones(64))
     elif strategy == "deterministic":
         density = deterministic_density(geometry)
-    elif strategy == "cnn":
-        raise RuntimeError("CNN prediction must be resolved by Simulation before projection")
     elif strategy != "density":
         raise ValueError(
-            "Mesh strategy must be uniform, deterministic, cnn, density, or an explicit Mesh"
+            "Mesh strategy must be uniform, deterministic, density, or an explicit Mesh"
         )
     if density is None or len(density) != 2:
         raise ValueError("density requires two positive axis vectors")

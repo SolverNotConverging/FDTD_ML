@@ -151,7 +151,7 @@ def main():
         platform=platform.platform(),
         python=platform.python_version(),
         device=device,
-        method="tmz-conformal-ect-v1",
+        method=baseline.diagnostics["method"],
         rows=rows,
         sensitivity=sensitivity,
         shape_refinement=refinements,
@@ -162,7 +162,8 @@ def main():
         ),
     )
     (args.output / "report.json").write_text(json.dumps(report, indent=2, allow_nan=False) + "\n")
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), constrained_layout=True)
+    fig = plt.figure(figsize=(12, 5), constrained_layout=True)
+    axes = (fig.add_subplot(121), fig.add_subplot(122, projection="polar"))
     for graded in (False, True):
         selected = [
             r
@@ -184,13 +185,12 @@ def main():
     axes[0].legend()
     exact = cylinder_amplitude(0.47 * C0 / case.frequency, case.frequency, case.angles)
     axes[1].plot(
-        np.rad2deg(case.angles), 4 / (2 * np.pi) * abs(exact) ** 2, "k--", label="Analytical"
+        case.angles, 4 / (2 * np.pi) * abs(exact) ** 2, "k--", label="Analytical"
     )
     axes[1].plot(
-        np.rad2deg(case.angles), baseline.width[0] / (C0 / case.frequency), label="CUDA, 64 cells/λ"
+        case.angles, baseline.width[0] / (C0 / case.frequency), label="CUDA, 64 cells/λ"
     )
     axes[1].set(
-        xlabel="Observation angle (degrees)",
         ylabel="Scattering width / wavelength",
         title="Absolute bistatic pattern",
     )

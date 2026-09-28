@@ -1,0 +1,99 @@
+{
+  "kind": "bounded accuracy screen; fine run is not a qualified reference",
+  "threshold": 0.1,
+  "geometry": "PEC rectangle [-0.1,0.1]^2 with air notch x=[0.0215,0.0245], y=[0.07,0.2] metres",
+  "fmin": 900000000.0,
+  "fmax": 1100000000.0,
+  "dft_bins": 3,
+  "rows": [
+    {
+      "name": "hybrid100",
+      "cells": [
+        100,
+        100
+      ],
+      "converged": true,
+      "steps": 10240,
+      "gpu_ms": 201.2332763671875,
+      "difference_from_strict_fine": {
+        "error": 0.0015870271763688633,
+        "worst_frequency": 0.0018887717680428925,
+        "per_frequency": [
+          0.0012302295784016168,
+          0.0015732266741540735,
+          0.0018887717680428925
+        ],
+        "width_error": 0.0024233134894267854
+      },
+      "passed_screen": true,
+      "boundary": {
+        "boundary_cells": 160,
+        "enlarged_pairs": 0,
+        "expanded_cells": 0,
+        "fallback_area_fraction": 0.0005781168459692598,
+        "fallback_boundary_fraction": 0.0875,
+        "fallback_cells": 14,
+        "initial_fallback_cells": 14,
+        "mode": "hybrid",
+        "reasons": {
+          "unavailable_donor": 12
+        }
+      }
+    },
+    {
+      "name": "hybrid120",
+      "cells": [
+        120,
+        120
+      ],
+      "converged": true,
+      "steps": 16384,
+      "gpu_ms": 269.87725830078125,
+      "difference_from_strict_fine": {
+        "error": 0.0004343579962005663,
+        "worst_frequency": 0.0005107079496208774,
+        "per_frequency": [
+          0.0003441566255575293,
+          0.0004321275435204374,
+          0.0005107079496208774
+        ],
+        "width_error": 0.0007290277986088081
+      },
+      "passed_screen": true,
+      "boundary": {
+        "boundary_cells": 237,
+        "enlarged_pairs": 0,
+        "expanded_cells": 0,
+        "fallback_area_fraction": 0.00018087311315560347,
+        "fallback_boundary_fraction": 0.04219409282700422,
+        "fallback_cells": 10,
+        "initial_fallback_cells": 10,
+        "mode": "hybrid",
+        "reasons": {
+          "multiple_crossings": 9
+        }
+      }
+    },
+    {
+      "name": "strict_fine",
+      "cells": [
+        150,
+        150
+      ],
+      "converged": true,
+      "steps": 38912,
+      "gpu_ms": 779.3837890625,
+      "boundary": {
+        "boundary_cells": 374,
+        "enlarged_pairs": 0,
+        "expanded_cells": 0,
+        "fallback_area_fraction": 0.0,
+        "fallback_boundary_fraction": 0.0,
+        "fallback_cells": 0,
+        "initial_fallback_cells": 0,
+        "mode": "conformal",
+        "reasons": {}
+      }
+    }
+  ]
+}

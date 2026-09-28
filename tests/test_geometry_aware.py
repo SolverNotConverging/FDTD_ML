@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from fdtdmesh import DomainPolicy, Geometry, Mesh, Simulation
-from fdtdmesh.benchmarks.shapes import make_geometry
+from fdtdmesh.catalog.shapes import make_geometry
 from fdtdmesh.geometry_mesher import GeometryMeshingError, inspect_mesh
 from fdtdmesh.mesh import MeshInfeasibleError
 
@@ -32,7 +32,7 @@ def test_unbounded_geometry_preserves_coordinates_and_final_csg_bounds(tmp_path)
 
 
 def test_fixed_exterior_policy_and_roundtrip_after_mesh(tmp_path):
-    sim = Simulation(fmin=0.9e9, fmax=1.1e9, domain=DomainPolicy(exterior_spacing=0.01))
+    sim = Simulation(fmin=0.9e9, fmax=1.1e9, domain=DomainPolicy(exterior_max_spacing=0.01))
     sim.add_circle((-0.03, 0.02), 0.05)
     original = sim.geometry
     first = sim.apply_mesh("geometry_aware")
@@ -45,10 +45,11 @@ def test_fixed_exterior_policy_and_roundtrip_after_mesh(tmp_path):
         assert np.allclose(a[-28:], b[-28:])
         assert np.allclose(np.diff(b[:28]), 0.01)
     bounds = sim.computational_geometry.bounds
-    assert bounds[0] - layout.tfsf_box[0] == pytest.approx(0.05)
-    assert layout.tfsf_box[0] - layout.contour_box[0] == pytest.approx(0.04)
-    assert layout.contour_box[0] - sim.pml.x.thickness == pytest.approx(0.06)
-    assert sim.pml.x.thickness == pytest.approx(0.12)
+    pml, outer, inner, margin = sim._domain_policy.allocation(sim.fmin, sim.fmax)["achieved"]
+    assert bounds[0] - layout.tfsf_box[0] == pytest.approx(margin)
+    assert layout.tfsf_box[0] - layout.contour_box[0] == pytest.approx(inner)
+    assert layout.contour_box[0] - sim.pml.x.thickness == pytest.approx(outer)
+    assert sim.pml.x.thickness == pytest.approx(pml)
     sim.save(tmp_path / "prepared.h5")
     loaded = Simulation.load(tmp_path / "prepared.h5")
     assert loaded.geometry == original
@@ -77,7 +78,7 @@ def test_catalog_geometry_aware_prepares_valid_conformal_mesh(shape):
     sim = Simulation(fmin=0.9e9, fmax=1.1e9)
     sim.set_geometry(make_geometry(shape, size=(2.0, 2.0), scale=0.2, incidence_deg=30))
     original = sim.geometry
-    mesh = sim.apply_mesh("geometry_aware", time_limit=30)
+    mesh = sim._apply_mesh("geometry_aware", time_limit=30)
     assert sim.geometry is original
     assert mesh.metadata["geometry_aware"]["status"] == "valid"
     assert inspect_mesh(sim.computational_geometry, mesh)[0] == []
@@ -94,12 +95,12 @@ def test_limits_are_explicit_and_failure_preserves_existing_mesh():
     assert sim.mesh is mesh
     with pytest.raises(ValueError, match="target_spacing"):
         sim.apply_mesh("geometry_aware", target_spacing=0)
-    with pytest.raises(ValueError, match="chooses cell counts"):
-        sim.apply_mesh("geometry_aware", cells=(100, 100))
+    candidate = sim.apply_mesh("geometry_aware", cells=(100, 100))
+    assert (candidate.Nx, candidate.Ny) == (100, 100)
     from fdtdmesh import AxisConstraints
 
     with pytest.raises(MeshInfeasibleError, match="fixed exterior"):
-        sim.apply_mesh("geometry_aware", constraints=AxisConstraints(max_spacing=0.001))
+        sim._apply_mesh("geometry_aware", constraints=AxisConstraints(max_spacing=0.001))
 
 
 def test_empty_domain_and_outside_phase_origin_are_rejected():

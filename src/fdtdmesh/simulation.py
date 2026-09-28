@@ -50,6 +50,7 @@ class ScatteringCase:
     angles: np.ndarray = field(default_factory=lambda: np.deg2rad(np.arange(360)))
     convergence: Convergence = field(default_factory=Convergence)
     pulse_end: float | None = None
+    boundary: object = None
 
     def __post_init__(self):
         scalars = [self.frequency, self.pulse_width_periods, self.pulse_delay_periods]
@@ -146,6 +147,7 @@ def prepare(case, mesh, *, dtype="float64", safety=0.9, dt=None):
         dtype=dtype,
         safety=safety,
         dt=dt,
+        boundary=case.boundary,
     )
     # Do not test convergence before the pulse and two domain transits have passed.
     source_end = (
@@ -236,7 +238,7 @@ def run_scattering(
                 (coeff.hy.length > 0) & (coeff.hy.length < np.diff(mesh.x)[:, None] * (1 - 1e-10))
             )
         ),
-        method="tmz-conformal-ect-v1",
+        method="tmz-ect-hybrid-v2",
         dtype=dtype,
         configuration=dict(
             scene=case.scene.as_dict(),

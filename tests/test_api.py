@@ -1,23 +1,23 @@
 """Public workflow contracts and physical integration of the broadband source."""
 
-import hashlib
-import json
-
 import matplotlib
 import numpy as np
 import pytest
+from legacy_fixtures import fixed_simulation
 
 matplotlib.use("Agg")
 
-from fdtdmesh import C0, DFTConvergence, Geometry, Result, Simulation, SolverSettings
+from fdtdmesh import C0, Geometry, Result, Simulation, SolverSettings
 from fdtdmesh.mesh import MeshInfeasibleError
 from fdtdmesh.pulse import GaussianPulse
 from fdtdmesh.scene import Scene2D
+from fdtdmesh.simulation import Convergence as DFTConvergence
 
 
 def cylinder(**kwargs):
     lam = C0 / 1e9
-    sim = Simulation((6 * lam, 6 * lam), 0.9e9, 1.1e9, **kwargs)
+    settings = kwargs.pop("settings", kwargs.pop("solver", None))
+    sim = fixed_simulation((6 * lam, 6 * lam), 0.9e9, 1.1e9, settings=settings, **kwargs)
     sim.add_circle((3 * lam, 3 * lam), 0.47 * lam)
     return sim
 
@@ -26,12 +26,12 @@ def test_exact_geometry_survives_mesh_and_archive(tmp_path):
     sim = cylinder()
     original = sim.geometry
     pixels = original.rasterize((51, 73), channels=("occupancy", "x", "y"))
-    sim.apply_mesh("uniform", cells=(144, 144), strict=True)
+    sim._apply_mesh("uniform", cells=(144, 144), strict=True)
     sim.save(tmp_path / "simulation.h5")
     restored = Simulation.load(tmp_path / "simulation.h5")
     assert restored.geometry == original
     np.testing.assert_array_equal(restored.mesh.x, sim.mesh.x)
-    sim.apply_mesh("deterministic", cells=(144, 144))
+    sim._apply_mesh("deterministic", cells=(144, 144))
     assert sim.geometry is original
     np.testing.assert_array_equal(
         pixels, sim.geometry.rasterize((51, 73), channels=("occupancy", "x", "y"))
@@ -97,14 +97,14 @@ def test_gaussian_band_and_sampled_source():
     with pytest.raises(ValueError):
         SolverSettings(dft_bins=(1e9, 0.9e9))
     with pytest.raises(ValueError):
-        Simulation((2, 2), 1e9, 1e9)
+        Simulation(fmin=1e9, fmax=1e9)
 
 
 def test_mesh_policy_and_plotting(tmp_path):
     sim = cylinder()
     with pytest.raises(MeshInfeasibleError):
-        sim.apply_mesh("uniform", cells=(140, 140), strict=True)
-    sim.apply_mesh(cells=(144, 144))
+        sim._apply_mesh("uniform", cells=(140, 140), strict=True)
+    sim._apply_mesh("uniform", cells=(144, 144), strict=True)
     mesh = sim.mesh
     with pytest.raises(ValueError):
         sim.apply_mesh("density", cells=(144, 144), density=([-1, 1], [1, 1]))
@@ -119,59 +119,6 @@ def test_mesh_policy_and_plotting(tmp_path):
     assert sim.mesh is None
 
 
-def test_actual_cnn_adapter_and_checkpoint_validation(tmp_path):
-    onnx = pytest.importorskip("onnx")
-    pytest.importorskip("onnxruntime")
-    from onnx import TensorProto, helper, numpy_helper
-
-    # A tiny untrained convolution export exercises real runtime I/O. No accuracy claim.
-    weights = np.ones((1, 1, 1, 1), np.float32)
-    nodes = [
-        helper.make_node("Conv", ["geometry", "weights"], ["features"]),
-        helper.make_node("ReduceMean", ["features"], ["rx"], axes=[1, 2], keepdims=0),
-        helper.make_node("ReduceMean", ["features"], ["ry"], axes=[1, 3], keepdims=0),
-        helper.make_node("Add", ["rx", "one"], ["rho_x"]),
-        helper.make_node("Add", ["ry", "one"], ["rho_y"]),
-    ]
-    inputs = [
-        helper.make_tensor_value_info("geometry", TensorProto.FLOAT, [1, 1, 32, 32]),
-        helper.make_tensor_value_info("physics", TensorProto.FLOAT, [1, 4]),
-    ]
-    outputs = [
-        helper.make_tensor_value_info(n, TensorProto.FLOAT, [1, 32]) for n in ("rho_x", "rho_y")
-    ]
-    graph = helper.make_graph(
-        nodes,
-        "adapter-test",
-        inputs,
-        outputs,
-        [
-            numpy_helper.from_array(weights, "weights"),
-            numpy_helper.from_array(np.ones(1, np.float32), "one"),
-        ],
-    )
-    model = helper.make_model(graph, opset_imports=[helper.make_opsetid("", 13)], ir_version=8)
-    onnx.save(model, tmp_path / "model.onnx")
-    manifest = dict(
-        schema="fdtdmesh-cnn-v1",
-        method="tmz-conformal-ect-v1",
-        normalization="unit-domain",
-        outputs="positive-axis-density",
-        channels=["occupancy"],
-        shape=[32, 32],
-        sha256=hashlib.sha256((tmp_path / "model.onnx").read_bytes()).hexdigest(),
-    )
-    (tmp_path / "manifest.json").write_text(json.dumps(manifest))
-    sim = cylinder()
-    sim.apply_mesh("cnn", cells=(144, 144), checkpoint=tmp_path)
-    assert sim.mesh.metadata["checkpoint_sha256"] == manifest["sha256"]
-    assert sim.mesh.metadata["strategy"] == "cnn"
-    manifest["sha256"] = "wrong"
-    (tmp_path / "manifest.json").write_text(json.dumps(manifest))
-    with pytest.raises(ValueError, match="checksum"):
-        sim.apply_mesh("cnn", cells=(144, 144), checkpoint=tmp_path)
-
-
 @pytest.mark.cuda
 def test_broadband_workflow_gpu_history_h5_and_cpu_plotting(tmp_path, monkeypatch):
     from fdtdmesh.scattering import cylinder_amplitude, pattern_error
@@ -182,7 +129,7 @@ def test_broadband_workflow_gpu_history_h5_and_cpu_plotting(tmp_path, monkeypatc
     except RuntimeError as exc:
         pytest.skip(str(exc))
     sim = cylinder(settings=SolverSettings(stop=DFTConvergence(check_interval=256)))
-    sim.apply_mesh(cells=(144, 144))
+    sim._apply_mesh("uniform", cells=(144, 144), strict=True)
     result = sim.solve()
     assert result.converged and sim.result is result
     assert result.bin_history.shape == (len(result.history), 21, 3)
@@ -222,7 +169,7 @@ def test_unsuccessful_run_exposes_diagnostics_without_qualifying_result():
     except RuntimeError as exc:
         pytest.skip(str(exc))
     sim = cylinder(settings=SolverSettings(stop=DFTConvergence(max_steps=1700, check_interval=256)))
-    sim.apply_mesh(cells=(144, 144))
+    sim._apply_mesh("uniform", cells=(144, 144), strict=True)
     with pytest.raises(ConvergenceError) as failure:
         sim.solve()
     assert not failure.value.result.converged and sim.result is None

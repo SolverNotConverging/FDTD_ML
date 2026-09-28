@@ -4,7 +4,7 @@ from copy import deepcopy
 
 import pytest
 
-from fdtdmesh.benchmarks.common import experiment_directory, read_json, write_json
+from fdtdmesh.optimization.common import experiment_directory, read_json, write_json
 
 
 @pytest.mark.parametrize(

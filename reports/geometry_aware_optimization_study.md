@@ -105,7 +105,7 @@ the final feasibility test. Feasible candidates receive a GPU solve and the
 broadband complex far-field error against a qualified fine reference; invalid
 ones receive a penalty. A 200-evaluation run is an empirical search budget,
 not a guarantee of a global optimum.
-The [optimizer implementation](../src/fdtdmesh/benchmarks/optimize.py)
+The [optimizer implementation](../src/fdtdmesh/optimization/optimize.py)
 records every feasibility outcome and candidate error.
 
 ## Finding
@@ -314,7 +314,7 @@ extruded along z by TMz. They are useful geometry stress cases, **not 3D
 aircraft or telescope radar cross-section predictions**. The dish polygon
 approximates a parabola rather than representing an analytic curved surface.
 The exact construction recipes are in the
-[engineered-shape module](../src/fdtdmesh/benchmarks/engineered_shapes.py).
+[engineered-shape module](../src/fdtdmesh/catalog/engineered_shapes.py).
 
 ![Exact engineered silhouettes at three orientations](figures/geometry_optimization/engineered_rotations.png)
 
@@ -429,9 +429,10 @@ reliably better valid mesh, rather than imitation of one optimizer trace.
 
 The committed [machine-readable results](geometry_aware_optimization_results.json)
 contain every feasibility screen, reference level/check and aggregate search
-result. The scripts in [`examples/geometry_optimization_study`](../examples/geometry_optimization_study)
-recreate the screens, GPU references, 60/200-evaluation comparisons and figures. From
-the repository root, for example:
+result. The scripts in `examples/geometry_optimization_study` at the
+[historical source revision](README.md) recreate the screens, GPU references,
+60/200-evaluation comparisons and figures. From that revision's repository root,
+for example:
 
 ```powershell
 .venv/Scripts/python examples/geometry_optimization_study/probe.py

@@ -23,114 +23,10 @@ class GeometryMeshingError(MeshInfeasibleError):
         super().__init__(message)
 
 
-def _intervals(scene, axis, fixed, tol):
-    """Merge adjacent vacuum pieces left by hidden CSG boundaries."""
-    merged = []
-    for lo, hi in scene.vacuum_intervals(axis, fixed):
-        if hi - lo <= tol:
-            continue
-        if merged and lo <= merged[-1][1] + tol:
-            merged[-1] = (merged[-1][0], hi)
-        else:
-            merged.append((lo, hi))
-    return merged
-
-
 def inspect_mesh(geometry, mesh):
-    """Return exact edge-topology and donor violations with repair coordinates."""
-    scene = geometry.to_scene()
-    tol = 1e-11 * max(geometry.size)
-    pec = scene.contains(mesh.x[:, None], mesh.y[None, :])
-    issues, requests = [], [[], []]
-    for axis in (0, 1):
-        lines, fixed = (mesh.x, mesh.y) if axis == 0 else (mesh.y, mesh.x)
-        mask = pec if axis == 0 else pec.T
-        full = np.diff(lines)
-        for j, value in enumerate(fixed):
-            air = _intervals(scene, axis, value, tol)
-            lengths = np.zeros(len(full))
-            for lo, hi in air:
-                lengths += np.maximum(0, np.minimum(lines[1:], hi) - np.maximum(lines[:-1], lo))
-            cuts = np.unique([p for ab in air for p in ab if tol < p < lines[-1] - tol])
-            # More than one transition is unsupported even with different endpoints.
-            # cuts are sorted and unique; count open-interval intersections
-            # without a Python loop over every Yee edge on every scanline.
-            crossings = np.maximum(
-                0,
-                np.searchsorted(cuts, lines[1:] - tol, side="left")
-                - np.searchsorted(cuts, lines[:-1] + tol, side="right"),
-            )
-            same_air = ~mask[:-1, j] & ~mask[1:, j]
-            same_pec = mask[:-1, j] & mask[1:, j]
-            bad = np.flatnonzero(
-                (
-                    (crossings > 1)
-                    | (same_air & (lengths < full - tol))
-                    | (same_pec & (lengths > tol))
-                )
-            )
-            for i in bad:
-                points = np.r_[
-                    lines[i], cuts[(cuts > lines[i]) & (cuts < lines[i + 1])], lines[i + 1]
-                ]
-                issues.append(
-                    dict(
-                        kind="multiple_crossings",
-                        axis=axis,
-                        fixed=float(value),
-                        edge=[float(lines[i]), float(lines[i + 1])],
-                    )
-                )
-                for lo, hi in zip(points[:-1], points[1:]):
-                    midpoint = (lo + hi) / 2
-                    inside = (
-                        scene.contains(midpoint, value)
-                        if axis == 0
-                        else scene.contains(value, midpoint)
-                    )
-                    missing = mask[i, j] == mask[i + 1, j] and inside != mask[i, j]
-                    internal = lo > lines[i] + tol and hi < lines[i + 1] - tol
-                    if hi - lo > tol and (missing or internal):
-                        requests[axis].append(midpoint)
-            if len(bad):
-                continue  # Donors are meaningful only after this scanline's topology is resolved.
-            all_air = same_air & (lengths >= full - tol)
-            lengths[same_pec], lengths[all_air] = 0, full[all_air]
-            used = set()
-            for i in np.flatnonzero((lengths > 0) & (lengths < 0.5 * full * (1 - 1e-12))):
-                borrow = 0.5 * full[i] - lengths[i]
-                candidates = [i + (1 if mask[i, j] else -1)]
-                donor = next(
-                    (
-                        d
-                        for d in candidates
-                        if 0 <= d < len(full)
-                        and d not in used
-                        and i not in used
-                        and np.isclose(lengths[d], full[d], rtol=1e-11, atol=0)
-                        and 0 < borrow < full[d]
-                    ),
-                    None,
-                )
-                if donor is not None:
-                    used.update((i, donor))
-                    continue
-                issues.append(
-                    dict(
-                        kind="unavailable_donor",
-                        axis=axis,
-                        fixed=float(value),
-                        edge=[float(lines[i]), float(lines[i + 1])],
-                        open_length=float(lengths[i]),
-                        donor_indices=list(map(int, candidates)),
-                    )
-                )
-                for lo, hi in air:
-                    if min(hi, lines[i + 1]) - max(lo, lines[i]) > tol:
-                        # Two distinct complete air edges can serve the two cut ends.
-                        requests[axis].extend(lo + (hi - lo) * np.array([0.25, 0.5, 0.75]))
-                        break
-    return issues, tuple(np.unique(a) for a in requests)
+    from .solver.topology import inspect_scene
+
+    return inspect_scene(geometry.to_scene(), mesh)
 
 
 def _unique(values, scale):
@@ -152,6 +48,8 @@ def geometry_aware_mesh(
     max_cells=(512, 512),
     max_passes=20,
     time_limit=30.0,
+    cells=None,
+    boundary=None,
 ):
     """Construct within resource caps; target_spacing is a target, not a cell budget.
 
@@ -167,7 +65,7 @@ def geometry_aware_mesh(
         raise ValueError("max_cells must contain two axis cell caps")
     caps = np.array([cell_count(n) for n in max_cells])
     if layout.scatterer_margin_cells is None or layout.exterior_cells is None:
-        raise ValueError("geometry_aware requires automatic domain or fit_domain()")
+        raise ValueError("geometry_aware requires a resolved automatic-domain layout")
     bounds = geometry.bounds
     if bounds is None:
         raise ValueError("geometry_aware requires nonempty PEC geometry")
@@ -183,7 +81,15 @@ def geometry_aware_mesh(
     if constraints.max_spacing is not None and constraints.max_spacing < exterior_h * (1 - 1e-10):
         raise MeshInfeasibleError("max_spacing is smaller than the fixed exterior spacing")
     target = min(target_spacing, constraints.max_spacing or target_spacing)
-    counts = reserve + np.maximum(4, np.ceil(spans / target).astype(int))
+    counts = (
+        reserve + np.maximum(4, np.ceil(spans / target).astype(int))
+        if cells is None
+        else np.array([cell_count(n) for n in cells])
+    )
+    if counts.shape != (2,) or np.any(counts <= reserve):
+        raise MeshInfeasibleError(f"Budget must exceed reserved axis cells {tuple(reserve)}")
+    if cells is not None:
+        caps = counts.copy()
     anchors = [np.array([]), np.array([])]
     # Probe each primitive in both directions, including air cutters. This seeds
     # interior features that could otherwise lie entirely inside one grid cell.
@@ -202,6 +108,7 @@ def geometry_aware_mesh(
     )
     started = perf_counter()
     previous_anchors = None
+    assignment = "local"
 
     def fail(message):
         report["elapsed_seconds"] = perf_counter() - started
@@ -216,7 +123,9 @@ def geometry_aware_mesh(
         if remaining <= 0:
             fail("Geometry-aware construction reached its time limit")
         anchors = [_unique(a, length) for a, length in zip(anchors, geometry.size)]
-        record = dict(cells=counts.tolist(), anchors=[len(a) for a in anchors])
+        record = dict(
+            cells=counts.tolist(), anchors=[len(a) for a in anchors], assignment=assignment
+        )
         report["passes"].append(record)
         try:
             mesh = generate_mesh(
@@ -226,22 +135,31 @@ def geometry_aware_mesh(
                 tuple(counts),
                 "uniform",
                 anchors=anchors,
-                anchor_assignment="local",
+                anchor_assignment=assignment,
                 constraints=constraints,
                 time_limit=max(0.01, remaining / 2),
             )
         except MeshInfeasibleError as exc:
             record.update(status="projection_infeasible", message=str(exc))
+            if assignment == "local":
+                assignment = "joint"
+                continue
+            assignment = "local"
             if previous_anchors is not None:
                 # Repairs are proposals, not permanent corner constraints. If they
                 # conflict with fixed exterior lines, retry a finer grid instead.
                 anchors, previous_anchors = previous_anchors, None
+            if cells is not None:
+                fail(
+                    "Fixed-budget geometry construction could not find a valid allocation; budget was not increased"
+                )
             counts = reserve + np.maximum(
                 counts - reserve + 4, np.ceil((counts - reserve) * 1.2).astype(int)
             )
             continue
         except MeshOptimizationError as exc:
             fail(f"Geometry-aware projection did not complete: {exc}")
+        assignment = "local"
         issues, additions = inspect_mesh(geometry, mesh)
         report["issues"] = issues
         record.update(
@@ -250,11 +168,13 @@ def geometry_aware_mesh(
             topology_violations=sum(i["kind"] == "multiple_crossings" for i in issues),
             donor_violations=sum(i["kind"] == "unavailable_donor" for i in issues),
         )
-        if not issues:
+        if not issues or (boundary is not None and boundary.mode == "hybrid"):
             try:
-                build_conformal(geometry.to_scene(), mesh)
+                build_conformal(geometry.to_scene(), mesh, boundary=boundary)
             except UnresolvedGeometryError as exc:
                 record.update(status="conformal_rejection", message=str(exc))
+                if cells is not None:
+                    fail("Fixed-budget conformal preparation failed")
                 counts = reserve + np.maximum(
                     counts - reserve + 4, np.ceil((counts - reserve) * 1.2).astype(int)
                 )
@@ -264,13 +184,12 @@ def geometry_aware_mesh(
                 elapsed_seconds=perf_counter() - started,
                 status="valid",
                 exterior_fixed=True,
+                boundary_mode="conformal" if boundary is None else boundary.mode,
                 # Retain the successful witness coordinates for subsequent
                 # fixed-budget density studies. They identify local material
                 # intervals and donors that the repair loop needed to resolve.
                 witness_anchors=[a.tolist() for a in anchors],
-                geometry_sha256=hashlib.sha256(
-                    json_text(geometry.as_dict()).encode()
-                ).hexdigest(),
+                geometry_sha256=hashlib.sha256(json_text(geometry.as_dict()).encode()).hexdigest(),
             )
             mesh.metadata.update(strategy="geometry_aware", geometry_aware=report)
             return mesh
@@ -281,6 +200,10 @@ def geometry_aware_mesh(
             for a, extra, length in zip(anchors, additions, geometry.size)
         ]
         if before == [len(a) for a in anchors]:
+            if cells is not None:
+                fail(
+                    "Fixed-budget geometry construction could not find a valid allocation; budget was not increased"
+                )
             counts = reserve + np.maximum(
                 counts - reserve + 4, np.ceil((counts - reserve) * 1.2).astype(int)
             )

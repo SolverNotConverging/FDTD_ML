@@ -5,10 +5,12 @@ from types import SimpleNamespace
 
 import numpy as np
 import pytest
+from legacy_fixtures import make_simulation
 
-from fdtdmesh.benchmarks import Reference, make_simulation, optimize_mesh
-from fdtdmesh.benchmarks.common import errors, experiment_key
 from fdtdmesh.mesh import MeshInfeasibleError, adjacent_ratio, axis_mesh
+from fdtdmesh.optimization import Reference
+from fdtdmesh.optimization.common import errors, experiment_key
+from fdtdmesh.optimization.optimize import _optimize_mesh as optimize_mesh
 from fdtdmesh.result import Result, json_text
 from fdtdmesh.simulation import MeshClearanceError
 
@@ -46,8 +48,8 @@ def test_complex_loss_detects_phase_and_rejects_mismatched_samples():
 
 @pytest.mark.parametrize("ppw", [48, 108])
 def test_moon_reference_aligns_thin_tip_without_changing_geometry_or_budget(ppw):
-    from fdtdmesh.benchmarks.common import refined
-    from fdtdmesh.benchmarks.features import unresolved_edge_anchors
+    from fdtdmesh.optimization.common import refined
+    from fdtdmesh.optimization.features import unresolved_edge_anchors
 
     sim = make_simulation("moon", incidence_deg=30, scale_factor=1.2)
     result = refined(sim, ppw)
@@ -61,7 +63,7 @@ def test_moon_reference_aligns_thin_tip_without_changing_geometry_or_budget(ppw)
 
 
 def test_reference_reports_every_preparation_failure(tmp_path, monkeypatch):
-    module = importlib.import_module("fdtdmesh.benchmarks.reference")
+    module = importlib.import_module("fdtdmesh.optimization.reference")
     from fdtdmesh.solver.conformal import UnresolvedGeometryError
 
     def rejected(*args):
@@ -88,9 +90,9 @@ def test_local_and_fixed_anchor_projection_enforce_hard_constraints():
 
 
 def test_de_resume_matches_uninterrupted_and_preserves_input(tmp_path, monkeypatch):
-    module = importlib.import_module("fdtdmesh.benchmarks.optimize")
+    module = importlib.import_module("fdtdmesh.optimization.optimize")
     sim = make_simulation()
-    sim.apply_mesh("uniform", cells=(144, 144))
+    sim._apply_mesh("uniform", cells=(144, 144))
     original = sim.mesh
     ref = Reference(
         synthetic(sim),
@@ -155,14 +157,18 @@ def test_de_resume_matches_uninterrupted_and_preserves_input(tmp_path, monkeypat
 
 
 def test_geometry_seed_optimizes_at_same_budget_with_witness_anchors(tmp_path, monkeypatch):
-    module = importlib.import_module("fdtdmesh.benchmarks.optimize")
+    module = importlib.import_module("fdtdmesh.optimization.optimize")
     sim = make_simulation("star", incidence_deg=30, scale_factor=0.5)
     baseline = sim.apply_mesh("geometry_aware")
     original = sim.mesh
     ref = Reference(
         synthetic(sim),
-        dict(qualified=True, case=experiment_key(sim), key="synthetic-seeded",
-             settings=dict(rtol=.002, worst_rtol=.005)),
+        dict(
+            qualified=True,
+            case=experiment_key(sim),
+            key="synthetic-seeded",
+            settings=dict(rtol=0.002, worst_rtol=0.005),
+        ),
         tmp_path,
     )
     meshes = []
@@ -179,37 +185,53 @@ def test_geometry_seed_optimizes_at_same_budget_with_witness_anchors(tmp_path, m
 
     monkeypatch.setattr(module, "run_cached", fake_run)
     out = optimize_mesh(
-        sim, ref, cells=(baseline.Nx, baseline.Ny), initial_mesh=baseline,
-        directory=tmp_path / "seeded", max_evaluations=6, population=4, controls=3,
+        sim,
+        ref,
+        cells=(baseline.Nx, baseline.Ny),
+        initial_mesh=baseline,
+        directory=tmp_path / "seeded",
+        max_evaluations=6,
+        population=4,
+        controls=3,
     )
     assert [t["kind"] for t in out.report["trials"][:3]] == [
-        "geometry_aware", "uniform", "deterministic"
+        "geometry_aware",
+        "uniform",
+        "deterministic",
     ]
     assert meshes[0].x.tobytes() == baseline.x.tobytes()
     assert meshes[0].y.tobytes() == baseline.y.tobytes()
     assert sim.mesh is original
     for mesh in meshes:
         assert (mesh.Nx, mesh.Ny) == (baseline.Nx, baseline.Ny)
-        for axis, witnesses in zip((mesh.x, mesh.y), baseline.metadata["geometry_aware"]["witness_anchors"]):
+        for axis, witnesses in zip(
+            (mesh.x, mesh.y), baseline.metadata["geometry_aware"]["witness_anchors"]
+        ):
             assert all(np.any(np.isclose(axis, v, atol=1e-12, rtol=0)) for v in witnesses)
         for axis, original_axis in ((mesh.x, baseline.x), (mesh.y, baseline.y)):
             assert np.array_equal(axis[:28], original_axis[:28])
             assert np.array_equal(axis[-28:], original_axis[-28:])
-    assert out.report["description"]["optimizer"]["initial_mesh"]["witness_anchors"] == (
-        baseline.metadata["geometry_aware"]["witness_anchors"]
+    assert (
+        out.report["description"]["optimizer"]["initial_mesh"]["witness_anchors"]
+        == (baseline.metadata["geometry_aware"]["witness_anchors"])
     )
     with pytest.raises(ValueError, match="must match"):
-        optimize_mesh(sim, ref, cells=(baseline.Nx + 1, baseline.Ny),
-                      initial_mesh=baseline, directory=tmp_path / "invalid")
+        optimize_mesh(
+            sim,
+            ref,
+            cells=(baseline.Nx + 1, baseline.Ny),
+            initial_mesh=baseline,
+            directory=tmp_path / "invalid",
+        )
 
 
 @pytest.mark.parametrize("check_boundaries", [False, True])
 def test_reference_requires_spatial_and_all_sensitivity_checks(
     tmp_path, monkeypatch, check_boundaries
 ):
-    module = importlib.import_module("fdtdmesh.benchmarks.reference")
+    module = importlib.import_module("fdtdmesh.optimization.reference")
     sim = make_simulation()
-    sim.apply_mesh("uniform", cells=(144, 144))
+    sim._apply_mesh("uniform", cells=(144, 144))
     monkeypatch.setattr(module, "refined", lambda *args: sim)
     monkeypatch.setattr(module, "_expanded_pml", lambda *args: sim)
 
@@ -238,22 +260,22 @@ def test_tfsf_clearance_is_mesh_infeasibility_and_failed_apply_is_transactional(
         (sim.layout.tfsf_box[0] + 0.06 * sim.wavelength, 3 * sim.wavelength), 0.05 * sim.wavelength
     )
     with pytest.raises(MeshClearanceError, match="clearance inside TFSF") as exc:
-        sim.apply_mesh("uniform", cells=(144, 144))
+        sim._apply_mesh("uniform", cells=(144, 144))
     assert isinstance(exc.value, MeshInfeasibleError)
     assert sim.mesh is None
 
 
-@pytest.mark.parametrize("strategy", ["differential_evolution", "powell"])
+@pytest.mark.parametrize("strategy", ["differential_evolution"])
 def test_search_records_clearance_failures_and_continues(tmp_path, monkeypatch, strategy):
-    module = importlib.import_module("fdtdmesh.benchmarks.optimize")
+    module = importlib.import_module("fdtdmesh.optimization.optimize")
     sim = make_simulation()
-    sim.apply_mesh("uniform", cells=(144, 144))
+    sim._apply_mesh("uniform", cells=(144, 144))
     ref = Reference(
         synthetic(sim), dict(qualified=True, case=experiment_key(sim), key="test"), tmp_path
     )
 
     class RejectedCandidate:
-        def apply_mesh(self, *args, **kwargs):
+        def _apply_mesh(self, *args, **kwargs):
             raise MeshClearanceError("Geometry and enlarged cells need clearance inside TFSF")
 
     monkeypatch.setattr(module, "clone", lambda *args, **kwargs: RejectedCandidate())
@@ -274,15 +296,15 @@ def test_search_records_clearance_failures_and_continues(tmp_path, monkeypatch, 
 
 
 def test_search_does_not_swallow_unrelated_value_errors(tmp_path, monkeypatch):
-    module = importlib.import_module("fdtdmesh.benchmarks.optimize")
+    module = importlib.import_module("fdtdmesh.optimization.optimize")
     sim = make_simulation()
-    sim.apply_mesh("uniform", cells=(144, 144))
+    sim._apply_mesh("uniform", cells=(144, 144))
     ref = Reference(
         synthetic(sim), dict(qualified=True, case=experiment_key(sim), key="test"), tmp_path
     )
 
     class BrokenCandidate:
-        def apply_mesh(self, *args, **kwargs):
+        def _apply_mesh(self, *args, **kwargs):
             raise ValueError("unexpected programming error")
 
     monkeypatch.setattr(module, "clone", lambda *args, **kwargs: BrokenCandidate())
@@ -290,14 +312,14 @@ def test_search_does_not_swallow_unrelated_value_errors(tmp_path, monkeypatch):
         optimize_mesh(sim, ref, cells=(144, 144), directory=tmp_path / "broken")
 
 
-@pytest.mark.parametrize("strategy", ["differential_evolution", "powell"])
+@pytest.mark.parametrize("strategy", ["differential_evolution"])
 @pytest.mark.parametrize("anchored", [False, True])
 def test_optional_anchors_apply_to_baselines_and_search(tmp_path, monkeypatch, strategy, anchored):
-    module = importlib.import_module("fdtdmesh.benchmarks.optimize")
+    module = importlib.import_module("fdtdmesh.optimization.optimize")
     from fdtdmesh.solver.conformal import UnresolvedGeometryError
 
     sim = make_simulation()
-    sim.apply_mesh("uniform", cells=(144, 144))
+    sim._apply_mesh("uniform", cells=(144, 144))
     ref = Reference(
         synthetic(sim), dict(qualified=True, case=experiment_key(sim), key="test"), tmp_path
     )
@@ -309,7 +331,7 @@ def test_optional_anchors_apply_to_baselines_and_search(tmp_path, monkeypatch, s
         return anchors
 
     class RejectedCandidate:
-        def apply_mesh(self, strategy, **kwargs):
+        def _apply_mesh(self, strategy, **kwargs):
             proposals.append((strategy, kwargs))
             raise UnresolvedGeometryError("test unresolved crossing")
 
