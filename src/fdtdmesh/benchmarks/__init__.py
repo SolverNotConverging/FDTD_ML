@@ -5,6 +5,7 @@ import numpy as np
 from ..api import DFTConvergence, Simulation, SolverSettings
 from ..constants import C0
 from .engineered_shapes import ENGINEERED_SHAPES, make_engineered_geometry
+from .feasible import FeasibleSettings, analyze_mesh_adaptivity
 from .optimize import Optimization, optimize_mesh
 from .reference import Reference, ReferenceSettings, qualify_reference
 from .shapes import SHAPES, make_geometry
@@ -72,6 +73,8 @@ __all__ = [
     "qualify_reference",
     "Optimization",
     "optimize_mesh",
+    "FeasibleSettings",
+    "analyze_mesh_adaptivity",
     "run_sweep",
     "plot_gallery",
 ]

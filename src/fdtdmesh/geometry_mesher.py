@@ -53,11 +53,12 @@ def inspect_mesh(geometry, mesh):
                 lengths += np.maximum(0, np.minimum(lines[1:], hi) - np.maximum(lines[:-1], lo))
             cuts = np.unique([p for ab in air for p in ab if tol < p < lines[-1] - tol])
             # More than one transition is unsupported even with different endpoints.
-            crossings = np.array(
-                [
-                    np.count_nonzero((cuts > lo + tol) & (cuts < hi - tol))
-                    for lo, hi in zip(lines[:-1], lines[1:])
-                ]
+            # cuts are sorted and unique; count open-interval intersections
+            # without a Python loop over every Yee edge on every scanline.
+            crossings = np.maximum(
+                0,
+                np.searchsorted(cuts, lines[1:] - tol, side="left")
+                - np.searchsorted(cuts, lines[:-1] + tol, side="right"),
             )
             same_air = ~mask[:-1, j] & ~mask[1:, j]
             same_pec = mask[:-1, j] & mask[1:, j]

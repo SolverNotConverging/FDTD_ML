@@ -4,6 +4,31 @@ See the [optimization API reference](mesh_optimization_api.md) for signatures,
 argument tables, defaults, return values and resume behavior for every public
 study function.
 
+For a validated geometry-aware seed, use `strategy="feasible_local"` to search
+by moving its free grid lines, with local restoration of invalid geometric
+regions. Notebook 04 includes an opt-in example. This keeps the seed's exact
+cell counts and witness indices; it does not change geometry or enlarge the
+budget. The original DE and Powell searches remain available.
+
+```python
+from fdtdmesh.benchmarks import FeasibleSettings, analyze_mesh_adaptivity
+
+seed = sim.apply_mesh("geometry_aware")
+# Qualify reference for the same simulation before this call.
+study = optimize_mesh(
+    sim, reference, initial_mesh=seed, cells=(seed.Nx, seed.Ny),
+    strategy="feasible_local", local_settings=FeasibleSettings(),
+    directory="artifacts/local_search", max_evaluations=200, max_solves=120,
+)
+print(study.report["search_statistics"])
+mobility = analyze_mesh_adaptivity(sim, seed)  # Optional; CPU only, no FDTD.
+```
+
+Read raw validity, repaired validity, unique solved meshes and actual
+displacements together. High acceptance caused by near-zero moves would not
+demonstrate useful search. LP mobility bounds omit exact geometry and donor
+constraints and are conditional on the seed's anchor-index allocation.
+
 Open `notebooks/03_reference_and_optimized_mesh.ipynb` for the complete workflow.
 It runs the selected shape and incidence on the GPU. The optional catalog sweep covers
 12 shapes at 0, 30, 60 and 90 degrees; enable it for longer server experiments.

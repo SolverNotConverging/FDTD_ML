@@ -12,7 +12,7 @@ Lengths are SI metres, frequencies are Hz, and `incidence_deg` is in degrees.
 optimize_mesh(sim, reference, *, cells, strategy="differential_evolution",
               directory, max_evaluations=80, max_seconds=600.0, controls=6,
               population=12, seed=0, constraints=None, feature_anchors=False,
-              initial_mesh=None,
+              initial_mesh=None, local_settings=None, max_solves=None,
               projection_seconds=5.0,
               resume=True, progress=None)
 ```
@@ -27,16 +27,18 @@ convergence and the fixed cell budget remain hard constraints.
 | `sim` | `Simulation` | Required | Exact geometry and physical/solver configuration to evaluate. A pre-existing mesh is not required; candidates are built on fresh simulation copies. |
 | `reference` | `Reference` | Required | Must have `qualified=True`, a result, and matching geometry, orientation and configuration. |
 | `cells` | Pair of positive integers | Required | Exact total `(Nx, Ny)` cell counts, including PML and the full domain. |
-| `strategy` | `str` | `"differential_evolution"` | `"differential_evolution"` for seeded population search, or `"powell"` for bounded derivative-free local search. |
+| `strategy` | `str` | `"differential_evolution"` | `"differential_evolution"` for seeded population search, `"powell"` for bounded derivative-free local search, or `"feasible_local"` for seed-relative local proposals with exact geometry checks and restoration. The latter requires a validated geometry-aware `initial_mesh`. |
 | `directory` | `str` or `Path` | Required | Root for automatically selected experiment subdirectories containing `experiment.json`, `optimization.h5`, result files and validation. |
-| `max_evaluations` | Integer ≥ 2 | `80` | Total proposals, including previous resumed trials, both baselines, failed candidates and cache hits. Changing this value selects a separate experiment. |
+| `max_evaluations` | Integer ≥ 2 | `80` | Total proposal trials, including previous resumed trials, failed candidates, cache hits, and baselines: three when `initial_mesh` is supplied (`geometry_aware`, `uniform`, `deterministic`), two otherwise. Changing this value selects a separate experiment. |
 | `max_seconds` | Positive finite float | `600.0` | Search wall-time allowance for this invocation, in seconds. Checked between evaluations; a running solve can overrun it. Winner validation occurs afterward. |
-| `controls` | Integer ≥ 2 | `6` | Log-density knots per axis. The last knot is fixed, leaving `2 * (controls - 1)` search variables. |
-| `population` | Integer ≥ 4 | `12` | Number of DE population members. Validated and recorded for both strategies; Powell does not use a population. |
-| `seed` | Nonnegative integer | `0` | NumPy RNG seed for DE. Recorded for both strategies; Powell itself is deterministic. |
-| `constraints` | `AxisConstraints` or `None` | `None` | Shared x/y spacing constraints. `None` selects minimum spacing `λ/160` (reduced to half the mean fitted-object cell width when needed), maximum spacing `λ/12`, and maximum adjacent-cell ratio `1.4`, with `λ` at band centre. |
-| `feature_anchors` | `bool` | `False` | Force visible geometry corner/intersection anchors for both baselines and all search proposals when `True`. `False` retains only required layout/PML coordinates (including fitted bounding-box margins). Reference meshing keeps its own anchors and repairs. Stored in the experiment description; changing it selects a separate archive. |
+| `controls` | Integer ≥ 2 | `6` | DE/Powell log-density knots per axis, with the last knot fixed and `2 * (controls - 1)` search variables. For `feasible_local`, the same count controls interpolation knots for local displacement proposals; it is not a fixed 10-dimensional parameterization. |
+| `population` | Integer ≥ 4 | `12` | DE population members, or the retained-parent pool size for `feasible_local`; Powell does not use a population. |
+| `seed` | Nonnegative integer | `0` | NumPy RNG seed for DE and `feasible_local`; Powell itself is deterministic. |
+| `constraints` | `AxisConstraints` or `None` | `None` | Shared x/y spacing constraints. Without `initial_mesh`, `None` selects minimum spacing `λ/160` (reduced to half the mean fitted-object cell width when needed), maximum spacing `λ/12`, and ratio `1.4`. With `initial_mesh`, `None` selects `min_spacing=0`, `max_spacing=max(fixed exterior spacing, geometry_aware.target_spacing)`, and ratio `1.4`. |
+| `feature_anchors` | `bool` | `False` | Force visible geometry corner/intersection anchors for baselines and proposals when `True`. For `feasible_local`, those coordinates must already be present in `initial_mesh`; otherwise seed validation fails. `False` retains only required layout/PML coordinates (including fitted bounding-box margins). Reference meshing keeps its own anchors and repairs. Stored in the experiment description; changing it selects a separate archive. |
 | `initial_mesh` | `Mesh` or `None` | `None` | A validated `geometry_aware` mesh from the same simulation. Uses its exact axis counts and successful witness anchors as fixed constraints for all projected candidates, and scores that mesh as the first baseline. The full coordinates and anchors enter the experiment description. With `None`, the original uniform/deterministic baselines are used. |
+| `local_settings` | `FeasibleSettings` or `None` | `None` | Settings for `strategy="feasible_local"`; `None` uses `FeasibleSettings()`. Supplying it to another strategy is an error. |
+| `max_solves` | Positive integer or `None` | `None` | Optional cap on unique candidate FDTD evaluations, including cached hits and failed convergence, and excluding the final stricter validation. `max_evaluations` still caps proposal trials, including baselines. |
 | `projection_seconds` | Positive finite float | `5.0` | Time limit for each axis mesh projection, in seconds. Projection failures remain recorded trials. |
 | `resume` | `bool` | `True` | Load a matching existing archive. `False` raises `FileExistsError` if the archive already exists; it does not overwrite it. |
 | `progress` | Callable accepting one dictionary, or `None` | `None` | Called after a trial checkpoint is saved. Includes trial data, one-based `number` and current `best_error`. Exceptions from callbacks propagate. |
@@ -55,6 +57,82 @@ initial_mesh=baseline, ...)`. This holds the cell budget, exact geometry, exteri
 coordinates, and successful repair anchors fixed; strict conformal validation can
 still reject proposals that create new crossings or lose enlarged-cell donors.
 The same mesh without `initial_mesh` is not an equivalent comparison.
+
+With `strategy="feasible_local"`, proposals are generated relative to the
+geometry-aware seed and its accepted local parents. The allocation of fixed
+anchor indices is held constant: layout/PML lines, witness anchors, and any
+requested feature anchors stay at their seed coordinates, while only free line
+indices can move. Every proposal preserves the exact geometry and total cell
+counts, then undergoes strict enlarged-cell and conformal checks. Geometry
+failures trigger local restoration/backtracking; proposals below the
+`min_movement` threshold are rejected. The report records whether raw or
+repaired movement was accepted. The `radius` adapts after acceptance or
+rejection, and `exploration` controls sampling of retained parents.
+Here acceptance means a distinct, valid, converged mesh, even when its error
+does not improve the incumbent. The radius controller is based on feasibility;
+the search does not claim a formal stationarity or global-optimality certificate.
+The uniform and deterministic comparison baselines retain their existing
+projectors; they may use different anchor indices. The fixed-index restriction
+applies to `feasible_local` search proposals, and its parent pool starts from
+the geometry-aware seed. The reported best result includes all three baselines.
+
+`max_evaluations` counts proposal trials, including the two or three baselines,
+depending on whether `initial_mesh` is supplied, failed or
+rejected proposals, and cache hits. `max_solves` counts unique candidate FDTD
+evaluation identifiers, including cached hits and failed convergence; it does
+not count the final stricter validation. The local search's conditional LP
+mobility ranges are reported as bounds for the fixed seed anchor-index
+allocation. They omit nonlinear geometry and donor constraints, so they are not
+globally feasible mobility ranges and do not certify a minimum mesh budget.
+These ranges come from an explicit `analyze_mesh_adaptivity()` call; they are
+not automatically included in the optimizer report.
+
+### `FeasibleSettings`
+
+```python
+FeasibleSettings(radius=0.75, min_radius=0.05, max_radius=2.0,
+                 min_movement=0.03, repair_passes=3, backtracks=3,
+                 exploration=0.3)
+```
+
+Immutable settings for `strategy="feasible_local"`. Radii and movement are in
+cell-width units; repair counts are nonnegative integers.
+
+At each free grid line the normalization is the mean of its two adjacent
+**seed** cell widths. This scale stays fixed as accepted parent meshes change.
+RMS movement excludes fixed lines. Search acceptance statistics exclude the
+three initial baselines; internal restoration/backtracking checks are reported
+separately from outer proposal trials.
+
+| Argument | Type | Default | Meaning and constraints |
+|---|---|---|---|
+| `radius` | Finite float | `0.75` | Initial local proposal radius, measured in local cell-width units. Must satisfy `min_movement ≤ min_radius ≤ radius ≤ max_radius`. |
+| `min_radius` | Finite float | `0.05` | Lower bound for the adaptive proposal radius. Must be at least `min_movement`. |
+| `max_radius` | Finite float | `2.0` | Upper bound for the adaptive proposal radius. |
+| `min_movement` | Finite float | `0.03` | Minimum maximum displacement, in cell units; smaller proposals are filtered out. Must be positive and no greater than `min_radius`. |
+| `repair_passes` | Nonnegative integer | `3` | Number of local restoration attempts after a raw geometry failure. |
+| `backtracks` | Nonnegative integer | `3` | Number of progressively smaller backtracking attempts after restoration attempts. |
+| `exploration` | Finite float in `[0, 1]` | `0.3` | Probability of selecting a retained parent for exploration; otherwise the current best parent is used. |
+
+### `analyze_mesh_adaptivity`
+
+```python
+analyze_mesh_adaptivity(sim, mesh, *, constraints=None,
+                        projection_seconds=5.0)
+```
+
+Computes conditional LP coordinate ranges for a geometry-aware seed without
+running FDTD solves. The returned ranges use the seed's fixed anchor-index
+allocation and omit nonlinear geometry/donor constraints; they are not globally
+feasible mobility ranges or a minimum-budget certificate. Geometry-valid
+movement is assessed separately by `feasible_local` trials.
+
+| Argument | Type | Default | Meaning and constraints |
+|---|---|---|---|
+| `sim` | `Simulation` | Required | Simulation whose exact geometry and layout are checked against the seed. |
+| `mesh` | `Mesh` | Required | Validated geometry-aware seed mesh; its witness anchors and fixed index allocation define the conditional ranges. |
+| `constraints` | `AxisConstraints` or `None` | `None` | Shared x/y spacing constraints. `None` derives seed-relative constraints from PML and geometry-aware target spacing. |
+| `projection_seconds` | Positive finite float | `5.0` | Time limit in seconds for each LP projection. |
 
 `progress` and `resume` are execution controls rather than numerical settings:
 callbacks are not serialized, and `resume=False` refuses an existing exact match.
@@ -102,11 +180,12 @@ Useful report fields:
 
 | Field | Meaning |
 |---|---|
-| `status` | `evaluation_limit`, `time_limit`, `optimizer_finished`, `no_feasible_mesh`, or `interrupted_or_failed`; `running` during work. |
+| `status` | `evaluation_limit`, `solve_limit`, `time_limit`, `optimizer_finished`, `no_feasible_mesh`, or `interrupted_or_failed`; `running` during work. |
 | `trials` | Every proposal, including baseline kind, parameters, status, error, timing and result file when available. Failed trials have `error=None` and a message. |
 | `best_error` | Best overall relative complex-field error, or `None`. |
 | `validation` | Tighter-stop winner check: `passed`, error against reference, and `change` against the original winner; an unconverged check instead records a failure status/message. |
 | `observed_reference_difference` | Observed refinement/sensitivity difference from the reference report; not a rigorous error bound. |
+| `search_statistics` | For `feasible_local`, counts `proposals`, `raw_valid`, `returned_valid`, `solved`, `unique_solved`, `internal_checks`, and per-status `statuses`, plus `median_parent_rms_cells`, `median_seed_rms_cells`, and `median_changed_lines`. |
 
 `MeshClearanceError` is a `MeshInfeasibleError` raised when a proposed grid lacks
 the required cell clearance between geometry, TFSF, contour, source or PML.

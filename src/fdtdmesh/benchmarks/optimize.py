@@ -26,6 +26,7 @@ from .common import (
     run_cached,
     simulation_description,
 )
+from .feasible import FeasibleSettings, FeasibleSpace, search_statistics
 from .features import geometry_anchors
 
 
@@ -101,14 +102,16 @@ def optimize_mesh(
     constraints=None,
     feature_anchors=False,
     initial_mesh=None,
+    local_settings=None,
+    max_solves=None,
     projection_seconds=5.0,
     resume=True,
     progress=None,
 ):
     """Find a low-error tensor-product mesh at an exact total cell budget.
 
-    Strategies: differential_evolution (checkpointed rand/1/bin, immediate updates)
-    or powell (bounded SciPy search; resume is explicitly a warm restart).
+    Strategies: differential_evolution (checkpointed rand/1/bin), powell (warm
+    restart), or feasible_local (seed-relative, exact population/RNG resume).
     Budgets count proposals including failed/cached trials and both baselines.
     Time limits are checked between evaluations; an active solve may overrun them.
     The input simulation is not mutated. Inspect best, report and plot_history().
@@ -117,9 +120,26 @@ def optimize_mesh(
     conformal candidates remain infeasible; reference-only repairs are not used.
     initial_mesh accepts a validated geometry-aware grid. Its witness anchors
     constrain all same-budget projections, and it is scored as a baseline.
+    feasible_local requires that seed, preserves witness indices, and accepts
+    FeasibleSettings through local_settings. max_solves optionally limits unique
+    candidate FDTD evaluations, including cached hits and failed convergence but
+    excluding final stricter validation; max_evaluations still limits proposals.
     """
-    if strategy not in ("differential_evolution", "powell"):
-        raise ValueError("strategy must be differential_evolution or powell")
+    if strategy not in ("differential_evolution", "powell", "feasible_local"):
+        raise ValueError("strategy must be differential_evolution, powell or feasible_local")
+    if strategy == "feasible_local":
+        if initial_mesh is None:
+            raise ValueError("feasible_local requires a geometry-aware initial_mesh")
+        local_settings = local_settings or FeasibleSettings()
+        if not isinstance(local_settings, FeasibleSettings):
+            raise TypeError("local_settings must be FeasibleSettings")
+    elif local_settings is not None:
+        raise ValueError("local_settings is only used by feasible_local")
+    if max_solves is not None and (
+        isinstance(max_solves, bool) or not np.isfinite(max_solves)
+        or int(max_solves) != max_solves or max_solves < 1
+    ):
+        raise ValueError("max_solves must be a positive integer")
     if not isinstance(feature_anchors, bool):
         raise ValueError("feature_anchors must be a boolean")
     if not reference.qualified or reference.result is None:
@@ -200,6 +220,11 @@ def optimize_mesh(
         max_evaluations=max_evaluations,
         max_seconds=max_seconds,
     )
+    if strategy == "feasible_local":
+        config.update(local_settings=asdict(local_settings),
+                      parameterization="seed-relative-fixed-indices-v1")
+    if max_solves is not None:
+        config["max_solves"] = max_solves
     description = dict(
         schema=1,
         kind="optimization",
@@ -259,8 +284,21 @@ def optimize_mesh(
             np.unique(np.r_[w, extra])
             for w, extra in zip(witness, anchors if anchors is not None else ([], []))
         )
+    space = (FeasibleSpace(sim, initial_mesh, constraints, anchors, projection_seconds)
+             if strategy == "feasible_local" else None)
+    report.setdefault("solve_meshes", [])
+    if space is not None:
+        report.setdefault("feasible_state", dict(radius=local_settings.radius, pool=[]))
+        report["resume_mode"] = "exact_feasible_state"
+        report["adaptivity"] = dict(
+            method="fixed-index-local-search", free_lines=[len(s.free) for s in space.axes],
+            fixed_indices=[s.fixed.tolist() for s in space.axes],
+            global_minimum_budget_certified=False,
+        )
 
     def save():
+        if space is not None:
+            report["search_statistics"] = search_statistics(report["trials"])
         report["rng_state"] = rng.bit_generator.state
         report["wall_seconds"] = previous_seconds + perf_counter() - started
         _save(directory, report)
@@ -276,7 +314,8 @@ def optimize_mesh(
             )
 
     def budget():
-        if len(report["trials"]) >= max_evaluations or perf_counter() - started >= max_seconds:
+        if (len(report["trials"]) >= max_evaluations or perf_counter() - started >= max_seconds
+                or (max_solves is not None and len(report["solve_meshes"]) >= max_solves)):
             raise _BudgetReached
 
     def density(z):
@@ -286,16 +325,20 @@ def optimize_mesh(
             for a in q
         )
 
-    def evaluate(z=None, baseline=None, check_budget=True):
+    def evaluate(z=None, baseline=None, check_budget=True, proposed_mesh=None, proposal=None):
         if check_budget:
             budget()
         trial = dict(
             kind=baseline or strategy, parameters=None if z is None else np.asarray(z).tolist()
         )
+        if proposal is not None:
+            trial["proposal"] = proposal
         begin = perf_counter()
         candidate = clone(sim)
         try:
-            if baseline == "geometry_aware":
+            if proposed_mesh is not None:
+                candidate.apply_mesh(proposed_mesh)
+            elif baseline == "geometry_aware":
                 candidate.apply_mesh(initial_mesh)
             elif baseline:
                 candidate.apply_mesh(
@@ -316,6 +359,14 @@ def optimize_mesh(
                     constraints=constraints,
                     time_limit=projection_seconds,
                 )
+            identifier = mesh_id(candidate.mesh)
+            if proposed_mesh is not None and identifier in report["solve_meshes"]:
+                trial.update(status="duplicate", mesh_id=identifier, error=None)
+                trial["wall_seconds"] = perf_counter() - begin
+                report["trials"].append(trial)
+                return 1e6
+            if identifier not in report["solve_meshes"]:
+                report["solve_meshes"].append(identifier)
             result, path, cached = run_cached(candidate, directory / "runs")
             metric = errors(result, reference_result)
             trial.update(
@@ -401,6 +452,50 @@ def optimize_mesh(
                 report["energies"] = [None if not np.isfinite(v) else float(v) for v in energy]
                 save()
                 notify()
+        elif strategy == "feasible_local":
+            state = report["feasible_state"]
+            if not state["pool"]:
+                initial = next(t for t in report["trials"] if t["kind"] == "geometry_aware")
+                if initial["status"] != "feasible":
+                    raise MeshInfeasibleError("The geometry-aware seed must converge before local search")
+                state["pool"] = [dict(x=initial_mesh.x.tolist(), y=initial_mesh.y.tolist(),
+                                      error=initial["error"], mesh_id=mesh_id(initial_mesh))]
+            while True:
+                budget()
+                pool = state["pool"]
+                parent_index = int(rng.integers(len(pool))) if rng.random() < local_settings.exploration else 0
+                entry = pool[parent_index]
+                parent = Mesh(entry["x"], entry["y"])
+                begin = perf_counter()
+                mesh, proposal = space.propose(parent, rng, state["radius"], controls, local_settings)
+                proposal["parent_mesh_id"] = entry["mesh_id"]
+                proposal["seconds"] = perf_counter() - begin
+                if mesh is None:
+                    report["trials"].append(dict(kind=strategy, status="proposal_rejected",
+                                                 parameters=None, error=None, proposal=proposal,
+                                                 wall_seconds=proposal["seconds"]))
+                    value = 1e6
+                else:
+                    value = evaluate(proposed_mesh=mesh, proposal=proposal, check_budget=False)
+                    report["trials"][-1]["wall_seconds"] += proposal["seconds"]
+                accepted = report["trials"][-1]["status"] == "feasible"
+                if accepted:
+                    pool.append(dict(x=mesh.x.tolist(), y=mesh.y.tolist(), error=value,
+                                     mesh_id=mesh_id(mesh)))
+                    pool.sort(key=lambda item: item["error"])
+                    if len(pool) > population:
+                        # Keep good solutions plus geometrically diverse parents.
+                        good = pool[:max(1, population // 2)]
+                        rest = pool[len(good):]
+                        best_mesh = Mesh(good[0]["x"], good[0]["y"])
+                        rest.sort(key=lambda item: space.movement(
+                            Mesh(item["x"], item["y"]), best_mesh)["rms_cells"], reverse=True)
+                        pool[:] = good + rest[:population-len(good)]
+                state["radius"] = float(np.clip(
+                    state["radius"] * (1.12 if accepted else 0.65),
+                    local_settings.min_radius, local_settings.max_radius))
+                save()
+                notify()
         else:
 
             def objective(z):
@@ -421,7 +516,9 @@ def optimize_mesh(
             report["status"] = "optimizer_finished"
     except _BudgetReached:
         report["status"] = (
-            "evaluation_limit" if len(report["trials"]) >= max_evaluations else "time_limit"
+            "evaluation_limit" if len(report["trials"]) >= max_evaluations else
+            "solve_limit" if max_solves is not None and len(report["solve_meshes"]) >= max_solves else
+            "time_limit"
         )
     except BaseException:
         report["status"] = "interrupted_or_failed"

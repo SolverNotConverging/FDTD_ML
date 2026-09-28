@@ -7,6 +7,11 @@ qualification, fixed-budget optimization, and a constrained learning plan.
 All reported far fields are **2D TMz** results; the engineered silhouettes
 are stress tests, not 3D radar-cross-section predictions.
 
+The [feasible-local optimizer follow-up](feasible_optimizer_study.md) compares
+seed-relative search and geometric restoration against the density-based DE
+results below, including acceptance, actual mesh variation, and matched
+accepted-evaluation prefixes.
+
 ## Why conformal meshing matters
 
 Finite-difference time-domain (FDTD) time stepping samples electric and

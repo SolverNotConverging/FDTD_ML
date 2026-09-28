@@ -1,0 +1,59 @@
+[
+  {
+    "shape": "swept_aircraft",
+    "angle": 45,
+    "cells": [
+      173,
+      173
+    ],
+    "trials": 24,
+    "radius_cells": 0.75,
+    "raw_valid": 2,
+    "returned_valid": 24,
+    "unique_valid": 24,
+    "stages": {
+      "restore": 22,
+      "raw": 2
+    },
+    "median_rms_cells": 0.25542820655712506,
+    "fdtd_run": false
+  },
+  {
+    "shape": "propeller_aeroplane",
+    "angle": 15,
+    "cells": [
+      426,
+      413
+    ],
+    "trials": 24,
+    "radius_cells": 0.75,
+    "raw_valid": 2,
+    "returned_valid": 19,
+    "unique_valid": 19,
+    "stages": {
+      "restore": 17,
+      "raw": 2
+    },
+    "median_rms_cells": 0.2201909968846143,
+    "fdtd_run": false
+  },
+  {
+    "shape": "radio_telescope",
+    "angle": 30,
+    "cells": [
+      173,
+      176
+    ],
+    "trials": 24,
+    "radius_cells": 0.75,
+    "raw_valid": 4,
+    "returned_valid": 24,
+    "unique_valid": 24,
+    "stages": {
+      "restore": 20,
+      "raw": 4
+    },
+    "median_rms_cells": 0.2591872771876723,
+    "fdtd_run": false
+  }
+]
