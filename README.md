@@ -102,6 +102,10 @@ subdivision requires an initial mesh. A bounded hybrid screen and its limitation
 The [hybrid tip experiment](docs/hybrid_tip_optimization.md) records notebook 05's
 measured optimization improvements and the star's unresolved reference convergence.
 
+The [surrogate optimization plan](docs/surrogate_optimization_plan.md) describes
+the proposed GP-assisted local search, TITAN RTX/Linux setup, and controlled
+comparison against the existing optimizer. This strategy is not implemented yet.
+
 Historical studies are preserved in [reports](reports/), with their source
 revision recorded there. They are historical evidence and do not validate the
 hybrid method.
