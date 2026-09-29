@@ -20,8 +20,11 @@ class DomainPolicy:
     exterior_max_spacing: float | None = None
     min_pml_cells: int = 12
     phase_origin: tuple | None = None
+    margin_mesh: str = "fixed"
 
     def __post_init__(self):
+        if self.margin_mesh not in ("fixed", "graded"):
+            raise ValueError("margin_mesh must be fixed or graded")
         for name in (
             "scatterer_to_tfsf_wavelengths",
             "tfsf_to_contour_wavelengths",
@@ -100,5 +103,6 @@ class DomainPolicy:
             tuple(origin),
             exterior_cells=(outer, inner),
             scatterer_margin_cells=margin,
+            margin_mesh=self.margin_mesh,
         )
         return resolved, PML(collar, collar), layout, tuple(offset)

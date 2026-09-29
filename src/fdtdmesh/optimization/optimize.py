@@ -182,7 +182,7 @@ def _optimize_mesh(
             exterior_h = max(p.thickness / p.cells for p in (sim.pml.x, sim.pml.y))
             constraints = AxisConstraints(
                 max_spacing=max(
-                    exterior_h,
+                    exterior_h * (1.4 if sim.layout.margin_mesh == "graded" else 1),
                     float(np.diff(initial_mesh.x).max()),
                     float(np.diff(initial_mesh.y).max()),
                 )
@@ -647,6 +647,7 @@ def optimize_mesh(
     constraints=None,
     resume=True,
     progress=None,
+    boundary=None,
 ):
     """Search a fixed total budget; optional winner check is reported separately."""
     if not reference.qualified or reference.result is None:
@@ -654,9 +655,22 @@ def optimize_mesh(
     settings = settings or SearchSettings()
     if not isinstance(settings, SearchSettings):
         raise TypeError("settings must be SearchSettings")
+    from ..boundary import BoundaryPolicy
+
+    # Optimization uses hybrid by default, without changing the caller or relaxing
+    # explicitly supplied fallback limits. Strict mode is an explicit override.
+    policy = replace(sim._boundary, mode="hybrid") if boundary is None else boundary
+    if not isinstance(policy, BoundaryPolicy):
+        raise TypeError("boundary must be BoundaryPolicy")
+    sim = clone(sim)
+    sim._boundary = policy
     if strategy == "feasible_local" and initial_mesh is None:
         prepared = clone(sim)
-        prepared.apply_mesh("geometry_aware", cells=cells)
+        from ..meshing import MeshOptions
+
+        prepared.apply_mesh(
+            "geometry_aware", cells=cells, options=MeshOptions(constraints=constraints)
+        )
         initial_mesh = prepared.mesh
     return _optimize_mesh(
         sim,

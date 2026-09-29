@@ -72,8 +72,11 @@ class ScatteringLayout:
     origin: tuple
     exterior_cells: tuple | None = None
     scatterer_margin_cells: int | None = None
+    margin_mesh: str = "fixed"
 
     def __post_init__(self):
+        if self.margin_mesh not in ("fixed", "graded"):
+            raise ValueError("margin_mesh must be fixed or graded")
         for name, count in (("tfsf_box", 4), ("contour_box", 4), ("origin", 2)):
             a = tuple(float(v) for v in getattr(self, name))
             if len(a) != count or not np.isfinite(a).all():
@@ -330,6 +333,7 @@ class Simulation:
                 constraints=opts.constraints,
                 time_limit=opts.time_limit,
                 max_passes=opts.max_passes,
+                hybrid_repair_passes=opts.hybrid_repair_passes,
             )
         if target_spacing is not None or max_cells != (512, 512):
             raise ValueError("Automatic counts require geometry_aware")
@@ -362,6 +366,7 @@ class Simulation:
         target_spacing=None,
         max_cells=(512, 512),
         max_passes=20,
+        hybrid_repair_passes=3,
     ):
         """Prepare a grid and conformal enlarged-cell coefficients; return the Mesh.
 
@@ -369,7 +374,7 @@ class Simulation:
         cells includes PML. strict=True requires an exactly uniform grid.
         A failed proposal leaves the previously applied mesh intact.
         geometry_aware selects counts using target_spacing, max_cells, max_passes,
-        and the construction time_limit. See docs/geometry_aware_meshing.md.
+        and the construction time_limit. See docs/mesh_strategy.md.
         """
         start = perf_counter()
         metadata = {}
@@ -405,6 +410,7 @@ class Simulation:
                 time_limit=time_limit,
                 cells=cells,
                 boundary=self._boundary,
+                hybrid_repair_passes=hybrid_repair_passes,
             )
         else:
             if target_spacing is not None or max_cells != (512, 512) or max_passes != 20:

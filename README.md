@@ -74,7 +74,7 @@ exact cell budget or a target spacing with caps, and validates exact geometry,
 donors, and enlarged-cell topology. `density` uses positive axis densities at
 an exact budget. `custom` accepts only `mesh=`. Advanced settings belong in
 `MeshOptions`; see the [solver API](docs/solver_api.md) and
-[geometry-aware meshing guide](docs/geometry_aware_meshing.md).
+[mesh strategy guide](docs/mesh_strategy.md).
 
 ## Solver and results
 
@@ -89,13 +89,18 @@ convergence diagnostics, and HDF5 save/plot helpers.
 - `notebooks/02_gpu_scattering_and_far_field.ipynb` — native CUDA scattering and NF2FF.
 - `notebooks/03_hybrid_boundary.ipynb` — boundary policy and targeted checks.
 - `notebooks/04_geometry_aware_meshing.ipynb` — qualified references and multiple-budget optimization.
+- `notebooks/05_hybrid_tip_optimization.ipynb` — bounded tip repairs, graded interior margins, qualified hybrid references and mesh search.
 
 The [optimization API](docs/mesh_optimization_api.md) documents
 `optimize_mesh`, `SearchSettings`, `FeasibleSettings`, `ReferenceSettings`,
 `qualify_reference`, and `analyze_mesh_adaptivity`. The default feasible-local
-search auto-generates a geometry-aware seed when none is supplied. Reference
+search uses hybrid boundary treatment and auto-generates a geometry-aware
+seed when none is supplied. Strict search remains an explicit policy override. Reference
 subdivision requires an initial mesh. A bounded hybrid screen and its limitations are recorded in
 [validation](docs/validation.md).
+
+The [hybrid tip experiment](docs/hybrid_tip_optimization.md) records notebook 05's
+measured optimization improvements and the star's unresolved reference convergence.
 
 Historical studies are preserved in [reports](reports/), with their source
 revision recorded there. They are historical evidence and do not validate the

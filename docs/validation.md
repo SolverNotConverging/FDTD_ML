@@ -1,5 +1,9 @@
 # Validation of the geometry-first cleanup
 
+The later [notebook 3 sharp-tip refinement study](hybrid_tip_refinement.md)
+compares fixed-exterior budget growth with full-domain subdivision and includes
+a tighter temporal stopping control.
+
 The full native-CUDA regression run passed **124 tests**, with no skipped tests.
 An additional public optimizer integration test was then added; the focused
 11-test hybrid/API module also passed, bringing the verified total to 125 tests.
@@ -37,7 +41,11 @@ other thin features. Saved measurements are in
 
 The additional triangle screen produced no fallback; it is not evidence for
 accuracy of staircase patches. Strict conformal remains the default, and reference
-qualification always uses strict mode with spatial and stopping/PML/contour checks.
+qualification defaults to strict mode with spatial and stopping/PML/contour checks.
+Explicit hybrid references now use full-domain subdivision, the same sensitivity
+checks, and shrinking physical fallback patches; see the
+[optimization API](mesh_optimization_api.md) and
+[notebook 05](../notebooks/05_hybrid_tip_optimization.ipynb).
 
 Earlier detailed qualification and optimizer campaigns are frozen in
 [historical reports](../reports/README.md). Their measured results refer to their

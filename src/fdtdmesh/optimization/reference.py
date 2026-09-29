@@ -38,8 +38,13 @@ class ReferenceSettings:
     worst_rtol: float = 0.005
     max_seconds: float = 900.0
     check_boundaries: bool = True
+    boundary_mode: str = "conformal"
 
     def __post_init__(self):
+        if self.boundary_mode not in ("conformal", "hybrid"):
+            raise ValueError("boundary_mode must be conformal or hybrid")
+        if self.boundary_mode == "hybrid" and self.method != "subdivide":
+            raise ValueError("Hybrid references require method='subdivide' to refine every cell")
         if self.method not in ("refine", "subdivide"):
             raise ValueError("Reference method must be refine or subdivide")
         factors = tuple(self.factors)
@@ -134,13 +139,12 @@ def qualify_reference(sim, *, directory, settings=None, initial_mesh=None, progr
     An incomplete reference can be inspected but cannot be used by optimize_mesh.
     """
     settings = settings or ReferenceSettings()
-    from ..boundary import BoundaryPolicy
     from ..mesh import Mesh
 
     physical_case = physical_key(sim)
     original_mesh = sim.mesh
     sim = clone(sim)
-    sim._boundary = BoundaryPolicy()
+    sim._boundary = replace(sim._boundary, mode=settings.boundary_mode)
     seed = initial_mesh if initial_mesh is not None else original_mesh
     if settings.method == "subdivide" and seed is None:
         raise ValueError("subdivide reference requires initial_mesh or an applied mesh")
@@ -209,6 +213,26 @@ def qualify_reference(sim, *, directory, settings=None, initial_mesh=None, progr
     def accepted(metric):
         return metric["error"] <= settings.rtol and metric["worst_frequency"] <= settings.worst_rtol
 
+    def localization():
+        levels = [level for level in report["levels"] if level["status"] == "converged"]
+        if not levels:
+            return dict(passed=False)
+        end = levels[-1]["boundary"]
+        area = end.get("fallback_area_m2", 0.0)
+        diameter = end.get("fallback_max_diameter_m", 0.0)
+        earlier = [level["boundary"] for level in levels[:-1]]
+        passed = area == 0 or any(
+            area < b.get("fallback_area_m2", 0.0) * (1 - 1e-8)
+            and diameter < b.get("fallback_max_diameter_m", 0.0) * (1 - 1e-8)
+            for b in earlier
+        )
+        return dict(
+            passed=passed,
+            fallback_area_m2=area,
+            fallback_max_diameter_m=diameter,
+            note="Physical patches must shrink under subdivision; this is not an error bound",
+        )
+
     for resolution in settings.ppw if settings.method == "refine" else settings.factors:
         ppw = resolution
         if perf_counter() - started > settings.max_seconds:
@@ -243,6 +267,7 @@ def qualify_reference(sim, *, directory, settings=None, initial_mesh=None, progr
                 difference=metric,
                 cached=cached,
                 dt=finest.diagnostics["dt"],
+                boundary=finest.diagnostics.get("boundary", {}),
             )
         )
         report["result_file"] = str(path.relative_to(directory))
@@ -250,7 +275,7 @@ def qualify_reference(sim, *, directory, settings=None, initial_mesh=None, progr
         save()
         if progress:
             progress(report["levels"][-1])
-        if passing >= 2:
+        if passing >= 2 and (settings.boundary_mode == "conformal" or localization()["passed"]):
             break
     if passing < 2:
         if report["status"] == "running":
@@ -258,12 +283,18 @@ def qualify_reference(sim, *, directory, settings=None, initial_mesh=None, progr
         save()
         return Reference(finest, report, directory)
     checks = {}
+    if settings.boundary_mode == "hybrid":
+        report["checks"]["fallback_localization"] = localization()
     try:
         stop = fine_sim.settings.stop
         tighter = clone(
             fine_sim,
             stop=replace(
-                stop, rtol=stop.rtol * 0.1, atol=stop.atol * 0.1, field_tol=stop.field_tol * 0.1
+                stop,
+                rtol=stop.rtol * 0.1,
+                atol=stop.atol * 0.1,
+                field_tol=stop.field_tol * 0.1,
+                stable_checks=stop.stable_checks + 3,
             ),
         )
         tighter._apply_mesh(fine_sim.mesh)
@@ -318,7 +349,7 @@ def qualify_reference(sim, *, directory, settings=None, initial_mesh=None, progr
         return Reference(finest, report, directory)
     report["observed_reference_difference"] = max(
         [level["difference"]["error"] for level in report["levels"][-2:]]
-        + [check["error"] for check in report["checks"].values()]
+        + [check["error"] for check in report["checks"].values() if "error" in check]
     )
     report["qualified"] = settings.check_boundaries and all(
         c["passed"] for c in report["checks"].values()

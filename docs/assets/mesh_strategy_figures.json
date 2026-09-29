@@ -1,0 +1,35 @@
+{
+  "kind": "CPU mesh preparation only; no accuracy comparison",
+  "meshes": [
+    {
+      "strategy": "quasi_uniform",
+      "cells": [
+        100,
+        100
+      ],
+      "boundary": "hybrid",
+      "fallback_cells": 14,
+      "geometry_passes": 0
+    },
+    {
+      "strategy": "density",
+      "cells": [
+        100,
+        100
+      ],
+      "boundary": "hybrid",
+      "fallback_cells": 26,
+      "geometry_passes": 0
+    },
+    {
+      "strategy": "geometry_aware",
+      "cells": [
+        100,
+        100
+      ],
+      "boundary": "conformal",
+      "fallback_cells": 0,
+      "geometry_passes": 3
+    }
+  ]
+}

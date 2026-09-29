@@ -124,18 +124,26 @@ def generate_mesh(
                 raise MeshInfeasibleError(
                     "Geometry does not fit the resolved TFSF box; resolve the automatic domain again"
                 )
-            indices.update(
+            margin_indices = dict(
                 {
                     left + j: float(v)
                     for j, v in enumerate(np.linspace(box[0], occupied[0], margin + 1))
                 }
             )
-            indices.update(
+            margin_indices.update(
                 {
                     right - margin + j: float(v)
                     for j, v in enumerate(np.linspace(occupied[1], box[1], margin + 1))
                 }
             )
+            if layout.margin_mesh == "graded":
+                margin_indices = {
+                    left: box[0],
+                    left + margin: occupied[0],
+                    right - margin: occupied[1],
+                    right: box[1],
+                }
+            indices.update(margin_indices)
     # Preserve exact source/layout anchors that differ from linspace by roundoff.
     for indices, values, length in zip(fixed, (ax, ay), geometry.size):
         for v in values:
@@ -150,6 +158,7 @@ def generate_mesh(
         anchor_assignment=anchor_assignment,
         exterior_cells=layout.exterior_cells,
         scatterer_margin_cells=layout.scatterer_margin_cells,
+        margin_mesh=layout.margin_mesh,
     )
     if strategy == "uniform":
         # Fast exact-uniform path. Never alter a user-supplied coordinate mesh.

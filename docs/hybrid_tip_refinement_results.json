@@ -1,0 +1,1128 @@
+{
+  "date": "2026-09-29",
+  "source_revision": "56452d9",
+  "device": "NVIDIA GeForce RTX 4070 Laptop GPU",
+  "fixed_exterior": {
+    "kind": "Spatial refinement screen; finest mesh is not qualified ground truth",
+    "frequencies": [
+      950000000.0,
+      1000000000.0,
+      1050000000.0
+    ],
+    "tight": false,
+    "exterior_ppw": 24,
+    "refinement": "fixed-exterior budget increase",
+    "rows": [
+      {
+        "budget": 120,
+        "converged": true,
+        "steps": 10240,
+        "dt": 1.1456864195013081e-11,
+        "result_path": "artifacts/hybrid_tip_refinement/runs/0527893662d9a5f8c9cf4061d2774b6c70972c52ec4bc2a4cc0ee7c385e7bfca/result.h5",
+        "fallback_cells": 4,
+        "fallback_area_m2": 0.000281102565872803,
+        "expanded_cells": 0,
+        "reasons": {
+          "multiple_crossings": 2
+        },
+        "interior_cells": [
+          58,
+          58
+        ],
+        "geometry": {
+          "schema": 1,
+          "units": "m",
+          "size": null,
+          "next_id": 2,
+          "shapes": [
+            {
+              "id": 0,
+              "kind": "polygon",
+              "material": "PEC",
+              "parameters": [
+                [
+                  0.6745330304999999,
+                  0.6595434076
+                ],
+                [
+                  0.899377374,
+                  0.899377374
+                ],
+                [
+                  0.6745330304999999,
+                  1.1392113404
+                ],
+                [
+                  0.7344915221,
+                  0.899377374
+                ]
+              ],
+              "name": "sharp-tip"
+            },
+            {
+              "id": 1,
+              "kind": "rectangle",
+              "material": "PEC",
+              "parameters": [
+                0.92336077064,
+                1.02529020636,
+                0.81543548576,
+                0.9833192622399999
+              ],
+              "name": "narrow-gap-block"
+            }
+          ]
+        },
+        "domain_allocation": {
+          "wavelength": 0.299792458,
+          "spacing": 0.011896526111111111,
+          "requested": [
+            0.149896229,
+            0.0749481145,
+            0.04996540966666666,
+            0.06245676208333333
+          ],
+          "achieved": [
+            0.15465483944444444,
+            0.08327568277777778,
+            0.059482630555555555,
+            0.07137915666666667
+          ],
+          "cells": [
+            13,
+            7,
+            5,
+            6
+          ],
+          "order": [
+            "pml",
+            "contour_to_pml",
+            "tfsf_to_contour",
+            "scatterer_to_tfsf"
+          ]
+        },
+        "difference_from_finest": {
+          "error": 0.002319616593744331,
+          "worst_frequency": 0.002478845237877903,
+          "per_frequency": [
+            0.0022047314953150387,
+            0.00226635141717654,
+            0.002478845237877903
+          ],
+          "width_error": 0.0013944252155040446
+        },
+        "difference_from_full_refinement_960": {
+          "error": 0.010840517237005784,
+          "worst_frequency": 0.011127257193434223,
+          "per_frequency": [
+            0.01058105330514642,
+            0.010806289844450543,
+            0.011127257193434223
+          ],
+          "width_error": 0.006774478569646551
+        }
+      },
+      {
+        "budget": 180,
+        "converged": true,
+        "steps": 32768,
+        "dt": 2.228798217101819e-12,
+        "result_path": "artifacts/hybrid_tip_refinement/runs/3605c4fde8863a8798b02450aeda5f3cba1c9966b4aad07a9d4cec4dd5492aaa/result.h5",
+        "fallback_cells": 4,
+        "fallback_area_m2": 0.00024756967961344023,
+        "expanded_cells": 0,
+        "reasons": {
+          "multiple_crossings": 2
+        },
+        "interior_cells": [
+          118,
+          118
+        ],
+        "geometry": {
+          "schema": 1,
+          "units": "m",
+          "size": null,
+          "next_id": 2,
+          "shapes": [
+            {
+              "id": 0,
+              "kind": "polygon",
+              "material": "PEC",
+              "parameters": [
+                [
+                  0.6745330304999999,
+                  0.6595434076
+                ],
+                [
+                  0.899377374,
+                  0.899377374
+                ],
+                [
+                  0.6745330304999999,
+                  1.1392113404
+                ],
+                [
+                  0.7344915221,
+                  0.899377374
+                ]
+              ],
+              "name": "sharp-tip"
+            },
+            {
+              "id": 1,
+              "kind": "rectangle",
+              "material": "PEC",
+              "parameters": [
+                0.92336077064,
+                1.02529020636,
+                0.81543548576,
+                0.9833192622399999
+              ],
+              "name": "narrow-gap-block"
+            }
+          ]
+        },
+        "domain_allocation": {
+          "wavelength": 0.299792458,
+          "spacing": 0.011896526111111111,
+          "requested": [
+            0.149896229,
+            0.0749481145,
+            0.04996540966666666,
+            0.06245676208333333
+          ],
+          "achieved": [
+            0.15465483944444444,
+            0.08327568277777778,
+            0.059482630555555555,
+            0.07137915666666667
+          ],
+          "cells": [
+            13,
+            7,
+            5,
+            6
+          ],
+          "order": [
+            "pml",
+            "contour_to_pml",
+            "tfsf_to_contour",
+            "scatterer_to_tfsf"
+          ]
+        },
+        "difference_from_previous": {
+          "error": 0.00240187542507989,
+          "worst_frequency": 0.0025408870251377278,
+          "per_frequency": [
+            0.0022988842887964266,
+            0.0023592458169974153,
+            0.0025408870251377278
+          ],
+          "width_error": 0.0015312893199859493
+        },
+        "difference_from_finest": {
+          "error": 0.0002463735817778848,
+          "worst_frequency": 0.0003123693049746617,
+          "per_frequency": [
+            0.0001731968783585547,
+            0.00023351249223690598,
+            0.0003123693049746617
+          ],
+          "width_error": 0.00019146326071994965
+        },
+        "difference_from_full_refinement_960": {
+          "error": 0.01216487359827047,
+          "worst_frequency": 0.012513917201695675,
+          "per_frequency": [
+            0.011847153640883323,
+            0.012124325790084324,
+            0.012513917201695675
+          ],
+          "width_error": 0.007343141219017469
+        }
+      },
+      {
+        "budget": 260,
+        "converged": true,
+        "steps": 131072,
+        "dt": 5.091246887859183e-13,
+        "result_path": "artifacts/hybrid_tip_refinement/runs/b68a2b9af9cbed27ae32f48cd75aa61beba184ef04ca136b956324d8d4e6835e/result.h5",
+        "fallback_cells": 4,
+        "fallback_area_m2": 0.00024756967961344023,
+        "expanded_cells": 0,
+        "reasons": {
+          "multiple_crossings": 2
+        },
+        "interior_cells": [
+          198,
+          198
+        ],
+        "geometry": {
+          "schema": 1,
+          "units": "m",
+          "size": null,
+          "next_id": 2,
+          "shapes": [
+            {
+              "id": 0,
+              "kind": "polygon",
+              "material": "PEC",
+              "parameters": [
+                [
+                  0.6745330304999999,
+                  0.6595434076
+                ],
+                [
+                  0.899377374,
+                  0.899377374
+                ],
+                [
+                  0.6745330304999999,
+                  1.1392113404
+                ],
+                [
+                  0.7344915221,
+                  0.899377374
+                ]
+              ],
+              "name": "sharp-tip"
+            },
+            {
+              "id": 1,
+              "kind": "rectangle",
+              "material": "PEC",
+              "parameters": [
+                0.92336077064,
+                1.02529020636,
+                0.81543548576,
+                0.9833192622399999
+              ],
+              "name": "narrow-gap-block"
+            }
+          ]
+        },
+        "domain_allocation": {
+          "wavelength": 0.299792458,
+          "spacing": 0.011896526111111111,
+          "requested": [
+            0.149896229,
+            0.0749481145,
+            0.04996540966666666,
+            0.06245676208333333
+          ],
+          "achieved": [
+            0.15465483944444444,
+            0.08327568277777778,
+            0.059482630555555555,
+            0.07137915666666667
+          ],
+          "cells": [
+            13,
+            7,
+            5,
+            6
+          ],
+          "order": [
+            "pml",
+            "contour_to_pml",
+            "tfsf_to_contour",
+            "scatterer_to_tfsf"
+          ]
+        },
+        "difference_from_previous": {
+          "error": 0.0002463745894224086,
+          "worst_frequency": 0.00031237179096738684,
+          "per_frequency": [
+            0.0001731952652396105,
+            0.00023351355259511038,
+            0.00031237179096738684
+          ],
+          "width_error": 0.0001914796412550028
+        },
+        "difference_from_finest": {
+          "error": 0.0,
+          "worst_frequency": 0.0,
+          "per_frequency": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "width_error": 0.0
+        },
+        "difference_from_full_refinement_960": {
+          "error": 0.012061694452654533,
+          "worst_frequency": 0.012394185342847369,
+          "per_frequency": [
+            0.011759223211929683,
+            0.012023238263743801,
+            0.012394185342847369
+          ],
+          "width_error": 0.007242280188913958
+        }
+      }
+    ]
+  },
+  "full_refinement": {
+    "kind": "Spatial refinement screen; finest mesh is not qualified ground truth",
+    "frequencies": [
+      950000000.0,
+      1000000000.0,
+      1050000000.0
+    ],
+    "tight": false,
+    "exterior_ppw": 24,
+    "refinement": "full-domain subdivision",
+    "rows": [
+      {
+        "budget": 120,
+        "converged": true,
+        "steps": 10240,
+        "dt": 1.1456864195013081e-11,
+        "result_path": "artifacts/hybrid_tip_subdivision/runs/f9a2ee60cc8890146d14910b9a015f40c5d828727cd04ed086cc76b28174be2f/result.h5",
+        "fallback_cells": 4,
+        "fallback_area_m2": 0.000281102565872803,
+        "expanded_cells": 0,
+        "reasons": {
+          "multiple_crossings": 2
+        },
+        "interior_cells": null,
+        "geometry": {
+          "schema": 1,
+          "units": "m",
+          "size": null,
+          "next_id": 2,
+          "shapes": [
+            {
+              "id": 0,
+              "kind": "polygon",
+              "material": "PEC",
+              "parameters": [
+                [
+                  0.6745330304999999,
+                  0.6595434076
+                ],
+                [
+                  0.899377374,
+                  0.899377374
+                ],
+                [
+                  0.6745330304999999,
+                  1.1392113404
+                ],
+                [
+                  0.7344915221,
+                  0.899377374
+                ]
+              ],
+              "name": "sharp-tip"
+            },
+            {
+              "id": 1,
+              "kind": "rectangle",
+              "material": "PEC",
+              "parameters": [
+                0.92336077064,
+                1.02529020636,
+                0.81543548576,
+                0.9833192622399999
+              ],
+              "name": "narrow-gap-block"
+            }
+          ]
+        },
+        "domain_allocation": {
+          "wavelength": 0.299792458,
+          "spacing": 0.011896526111111111,
+          "requested": [
+            0.149896229,
+            0.0749481145,
+            0.04996540966666666,
+            0.06245676208333333
+          ],
+          "achieved": [
+            0.15465483944444444,
+            0.08327568277777778,
+            0.059482630555555555,
+            0.07137915666666667
+          ],
+          "cells": [
+            13,
+            7,
+            5,
+            6
+          ],
+          "order": [
+            "pml",
+            "contour_to_pml",
+            "tfsf_to_contour",
+            "scatterer_to_tfsf"
+          ]
+        },
+        "difference_from_finest": {
+          "error": 0.010840517237005784,
+          "worst_frequency": 0.011127257193434223,
+          "per_frequency": [
+            0.01058105330514642,
+            0.010806289844450543,
+            0.011127257193434223
+          ],
+          "width_error": 0.006774478569646551
+        }
+      },
+      {
+        "budget": 240,
+        "converged": true,
+        "steps": 16384,
+        "dt": 5.728432097506465e-12,
+        "result_path": "artifacts/hybrid_tip_subdivision/runs/bfd4c22efad24d0d95552abfbfa306f505c7b918c06dd93d1d3251f860696eba/result.h5",
+        "fallback_cells": 4,
+        "fallback_area_m2": 7.220782322058523e-05,
+        "expanded_cells": 0,
+        "reasons": {
+          "multiple_crossings": 2
+        },
+        "interior_cells": null,
+        "geometry": {
+          "schema": 1,
+          "units": "m",
+          "size": null,
+          "next_id": 2,
+          "shapes": [
+            {
+              "id": 0,
+              "kind": "polygon",
+              "material": "PEC",
+              "parameters": [
+                [
+                  0.6745330304999999,
+                  0.6595434076
+                ],
+                [
+                  0.899377374,
+                  0.899377374
+                ],
+                [
+                  0.6745330304999999,
+                  1.1392113404
+                ],
+                [
+                  0.7344915221,
+                  0.899377374
+                ]
+              ],
+              "name": "sharp-tip"
+            },
+            {
+              "id": 1,
+              "kind": "rectangle",
+              "material": "PEC",
+              "parameters": [
+                0.92336077064,
+                1.02529020636,
+                0.81543548576,
+                0.9833192622399999
+              ],
+              "name": "narrow-gap-block"
+            }
+          ]
+        },
+        "domain_allocation": {
+          "wavelength": 0.299792458,
+          "spacing": 0.011896526111111111,
+          "requested": [
+            0.149896229,
+            0.0749481145,
+            0.04996540966666666,
+            0.06245676208333333
+          ],
+          "achieved": [
+            0.15465483944444444,
+            0.08327568277777778,
+            0.059482630555555555,
+            0.07137915666666667
+          ],
+          "cells": [
+            13,
+            7,
+            5,
+            6
+          ],
+          "order": [
+            "pml",
+            "contour_to_pml",
+            "tfsf_to_contour",
+            "scatterer_to_tfsf"
+          ]
+        },
+        "difference_from_previous": {
+          "error": 0.007108468061955647,
+          "worst_frequency": 0.00718489648910225,
+          "per_frequency": [
+            0.007038265935223187,
+            0.007101480805402032,
+            0.00718489648910225
+          ],
+          "width_error": 0.00485412140959288
+        },
+        "difference_from_finest": {
+          "error": 0.003978682532249963,
+          "worst_frequency": 0.004152073118556629,
+          "per_frequency": [
+            0.003814275490488408,
+            0.0039624910571648955,
+            0.004152073118556629
+          ],
+          "width_error": 0.002234861783355285
+        }
+      },
+      {
+        "budget": 360,
+        "converged": true,
+        "steps": 22528,
+        "dt": 3.818954731670989e-12,
+        "result_path": "artifacts/hybrid_tip_subdivision/runs/9e17cbe92fb802495aed33c3f8365e4bce9270687205a04a4d265aca3cbd4c93/result.h5",
+        "fallback_cells": 4,
+        "fallback_area_m2": 3.20923658758156e-05,
+        "expanded_cells": 0,
+        "reasons": {
+          "multiple_crossings": 2
+        },
+        "interior_cells": null,
+        "geometry": {
+          "schema": 1,
+          "units": "m",
+          "size": null,
+          "next_id": 2,
+          "shapes": [
+            {
+              "id": 0,
+              "kind": "polygon",
+              "material": "PEC",
+              "parameters": [
+                [
+                  0.6745330304999999,
+                  0.6595434076
+                ],
+                [
+                  0.899377374,
+                  0.899377374
+                ],
+                [
+                  0.6745330304999999,
+                  1.1392113404
+                ],
+                [
+                  0.7344915221,
+                  0.899377374
+                ]
+              ],
+              "name": "sharp-tip"
+            },
+            {
+              "id": 1,
+              "kind": "rectangle",
+              "material": "PEC",
+              "parameters": [
+                0.92336077064,
+                1.02529020636,
+                0.81543548576,
+                0.9833192622399999
+              ],
+              "name": "narrow-gap-block"
+            }
+          ]
+        },
+        "domain_allocation": {
+          "wavelength": 0.299792458,
+          "spacing": 0.011896526111111111,
+          "requested": [
+            0.149896229,
+            0.0749481145,
+            0.04996540966666666,
+            0.06245676208333333
+          ],
+          "achieved": [
+            0.15465483944444444,
+            0.08327568277777778,
+            0.059482630555555555,
+            0.07137915666666667
+          ],
+          "cells": [
+            13,
+            7,
+            5,
+            6
+          ],
+          "order": [
+            "pml",
+            "contour_to_pml",
+            "tfsf_to_contour",
+            "scatterer_to_tfsf"
+          ]
+        },
+        "difference_from_previous": {
+          "error": 0.0018572951402479301,
+          "worst_frequency": 0.001929446678077326,
+          "per_frequency": [
+            0.0017903246382352496,
+            0.0018494888267167034,
+            0.001929446678077326
+          ],
+          "width_error": 0.0010847032357090892
+        },
+        "difference_from_finest": {
+          "error": 0.0021474481270863373,
+          "worst_frequency": 0.0022440876770362535,
+          "per_frequency": [
+            0.002053873067152261,
+            0.0021401580075733765,
+            0.0022440876770362535
+          ],
+          "width_error": 0.0011946124570169953
+        }
+      },
+      {
+        "budget": 480,
+        "converged": true,
+        "steps": 26624,
+        "dt": 2.8642160487532157e-12,
+        "result_path": "artifacts/hybrid_tip_subdivision/runs/0788a84a6a4ef68d3db4d309b51f37d8111141c46e457cff8118744d46d39653/result.h5",
+        "fallback_cells": 4,
+        "fallback_area_m2": 1.8051955805146368e-05,
+        "expanded_cells": 0,
+        "reasons": {
+          "multiple_crossings": 2
+        },
+        "interior_cells": null,
+        "geometry": {
+          "schema": 1,
+          "units": "m",
+          "size": null,
+          "next_id": 2,
+          "shapes": [
+            {
+              "id": 0,
+              "kind": "polygon",
+              "material": "PEC",
+              "parameters": [
+                [
+                  0.6745330304999999,
+                  0.6595434076
+                ],
+                [
+                  0.899377374,
+                  0.899377374
+                ],
+                [
+                  0.6745330304999999,
+                  1.1392113404
+                ],
+                [
+                  0.7344915221,
+                  0.899377374
+                ]
+              ],
+              "name": "sharp-tip"
+            },
+            {
+              "id": 1,
+              "kind": "rectangle",
+              "material": "PEC",
+              "parameters": [
+                0.92336077064,
+                1.02529020636,
+                0.81543548576,
+                0.9833192622399999
+              ],
+              "name": "narrow-gap-block"
+            }
+          ]
+        },
+        "domain_allocation": {
+          "wavelength": 0.299792458,
+          "spacing": 0.011896526111111111,
+          "requested": [
+            0.149896229,
+            0.0749481145,
+            0.04996540966666666,
+            0.06245676208333333
+          ],
+          "achieved": [
+            0.15465483944444444,
+            0.08327568277777778,
+            0.059482630555555555,
+            0.07137915666666667
+          ],
+          "cells": [
+            13,
+            7,
+            5,
+            6
+          ],
+          "order": [
+            "pml",
+            "contour_to_pml",
+            "tfsf_to_contour",
+            "scatterer_to_tfsf"
+          ]
+        },
+        "difference_from_previous": {
+          "error": 0.000874577697177369,
+          "worst_frequency": 0.0009128866080269896,
+          "per_frequency": [
+            0.0008381657457485541,
+            0.0008710767295358983,
+            0.0009128866080269896
+          ],
+          "width_error": 0.000487925603235541
+        },
+        "difference_from_finest": {
+          "error": 0.001277884590927602,
+          "worst_frequency": 0.0013353011398528692,
+          "per_frequency": [
+            0.0012215428891214066,
+            0.0012742727020285604,
+            0.0013353011398528692
+          ],
+          "width_error": 0.0007142729637568746
+        }
+      },
+      {
+        "budget": 720,
+        "converged": true,
+        "steps": 38912,
+        "dt": 1.9094773658354767e-12,
+        "result_path": "artifacts/hybrid_tip_subdivision/runs/dd0a41ed55e265b58cbef49af2d482d37b9d9725a286f09d05593ce5577a5ebf/result.h5",
+        "fallback_cells": 4,
+        "fallback_area_m2": 8.023091468953941e-06,
+        "expanded_cells": 0,
+        "reasons": {
+          "multiple_crossings": 2
+        },
+        "interior_cells": null,
+        "geometry": {
+          "schema": 1,
+          "units": "m",
+          "size": null,
+          "next_id": 2,
+          "shapes": [
+            {
+              "id": 0,
+              "kind": "polygon",
+              "material": "PEC",
+              "parameters": [
+                [
+                  0.6745330304999999,
+                  0.6595434076
+                ],
+                [
+                  0.899377374,
+                  0.899377374
+                ],
+                [
+                  0.6745330304999999,
+                  1.1392113404
+                ],
+                [
+                  0.7344915221,
+                  0.899377374
+                ]
+              ],
+              "name": "sharp-tip"
+            },
+            {
+              "id": 1,
+              "kind": "rectangle",
+              "material": "PEC",
+              "parameters": [
+                0.92336077064,
+                1.02529020636,
+                0.81543548576,
+                0.9833192622399999
+              ],
+              "name": "narrow-gap-block"
+            }
+          ]
+        },
+        "domain_allocation": {
+          "wavelength": 0.299792458,
+          "spacing": 0.011896526111111111,
+          "requested": [
+            0.149896229,
+            0.0749481145,
+            0.04996540966666666,
+            0.06245676208333333
+          ],
+          "achieved": [
+            0.15465483944444444,
+            0.08327568277777778,
+            0.059482630555555555,
+            0.07137915666666667
+          ],
+          "cells": [
+            13,
+            7,
+            5,
+            6
+          ],
+          "order": [
+            "pml",
+            "contour_to_pml",
+            "tfsf_to_contour",
+            "scatterer_to_tfsf"
+          ]
+        },
+        "difference_from_previous": {
+          "error": 0.0008582880278045966,
+          "worst_frequency": 0.0008964687152893191,
+          "per_frequency": [
+            0.0008210989869842471,
+            0.000855637371845733,
+            0.0008964687152893191
+          ],
+          "width_error": 0.0004782258748710875
+        },
+        "difference_from_finest": {
+          "error": 0.0004208962006555382,
+          "worst_frequency": 0.00043988436301334283,
+          "per_frequency": [
+            0.000401979247732442,
+            0.00041997055461973396,
+            0.00043988436301334283
+          ],
+          "width_error": 0.00023695921757218089
+        }
+      },
+      {
+        "budget": 960,
+        "converged": true,
+        "steps": 49152,
+        "dt": 1.4321080243765897e-12,
+        "result_path": "artifacts/hybrid_tip_subdivision/runs/88e169753499eec73169492650cacec9d23a65857d357ea268521f6c64462275/result.h5",
+        "fallback_cells": 4,
+        "fallback_area_m2": 4.512988951286592e-06,
+        "expanded_cells": 0,
+        "reasons": {
+          "multiple_crossings": 2
+        },
+        "interior_cells": null,
+        "geometry": {
+          "schema": 1,
+          "units": "m",
+          "size": null,
+          "next_id": 2,
+          "shapes": [
+            {
+              "id": 0,
+              "kind": "polygon",
+              "material": "PEC",
+              "parameters": [
+                [
+                  0.6745330304999999,
+                  0.6595434076
+                ],
+                [
+                  0.899377374,
+                  0.899377374
+                ],
+                [
+                  0.6745330304999999,
+                  1.1392113404
+                ],
+                [
+                  0.7344915221,
+                  0.899377374
+                ]
+              ],
+              "name": "sharp-tip"
+            },
+            {
+              "id": 1,
+              "kind": "rectangle",
+              "material": "PEC",
+              "parameters": [
+                0.92336077064,
+                1.02529020636,
+                0.81543548576,
+                0.9833192622399999
+              ],
+              "name": "narrow-gap-block"
+            }
+          ]
+        },
+        "domain_allocation": {
+          "wavelength": 0.299792458,
+          "spacing": 0.011896526111111111,
+          "requested": [
+            0.149896229,
+            0.0749481145,
+            0.04996540966666666,
+            0.06245676208333333
+          ],
+          "achieved": [
+            0.15465483944444444,
+            0.08327568277777778,
+            0.059482630555555555,
+            0.07137915666666667
+          ],
+          "cells": [
+            13,
+            7,
+            5,
+            6
+          ],
+          "order": [
+            "pml",
+            "contour_to_pml",
+            "tfsf_to_contour",
+            "scatterer_to_tfsf"
+          ]
+        },
+        "difference_from_previous": {
+          "error": 0.0004208859688334589,
+          "worst_frequency": 0.00043987142013080947,
+          "per_frequency": [
+            0.0004019700163164151,
+            0.00041996218403247195,
+            0.00043987142013080947
+          ],
+          "width_error": 0.00023694721546884493
+        },
+        "difference_from_finest": {
+          "error": 0.0,
+          "worst_frequency": 0.0,
+          "per_frequency": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "width_error": 0.0
+        }
+      }
+    ]
+  },
+  "tighter_stopping": {
+    "kind": "Spatial refinement screen; finest mesh is not qualified ground truth",
+    "frequencies": [
+      950000000.0,
+      1000000000.0,
+      1050000000.0
+    ],
+    "tight": true,
+    "exterior_ppw": 24,
+    "refinement": "full-domain subdivision",
+    "rows": [
+      {
+        "budget": 960,
+        "converged": true,
+        "steps": 55296,
+        "dt": 1.4321080243765897e-12,
+        "result_path": "artifacts/hybrid_tip_tight/runs/297c3a8307e8f72f4c66d7258d829fae1ef63ac78efaef9268720f9fd4c9c857/result.h5",
+        "fallback_cells": 4,
+        "fallback_area_m2": 4.512988951286592e-06,
+        "expanded_cells": 0,
+        "reasons": {
+          "multiple_crossings": 2
+        },
+        "interior_cells": null,
+        "geometry": {
+          "schema": 1,
+          "units": "m",
+          "size": null,
+          "next_id": 2,
+          "shapes": [
+            {
+              "id": 0,
+              "kind": "polygon",
+              "material": "PEC",
+              "parameters": [
+                [
+                  0.6745330304999999,
+                  0.6595434076
+                ],
+                [
+                  0.899377374,
+                  0.899377374
+                ],
+                [
+                  0.6745330304999999,
+                  1.1392113404
+                ],
+                [
+                  0.7344915221,
+                  0.899377374
+                ]
+              ],
+              "name": "sharp-tip"
+            },
+            {
+              "id": 1,
+              "kind": "rectangle",
+              "material": "PEC",
+              "parameters": [
+                0.92336077064,
+                1.02529020636,
+                0.81543548576,
+                0.9833192622399999
+              ],
+              "name": "narrow-gap-block"
+            }
+          ]
+        },
+        "domain_allocation": {
+          "wavelength": 0.299792458,
+          "spacing": 0.011896526111111111,
+          "requested": [
+            0.149896229,
+            0.0749481145,
+            0.04996540966666666,
+            0.06245676208333333
+          ],
+          "achieved": [
+            0.15465483944444444,
+            0.08327568277777778,
+            0.059482630555555555,
+            0.07137915666666667
+          ],
+          "cells": [
+            13,
+            7,
+            5,
+            6
+          ],
+          "order": [
+            "pml",
+            "contour_to_pml",
+            "tfsf_to_contour",
+            "scatterer_to_tfsf"
+          ]
+        },
+        "difference_from_finest": {
+          "error": 0.0,
+          "worst_frequency": 0.0,
+          "per_frequency": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "width_error": 0.0
+        }
+      }
+    ]
+  },
+  "temporal_difference": {
+    "error": 1.8028395585038194e-14,
+    "worst_frequency": 2.602550498830525e-14,
+    "per_frequency": [
+      2.602550498830525e-14,
+      5.010064035293364e-15,
+      1.6511859089086012e-14
+    ],
+    "width_error": 2.1131538000010686e-14
+  },
+  "gpu": {
+    "backend": "native-cuda",
+    "debug_d2h_bytes": 0,
+    "stepping_field_transfers": 0
+  }
+}

@@ -19,6 +19,8 @@ study = optimize_mesh(
 )
 ```
 
+Optimization defaults to hybrid boundary treatment on a private clone. Use an
+explicit `boundary=BoundaryPolicy(mode="conformal")` for strict search.
 The default `feasible_local` strategy automatically constructs a geometry-aware
 seed when `initial_mesh` is absent. Candidate proposals preserve the seed's
 budget and fixed layout constraints, then undergo exact geometry and enlarged-
@@ -33,14 +35,15 @@ PML and contour sensitivity; temporal stopping checks always run. A reference th
 not a valid optimization target.
 
 All public settings and defaults are listed in the [optimization API reference](mesh_optimization_api.md).
-The [geometry-aware meshing guide](geometry_aware_meshing.md) documents exact
-budgets, target spacing, caps, and construction failures. The four current
-notebooks are:
+The [mesh strategy guide](mesh_strategy.md) documents exact
+budgets, target spacing, caps, and construction failures. The current
+notebooks include:
 
 - `01_geometry_and_mesh.ipynb` — exact geometry and CPU mesh preparation.
 - `02_gpu_scattering_and_far_field.ipynb` — one native CUDA solve and NF2FF.
 - `03_hybrid_boundary.ipynb` — boundary-policy workflow and targeted checks.
 - `04_geometry_aware_meshing.ipynb` — qualified references and fixed-budget optimization.
+- `05_hybrid_tip_optimization.ipynb` — graded margins, persistent tip patches and hybrid search against qualified subdivided references.
 
 Hybrid boundary behavior has a bounded accuracy screen in [validation](validation.md). Historical studies in
 the [reports directory](../reports/) are preserved as evidence from their

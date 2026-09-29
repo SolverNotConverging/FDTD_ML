@@ -50,6 +50,7 @@ def geometry_aware_mesh(
     time_limit=30.0,
     cells=None,
     boundary=None,
+    hybrid_repair_passes=3,
 ):
     """Construct within resource caps; target_spacing is a target, not a cell budget.
 
@@ -61,6 +62,14 @@ def geometry_aware_mesh(
     if not np.isfinite(time_limit) or time_limit <= 0:
         raise ValueError("time_limit must be positive and finite")
     max_passes = cell_count(max_passes)
+    if (
+        isinstance(hybrid_repair_passes, bool)
+        or not np.isfinite(hybrid_repair_passes)
+        or int(hybrid_repair_passes) != hybrid_repair_passes
+        or hybrid_repair_passes < 0
+    ):
+        raise ValueError("hybrid_repair_passes must be a nonnegative integer")
+    hybrid = boundary is not None and boundary.mode == "hybrid"
     if len(max_cells) != 2:
         raise ValueError("max_cells must contain two axis cell caps")
     caps = np.array([cell_count(n) for n in max_cells])
@@ -77,7 +86,9 @@ def geometry_aware_mesh(
         ]
     )
     exterior_h = max(p.thickness / p.cells for p in (pml.x, pml.y) if p.cells)
-    constraints = constraints or AxisConstraints(max_spacing=max(exterior_h, target_spacing))
+    constraints = constraints or AxisConstraints(
+        max_spacing=max(exterior_h * (1.4 if layout.margin_mesh == "graded" else 1), target_spacing)
+    )
     if constraints.max_spacing is not None and constraints.max_spacing < exterior_h * (1 - 1e-10):
         raise MeshInfeasibleError("max_spacing is smaller than the fixed exterior spacing")
     target = min(target_spacing, constraints.max_spacing or target_spacing)
@@ -105,23 +116,47 @@ def geometry_aware_mesh(
         max_passes=max_passes,
         passes=[],
         issues=[],
+        hybrid_repair_passes=hybrid_repair_passes,
     )
     started = perf_counter()
     previous_anchors = None
     assignment = "local"
+    best = None
+    best_score = None
+    hybrid_attempts = stagnant = 0
+
+    def finish(selected, reason):
+        candidate, selected_anchors, selected_issues, details = selected
+        report.update(
+            elapsed_seconds=perf_counter() - started,
+            status="valid",
+            exterior_fixed=True,
+            margin_mesh=layout.margin_mesh,
+            boundary_mode="conformal" if boundary is None else boundary.mode,
+            witness_anchors=[a.tolist() for a in selected_anchors],
+            issues=selected_issues,
+            boundary=details,
+            termination_reason=reason,
+            geometry_sha256=hashlib.sha256(json_text(geometry.as_dict()).encode()).hexdigest(),
+        )
+        candidate.metadata.update(strategy="geometry_aware", geometry_aware=report)
+        return candidate
 
     def fail(message):
+        if best is not None:
+            report["repair_limit_message"] = message
+            return finish(best, "retained_best_hybrid")
         report["elapsed_seconds"] = perf_counter() - started
         raise GeometryMeshingError(message, report)
 
     for step in range(max_passes):
         if np.any(counts > caps):
-            fail(
+            return fail(
                 f"Geometry-aware construction reached max_cells={tuple(map(int, caps))}; proposed {tuple(map(int, counts))}"
             )
         remaining = time_limit - (perf_counter() - started)
         if remaining <= 0:
-            fail("Geometry-aware construction reached its time limit")
+            return fail("Geometry-aware construction reached its time limit")
         anchors = [_unique(a, length) for a, length in zip(anchors, geometry.size)]
         record = dict(
             cells=counts.tolist(), anchors=[len(a) for a in anchors], assignment=assignment
@@ -150,7 +185,7 @@ def geometry_aware_mesh(
                 # conflict with fixed exterior lines, retry a finer grid instead.
                 anchors, previous_anchors = previous_anchors, None
             if cells is not None:
-                fail(
+                return fail(
                     "Fixed-budget geometry construction could not find a valid allocation; budget was not increased"
                 )
             counts = reserve + np.maximum(
@@ -158,7 +193,8 @@ def geometry_aware_mesh(
             )
             continue
         except MeshOptimizationError as exc:
-            fail(f"Geometry-aware projection did not complete: {exc}")
+            record.update(status="projection_incomplete", message=str(exc))
+            return fail(f"Geometry-aware projection did not complete: {exc}")
         assignment = "local"
         issues, additions = inspect_mesh(geometry, mesh)
         report["issues"] = issues
@@ -168,31 +204,43 @@ def geometry_aware_mesh(
             topology_violations=sum(i["kind"] == "multiple_crossings" for i in issues),
             donor_violations=sum(i["kind"] == "unavailable_donor" for i in issues),
         )
-        if not issues or (boundary is not None and boundary.mode == "hybrid"):
+        if not issues or hybrid:
+            details = {}
             try:
-                build_conformal(geometry.to_scene(), mesh, boundary=boundary)
+                build_conformal(geometry.to_scene(), mesh, boundary=boundary, report=details)
             except UnresolvedGeometryError as exc:
                 record.update(status="conformal_rejection", message=str(exc))
-                if cells is not None:
-                    fail("Fixed-budget conformal preparation failed")
-                counts = reserve + np.maximum(
-                    counts - reserve + 4, np.ceil((counts - reserve) * 1.2).astype(int)
+                if not hybrid:
+                    if cells is not None:
+                        return fail("Fixed-budget conformal preparation failed")
+                    counts = reserve + np.maximum(
+                        counts - reserve + 4, np.ceil((counts - reserve) * 1.2).astype(int)
+                    )
+                    continue
+            else:
+                selected = (mesh, [a.copy() for a in anchors], issues, details)
+                record.update(
+                    status="valid",
+                    fallback_cells=details["fallback_cells"],
+                    fallback_area_m2=details["fallback_area_m2"],
+                    fallback_max_diameter_m=details["fallback_max_diameter_m"],
                 )
-                continue
-            record["status"] = "valid"
-            report.update(
-                elapsed_seconds=perf_counter() - started,
-                status="valid",
-                exterior_fixed=True,
-                boundary_mode="conformal" if boundary is None else boundary.mode,
-                # Retain the successful witness coordinates for subsequent
-                # fixed-budget density studies. They identify local material
-                # intervals and donors that the repair loop needed to resolve.
-                witness_anchors=[a.tolist() for a in anchors],
-                geometry_sha256=hashlib.sha256(json_text(geometry.as_dict()).encode()).hexdigest(),
-            )
-            mesh.metadata.update(strategy="geometry_aware", geometry_aware=report)
-            return mesh
+                if not details["fallback_cells"]:
+                    return finish(selected, "fully_conformal")
+                # Physical patch extent, not cell count, ranks preparation attempts.
+                score = (details["fallback_max_diameter_m"], details["fallback_area_m2"])
+                improved = best_score is None or score < best_score
+                if improved:
+                    best, best_score = selected, score
+                stagnant = 0 if improved else stagnant + 1
+                if stagnant >= 2:
+                    return finish(best, "persistent_fallback")
+        if hybrid:
+            hybrid_attempts += 1
+            if hybrid_attempts >= 1 + hybrid_repair_passes:
+                if best is not None:
+                    return finish(best, "hybrid_repair_limit")
+                return fail("Hybrid repair limit reached without a policy-accepted mesh")
         before = [len(a) for a in anchors]
         previous_anchors = anchors
         anchors = [
@@ -200,13 +248,15 @@ def geometry_aware_mesh(
             for a, extra, length in zip(anchors, additions, geometry.size)
         ]
         if before == [len(a) for a in anchors]:
+            if best is not None:
+                return finish(best, "persistent_fallback")
             if cells is not None:
-                fail(
+                return fail(
                     "Fixed-budget geometry construction could not find a valid allocation; budget was not increased"
                 )
             counts = reserve + np.maximum(
                 counts - reserve + 4, np.ceil((counts - reserve) * 1.2).astype(int)
             )
-    fail(
+    return fail(
         "Geometry-aware construction reached max_passes; inspect exception.report for unresolved edges"
     )

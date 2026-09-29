@@ -79,6 +79,7 @@ in input metres.
 | `exterior_max_spacing` | `None` | m | Explicit exterior spacing cap, replacing the `exterior_ppw` target. |
 | `min_pml_cells` | `12` | cells/side | Minimum PML collar. |
 | `phase_origin` | `None` | m pair | Phase origin; defaults to final PEC-box centre. |
+| `margin_mesh` | `"fixed"` | — | `"graded"` lets lines inside the scatterer–TFSF margins move; their physical extents/counts and exterior axes stay fixed. |
 
 ### `BoundaryPolicy`
 
@@ -87,6 +88,7 @@ in input metres.
 | `mode` | `"conformal"` | — | `"conformal"` or `"hybrid"`. |
 | `max_fallback_fraction` | `1.0` | fraction | Maximum staircase fallback area divided by total domain area. |
 | `on_fallback` | `"warn"` | — | `"warn"` or `"error"`. |
+| `max_patch_diameter` | `None` | m | Optional maximum connected fallback patch bounding-box diagonal. |
 
 Conformal is the default. Hybrid fallback emits `StaircaseFallbackWarning` when
 configured to warn. A bounded validation screen is documented in [validation](validation.md); it is not a general accuracy qualification.
@@ -103,6 +105,7 @@ Advanced construction controls belong in `MeshOptions`, passed as
 | `anchor_assignment` | `"local"` | — | `"local"`, `"joint"`, or `"fixed"`. |
 | `time_limit` | `30.0` | s | Construction budget. |
 | `max_passes` | `20` | passes | Construction/repair pass cap. |
+| `hybrid_repair_passes` | `3` | repairs | Additional inspected hybrid proposals after the first; retain the best accepted physical patch extent when repair stalls. |
 
 `AxisConstraints` has `min_spacing=0.0 m`, `max_spacing=None m`, and
 `max_ratio=1.4` (dimensionless). Grading is constrained to at most 1.4.
@@ -144,7 +147,7 @@ projects positive axis densities at an exact budget. `custom` accepts only
 the previously applied mesh intact.
 
 Adding or removing geometry invalidates the mesh and result. Apply a mesh again
-before solving. See [geometry-aware meshing](geometry_aware_meshing.md) for the
+before solving. See [mesh strategies](mesh_strategy.md) for the
 bounded construction process and failure reports.
 
 ## Run the solver

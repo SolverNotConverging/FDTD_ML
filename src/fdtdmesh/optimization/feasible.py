@@ -51,7 +51,10 @@ class FeasibleSettings:
 def seed_constraints(sim, mesh):
     return AxisConstraints(
         max_spacing=max(
-            *(p.thickness / p.cells for p in (sim.pml.x, sim.pml.y)),
+            *(
+                p.thickness / p.cells * (1.4 if sim.layout.margin_mesh == "graded" else 1)
+                for p in (sim.pml.x, sim.pml.y)
+            ),
             float(np.diff(mesh.x).max()),
             float(np.diff(mesh.y).max()),
         )
@@ -170,9 +173,19 @@ class FeasibleSpace:
         self.axes = []
         for axis, (lines, pml) in enumerate(zip((mesh.x, mesh.y), (sim.pml.x, sim.pml.y))):
             side = (
-                pml.cells + sum(layout.exterior_cells or ()) + (layout.scatterer_margin_cells or 0)
+                pml.cells
+                + sum(layout.exterior_cells or ())
+                + ((layout.scatterer_margin_cells or 0) if layout.margin_mesh == "fixed" else 0)
             )
             fixed = set(range(side + 1)) | set(range(len(lines) - side - 1, len(lines)))
+            if layout.margin_mesh == "graded" and layout.scatterer_margin_cells:
+                # Preserve the margin count and its physical extent, while allowing grading inside it.
+                fixed.update(
+                    (
+                        side + layout.scatterer_margin_cells,
+                        len(lines) - 1 - side - layout.scatterer_margin_cells,
+                    )
+                )
             for value in [
                 *coordinates[axis],
                 *witnesses[axis],

@@ -11,7 +11,10 @@ from fdtdmesh.optimization import (
 ```
 
 `optimize_mesh` keeps the physical geometry, source, frequencies, observation
-angles, boundary policy, and total cell budget fixed. Native CUDA is used only
+angles and total cell budget fixed. It defaults to hybrid boundary treatment on
+a private clone; use `boundary=BoundaryPolicy(mode="conformal")` for strict search.
+The caller is unchanged. Existing fallback limits are preserved when the
+boundary argument is omitted. Native CUDA is used only
 for candidate solves; projection and feasibility inspection are CPU work.
 
 ## `optimize_mesh`
@@ -20,7 +23,7 @@ for candidate solves; projection and feasibility inspection are CPU work.
 optimize_mesh(
     sim, reference, *, cells, directory, strategy="feasible_local",
     settings=SearchSettings(), local_settings=None, initial_mesh=None,
-    constraints=None, resume=True, progress=None,
+    constraints=None, resume=True, progress=None, boundary=None,
 )
 ```
 
@@ -37,6 +40,7 @@ optimize_mesh(
 | `constraints` | `None` | — | Optional `AxisConstraints`. |
 | `resume` | `True` | — | Reuse an identical archive. |
 | `progress` | `None` | callback | Receives saved trial dictionaries. |
+| `boundary` | `None` | policy | Omitted: hybrid with the simulation's fallback limits. Explicit `BoundaryPolicy` overrides mode and limits for this search. |
 
 The default feasible-local search creates a geometry-aware seed automatically
 when `initial_mesh` is omitted. It reports a best feasible mesh and an optional
@@ -85,6 +89,7 @@ qualify_reference(sim, *, directory, settings=None, initial_mesh=None, progress=
 | `worst_rtol` | `0.005` | relative | Worst-frequency tolerance. |
 | `max_seconds` | `900.0` | s | Qualification budget. |
 | `check_boundaries` | `True` | boolean | Run temporal, PML, and contour checks. |
+| `boundary_mode` | `"conformal"` | — | `"hybrid"` explicitly permits hybrid references; requires `method="subdivide"`. |
 
 `method="refine"` builds increasing wavelength resolutions. `method="subdivide"`
 requires an `initial_mesh` argument or an already applied `sim.mesh`; it
@@ -107,5 +112,20 @@ limits unique candidate mesh evaluations, including cache hits and unsuccessful
 convergence. Optional winner validation is a separately reported solve outside
 these search budgets. Time limits are checked between solves. Reference temporal
 checks always run; `check_boundaries=False` omits PML/contour checks and leaves the
-reference unqualified. References always use strict conformal treatment, including
-when the candidate simulation selects hybrid.
+reference unqualified. References default to strict conformal treatment. Hybrid
+references must subdivide every seed interval, including the PML, and pass a
+physical fallback-localization check: remaining patch area and maximum diameter
+must shrink compared with an earlier converged level. Zero fallback also passes
+that check. Both modes still require two consecutive spatial comparisons and
+temporal/PML/contour checks. Temporal verification runs three extra stable checks.
+
+Use `DomainPolicy(margin_mesh="graded")` when tips touch the scatterer bounding
+box. It frees margin lines inside TFSF while preserving margin counts, bounding
+coordinates and the fixed exterior. The default seed/search maximum spacing
+then allows up to `1.4 * exterior_spacing` so a previously uniform margin has
+room to grade. User-supplied constraints still take precedence. Trials report
+physical patch sizes, but the objective remains complex far-field error; fewer
+fallback cells are not automatically a better solution.
+
+See [notebook 05](../notebooks/05_hybrid_tip_optimization.ipynb) for two tip-rich
+geometries, rotations, multiple budgets and qualified hybrid targets.

@@ -223,12 +223,39 @@ def build_conformal(scene, mesh, *, boundary=None, report=None, warn=False):
         raise UnresolvedGeometryError("Hybrid patch closure failed")
     area = np.diff(mesh.x)[:, None] * np.diff(mesh.y)[None, :]
     fraction = float(area[patch].sum() / area.sum())
+    from scipy.ndimage import find_objects, label
+
+    labels, count = label(patch)  # Four-neighbour connectivity: shared edges.
+    patches = []
+    for number, slices in enumerate(find_objects(labels), start=1):
+        local = labels[slices] == number
+        sx, sy = slices
+        bounds = [
+            float(mesh.x[sx.start]),
+            float(mesh.x[sx.stop]),
+            float(mesh.y[sy.start]),
+            float(mesh.y[sy.stop]),
+        ]
+        patches.append(
+            dict(
+                cells=int(local.sum()),
+                area_m2=float(area[slices][local].sum()),
+                bounds=bounds,
+                # Bounding-box diagonal is a conservative physical diameter, not an error estimate.
+                diameter_m=float(np.hypot(bounds[1] - bounds[0], bounds[3] - bounds[2])),
+            )
+        )
+    max_diameter = max((p["diameter_m"] for p in patches), default=0.0)
     details = dict(
         mode=policy.mode,
         fallback_cells=int(patch.sum()),
         initial_fallback_cells=initial,
         expanded_cells=int(patch.sum()) - initial,
         fallback_area_fraction=fraction,
+        fallback_area_m2=float(area[patch].sum()),
+        fallback_max_diameter_m=max_diameter,
+        patch_count=count,
+        patches=patches,
         reasons=reasons,
         boundary_cells=int(boundary_cells.sum()),
         fallback_boundary_fraction=float(
@@ -243,6 +270,10 @@ def build_conformal(scene, mesh, *, boundary=None, report=None, warn=False):
     if patch.any() and (policy.on_fallback == "error" or fraction > policy.max_fallback_fraction):
         raise UnresolvedGeometryError(
             f"Staircase fallback exceeds policy: {int(patch.sum())} cells, area fraction {fraction:.6g}"
+        )
+    if policy.max_patch_diameter is not None and max_diameter > policy.max_patch_diameter:
+        raise UnresolvedGeometryError(
+            f"Staircase patch diameter {max_diameter:.6g} m exceeds max_patch_diameter"
         )
     if report is not None:
         report.update(details)

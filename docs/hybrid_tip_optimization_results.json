@@ -1,0 +1,277 @@
+{
+  "date": "2026-09-29",
+  "cases": [
+    {
+      "shape": "notebook_tip",
+      "orientation": 0,
+      "qualified": true,
+      "reference_status": "qualified",
+      "reference_checks": {
+        "contour": {
+          "cached": false,
+          "error": 0.0001104499880186203,
+          "passed": true,
+          "per_frequency": [
+            0.00011274424144393175,
+            0.00010809066732729033,
+            0.00011046602743791225
+          ],
+          "width_error": 0.00016931442140409613,
+          "worst_frequency": 0.00011274424144393175
+        },
+        "fallback_localization": {
+          "fallback_area_m2": 0.0,
+          "fallback_max_diameter_m": 0.0,
+          "note": "Physical patches must shrink under subdivision; this is not an error bound",
+          "passed": true
+        },
+        "pml": {
+          "cached": false,
+          "error": 1.9457525380912e-07,
+          "passed": true,
+          "per_frequency": [
+            1.9511249254123332e-07,
+            1.948857931191075e-07,
+            1.9372462693042923e-07
+          ],
+          "width_error": 2.841961437826044e-07,
+          "worst_frequency": 1.9511249254123332e-07
+        },
+        "temporal": {
+          "cached": false,
+          "error": 1.1174875824256363e-14,
+          "passed": true,
+          "per_frequency": [
+            1.2823685143672602e-14,
+            5.79600451696098e-15,
+            1.3288829144735305e-14
+          ],
+          "width_error": 1.6641259802341455e-14,
+          "worst_frequency": 1.3288829144735305e-14
+        }
+      },
+      "reference_difference": 0.0017589966781627537,
+      "reference_levels": [
+        {
+          "resolution": 2,
+          "status": "converged",
+          "difference": null
+        },
+        {
+          "resolution": 3,
+          "status": "converged",
+          "difference": {
+            "error": 0.0036073061187223985,
+            "per_frequency": [
+              0.0034313174894202506,
+              0.0035959879864379323,
+              0.003785882062440527
+            ],
+            "width_error": 0.0021607252129298114,
+            "worst_frequency": 0.003785882062440527
+          }
+        },
+        {
+          "resolution": 4,
+          "status": "converged",
+          "difference": {
+            "error": 0.0017589966781627537,
+            "per_frequency": [
+              0.001677368313491014,
+              0.0017544925095201442,
+              0.0018413037544894168
+            ],
+            "width_error": 0.0010386238292050547,
+            "worst_frequency": 0.0018413037544894168
+          }
+        },
+        {
+          "resolution": 6,
+          "status": "converged",
+          "difference": {
+            "error": 0.001720923568607035,
+            "per_frequency": [
+              0.0016446436785105263,
+              0.0017176489341242448,
+              0.0017970985217284907
+            ],
+            "width_error": 0.0010192260468109544,
+            "worst_frequency": 0.0017970985217284907
+          }
+        }
+      ],
+      "budgets": [
+        {
+          "cells": [
+            120,
+            120
+          ],
+          "seed_error": 0.018446025502608404,
+          "best_error": 0.007384467205191544,
+          "evaluations": 40,
+          "search_statistics": {
+            "internal_checks": 37,
+            "median_changed_lines": 66.0,
+            "median_parent_rms_cells": 0.6953064721656685,
+            "median_seed_rms_cells": 0.7976664236901028,
+            "proposals": 37,
+            "raw_valid": 37,
+            "returned_valid": 37,
+            "solved": 37,
+            "statuses": {
+              "feasible": 37
+            },
+            "unique_solved": 37
+          },
+          "validation": {
+            "cached": true,
+            "change": {
+              "error": 0.0,
+              "per_frequency": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "width_error": 0.0,
+              "worst_frequency": 0.0
+            },
+            "error": 0.007384467205191544,
+            "passed": true,
+            "per_frequency": [
+              0.007458954576030611,
+              0.00719986232779552,
+              0.0074911312101144725
+            ],
+            "result_file": "validation\\a9879766708ab989f4d041a6030ee3802d9a0a3fee293d5303b76e498778a8e9\\result.h5",
+            "width_error": 0.005340433028223546,
+            "worst_frequency": 0.0074911312101144725
+          },
+          "fallback_cells": 4,
+          "fallback_area_m2": 0.00027532033939156716,
+          "fallback_max_diameter_m": 0.018516166505457805
+        },
+        {
+          "cells": [
+            160,
+            160
+          ],
+          "seed_error": 0.014580715520432285,
+          "best_error": 0.007919554386497165,
+          "evaluations": 40,
+          "search_statistics": {
+            "internal_checks": 37,
+            "median_changed_lines": 106.0,
+            "median_parent_rms_cells": 0.6649186125632588,
+            "median_seed_rms_cells": 1.0684154800099976,
+            "proposals": 37,
+            "raw_valid": 37,
+            "returned_valid": 37,
+            "solved": 37,
+            "statuses": {
+              "feasible": 37
+            },
+            "unique_solved": 37
+          },
+          "validation": {
+            "cached": false,
+            "change": {
+              "error": 0.0,
+              "per_frequency": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "width_error": 0.0,
+              "worst_frequency": 0.0
+            },
+            "error": 0.007919554386497165,
+            "passed": true,
+            "per_frequency": [
+              0.007494240681140475,
+              0.007476523054294812,
+              0.008723301248598306
+            ],
+            "result_file": "validation\\f9c0e65fa1f3954bd23b307ce37de73d5b53dec1aae40ece0d75405df1712f82\\result.h5",
+            "width_error": 0.007927137836988594,
+            "worst_frequency": 0.008723301248598306
+          },
+          "fallback_cells": 8,
+          "fallback_area_m2": 0.0001850283164897519,
+          "fallback_max_diameter_m": 0.011931010495940685
+        }
+      ]
+    },
+    {
+      "shape": "star",
+      "orientation": 0,
+      "qualified": false,
+      "reference_status": "spatial_unqualified",
+      "reference_checks": {},
+      "reference_difference": null,
+      "reference_levels": [
+        {
+          "resolution": 2,
+          "status": "converged",
+          "difference": null
+        },
+        {
+          "resolution": 3,
+          "status": "converged",
+          "difference": {
+            "error": 0.017941602146346172,
+            "per_frequency": [
+              0.017810463646018557,
+              0.017918406081107157,
+              0.01809478850276272
+            ],
+            "width_error": 0.018181365349756437,
+            "worst_frequency": 0.01809478850276272
+          }
+        },
+        {
+          "resolution": 4,
+          "status": "converged",
+          "difference": {
+            "error": 0.0263549623416187,
+            "per_frequency": [
+              0.024959827862540484,
+              0.02629613194181152,
+              0.027735763159783572
+            ],
+            "width_error": 0.019148876250390693,
+            "worst_frequency": 0.027735763159783572
+          }
+        },
+        {
+          "resolution": 6,
+          "status": "converged",
+          "difference": {
+            "error": 0.01110007603917205,
+            "per_frequency": [
+              0.010906777957227403,
+              0.011103620820991204,
+              0.011286578909554186
+            ],
+            "width_error": 0.010513182195832074,
+            "worst_frequency": 0.011286578909554186
+          }
+        },
+        {
+          "resolution": 8,
+          "status": "converged",
+          "difference": {
+            "error": 0.011259798231462299,
+            "per_frequency": [
+              0.010680311038422388,
+              0.011244597256279562,
+              0.01182536076854941
+            ],
+            "width_error": 0.008956093733891559,
+            "worst_frequency": 0.01182536076854941
+          }
+        }
+      ],
+      "budgets": []
+    }
+  ]
+}
